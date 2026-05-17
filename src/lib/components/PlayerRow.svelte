@@ -4,10 +4,11 @@
   import type { EncounterState } from "$lib/encounter.svelte.js";
   import { EntityState } from "$lib/entity.svelte.js";
   import { IconExternalLink, IconFileClock } from "$lib/icons";
-  import { settings } from "$lib/stores.svelte.js";
+  import { screenshot, settings } from "$lib/stores.svelte.js";
   import { EntityType, type Entity } from "$lib/types";
   import { getClassIcon, isNameValid, LOA_BIBLE_URL } from "$lib/utils";
   import { openUrl } from "@tauri-apps/plugin-opener";
+  import { tick } from "svelte";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
   import { logColumns } from "./DamageMeterColumns.svelte";
@@ -65,7 +66,7 @@
         <ArkPassiveTooltip state={entityState} />
       {/if}
     </div>
-    {#if (enc.live && settings.app.meter.profileShortcut) || (!enc.live && isNameValid(entityState.entity.name) && hovering && entityState.entity.entityType === EntityType.PLAYER)}
+    {#if !screenshot.state && ((enc.live && settings.app.meter.profileShortcut) || (!enc.live && isNameValid(entityState.entity.name) && hovering && entityState.entity.entityType === EntityType.PLAYER))}
       <button
         class="shrink-0"
         title="View Character Profile"
@@ -77,7 +78,7 @@
         <IconExternalLink class="size-3" />
       </button>
     {/if}
-    {#if entityState.entity.loadoutHash && hovering}
+    {#if !screenshot.state && entityState.entity.loadoutHash && hovering}
       <button
         class="shrink-0 tracking-tighter hover:underline"
         title="View Loadout Snapshot"

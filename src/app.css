@@ -3,41 +3,41 @@
 
 @import "tailwindcss";
 
-@plugin '@tailwindcss/typography';
-@plugin '@tailwindcss/forms';
+@plugin "@tailwindcss/typography";
+@plugin "@tailwindcss/forms";
 
 :root {
-  --font-size: medium;
+    --font-size: medium;
 }
 
 @theme inline {
-  --font-sans: "Inter Variable", sans-serif;
-  --font-mono: "Geist Mono Variable", monospace;
+    --font-sans: "Inter Variable", sans-serif;
+    --font-mono: "Geist Mono Variable", monospace;
 
-  --text-xxs: 0.7rem;
-  --text-3xs: 0.65rem;
+    --text-xxs: 0.7rem;
+    --text-3xs: 0.65rem;
 
-  --color-accent-50: var(--accent-50);
-  --color-accent-100: var(--accent-100);
-  --color-accent-200: var(--accent-200);
-  --color-accent-300: var(--accent-300);
-  --color-accent-400: var(--accent-400);
-  --color-accent-500: var(--accent-500);
-  --color-accent-600: var(--accent-600);
-  --color-accent-700: var(--accent-700);
-  --color-accent-800: var(--accent-800);
-  --color-accent-900: var(--accent-900);
+    --color-accent-50: var(--accent-50);
+    --color-accent-100: var(--accent-100);
+    --color-accent-200: var(--accent-200);
+    --color-accent-300: var(--accent-300);
+    --color-accent-400: var(--accent-400);
+    --color-accent-500: var(--accent-500);
+    --color-accent-600: var(--accent-600);
+    --color-accent-700: var(--accent-700);
+    --color-accent-800: var(--accent-800);
+    --color-accent-900: var(--accent-900);
 
-  --animate-spin-once: spin 1s linear;
+    --animate-spin-once: spin 1s linear;
 
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(-180deg);
+        }
     }
-    to {
-      transform: rotate(-180deg);
-    }
-  }
 }
 
 /*
@@ -49,163 +49,164 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
-  button:not(:disabled),
-  [role="button"]:not(:disabled) {
-    cursor: pointer;
-  }
-
-  html {
-    font-size: var(--font-size);
-  }
-
-  body {
-    @apply text-sm text-white;
-  }
-
-  [data-view="logs"] {
-
-    *::-webkit-scrollbar {
-      @apply right-0! block! size-2! bg-neutral-800!;
+    button:not(:disabled),
+    [role="button"]:not(:disabled) {
+        cursor: pointer;
     }
 
-    *::-webkit-scrollbar-thumb {
-      @apply rounded-md! bg-neutral-600!;
+    html {
+        font-size: var(--font-size);
     }
 
-    *::-webkit-scrollbar-corner {
-      @apply bg-neutral-800!;
+    body {
+        @apply text-sm text-white;
     }
-  }
 
-  /* During html2canvas capture (set in takeScreenshot), let the captured
-     subtree expand so truncated cells render their full text. */
-  [data-screenshot] .truncate {
-    overflow: visible;
-    text-overflow: clip;
-  }
-  [data-screenshot] table.table-fixed {
-    table-layout: auto;
-  }
-  [data-screenshot] .overflow-x-auto {
-    overflow-x: visible;
-  }
+    [data-view="logs"] {
+        *::-webkit-scrollbar {
+            @apply right-0! block! size-2! bg-neutral-800!;
+        }
 
-  [data-theme="red"] {
-    --accent-50: theme(--color-red-50);
-    --accent-100: theme(--color-red-100);
-    --accent-200: theme(--color-red-200);
-    --accent-300: theme(--color-red-300);
-    --accent-400: theme(--color-red-400);
-    --accent-500: theme(--color-red-500);
-    --accent-600: theme(--color-red-600);
-    --accent-700: theme(--color-red-700);
-    --accent-800: theme(--color-red-800);
-    --accent-900: theme(--color-red-900);
-  }
+        *::-webkit-scrollbar-thumb {
+            @apply rounded-md! bg-neutral-600!;
+        }
 
-  [data-theme="pink"] {
-    --accent-50: theme(--color-pink-50);
-    --accent-100: theme(--color-pink-100);
-    --accent-200: theme(--color-pink-200);
-    --accent-300: theme(--color-pink-300);
-    --accent-400: theme(--color-pink-400);
-    --accent-500: theme(--color-pink-500);
-    --accent-600: theme(--color-pink-600);
-    --accent-700: theme(--color-pink-700);
-    --accent-800: theme(--color-pink-800);
-    --accent-900: theme(--color-pink-900);
-  }
+        *::-webkit-scrollbar-corner {
+            @apply bg-neutral-800!;
+        }
+    }
 
-  [data-theme="rose"] {
-    --accent-50: oklch(98.13% 0.007 354.79);
-    --accent-100: oklch(95.28% 0.017 349.49);
-    --accent-200: oklch(90.63% 0.035 352.91);
-    --accent-300: oklch(85.02% 0.057 352.96);
-    --accent-400: oklch(77.86% 0.087 354.65);
-    --accent-500: oklch(69.9% 0.123 356.37);
-    --accent-600: oklch(64.86% 0.147 357.58);
-    --accent-700: oklch(59.46% 0.171 0.2);
-    --accent-800: oklch(52.59% 0.169 1.41);
-    --accent-900: oklch(40.44% 0.125 0.82);
-    --accent-950: oklch(32.29% 0.095 0.57);
-  }
+    /* During html2canvas capture (set in takeScreenshot), let the captured
+       subtree expand so truncated cells render their full text. */
+    [data-screenshot] .truncate {
+        overflow: visible;
+        text-overflow: clip;
+    }
 
-  [data-theme="violet"] {
-    --accent-50: oklch(97.53% 0.014 299.8);
-    --accent-100: oklch(96.23% 0.019 299.07);
-    --accent-200: oklch(91.37% 0.044 296.97);
-    --accent-300: oklch(85.04% 0.078 296.16);
-    --accent-400: oklch(80.28% 0.105 295.74);
-    --accent-500: oklch(72.3% 0.15 293.69);
-    --accent-600: oklch(68.16% 0.174 292.61);
-    --accent-700: oklch(61.46% 0.212 290.17);
-    --accent-800: oklch(54.37% 0.25 286.05);
-    --accent-900: oklch(44.6% 0.273 276.33);
-    --accent-950: oklch(36.92% 0.223 277.17);
-  }
+    [data-screenshot] table.table-fixed {
+        table-layout: auto;
+    }
 
-  [data-theme="purple"] {
-    --accent-50: theme(--color-purple-50);
-    --accent-100: theme(--color-purple-100);
-    --accent-200: theme(--color-purple-200);
-    --accent-300: theme(--color-purple-300);
-    --accent-400: theme(--color-purple-400);
-    --accent-500: theme(--color-purple-500);
-    --accent-600: theme(--color-purple-600);
-    --accent-700: theme(--color-purple-700);
-    --accent-800: theme(--color-purple-800);
-    --accent-900: theme(--color-purple-900);
-  }
+    [data-screenshot] .overflow-x-auto {
+        overflow-x: visible;
+    }
 
-  [data-theme="blue"] {
-    --accent-50: theme(--color-sky-50);
-    --accent-100: theme(--color-sky-100);
-    --accent-200: theme(--color-sky-200);
-    --accent-300: theme(--color-sky-300);
-    --accent-400: theme(--color-sky-400);
-    --accent-500: theme(--color-sky-500);
-    --accent-600: theme(--color-sky-600);
-    --accent-700: theme(--color-sky-700);
-    --accent-800: theme(--color-sky-800);
-    --accent-900: theme(--color-sky-900);
-  }
+    [data-theme="red"] {
+        --accent-50: theme(--color-red-50);
+        --accent-100: theme(--color-red-100);
+        --accent-200: theme(--color-red-200);
+        --accent-300: theme(--color-red-300);
+        --accent-400: theme(--color-red-400);
+        --accent-500: theme(--color-red-500);
+        --accent-600: theme(--color-red-600);
+        --accent-700: theme(--color-red-700);
+        --accent-800: theme(--color-red-800);
+        --accent-900: theme(--color-red-900);
+    }
 
-  [data-theme="green"] {
-    --accent-50: theme(--color-green-50);
-    --accent-100: theme(--color-green-100);
-    --accent-200: theme(--color-green-200);
-    --accent-300: theme(--color-green-300);
-    --accent-400: theme(--color-green-400);
-    --accent-500: theme(--color-green-500);
-    --accent-600: theme(--color-green-600);
-    --accent-700: theme(--color-green-700);
-    --accent-800: theme(--color-green-800);
-    --accent-900: theme(--color-green-900);
-  }
+    [data-theme="pink"] {
+        --accent-50: theme(--color-pink-50);
+        --accent-100: theme(--color-pink-100);
+        --accent-200: theme(--color-pink-200);
+        --accent-300: theme(--color-pink-300);
+        --accent-400: theme(--color-pink-400);
+        --accent-500: theme(--color-pink-500);
+        --accent-600: theme(--color-pink-600);
+        --accent-700: theme(--color-pink-700);
+        --accent-800: theme(--color-pink-800);
+        --accent-900: theme(--color-pink-900);
+    }
 
-  [data-theme="yellow"] {
-    --accent-50: theme(--color-yellow-50);
-    --accent-100: theme(--color-yellow-100);
-    --accent-200: theme(--color-yellow-200);
-    --accent-300: theme(--color-yellow-300);
-    --accent-400: theme(--color-yellow-400);
-    --accent-500: theme(--color-yellow-500);
-    --accent-600: theme(--color-yellow-600);
-    --accent-700: theme(--color-yellow-700);
-    --accent-800: theme(--color-yellow-800);
-    --accent-900: theme(--color-yellow-900);
-  }
+    [data-theme="rose"] {
+        --accent-50: oklch(98.13% 0.007 354.79);
+        --accent-100: oklch(95.28% 0.017 349.49);
+        --accent-200: oklch(90.63% 0.035 352.91);
+        --accent-300: oklch(85.02% 0.057 352.96);
+        --accent-400: oklch(77.86% 0.087 354.65);
+        --accent-500: oklch(69.9% 0.123 356.37);
+        --accent-600: oklch(64.86% 0.147 357.58);
+        --accent-700: oklch(59.46% 0.171 0.2);
+        --accent-800: oklch(52.59% 0.169 1.41);
+        --accent-900: oklch(40.44% 0.125 0.82);
+        --accent-950: oklch(32.29% 0.095 0.57);
+    }
 
-  [data-theme="orange"] {
-    --accent-50: theme(--color-orange-50);
-    --accent-100: theme(--color-orange-100);
-    --accent-200: theme(--color-orange-200);
-    --accent-300: theme(--color-orange-300);
-    --accent-400: theme(--color-orange-400);
-    --accent-500: theme(--color-orange-500);
-    --accent-600: theme(--color-orange-600);
-    --accent-700: theme(--color-orange-700);
-    --accent-800: theme(--color-orange-800);
-    --accent-900: theme(--color-orange-900);
-  }
+    [data-theme="violet"] {
+        --accent-50: oklch(97.53% 0.014 299.8);
+        --accent-100: oklch(96.23% 0.019 299.07);
+        --accent-200: oklch(91.37% 0.044 296.97);
+        --accent-300: oklch(85.04% 0.078 296.16);
+        --accent-400: oklch(80.28% 0.105 295.74);
+        --accent-500: oklch(72.3% 0.15 293.69);
+        --accent-600: oklch(68.16% 0.174 292.61);
+        --accent-700: oklch(61.46% 0.212 290.17);
+        --accent-800: oklch(54.37% 0.25 286.05);
+        --accent-900: oklch(44.6% 0.273 276.33);
+        --accent-950: oklch(36.92% 0.223 277.17);
+    }
+
+    [data-theme="purple"] {
+        --accent-50: theme(--color-purple-50);
+        --accent-100: theme(--color-purple-100);
+        --accent-200: theme(--color-purple-200);
+        --accent-300: theme(--color-purple-300);
+        --accent-400: theme(--color-purple-400);
+        --accent-500: theme(--color-purple-500);
+        --accent-600: theme(--color-purple-600);
+        --accent-700: theme(--color-purple-700);
+        --accent-800: theme(--color-purple-800);
+        --accent-900: theme(--color-purple-900);
+    }
+
+    [data-theme="blue"] {
+        --accent-50: theme(--color-sky-50);
+        --accent-100: theme(--color-sky-100);
+        --accent-200: theme(--color-sky-200);
+        --accent-300: theme(--color-sky-300);
+        --accent-400: theme(--color-sky-400);
+        --accent-500: theme(--color-sky-500);
+        --accent-600: theme(--color-sky-600);
+        --accent-700: theme(--color-sky-700);
+        --accent-800: theme(--color-sky-800);
+        --accent-900: theme(--color-sky-900);
+    }
+
+    [data-theme="green"] {
+        --accent-50: theme(--color-green-50);
+        --accent-100: theme(--color-green-100);
+        --accent-200: theme(--color-green-200);
+        --accent-300: theme(--color-green-300);
+        --accent-400: theme(--color-green-400);
+        --accent-500: theme(--color-green-500);
+        --accent-600: theme(--color-green-600);
+        --accent-700: theme(--color-green-700);
+        --accent-800: theme(--color-green-800);
+        --accent-900: theme(--color-green-900);
+    }
+
+    [data-theme="yellow"] {
+        --accent-50: theme(--color-yellow-50);
+        --accent-100: theme(--color-yellow-100);
+        --accent-200: theme(--color-yellow-200);
+        --accent-300: theme(--color-yellow-300);
+        --accent-400: theme(--color-yellow-400);
+        --accent-500: theme(--color-yellow-500);
+        --accent-600: theme(--color-yellow-600);
+        --accent-700: theme(--color-yellow-700);
+        --accent-800: theme(--color-yellow-800);
+        --accent-900: theme(--color-yellow-900);
+    }
+
+    [data-theme="orange"] {
+        --accent-50: theme(--color-orange-50);
+        --accent-100: theme(--color-orange-100);
+        --accent-200: theme(--color-orange-200);
+        --accent-300: theme(--color-orange-300);
+        --accent-400: theme(--color-orange-400);
+        --accent-500: theme(--color-orange-500);
+        --accent-600: theme(--color-orange-600);
+        --accent-700: theme(--color-orange-700);
+        --accent-800: theme(--color-orange-800);
+        --accent-900: theme(--color-orange-900);
+    }
 }
