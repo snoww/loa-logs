@@ -153,10 +153,6 @@ fn check_updates(app_handle: &AppHandle, is_beta: bool) -> Arc<AtomicBool> {
                         update_checked.store(true, Ordering::Relaxed);
                     } else {
                         info!("update available, downloading update: v{}", update.version);
-                        if shell_manager.check_nineveh_running() {
-                            info!("stopping nineveh before update");
-                            shell_manager.kill_nineveh_process();
-                        }
                         shell_manager.remove_driver().await;
                         if let Err(e) = update.download_and_install(|_, _| {}, || {}).await {
                             error!("failed to download update: {}", e);
