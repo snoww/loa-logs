@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.44.0-Nineveh Beta 22 - May 18th, 2026
+    v1.44.0-Nineveh Beta 23 - May 27th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -27,7 +27,6 @@ across all platforms, including Linux!
 
 #### BUG FIXES AND IMPROVEMENTS
 
-- fixed and improved bunch of screenshotting issues
-- fixed mini meter boss hp % vs bar setting not working
-- improved encounter timestamps to reduce ntp errors
-- improved installer behavior
+- wip for damage breakdown buff display (disabling detailed breakdown temporarily)
+- fixed skill cast details not showing all self/misc buffs
+- adjusted app and nineveh behavior for updates
