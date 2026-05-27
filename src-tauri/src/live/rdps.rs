@@ -6,7 +6,9 @@ use crate::data::{
 use crate::live::entity_tracker::{
     Entity, EntityTracker, InspectSnapshot, SkillRuntimeData, entity_owns_status_effect,
 };
-use crate::live::player_stats::{PlayerStats, STAT_PRIORITY_DEFAULT, STAT_PRIORITY_SUPPORT};
+use crate::live::player_stats::{
+    PlayerStats, STAT_PRIORITY_DEFAULT, STAT_PRIORITY_SUPPORT, StatSource,
+};
 use crate::live::status_tracker::StatusEffectDetails;
 use crate::live::{
     DEBUG_DUMP_DAMAGE_STATE_JSON, compute_stat_damage_metrics, write_debug_json_dump,
@@ -291,39 +293,55 @@ fn compute_hit_stat_damage_metrics(
         };
 
         metrics.additional_damage_1percent_damage.add(
-            calculate_adjusted_damage(&|stats| stats.skill_damage_rate.add_self(0.01, "stat_diff")),
+            calculate_adjusted_damage(&|stats| {
+                stats.skill_damage_rate.add_self(0.01, StatSource::StatDiff)
+            }),
             damage_done as f64,
         );
         metrics.critical_hit_rate_1percent_damage.add(
-            calculate_adjusted_damage(&|stats| stats.critical_hit_rate.add_self(0.01, "stat_diff")),
+            calculate_adjusted_damage(&|stats| {
+                stats.critical_hit_rate.add_self(0.01, StatSource::StatDiff)
+            }),
             damage_done as f64,
         );
         metrics.critical_damage_rate_1percent_damage.add(
             calculate_adjusted_damage(&|stats| {
-                stats.critical_damage_rate.add_self(0.01, "stat_diff")
+                stats
+                    .critical_damage_rate
+                    .add_self(0.01, StatSource::StatDiff)
             }),
             damage_done as f64,
         );
         metrics.evo_damage_1percent_damage.add(
-            calculate_adjusted_damage(&|stats| stats.evolution_damage.add_self(0.01, "stat_diff")),
+            calculate_adjusted_damage(&|stats| {
+                stats.evolution_damage.add_self(0.01, StatSource::StatDiff)
+            }),
             damage_done as f64,
         );
         metrics.weapon_power_1000_damage.add(
-            calculate_adjusted_damage(&|stats| stats.weapon_power.add_self(1000.0, "stat_diff")),
+            calculate_adjusted_damage(&|stats| {
+                stats.weapon_power.add_self(1000.0, StatSource::StatDiff)
+            }),
             damage_done as f64,
         );
         metrics.weapon_power_1percent_damage.add(
-            calculate_adjusted_damage(&|stats| stats.weapon_dam_x.add_self(0.01, "stat_diff")),
+            calculate_adjusted_damage(&|stats| {
+                stats.weapon_dam_x.add_self(0.01, StatSource::StatDiff)
+            }),
             damage_done as f64,
         );
         metrics.attack_power_1000_damage.add(
             calculate_adjusted_damage(&|stats| {
-                stats.attack_power_addend_2.add_self(1000.0, "stat_diff")
+                stats
+                    .attack_power_addend_2
+                    .add_self(1000.0, StatSource::StatDiff)
             }),
             damage_done as f64,
         );
         metrics.attack_power_1percent_damage.add(
-            calculate_adjusted_damage(&|stats| stats.attack_power_rate.add_self(0.01, "stat_diff")),
+            calculate_adjusted_damage(&|stats| {
+                stats.attack_power_rate.add_self(0.01, StatSource::StatDiff)
+            }),
             damage_done as f64,
         );
         metrics.main_stat_1000_damage.add(
@@ -332,11 +350,11 @@ fn compute_hit_stat_damage_metrics(
                 let dex_self = stats.dex_stat.self_value();
                 let str_self = stats.str_stat.self_value();
                 if int_self >= dex_self && int_self >= str_self {
-                    stats.int_stat.add_self(1000.0, "stat_diff");
+                    stats.int_stat.add_self(1000.0, StatSource::StatDiff);
                 } else if dex_self >= int_self && dex_self >= str_self {
-                    stats.dex_stat.add_self(1000.0, "stat_diff");
+                    stats.dex_stat.add_self(1000.0, StatSource::StatDiff);
                 } else {
-                    stats.str_stat.add_self(1000.0, "stat_diff");
+                    stats.str_stat.add_self(1000.0, StatSource::StatDiff);
                 }
             }),
             damage_done as f64,
@@ -668,7 +686,9 @@ pub fn analyze_hit_rdps(
         && matches!(hit_option, HitOption::BACK_ATTACK)
         && is_directional_skill_any(skill_id, skill_id_real, runtime_data, 1)
     {
-        stats.critical_hit_rate.add_self(0.1, "back_attack");
+        stats
+            .critical_hit_rate
+            .add_self(0.1, StatSource::BackAttack);
     }
     let mut contributions = Vec::new();
     let attacker_stats_for_source_effects = stats.clone();
@@ -1033,10 +1053,7 @@ fn apply_owner_snapshot_self_buffs(
         ) else {
             continue;
         };
-        let buff_source = skill_buff
-            .name
-            .clone()
-            .unwrap_or_else(|| skill_buff.id.to_string());
+        let buff_source = StatSource::SkillBuff(skill_buff.id as u32);
 
         for option in &level_data.passive_options {
             match option.option_type.as_str() {
@@ -1047,21 +1064,21 @@ fn apply_owner_snapshot_self_buffs(
                         &option.key_stat,
                         value,
                         source_entity_id,
-                        &buff_source,
+                        buff_source.clone(),
                     );
                 }
                 "combat_effect" if option.key_index > 0 => {
                     stats.add_combat_effect_from_id(
                         option.key_index as u32,
                         source_entity_id,
-                        &buff_source,
+                        buff_source.clone(),
                     );
                 }
                 "attack_power_amplify_multiplier" => {
                     stats.add_attack_power_amplify_multiplier(
                         option.value as f64 / 10000.0,
                         source_entity_id,
-                        &buff_source,
+                        buff_source.clone(),
                     );
                 }
                 _ => apply_passive_addon_option(
@@ -1069,7 +1086,7 @@ fn apply_owner_snapshot_self_buffs(
                     option,
                     source_entity_id,
                     owner_entity.class_id,
-                    &buff_source,
+                    buff_source.clone(),
                     STAT_PRIORITY_DEFAULT,
                 ),
             }
@@ -1220,10 +1237,7 @@ fn append_source_contributions(
                 entity_tracker,
                 buffered_entities,
             );
-        let buff_source = skill_buff
-            .name
-            .clone()
-            .unwrap_or_else(|| skill_buff.id.to_string());
+        let buff_source = StatSource::SkillBuff(skill_buff.id as u32);
 
         for option in &level_data.passive_options {
             match option.option_type.as_str() {
@@ -1237,19 +1251,19 @@ fn append_source_contributions(
                     source_skill_id,
                     source_player_stats_ref,
                     is_attributable_source,
-                    &buff_source,
+                    buff_source.clone(),
                     source_priority,
                 )?,
                 "combat_effect" if option.key_index > 0 => stats.add_combat_effect_from_id(
                     option.key_index as u32,
                     source_entity_id,
-                    &buff_source,
+                    buff_source.clone(),
                 ),
                 "attack_power_amplify_multiplier" => stats
                     .add_attack_power_amplify_multiplier_with_priority(
                         option.value as f64 / 10000.0,
                         source_entity_id,
-                        &buff_source,
+                        buff_source.clone(),
                         source_priority,
                     ),
                 _ => apply_passive_addon_option(
@@ -1257,7 +1271,7 @@ fn append_source_contributions(
                     option,
                     source_entity_id,
                     attacker_class_id,
-                    &buff_source,
+                    buff_source.clone(),
                     source_priority,
                 ),
             }
@@ -1386,7 +1400,7 @@ fn apply_source_passive_stat(
     source_skill_id: u32,
     source_player_stats: Option<&PlayerStats>,
     is_attributable_source: bool,
-    buff_source: &str,
+    buff_source: StatSource,
     source_priority: i32,
 ) -> Result<(), RdpsInvalidReason> {
     let mut value = get_passive_option_stat_value(option, status_effect_id, source_player_stats);
@@ -1560,10 +1574,7 @@ fn append_target_contributions(
             attacker_character_id,
             attacker_stats,
         );
-        let buff_source = skill_buff
-            .name
-            .clone()
-            .unwrap_or_else(|| skill_buff.id.to_string());
+        let buff_source = StatSource::SkillBuff(skill_buff.id as u32);
         for option in &level_data.passive_options {
             apply_target_passive_option(option, damage_type, damage_attr, damage_multiplier);
             if is_dark_grenade
@@ -1572,7 +1583,7 @@ fn append_target_contributions(
                     attacker.id,
                     option,
                     damage_type,
-                    &buff_source,
+                    buff_source.clone(),
                     source_priority,
                 )
                 && factor > 0.0
@@ -1631,7 +1642,7 @@ fn append_target_contributions(
                             factor,
                             attacker.id,
                             source_entity_id,
-                            buff_source.clone(),
+                            buff_source,
                             source_priority,
                         );
                         if is_attributable_source && !is_self_source {
@@ -2111,7 +2122,7 @@ fn apply_dark_grenade_target_passive_stat(
     attacker_id: u64,
     option: &crate::models::PassiveOption,
     damage_type: u8,
-    buff_source: &str,
+    buff_source: StatSource,
     source_priority: i32,
 ) -> Option<f64> {
     if !option.option_type.eq_ignore_ascii_case("stat") {
@@ -2130,7 +2141,7 @@ fn apply_dark_grenade_target_passive_stat(
                 factor,
                 attacker_id,
                 DARK_GRENADE_ENTITY_ID,
-                buff_source.to_string(),
+                buff_source,
                 source_priority,
             );
             (damage_type == 0).then_some(factor)
@@ -2140,7 +2151,7 @@ fn apply_dark_grenade_target_passive_stat(
                 factor,
                 attacker_id,
                 DARK_GRENADE_ENTITY_ID,
-                buff_source.to_string(),
+                buff_source,
                 source_priority,
             );
             (damage_type != 0).then_some(factor)
@@ -2250,10 +2261,7 @@ fn apply_target_direct_stats(
     let Some(status_effect_values) = level_data.status_effect_values.as_ref() else {
         return;
     };
-    let buff_source = skill_buff
-        .name
-        .clone()
-        .unwrap_or_else(|| skill_buff.id.to_string());
+    let buff_source = StatSource::SkillBuff(skill_buff.id as u32);
 
     match skill_buff.buff_type.as_str() {
         "directional_attack_amplify" => {
@@ -2458,7 +2466,7 @@ fn apply_passive_addon_option(
     option: &crate::models::PassiveOption,
     source_entity_id: u64,
     owner_class_id: u32,
-    buff_source: &str,
+    buff_source: StatSource,
     source_priority: i32,
 ) {
     stats.add_external_addon_from_source_with_priority(
@@ -2561,7 +2569,7 @@ fn compute_skill_group_attributions(
                     continue;
                 }
                 sum_value += value.value;
-                mod_values.push((value.value, value.source.clone()));
+                mod_values.push((value.value, value.source.serialize()));
             }
             if sum_value == 0.0 {
                 continue;
@@ -3579,7 +3587,7 @@ mod tests {
             789,
             None,
             true,
-            "test",
+            StatSource::Test,
             STAT_PRIORITY_DEFAULT,
         );
 
@@ -3589,7 +3597,9 @@ mod tests {
     #[test]
     fn berserker_burst_passive_stat_scales_with_identity_2() {
         let mut owner_stats = PlayerStats::default();
-        owner_stats.spec_bonus_identity_2.add_self(0.5, "test");
+        owner_stats
+            .spec_bonus_identity_2
+            .add_self(0.5, StatSource::Test);
         let option = crate::models::PassiveOption {
             option_type: "stat".to_string(),
             key_stat: "critical_hit_rate".to_string(),
@@ -3618,7 +3628,14 @@ mod tests {
             value: 2500,
         };
 
-        apply_passive_addon_option(&mut stats, &option, 1, 0, "test", STAT_PRIORITY_DEFAULT);
+        apply_passive_addon_option(
+            &mut stats,
+            &option,
+            1,
+            0,
+            StatSource::Test,
+            STAT_PRIORITY_DEFAULT,
+        );
 
         assert_eq!(
             stats.skill_status_effect_multiplier.get(&123).copied(),
