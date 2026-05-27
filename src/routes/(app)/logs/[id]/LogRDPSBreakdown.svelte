@@ -215,66 +215,66 @@
     <div class="flex w-full items-center justify-center py-3">
       <div class="h-[370px] w-full" use:chartable={contributionPieOptions}></div>
     </div>
-    <div class="grid grid-cols-4 gap-4 px-4 py-2">
-      {#each contributionGroups as group}
-        {@const desc = statDataDescriptors[group.name]}
-        {@const pct = (group.total / player.damageStats.damageDealt) * 100}
-        <div class="flex flex-col gap-1">
-          <div class="flex flex-row justify-between gap-2">
-            <div class="flex min-w-0 flex-row items-center gap-1 text-sm font-semibold">
-              <span class="truncate">{typeof desc.title === "string" ? desc.title : desc.title(player.spec!)}</span>
-              <QuickTooltip>
-                <IconInfo class="size-4" />
-                {#snippet tooltip()}
-                  <div class="max-w-[300px]">
-                    {typeof desc.help === "string" ? desc.help : desc.help(player.spec!)}
-                  </div>
-                {/snippet}
-              </QuickTooltip>
-            </div>
-            <div class="text-sm font-medium">{pct.toFixed(1)}%</div>
-          </div>
-          <div class="flex flex-col gap-1 border-t border-neutral-600 pt-1">
-            {#each group.subgroups as subgroup}
-              {@render subgroupDetails(subgroup, group.subgroups.length > 1)}
-            {/each}
-          </div>
-        </div>
-      {/each}
-    </div>
+    <!--    <div class="grid grid-cols-4 gap-4 px-4 py-2">-->
+    <!--      {#each contributionGroups as group}-->
+    <!--        {@const desc = statDataDescriptors[group.name]}-->
+    <!--        {@const pct = (group.total / player.damageStats.damageDealt) * 100}-->
+    <!--        <div class="flex flex-col gap-1">-->
+    <!--          <div class="flex flex-row justify-between gap-2">-->
+    <!--            <div class="flex min-w-0 flex-row items-center gap-1 text-sm font-semibold">-->
+    <!--              <span class="truncate">{typeof desc.title === "string" ? desc.title : desc.title(player.spec!)}</span>-->
+    <!--              <QuickTooltip>-->
+    <!--                <IconInfo class="size-4" />-->
+    <!--                {#snippet tooltip()}-->
+    <!--                  <div class="max-w-[300px]">-->
+    <!--                    {typeof desc.help === "string" ? desc.help : desc.help(player.spec!)}-->
+    <!--                  </div>-->
+    <!--                {/snippet}-->
+    <!--              </QuickTooltip>-->
+    <!--            </div>-->
+    <!--            <div class="text-sm font-medium">{pct.toFixed(1)}%</div>-->
+    <!--          </div>-->
+    <!--          <div class="flex flex-col gap-1 border-t border-neutral-600 pt-1">-->
+    <!--            {#each group.subgroups as subgroup}-->
+    <!--              {@render subgroupDetails(subgroup, group.subgroups.length > 1)}-->
+    <!--            {/each}-->
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--      {/each}-->
+    <!--    </div>-->
   </div>
 </Card>
 
 <style lang="postcss">
-  .tree-item {
-    position: relative;
-    padding-left: 1.25rem;
-  }
+    .tree-item {
+        position: relative;
+        padding-left: 1.25rem;
+    }
 
-  /* The "branch": top-half vertical + horizontal arm */
-  .tree-item::before {
-    content: "";
-    position: absolute;
-    left: 6px;
-    top: 0;
-    width: 0.6rem;
-    height: 50%;
-    border-left: 1px solid #555;
-    border-bottom: 1px solid #555;
-  }
+    /* The "branch": top-half vertical + horizontal arm */
+    .tree-item::before {
+        content: "";
+        position: absolute;
+        left: 6px;
+        top: 0;
+        width: 0.6rem;
+        height: 50%;
+        border-left: 1px solid #555;
+        border-bottom: 1px solid #555;
+    }
 
-  /* The "trunk continuation" below the arm — skipped on last child */
-  .tree-item:not(:last-child)::after {
-    content: "";
-    position: absolute;
-    left: 6px;
-    top: 50%;
-    bottom: 0;
-    border-left: 1px solid #555;
-  }
+    /* The "trunk continuation" below the arm — skipped on last child */
+    .tree-item:not(:last-child)::after {
+        content: "";
+        position: absolute;
+        left: 6px;
+        top: 50%;
+        bottom: 0;
+        border-left: 1px solid #555;
+    }
 
-  /* Round the corner on the last one */
-  .tree-item:last-child::before {
-    border-bottom-left-radius: 0.3rem;
-  }
+    /* Round the corner on the last one */
+    .tree-item:last-child::before {
+        border-bottom-left-radius: 0.3rem;
+    }
 </style>
