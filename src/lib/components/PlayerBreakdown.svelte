@@ -5,7 +5,14 @@
   import { IconExternalLink, IconFileClock } from "$lib/icons";
   import { settings } from "$lib/stores.svelte.js";
   import { EntityType, type Entity } from "$lib/types";
-  import { abbreviateNumberSplit, customRound, isNameValid, isSupportSpec, LOA_BIBLE_URL, rgbLinearShadeAdjust } from "$lib/utils";
+  import {
+    abbreviateNumberSplit,
+    customRound,
+    isNameValid,
+    isSupportSpec,
+    LOA_BIBLE_URL,
+    rgbLinearShadeAdjust
+  } from "$lib/utils";
   import { openUrl } from "@tauri-apps/plugin-opener";
   import { flip } from "svelte/animate";
   import { unbuffedDamageTooltip, unbuffedDpsTooltip } from "./DamageMeterColumns.svelte";
@@ -73,7 +80,7 @@
         </div>
       </td>
       {#if entityState.isSupport}
-        {#if enc.curSettings.breakdown.unbuffedDamage && entityState.hasUdpsContributions}
+        {#if entityState.hasUdpsContributions}
           <td class="px-1 text-center">
             <QuickTooltip tooltip={entityState.totalDamageBuffed.toLocaleString()}>
               {entityState.totalDamageBuffedString[0]}<span class="text-xxs text-gray-300"
@@ -82,7 +89,7 @@
             </QuickTooltip>
           </td>
         {/if}
-        {#if enc.curSettings.breakdown.unbuffedDps && entityState.hasUdpsContributions}
+        {#if entityState.hasUdpsContributions}
           <td class="px-1 text-center">
             <QuickTooltip tooltip={entityState.totalDpsBuffed.toLocaleString()}>
               {entityState.totalDpsBuffedString[0]}<span class="text-xxs text-gray-300"
