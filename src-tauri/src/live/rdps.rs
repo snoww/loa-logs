@@ -2569,7 +2569,7 @@ fn compute_skill_group_attributions(
                     continue;
                 }
                 sum_value += value.value;
-                mod_values.push((value.value, value.source.serialize()));
+                mod_values.push((value.value, format!("$@{}", value.source.serialize())));
             }
             if sum_value == 0.0 {
                 continue;

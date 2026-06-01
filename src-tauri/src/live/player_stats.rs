@@ -73,10 +73,11 @@ pub enum OperationType {
     Multiplicative,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[repr(u8)]
 pub enum StatSource {
     /// Base crit stat, but also some clamping?
-    Base,
+    Base = 0,
     /// Stat directly from inspect data.
     Inspect,
     /// Stat derived from inspect?
@@ -111,36 +112,103 @@ pub enum StatSource {
     SkillBuff(u32),
     /// Sourced from an Ability
     Ability(u32),
+    /// Sourced from one stat being converted into another stat.
+    Composite {
+        converter: Box<StatSource>,
+        original: Box<StatSource>,
+    },
     /// Only used in unit tests.
     #[cfg(test)]
     Test,
 }
 
 impl StatSource {
-    /// Convert stat source to a string representation for use in the UI.
-    pub fn serialize(&self) -> String {
+    fn kind_rank(&self) -> u8 {
+        // safe because StatSource is #[repr(u8)]
+        unsafe { *<*const _>::from(self).cast::<u8>() }
+    }
+
+    /// Convert stat source to a JSON representation for use in the UI. Output format
+    /// is [rank, additional data...], where rank is determined by `kind_rank`
+    pub fn serialize(&self) -> serde_json::Value {
+        use serde_json::json;
+        let rank = self.kind_rank();
         match self {
-            StatSource::Base => "$$0".to_string(),
-            StatSource::Inspect => "$$1".to_string(),
-            StatSource::InspectStatDerived(stat_type) => format!("$$2::{:?}", stat_type),
-            StatSource::InspectDerived => "$$3".to_string(),
-            StatSource::InspectDeferred => "$$4".to_string(),
-            StatSource::Contribution => "$$5".to_string(),
-            StatSource::StatDiff => "$$6".to_string(),
-            StatSource::BackAttack => "$$7".to_string(),
-            StatSource::Roster => "$$8".to_string(),
-            StatSource::Pet => "$$9".to_string(),
-            StatSource::Skin => "$$10".to_string(),
-            StatSource::SkillTripods => "$$11".to_string(),
-            StatSource::BaseAP => "$$12".to_string(),
-            StatSource::AttackPowerBaseMultiplier => "$$13".to_string(),
-            StatSource::Clamp => "$$14".to_string(),
-            StatSource::AbilityFeature(feature) => format!("$$15::{}", feature),
-            StatSource::SkillBuff(buff_id) => format!("$$16::{}", buff_id),
-            StatSource::Ability(ability_id) => format!("$$17::{}", ability_id),
             #[cfg(test)]
-            StatSource::Test => "<TEST>".to_string(),
+            StatSource::Test => json!("<TEST>"),
+
+            // sources with additional data
+            StatSource::InspectStatDerived(stat_type) => json!([rank, *stat_type as u32]),
+            StatSource::AbilityFeature(feature) => json!([rank, feature]),
+            StatSource::SkillBuff(buff_id) => json!([rank, buff_id]),
+            StatSource::Ability(ability_id) => json!([rank, ability_id]),
+            StatSource::Composite {
+                converter,
+                original,
+            } => json!([rank, converter.serialize(), original.serialize()]),
+
+            // otherwise, just use rank
+            _ => json!([rank]),
         }
+    }
+}
+
+impl Ord for StatSource {
+    fn cmp(&self, other: &Self) -> Ordering {
+        // compare by rank first
+        let by_rank = self.kind_rank().cmp(&other.kind_rank());
+        if by_rank != Ordering::Equal {
+            return by_rank;
+        }
+
+        match (self, other) {
+            // composite+composite: sort by converter, then original
+            (
+                StatSource::Composite {
+                    converter: lhs_converter,
+                    original: lhs_original,
+                },
+                StatSource::Composite {
+                    converter: rhs_converter,
+                    original: rhs_original,
+                },
+            ) => lhs_converter
+                .cmp(rhs_converter)
+                .then_with(|| lhs_original.cmp(rhs_original)),
+
+            // composite+non-composite: composite sorts next to its converter
+            (
+                StatSource::Composite {
+                    converter,
+                    original: _,
+                },
+                _,
+            ) => converter.as_ref().cmp(other).then(Ordering::Greater),
+
+            // non-composite+composite: composite sorts next to its converter
+            (
+                _,
+                StatSource::Composite {
+                    converter,
+                    original: _,
+                },
+            ) => self.cmp(converter.as_ref()).then(Ordering::Less),
+
+            // other variants with additional data: sort by that data
+            (StatSource::InspectStatDerived(a), StatSource::InspectStatDerived(b)) => a.cmp(b),
+            (StatSource::AbilityFeature(a), StatSource::AbilityFeature(b)) => a.cmp(b),
+            (StatSource::SkillBuff(a), StatSource::SkillBuff(b)) => a.cmp(b),
+            (StatSource::Ability(a), StatSource::Ability(b)) => a.cmp(b),
+
+            // otherwise, truly equal
+            _ => Ordering::Equal,
+        }
+    }
+}
+
+impl PartialOrd for StatSource {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
     }
 }
 
@@ -2495,6 +2563,28 @@ impl PlayerStats {
         self.runtime_state.identity_runtime_reliable
     }
 
+    fn build_composite_source(converter: &StatSource, original: &StatSource) -> StatSource {
+        StatSource::Composite {
+            converter: Box::new(converter.clone()),
+            original: Box::new(original.clone()),
+        }
+    }
+
+    fn stat_data_value_chunk(
+        operation_type: OperationType,
+        accumulator: &mut f64,
+        value: f64,
+    ) -> f64 {
+        match operation_type {
+            OperationType::Additive => value,
+            OperationType::Multiplicative => {
+                let previous = *accumulator;
+                *accumulator *= 1.0 + value;
+                *accumulator - previous
+            }
+        }
+    }
+
     fn add_self_to_stat_with_function<F>(
         add_to_stat: &mut StatData,
         source_stat: &StatData,
@@ -2505,18 +2595,52 @@ impl PlayerStats {
     ) where
         F: FnMut(f64) -> f64,
     {
-        let mut to_add = source_stat.self_value().min(source_stat_max_to_add);
-        let mut stat_left_to_add = source_stat_max_to_add - to_add;
-        let mut added_value = calculate_stat_value_func(to_add).min(add_to_stat_max_to_add);
-        let mut added_value_left_to_add = add_to_stat_max_to_add - added_value;
-        add_to_stat.add_self(added_value, source.clone());
+        let mut stat_left_to_add = source_stat_max_to_add;
+        let mut added_value_left_to_add = add_to_stat_max_to_add;
+
+        let mut multiplicative_accumulator = 1.0;
+        for value in &source_stat.self_values {
+            if added_value_left_to_add <= 0.0 {
+                break;
+            }
+            let source_value = Self::stat_data_value_chunk(
+                source_stat.operation_type,
+                &mut multiplicative_accumulator,
+                value.value,
+            );
+            let to_add = source_value.min(stat_left_to_add);
+            stat_left_to_add -= to_add;
+            let added_value = calculate_stat_value_func(to_add).min(added_value_left_to_add);
+            added_value_left_to_add -= added_value;
+            add_to_stat.add_self(
+                added_value,
+                Self::build_composite_source(&source, &value.source),
+            );
+        }
 
         for modification in &source_stat.modified_values {
-            to_add = stat_left_to_add.min(modification.value(source_stat.operation_type));
-            stat_left_to_add -= to_add;
-            added_value = calculate_stat_value_func(to_add).min(added_value_left_to_add);
-            added_value_left_to_add -= added_value;
-            add_to_stat.add_self(added_value, source.clone());
+            if added_value_left_to_add <= 0.0 {
+                break;
+            }
+            multiplicative_accumulator = 1.0;
+            for value in &modification.values {
+                if added_value_left_to_add <= 0.0 {
+                    break;
+                }
+                let source_value = Self::stat_data_value_chunk(
+                    source_stat.operation_type,
+                    &mut multiplicative_accumulator,
+                    value.value,
+                );
+                let to_add = source_value.min(stat_left_to_add);
+                stat_left_to_add -= to_add;
+                let added_value = calculate_stat_value_func(to_add).min(added_value_left_to_add);
+                added_value_left_to_add -= added_value;
+                add_to_stat.add_self(
+                    added_value,
+                    Self::build_composite_source(&source, &value.source),
+                );
+            }
         }
     }
 
@@ -2614,33 +2738,53 @@ impl PlayerStats {
             }
         };
 
-        let self_value = source_stat.self_value().min(stat_left_to_add);
-        stat_left_to_add -= self_value;
-        apply_chunk(
-            self,
-            self_value,
-            self.owner_id,
-            source.clone(),
-            STAT_PRIORITY_DEFAULT,
-            &mut added_left,
-        );
+        let mut multiplicative_accumulator = 1.0;
+        for value in &source_stat.self_values {
+            if stat_left_to_add <= 0.0 || added_left <= 0.0 {
+                break;
+            }
+            let source_value = Self::stat_data_value_chunk(
+                source_stat.operation_type,
+                &mut multiplicative_accumulator,
+                value.value,
+            );
+            let to_add = source_value.min(stat_left_to_add);
+            stat_left_to_add -= to_add;
+            apply_chunk(
+                self,
+                to_add,
+                self.owner_id,
+                Self::build_composite_source(&source, &value.source),
+                STAT_PRIORITY_DEFAULT,
+                &mut added_left,
+            );
+        }
 
         for modification in &source_stat.modified_values {
             if stat_left_to_add <= 0.0 || added_left <= 0.0 {
                 break;
             }
-            let to_add = modification
-                .value(source_stat.operation_type)
-                .min(stat_left_to_add);
-            stat_left_to_add -= to_add;
-            apply_chunk(
-                self,
-                to_add,
-                modification.source_entity_id,
-                source.clone(),
-                modification.source_priority,
-                &mut added_left,
-            );
+            multiplicative_accumulator = 1.0;
+            for value in &modification.values {
+                if stat_left_to_add <= 0.0 || added_left <= 0.0 {
+                    break;
+                }
+                let source_value = Self::stat_data_value_chunk(
+                    source_stat.operation_type,
+                    &mut multiplicative_accumulator,
+                    value.value,
+                );
+                let to_add = source_value.min(stat_left_to_add);
+                stat_left_to_add -= to_add;
+                apply_chunk(
+                    self,
+                    to_add,
+                    modification.source_entity_id,
+                    Self::build_composite_source(&source, &value.source),
+                    modification.source_priority,
+                    &mut added_left,
+                );
+            }
         }
     }
 
@@ -2706,28 +2850,50 @@ impl PlayerStats {
             }
         };
 
-        apply_chunk(
-            self,
-            source_stat.self_value(),
-            self.owner_id,
-            source.clone(),
-            STAT_PRIORITY_DEFAULT,
-            &mut added_left,
-            &mut accumulator,
-        );
+        let mut multiplicative_accumulator = 1.0;
+        for value in &source_stat.self_values {
+            if added_left <= 0.0 {
+                break;
+            }
+            let source_value = Self::stat_data_value_chunk(
+                source_stat.operation_type,
+                &mut multiplicative_accumulator,
+                value.value,
+            );
+            apply_chunk(
+                self,
+                source_value,
+                self.owner_id,
+                Self::build_composite_source(&source, &value.source),
+                STAT_PRIORITY_DEFAULT,
+                &mut added_left,
+                &mut accumulator,
+            );
+        }
         for modification in &source_stat.modified_values {
             if added_left <= 0.0 {
                 break;
             }
-            apply_chunk(
-                self,
-                modification.value(source_stat.operation_type),
-                modification.source_entity_id,
-                source.clone(),
-                modification.source_priority,
-                &mut added_left,
-                &mut accumulator,
-            );
+            multiplicative_accumulator = 1.0;
+            for value in &modification.values {
+                if added_left <= 0.0 {
+                    break;
+                }
+                let source_value = Self::stat_data_value_chunk(
+                    source_stat.operation_type,
+                    &mut multiplicative_accumulator,
+                    value.value,
+                );
+                apply_chunk(
+                    self,
+                    source_value,
+                    modification.source_entity_id,
+                    Self::build_composite_source(&source, &value.source),
+                    modification.source_priority,
+                    &mut added_left,
+                    &mut accumulator,
+                );
+            }
         }
     }
 
