@@ -292,6 +292,8 @@ pub struct ContributionSplit {
     pub damage_done_without_crits: i64,
     pub damage_done_with_all_crits: i64,
     pub damage_done_with_average_crits: i64,
+    pub damage_done_from_crits: i64,
+    pub damage_done_variance: f64,
     pub critical_hit_rate_adjusted_damage_raw: i64,
     pub critical_hit_rate_adjusted_damage_raw_capped: i64,
     pub additional_damage_1percent_damage: StatDamageContribution,

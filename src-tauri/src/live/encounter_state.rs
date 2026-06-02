@@ -63,6 +63,8 @@ struct DamageDataAccumulator {
     damage_done_without_ultimate_awakening_: i64,
     damage_done_with_all_crits_: i64,
     damage_done_with_average_crits_: i64,
+    damage_done_from_crits_: i64,
+    damage_done_variance_: f64,
     critical_hit_rate_adjusted_damage_raw_: i64,
     critical_hit_rate_adjusted_damage_raw_capped_: i64,
     additional_damage_1percent_damage_: StatDamageContribution,
@@ -94,6 +96,8 @@ struct DamageDataDump {
     damage_done_without_crits_: i64,
     damage_done_with_all_crits_: i64,
     damage_done_with_average_crits_: i64,
+    damage_done_from_crits_: i64,
+    damage_done_variance_: f64,
     critical_hit_rate_adjusted_damage_raw_: i64,
     critical_hit_rate_adjusted_damage_raw_capped_: i64,
     damage_split_by_entity_id_: HashMap<u64, i64>,
@@ -1224,6 +1228,8 @@ impl EncounterState {
             source.damage_done_without_ultimate_awakening_;
         target.damage_done_with_all_crits_ += source.damage_done_with_all_crits_;
         target.damage_done_with_average_crits_ += source.damage_done_with_average_crits_;
+        target.damage_done_from_crits_ += source.damage_done_from_crits_;
+        target.damage_done_variance_ += source.damage_done_variance_;
         target.critical_hit_rate_adjusted_damage_raw_ +=
             source.critical_hit_rate_adjusted_damage_raw_;
         target.critical_hit_rate_adjusted_damage_raw_capped_ +=
@@ -1753,14 +1759,25 @@ impl EncounterState {
             } else {
                 (damage as f64 * crit_metrics.crit_damage_multiplier) as i64
             };
-            let damage_done_with_average_crits = (damage_done_without_crits as f64
+            let damage_done_with_expected_crits = (damage_done_without_crits as f64
                 + (damage_done_without_crits as f64
                     * crit_metrics.crit_rate_capped
                     * (crit_metrics.crit_damage_multiplier - 1.0)))
                 as i64;
+            let crit_bonus_damage =
+                damage_done_with_all_crits as f64 - damage_done_without_crits as f64;
+            let hit_variance = crit_bonus_damage.powi(2)
+                * crit_metrics.crit_rate_capped
+                * (1.0 - crit_metrics.crit_rate_capped);
             entry.damage_done_without_crits_ += damage_done_without_crits;
             entry.damage_done_with_all_crits_ += damage_done_with_all_crits;
-            entry.damage_done_with_average_crits_ += damage_done_with_average_crits;
+            entry.damage_done_with_average_crits_ += damage_done_with_expected_crits;
+            entry.damage_done_from_crits_ += if is_critical_hit {
+                crit_bonus_damage as i64
+            } else {
+                0
+            };
+            entry.damage_done_variance_ += hit_variance;
             entry.critical_hit_rate_adjusted_damage_raw_ +=
                 (damage_done_without_crits as f64 * crit_metrics.crit_rate_raw) as i64;
             entry.critical_hit_rate_adjusted_damage_raw_capped_ +=
@@ -2007,6 +2024,8 @@ impl EncounterState {
                     damage_done_without_crits,
                     damage_done_with_all_crits,
                     damage_done_with_average_crits,
+                    damage_done_from_crits,
+                    damage_done_variance,
                     critical_hit_rate_adjusted_damage_raw,
                     critical_hit_rate_adjusted_damage_raw_capped,
                     additional_damage_1percent_damage,
@@ -2031,6 +2050,8 @@ impl EncounterState {
                         acc.damage_done_without_crits_,
                         acc.damage_done_with_all_crits_,
                         acc.damage_done_with_average_crits_,
+                        acc.damage_done_from_crits_,
+                        acc.damage_done_variance_,
                         acc.critical_hit_rate_adjusted_damage_raw_,
                         acc.critical_hit_rate_adjusted_damage_raw_capped_,
                         acc.additional_damage_1percent_damage_,
@@ -2064,6 +2085,8 @@ impl EncounterState {
                         0,
                         0,
                         0,
+                        0,
+                        0.0,
                         0,
                         0,
                         StatDamageContribution::default(),
@@ -2100,6 +2123,8 @@ impl EncounterState {
                     damage_done_without_crits,
                     damage_done_with_all_crits,
                     damage_done_with_average_crits,
+                    damage_done_from_crits,
+                    damage_done_variance,
                     critical_hit_rate_adjusted_damage_raw,
                     critical_hit_rate_adjusted_damage_raw_capped,
                     additional_damage_1percent_damage,
@@ -2143,6 +2168,12 @@ impl EncounterState {
                 .unwrap_or_default();
             let damage_done_with_average_crits_ = accumulator
                 .map(|value| value.damage_done_with_average_crits_)
+                .unwrap_or_default();
+            let damage_done_from_crits_ = accumulator
+                .map(|value| value.damage_done_from_crits_)
+                .unwrap_or_default();
+            let damage_done_variance_ = accumulator
+                .map(|value| value.damage_done_variance_)
                 .unwrap_or_default();
             let critical_hit_rate_adjusted_damage_raw_ = accumulator
                 .map(|value| value.critical_hit_rate_adjusted_damage_raw_)
@@ -2225,6 +2256,8 @@ impl EncounterState {
                     damage_done_without_crits_,
                     damage_done_with_all_crits_,
                     damage_done_with_average_crits_,
+                    damage_done_from_crits_,
+                    damage_done_variance_,
                     critical_hit_rate_adjusted_damage_raw_,
                     critical_hit_rate_adjusted_damage_raw_capped_,
                     damage_split_by_entity_id_: accumulator

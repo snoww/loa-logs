@@ -108,6 +108,8 @@ export interface ContributionSplit {
   damageDoneWithoutCrits: number;
   damageDoneWithAllCrits: number;
   damageDoneWithAverageCrits: number;
+  damageDoneFromCrits?: number;
+  damageDoneVariance?: number;
   criticalHitRateAdjustedDamageRaw: number;
   criticalHitRateAdjustedDamageRawCapped: number;
   additionalDamage1percentDamage?: StatDamageContribution;
