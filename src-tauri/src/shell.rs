@@ -1,5 +1,5 @@
 use log::*;
-use sysinfo::{Pid, Process, ProcessRefreshKind, RefreshKind, System};
+use sysinfo::{Pid, Process, ProcessRefreshKind, RefreshKind, System, UpdateKind};
 use tauri::{AppHandle, Manager};
 use tauri_plugin_opener::OpenerExt;
 use tauri_plugin_shell::ShellExt;
@@ -29,7 +29,11 @@ fn has_nineveh_name(process: &Process) -> bool {
 /// Snapshot of the running processes, refreshed only for names/paths.
 fn process_snapshot() -> System {
     System::new_with_specifics(
-        RefreshKind::nothing().with_processes(ProcessRefreshKind::nothing().without_tasks()),
+        RefreshKind::nothing().with_processes(
+            ProcessRefreshKind::nothing()
+                .with_exe(UpdateKind::Always)
+                .without_tasks(),
+        ),
     )
 }
 

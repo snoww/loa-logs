@@ -265,8 +265,8 @@ fn apply_item(
             let bracer_data = &equippable.sub_p_k_t_ability_engrave_item_result_5_2_74;
             if bracer_data.b_0 != 0
                 && let Some(bracer) = bracer_data
-                .sub_p_k_t_ability_engrave_item_result_6_6_73
-                .as_ref()
+                    .sub_p_k_t_ability_engrave_item_result_6_6_73
+                    .as_ref()
             {
                 item_debug.bracer_line_count =
                     bracer.bytearraylist_0.len() + bracer.bytearraylist_1.len();
@@ -303,24 +303,24 @@ fn apply_item(
     }
 
     let mut bonus_mult = 1.0;
-    if advanced_honing_level > 0 && item_definition.item_amplification_base_id != 0 {
-        if let Some(level) = EXTERNAL_ITEM_AMPLIFICATION_BASE_DATA
+    if advanced_honing_level > 0
+        && item_definition.item_amplification_base_id != 0
+        && let Some(level) = EXTERNAL_ITEM_AMPLIFICATION_BASE_DATA
             .get(&item_definition.item_amplification_base_id)
             .and_then(|base| base.levels.get(&(advanced_honing_level as u32)))
-        {
-            bonus_mult += level.stage_bonus_stat_rate as f64 / 10000.0;
-        }
+    {
+        bonus_mult += level.stage_bonus_stat_rate as f64 / 10000.0;
     }
     item_debug.bonus_mult = bonus_mult;
 
     if item_definition.level_option_id != 0
         && apply_item_level_option(
-        item_definition.level_option_id,
-        resolved_balance_level.balance_level,
-        bonus_mult,
-        raw_stat_pairs,
-        derived,
-    )
+            item_definition.level_option_id,
+            resolved_balance_level.balance_level,
+            bonus_mult,
+            raw_stat_pairs,
+            derived,
+        )
     {
         if let Some(level_data) = get_item_level_option(
             item_definition.level_option_id,
@@ -978,7 +978,7 @@ fn resolve_item_balance_level(
     if item_definition.item_amplification_base_id != 0
         && advanced_honing_level > 0
         && let Some(item_amp_base) =
-        EXTERNAL_ITEM_AMPLIFICATION_BASE_DATA.get(&item_definition.item_amplification_base_id)
+            EXTERNAL_ITEM_AMPLIFICATION_BASE_DATA.get(&item_definition.item_amplification_base_id)
         && let Some(level) = item_amp_base.levels.get(&(advanced_honing_level as u32))
     {
         resolved.advanced_balance_level_delta = level.balance_level.max(0) as u32;
@@ -1252,7 +1252,7 @@ fn damage_attr_from_name(name: &str) -> Option<u8> {
     }
 }
 
-fn split_fixed_chunks(bytes: &[u8], chunk_len: usize) -> impl Iterator<Item=&[u8]> {
+fn split_fixed_chunks(bytes: &[u8], chunk_len: usize) -> impl Iterator<Item = &[u8]> {
     bytes
         .chunks_exact(chunk_len)
         .filter(|chunk| !chunk.iter().all(|value| *value == 0))
