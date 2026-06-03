@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.44.0-Nineveh Beta 23 - May 27th, 2026
+    v1.44.0-Nineveh Beta 24 - June 3rd, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -27,6 +27,5 @@ across all platforms, including Linux!
 
 #### BUG FIXES AND IMPROVEMENTS
 
-- wip for damage breakdown buff display (disabling detailed breakdown temporarily)
-- fixed skill cast details not showing all self/misc buffs
-- adjusted app and nineveh behavior for updates
+- some buff source fixing and stats for average crit luck (for future ui still wip)
+- fix support breakdown columns tied to udps settings
