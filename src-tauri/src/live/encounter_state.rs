@@ -1349,6 +1349,16 @@ impl EncounterState {
     // we set current boss if npc matches criteria
     pub fn on_new_npc(&mut self, entity: Entity, hp: i64, max_hp: i64) {
         let entity_name = entity.name.clone();
+
+        // set intermission end if boss is kazeros g2
+        if self.intermission_end.is_none()
+            && self.intermission_start.is_some()
+            && entity_name == "Death Incarnate Kazeros"
+        {
+            self.intermission_end = Some(Utc::now().timestamp_millis());
+            info!("ending intermission");
+        }
+
         self.encounter
             .entities
             .entry(entity_name.clone())
@@ -1392,15 +1402,6 @@ impl EncounterState {
             } else {
                 self.encounter.current_boss_name.clone()
             };
-
-            // set intermission end if boss is kazeros g2
-            if self.encounter.current_boss_name == "Death Incarnate Kazeros"
-                && self.intermission_start.is_some()
-                && self.intermission_end.is_none()
-            {
-                self.intermission_end = Some(Utc::now().timestamp_millis());
-                info!("ending intermission");
-            }
         }
     }
 
