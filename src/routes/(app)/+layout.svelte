@@ -57,7 +57,9 @@
 </script>
 
 <UpdateAvailable />
-<BetaWelcome />
+{#if settings.app.general.betaChannel}
+  <BetaWelcome />
+{/if}
 <Toaster />
 <div class="min-h-screen bg-neutral-900 select-none">
   {@render children?.()}

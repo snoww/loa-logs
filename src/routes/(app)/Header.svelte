@@ -63,7 +63,7 @@
 {#snippet route(name: string, path: string)}
   <a
     href={path}
-    class="hover:text-accent-500 rounded-md px-3 py-1 text-base"
+    class="rounded-md px-3 py-1 text-base hover:text-accent-500"
     class:bg-neutral-800={pathname.startsWith(path)}
   >
     {name}
@@ -71,15 +71,20 @@
 {/snippet}
 
 {#if $open}
-  <div use:melt={$portalled} class="select-none text-white {settings.app.general.accentColor}">
+  <div use:melt={$portalled} class="text-white select-none {settings.app.general.accentColor}">
     <div use:melt={$overlay} class="fixed inset-0 z-30 bg-neutral-950/50" transition:fade={{ duration: 100 }}></div>
     <div
       use:melt={$content}
-      class="fixed left-0 top-0 z-30 flex h-screen min-w-[15rem] flex-col bg-neutral-900 shadow-md"
+      class="fixed top-0 left-0 z-30 flex h-screen min-w-[15rem] flex-col bg-neutral-900 shadow-md"
       transition:fly={{ x: -240, duration: 100 }}
     >
       <div class="m-4 flex items-center">
-        <p class="text-xl font-semibold">LOA Logs <span class="text-accent-500 text-base font-normal">Beta</span></p>
+        <p class="text-xl font-semibold">
+          LOA Logs
+          {#if settings.app.general.betaChannel}
+            <span class="text-base font-normal text-accent-500">Beta</span>
+          {/if}
+        </p>
         <button use:melt={$close} class="ml-auto px-3 hover:opacity-60">
           <IconX class="size-7" />
         </button>
@@ -97,7 +102,7 @@
         <a
           href="https://ko-fi.com/synow"
           target="_blank"
-          class="hover:text-accent-500 flex items-center gap-2 rounded-md px-3 py-1"
+          class="flex items-center gap-2 rounded-md px-3 py-1 hover:text-accent-500"
         >
           <div>Donate</div>
           <IconExternalLink class="size-4" />
@@ -107,7 +112,7 @@
         <a
           href="https://discord.gg/RXvTMV2YHu"
           target="_blank"
-          class="hover:text-accent-500 flex items-center gap-2 rounded-md px-3 py-1"
+          class="flex items-center gap-2 rounded-md px-3 py-1 hover:text-accent-500"
         >
           <div>ramen shop</div>
           <IconDiscord class="size-4" />
@@ -144,7 +149,7 @@
       {/if}
       {#if !updateInfo.available}
         <button
-          class="group absolute bottom-3.5 right-4"
+          class="group absolute right-4 bottom-3.5"
           onclick={async () => {
             checking = true;
             const update = await checkForUpdate(settings.app.general.betaChannel);
@@ -158,7 +163,7 @@
         >
           <QuickTooltip tooltip="Check for updates">
             <IconRefresh
-              class="group-hover:text-accent-500/80 size-4 transform {checking
+              class="size-4 transform group-hover:text-accent-500/80 {checking
                 ? 'animate-[spin_1s_linear_infinite_reverse]'
                 : ''}"
             />
@@ -166,7 +171,7 @@
         </button>
       {:else}
         <button
-          class="group absolute bottom-3.5 right-4"
+          class="group absolute right-4 bottom-3.5"
           onclick={async () => {
             // emit update
             updateInfo.available = false;
@@ -174,7 +179,7 @@
           }}
         >
           <QuickTooltip tooltip="Update available">
-            <IconArrowUp class="group-hover:text-accent-500/70 text-accent-500/80 size-4 animate-bounce" />
+            <IconArrowUp class="size-4 animate-bounce text-accent-500/80 group-hover:text-accent-500/70" />
           </QuickTooltip>
         </button>
       {/if}

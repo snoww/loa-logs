@@ -1,8 +1,6 @@
 <script lang="ts">
   import {
-    BETA_MODAL_KEY,
     checkStartOnBoot,
-    installStableUpdate,
     relaunchApp,
     setAlwaysOnTop,
     setBlur,
@@ -12,10 +10,8 @@
   } from "$lib/api";
   import { addToast } from "$lib/components/Toaster.svelte";
   import { settings } from "$lib/stores.svelte";
-  import { checkForUpdate } from "$lib/utils";
   import { networkSettingsChanged } from "$lib/utils/toasts";
   import { createDialog, createRadioGroup, createSlider, melt } from "@melt-ui/svelte";
-  import { getVersion } from "@tauri-apps/api/app";
   import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
@@ -73,42 +69,6 @@
       }
     })();
   });
-
-  let prevBetaChannel = $state(settings.app.general.betaChannel);
-  $effect(() => {
-    let isBeta = settings.app.general.betaChannel;
-    if (!isBeta) {
-      localStorage.removeItem(BETA_MODAL_KEY);
-    }
-    if (isBeta !== prevBetaChannel) {
-      prevBetaChannel = isBeta;
-      checkForUpdate(isBeta);
-    }
-  });
-
-  const {
-    elements: {
-      portalled: optOutPortalled,
-      overlay: optOutOverlay,
-      content: optOutContent,
-      title: optOutTitle,
-      description: optOutDescription
-    },
-    states: { open: optOutOpen }
-  } = createDialog();
-
-  let installingStable = $state(false);
-
-  const {
-    elements: {
-      portalled: optInPortalled,
-      overlay: optInOverlay,
-      content: optInContent,
-      title: optInTitle,
-      description: optInDescription
-    },
-    states: { open: optInOpen }
-  } = createDialog();
 
   const {
     elements: {
@@ -431,29 +391,6 @@
           "Enable Experimental Features",
           "Enables experimental features that may not be fully complete or stable."
         )}
-        <div class="w-fit">
-          <label class="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={settings.app.general.betaChannel}
-              class="form-checkbox size-5 rounded-sm border-0 bg-neutral-700 checked:text-accent-600/80 focus:ring-0"
-              onclick={(e) => {
-                e.preventDefault();
-                if (settings.app.general.betaChannel) {
-                  $optOutOpen = true;
-                } else {
-                  $optInOpen = true;
-                }
-              }}
-            />
-            <div class="ml-5">
-              <div class="text-sm">Enable Beta Updates</div>
-              <div class="text-xs text-neutral-300">
-                Opt-in to beta updates. Test out new features before they are officially released.
-              </div>
-            </div>
-          </label>
-        </div>
         <div class="w-fit">
           <label class="flex items-center gap-2">
             <input
@@ -1118,90 +1055,6 @@
     </div>
   </div>
 </div>
-
-{#if $optInOpen}
-  <div use:melt={$optInPortalled}>
-    <div use:melt={$optInOverlay} class="fixed inset-0 z-50 bg-black/50" transition:fade={{ duration: 150 }}></div>
-    <div
-      class="fixed top-1/2 left-1/2 z-50 w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-neutral-800/40 p-6 shadow-lg drop-shadow-xl backdrop-blur-xl
-      {settings.app.general.accentColor} flex flex-col gap-4 text-white"
-      use:melt={$optInContent}
-    >
-      <h2 use:melt={$optInTitle} class="text-lg font-semibold">Switch to Beta Channel</h2>
-      <p use:melt={$optInDescription} class="text-sm text-neutral-300">
-        Your app will check for beta updates. You may test out new features before they are released.
-      </p>
-      <div class="flex justify-end gap-3">
-        <button
-          class="rounded-md bg-neutral-700 px-3 py-1.5 text-sm hover:bg-neutral-600 focus:ring-0"
-          onclick={() => {
-            $optInOpen = false;
-          }}
-        >
-          Cancel
-        </button>
-        <button
-          class="rounded-md bg-accent-500/70 px-3 py-1.5 text-sm hover:bg-accent-500/60 focus:ring-0"
-          onclick={async () => {
-            settings.app.general.betaChannel = true;
-            const hasUpdate = await checkForUpdate(true);
-            if (hasUpdate) {
-              await relaunchApp();
-            } else {
-              $optInOpen = false;
-            }
-          }}
-        >
-          Confirm
-        </button>
-      </div>
-    </div>
-  </div>
-{/if}
-
-{#if $optOutOpen}
-  <div use:melt={$optOutPortalled}>
-    <div use:melt={$optOutOverlay} class="fixed inset-0 z-50 bg-black/50" transition:fade={{ duration: 150 }}></div>
-    <div
-      class="fixed top-1/2 left-1/2 z-50 w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-neutral-800/40 p-6 shadow-lg drop-shadow-xl backdrop-blur-xl
-      {settings.app.general.accentColor} flex flex-col gap-4 text-white"
-      use:melt={$optOutContent}
-    >
-      <h2 use:melt={$optOutTitle} class="text-lg font-semibold">Switch to Stable Release</h2>
-      <p use:melt={$optOutDescription} class="text-sm text-neutral-300">
-        The latest stable release will be installed. You will no longer receive beta updates.
-      </p>
-      <div class="flex justify-end gap-3">
-        <button
-          class="rounded-md bg-neutral-700 px-3 py-1.5 text-sm hover:bg-neutral-600 focus:ring-0"
-          onclick={() => {
-            $optOutOpen = false;
-          }}
-        >
-          Cancel
-        </button>
-        <button
-          class="rounded-md bg-accent-500/70 px-3 py-1.5 text-sm hover:bg-accent-500/60 focus:ring-0 disabled:opacity-50"
-          disabled={installingStable}
-          onclick={async () => {
-            installingStable = true;
-            settings.app.general.betaChannel = false;
-            const currentVersion = await getVersion();
-            if (currentVersion.includes("-")) {
-              await installStableUpdate();
-              await relaunchApp();
-            } else {
-              installingStable = false;
-              $optOutOpen = false;
-            }
-          }}
-        >
-          {installingStable ? "Switching..." : "Confirm"}
-        </button>
-      </div>
-    </div>
-  </div>
-{/if}
 
 {#if $exitlagOpen}
   <div use:melt={$exitlagPortalled}>
