@@ -117,7 +117,8 @@ pub fn start(args: StartArgs) -> Result<()> {
         info!("no settings found, using defaults");
     }
 
-    get_and_set_region(&app, &mut state);
+    get_and_set_region(&app, &mut state, &mut ban_list);
+    ban_list.refresh();
 
     let mut party_freeze = false;
     let mut party_cache: Option<Vec<Vec<String>>> = None;
@@ -269,10 +270,12 @@ pub fn start(args: StartArgs) -> Result<()> {
                 if let Some(pkt) = packet.try_parse::<PKTDeathNotify>().unwrap()
                     && let Some(entity) = entity_tracker.entities.get(&pkt.target_id)
                 {
-                    debug_print(format_args!(
+                    debug_print!(
                         "death: {}, {}, {}",
-                        entity.name, entity.entity_type, entity.id
-                    ));
+                        entity.name,
+                        entity.entity_type,
+                        entity.id
+                    );
                     state.on_death(entity);
                 }
             }
@@ -315,6 +318,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                     state.raid_difficulty = "".to_string();
                     state.raid_difficulty_id = 0;
                     party_cache = None;
+                    get_and_set_region(&app, &mut state, &mut ban_list);
                     ban_list.refresh();
                     // clear banned if local player isn't on list
                     if !ban_list.is_banned(entity_tracker.local_character_id) {
@@ -324,7 +328,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                     let entity = entity_tracker.init_env(pkt);
                     state.on_init_env(entity);
                     state.disabled = banned;
-                    get_and_set_region(&app, &mut state);
                 }
             }
             PKTInitPC::OPCODE => {
@@ -391,14 +394,14 @@ pub fn start(args: StartArgs) -> Result<()> {
                 if let Some(pkt) = packet.try_parse::<PKTNewPC>().unwrap() {
                     let (hp, max_hp) = get_current_and_max_hp(&pkt.pc_struct.stat_pairs);
                     let entity = entity_tracker.new_pc(pkt.pc_struct);
-                    debug_print(format_args!(
+                    debug_print!(
                         "new PC: {}, {}, {}, eid: {}, cid: {}",
                         entity.name,
                         get_class_from_id(&entity.class_id),
                         entity.gear_level,
                         entity.id,
                         entity.character_id
-                    ));
+                    );
                     let rebound_gate_eligible = state.startup_barrier_active()
                         && entity_tracker
                             .is_bootstrap_party_inspect_eligible_player_entity(&entity);
@@ -430,14 +433,14 @@ pub fn start(args: StartArgs) -> Result<()> {
                 {
                     let (hp, max_hp) = get_current_and_max_hp(&pc_struct.stat_pairs);
                     let entity = entity_tracker.new_pc(pc_struct);
-                    debug_print(format_args!(
+                    debug_print!(
                         "new PC from vehicle: {}, {}, {}, eid: {}, cid: {}",
                         entity.name,
                         get_class_from_id(&entity.class_id),
                         entity.gear_level,
                         entity.id,
                         entity.character_id
-                    ));
+                    );
                     let rebound_gate_eligible = state.startup_barrier_active()
                         && entity_tracker
                             .is_bootstrap_party_inspect_eligible_player_entity(&entity);
@@ -467,10 +470,14 @@ pub fn start(args: StartArgs) -> Result<()> {
                 if let Some(pkt) = packet.try_parse::<PKTNewNpc>().unwrap() {
                     let (hp, max_hp) = get_current_and_max_hp(&pkt.npc_struct.stat_pairs);
                     let entity = entity_tracker.new_npc(pkt, max_hp);
-                    debug_print(format_args!(
+                    debug_print!(
                         "new {}: {}, eid: {}, id: {}, hp: {}",
-                        entity.entity_type, entity.name, entity.id, entity.npc_id, max_hp
-                    ));
+                        entity.entity_type,
+                        entity.name,
+                        entity.id,
+                        entity.npc_id,
+                        max_hp
+                    );
                     state.on_new_npc(entity, hp, max_hp);
                 }
             }
@@ -478,10 +485,14 @@ pub fn start(args: StartArgs) -> Result<()> {
                 if let Some(pkt) = packet.try_parse::<PKTNewNpcSummon>().unwrap() {
                     let (hp, max_hp) = get_current_and_max_hp(&pkt.npc_struct.stat_pairs);
                     let entity = entity_tracker.new_npc_summon(pkt, max_hp);
-                    debug_print(format_args!(
+                    debug_print!(
                         "new {}: {}, eid: {}, id: {}, hp: {}",
-                        entity.entity_type, entity.name, entity.id, entity.npc_id, max_hp
-                    ));
+                        entity.entity_type,
+                        entity.name,
+                        entity.id,
+                        entity.npc_id,
+                        max_hp
+                    );
                     let source_id = entity.id;
                     let owner_id = entity.owner_id;
                     state.on_new_npc(entity, hp, max_hp);
@@ -550,7 +561,7 @@ pub fn start(args: StartArgs) -> Result<()> {
             // }
             PKTRaidBegin::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTRaidBegin>().unwrap() {
-                    debug_print(format_args!("raid begin: {}", pkt.raid_id));
+                    debug_print!("raid begin: {}", pkt.raid_id);
                     match pkt.raid_id {
                         308226 | 308227 | 308239 | 308339 => {
                             state.raid_difficulty = "Trial".to_string();
@@ -751,9 +762,7 @@ pub fn start(args: StartArgs) -> Result<()> {
             // }
             PKTSkillDamageAbnormalMoveNotify::OPCODE => {
                 if Instant::now() - raid_end_cd < Duration::from_secs(10) {
-                    debug_print(format_args!(
-                        "ignoring damage - SkillDamageAbnormalMoveNotify"
-                    ));
+                    debug_print!("ignoring damage - SkillDamageAbnormalMoveNotify");
                     continue;
                 }
                 if let Some(pkt) = packet
@@ -829,7 +838,7 @@ pub fn start(args: StartArgs) -> Result<()> {
             PKTSkillDamageNotify::OPCODE => {
                 // use this to make sure damage packets are not tracked after a raid just wiped
                 if Instant::now() - raid_end_cd < Duration::from_secs(10) {
-                    debug_print(format_args!("ignoring damage - SkillDamageNotify"));
+                    debug_print!("ignoring damage - SkillDamageNotify");
                     continue;
                 }
                 if let Some(pkt) = packet.try_parse::<PKTSkillDamageNotify>().unwrap() {
@@ -1132,9 +1141,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                     } else {
                         state.on_phase_transition(3);
                     }
-                    debug_print(format_args!(
-                        "phase: 3 - resetting encounter - TriggerBossBattleStatus"
-                    ));
+                    debug_print!("phase: 3 - resetting encounter - TriggerBossBattleStatus");
                 }
             }
             PKTTriggerStartNotify::OPCODE => {
@@ -1185,7 +1192,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                             info!("phase: 4 - wipe - TriggerStartNotify");
                         }
                         27 | 10 | 11 => {
-                            // debug_print(format_args!("old udps sync time - {}", pkt.trigger_signal_type));
+                            // debug_print!("old udps sync time - {}", pkt.trigger_signal_type);
                         }
                         _ => {}
                     }
@@ -1206,8 +1213,8 @@ pub fn start(args: StartArgs) -> Result<()> {
                     {
                         continue;
                     }
-                    debug_print(format_args!("raid zone id: {}", &pkt.zone_id));
-                    debug_print(format_args!("raid zone level: {}", &pkt.zone_level));
+                    debug_print!("raid zone id: {}", &pkt.zone_id);
+                    debug_print!("raid zone level: {}", &pkt.zone_level);
                     state.set_lal_debug_zone(pkt.zone_id, Some(pkt.zone_level as u32));
                     match pkt.zone_level {
                         0 => {
@@ -1327,7 +1334,7 @@ pub fn start(args: StartArgs) -> Result<()> {
             }
             PKTNewTransit::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTNewTransit>().unwrap() {
-                    debug_print(format_args!("transit zone id: {}", pkt.zone_id));
+                    debug_print!("transit zone id: {}", pkt.zone_id);
                     state.set_lal_debug_zone(pkt.zone_id, None);
                     state.damage_is_valid = true;
                     damage_handler.update_zone_instance_id(pkt.zone_instance_id);
@@ -1611,18 +1618,12 @@ fn queue_missing_party_inspects(
     }
 }
 
-fn get_and_set_region(app: &AppHandle, state: &mut EncounterState) {
+fn get_and_set_region(app: &AppHandle, state: &mut EncounterState, ban_list: &mut BanList) {
     let ctx = app.state::<AppContext>();
     if let Ok(region) = ctx.region.read() {
         state.region = region.clone();
         state.encounter.region = region.clone();
-    }
-}
-
-pub fn debug_print(args: std::fmt::Arguments<'_>) {
-    #[cfg(debug_assertions)]
-    {
-        info!("{}", args);
+        ban_list.set_region(region.clone());
     }
 }
 

@@ -11,7 +11,7 @@ use crate::live::rdps::{
 use crate::live::skill_tracker::SkillTracker;
 use crate::live::status_tracker::{StatusEffectDetails, StatusTracker};
 use crate::live::utils::*;
-use crate::live::{DEBUG_DUMP_DAMAGE_STATE_JSON, debug_print, write_debug_json_dump};
+use crate::live::{DEBUG_DUMP_DAMAGE_STATE_JSON, write_debug_json_dump};
 use crate::models::*;
 use crate::utils::{
     get_class_from_id, get_player_spec, is_confirmed_player_entity, is_support_class,
@@ -3282,10 +3282,7 @@ impl EncounterState {
         };
 
         if is_battle_item && battle_item_name.contains("Dark") {
-            debug_print(format_args!(
-                "from: {}, hit: {}",
-                source_entity.name, battle_item_name
-            ))
+            debug_print!("from: {}, hit: {}", source_entity.name, battle_item_name)
         }
 
         source_entity.id = dmg_src_entity.id;
@@ -4508,9 +4505,9 @@ impl EncounterState {
         let intermission_start = self.intermission_start;
         let intermission_end = self.intermission_end;
 
-        // debug_print(format_args!("skill cast log:\n{}", serde_json::to_string(&skill_cast_log).unwrap()));
+        // debug_print!("skill cast log:\n{}", serde_json::to_string(&skill_cast_log).unwrap());
 
-        // debug_print(format_args!("rdps_data valid: [{}]", rdps_valid));
+        // debug_print!("rdps_data valid: [{}]", rdps_valid);
         info!(
             "saving to db - cleared: [{}], difficulty: [{}] {}",
             raid_clear, self.raid_difficulty, encounter.current_boss_name
