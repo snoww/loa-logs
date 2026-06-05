@@ -46,9 +46,11 @@ impl<'a> Migrator<'a> {
 
         migration_buff_summary(&tx)?;
 
-        migration_pseudo_rdps(&tx)?;
+        migration_legacy_udps(&tx)?;
 
         migration_boss_hp(&tx)?;
+
+        migration_rdps(&tx)?;
 
         stmt.finalize()?;
         info!("finished setting up database");
@@ -313,10 +315,10 @@ pub fn migration_buff_summary(tx: &Transaction) -> Result<(), rusqlite::Error> {
     stmt.finalize()
 }
 
-pub fn migration_pseudo_rdps(tx: &Transaction) -> Result<(), rusqlite::Error> {
+pub fn migration_legacy_udps(tx: &Transaction) -> Result<(), rusqlite::Error> {
     let mut stmt = tx.prepare("SELECT 1 FROM pragma_table_info(?) WHERE name=?")?;
     if !stmt.exists(["entity", "unbuffed_damage"])? {
-        info!("adding pseudo rdps columns");
+        info!("adding legacy udps columns");
         tx.execute(
             "ALTER TABLE entity ADD COLUMN unbuffed_damage INTEGER DEFAULT 0",
             [],
@@ -327,6 +329,27 @@ pub fn migration_pseudo_rdps(tx: &Transaction) -> Result<(), rusqlite::Error> {
         )?;
     }
 
+    stmt.finalize()
+}
+
+pub fn migration_rdps(tx: &Transaction) -> Result<(), rusqlite::Error> {
+    let mut stmt = tx.prepare("SELECT 1 FROM pragma_table_info(?) WHERE name=?")?;
+    if !stmt.exists(["entity", "rdps_damage_received"])? {
+        info!("adding rdps columns");
+        tx.execute_batch(
+            "ALTER TABLE entity ADD COLUMN rdps_damage_received INTEGER DEFAULT 0;
+             ALTER TABLE entity ADD COLUMN rdps_damage_received_support INTEGER DEFAULT 0;
+             ALTER TABLE entity ADD COLUMN rdps_damage_given INTEGER DEFAULT 0;
+             ALTER TABLE entity ADD COLUMN rdps INTEGER DEFAULT 0;
+             ALTER TABLE entity ADD COLUMN ndps INTEGER DEFAULT 0;
+             ALTER TABLE encounter_preview ADD COLUMN my_rdps INTEGER DEFAULT 0;
+             ALTER TABLE encounter_preview ADD COLUMN my_ndps INTEGER DEFAULT 0;",
+        )?;
+        tx.execute_batch(
+            "CREATE INDEX encounter_preview_my_rdps_index ON encounter_preview(my_rdps);
+             CREATE INDEX encounter_preview_my_ndps_index ON encounter_preview(my_ndps);",
+        )?;
+    }
     stmt.finalize()
 }
 

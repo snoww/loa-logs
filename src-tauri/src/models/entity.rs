@@ -23,6 +23,8 @@ pub enum EntityType {
     Projectile,
     #[serde(rename = "SUMMON")]
     Summon,
+    #[serde(rename = "DARK_GRENADE")]
+    DarkGrenade,
 }
 
 impl Display for EntityType {
@@ -37,6 +39,7 @@ impl Display for EntityType {
             EntityType::Esther => "ESTHER".to_string(),
             EntityType::Projectile => "PROJECTILE".to_string(),
             EntityType::Summon => "SUMMON".to_string(),
+            EntityType::DarkGrenade => "DARK_GRENADE".to_string(),
         };
         write!(f, "{}", str)
     }
@@ -54,6 +57,7 @@ impl FromStr for EntityType {
             "PLAYER" => Ok(EntityType::Player),
             "NPC" => Ok(EntityType::Npc),
             "ESTHER" => Ok(EntityType::Esther),
+            "DARK_GRENADE" => Ok(EntityType::DarkGrenade),
             _ => Ok(EntityType::Unknown),
         }
     }

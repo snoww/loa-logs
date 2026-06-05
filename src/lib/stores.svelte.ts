@@ -7,6 +7,7 @@ import { SvelteSet } from "svelte/reactivity";
 import { readable } from "svelte/store";
 import type { AppSettings } from "./settings";
 import { saveSettings } from "./api";
+import type { NinevehConnectionInfo } from "./types";
 
 /**
  * Merge settings from local storage into default settings.
@@ -124,7 +125,7 @@ class Settings {
   }
 }
 
-export type sortColumns = "id" | "my_dps" | "duration" | "unbuffed_dps";
+export type sortColumns = "id" | "my_dps" | "duration" | "my_ndps";
 export type sortOrder = "asc" | "desc";
 
 export class EncounterFilter {
@@ -195,7 +196,8 @@ export const defaultSettings: AppSettings = {
     miniEdit: true,
     autoShow: false,
     autoHideDelay: 5,
-    betaChannel: false
+    betaChannel: false,
+    exitlagCompat: false
   },
   shortcuts: {
     hideMeter: "Control+ArrowDown",
@@ -215,7 +217,11 @@ export const defaultSettings: AppSettings = {
     showClassColors: true,
     profileShortcut: false,
     damage: false,
+    ndmg: false,
+    rdmg: false,
     dps: true,
+    ndps: false,
+    rdps: false,
     unbuffedDamage: false,
     unbuffedDps: false,
     damagePercent: true,
@@ -233,10 +239,15 @@ export const defaultSettings: AppSettings = {
     percentBrand: true,
     percentHatBySup: true,
     supportContrib: false,
+    rdpsContrib: false,
     stagger: false,
     breakdown: {
       damage: true,
+      ndmg: false,
+      rdmg: false,
       dps: true,
+      ndps: false,
+      rdps: false,
       unbuffedDamage: false,
       unbuffedDps: false,
       damagePercent: true,
@@ -254,7 +265,8 @@ export const defaultSettings: AppSettings = {
       percentIdentityBySup: false,
       percentBrand: false,
       percentHatBySup: false,
-      supportContrib: false
+      supportContrib: false,
+      rdpsContrib: false
     }
   },
   mini: {
@@ -267,9 +279,13 @@ export const defaultSettings: AppSettings = {
     splitPartyBuffs: true,
     profileShortcut: true,
     damage: true,
+    ndmg: false,
+    rdmg: false,
     dps: true,
-    unbuffedDamage: true,
-    unbuffedDps: true,
+    ndps: true,
+    rdps: true,
+    unbuffedDamage: false,
+    unbuffedDps: false,
     damagePercent: true,
     deathTime: true,
     incapacitatedTime: true,
@@ -284,13 +300,18 @@ export const defaultSettings: AppSettings = {
     percentIdentityBySup: true,
     percentHatBySup: true,
     percentBrand: true,
-    supportContrib: true,
+    supportContrib: false,
+    rdpsContrib: true,
     stagger: true,
     breakdown: {
       damage: true,
+      ndmg: false,
+      rdmg: false,
       dps: true,
-      unbuffedDamage: true,
-      unbuffedDps: true,
+      ndps: true,
+      rdps: false,
+      unbuffedDamage: false,
+      unbuffedDps: false,
       damagePercent: true,
       critRate: true,
       adjustedCritRate: true,
@@ -307,7 +328,8 @@ export const defaultSettings: AppSettings = {
       percentIdentityBySup: false,
       percentBrand: false,
       percentHatBySup: false,
-      supportContrib: false
+      supportContrib: false,
+      rdpsContrib: false
     }
   },
   buffs: {
@@ -385,6 +407,10 @@ export class UpdateInfo {
   manifest: Update | { body?: string } | undefined = $state(undefined);
 }
 
+export class Nineveh {
+  connections: NinevehConnectionInfo[] = $state([]);
+}
+
 export const settings = new Settings();
 export const encounterFilter = new EncounterFilter();
 export const misc = new Misc();
@@ -405,6 +431,7 @@ export const screenshot = (() => {
   };
 })();
 export const updateInfo = new UpdateInfo();
+export const nineveh = new Nineveh();
 
 const md = new MarkdownIt({
   html: true

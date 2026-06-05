@@ -9,6 +9,7 @@
   import DamageTaken from "$lib/components/DamageTaken.svelte";
   import LogPlayerBreakdown from "$lib/components/PlayerBreakdown.svelte";
   import { EncounterState } from "$lib/encounter.svelte.js";
+  import { hasStatSources } from "$lib/rdps-breakdown";
   import { screenshot } from "$lib/stores.svelte.js";
   import { ChartType, type Encounter, type Entity, EntityType, MeterState, MeterTab } from "$lib/types";
   import {
@@ -29,6 +30,11 @@
   import LogQuickControls from "./LogQuickControls.svelte";
   import LogQuickSettings from "./LogQuickSettings.svelte";
   import LogScreenshotInfo from "./LogScreenshotInfo.svelte";
+  import LegacyLogRDPSBreakdown from "./LegacyLogRDPSBreakdown.svelte";
+  import LogRDPSBreakdown from "./LogRDPSBreakdown.svelte";
+  import LogRDPSConversionUtilization from "./LogRDPSConversionUtilization.svelte";
+  import LogRDPSCritLuck from "./LogRDPSCritLuck.svelte";
+  import LogRDPSStatUpgrades from "./LogRDPSStatUpgrades.svelte";
   import LogShields from "./LogShields.svelte";
   import LogSkillDetails from "./LogSkillDetails.svelte";
   import OpenerSkills from "./OpenerSkills.svelte";
@@ -306,6 +312,28 @@
       </div>
     </div>
   </Card>
+
+  <!-- RDPS sections -->
+  {#if player && player.entityType === EntityType.PLAYER && encounter.encounterDamageStats.misc!.contributionSplits}
+    {@const playerBreakdown = enc.contributionSplitByName.get(player.name)!}
+
+    {#if hasStatSources(playerBreakdown)}
+      <LogRDPSBreakdown {player} {enc} />
+    {:else}
+      <LegacyLogRDPSBreakdown {player} {enc} />
+    {/if}
+
+    {#if "damageDoneVariance" in playerBreakdown && playerBreakdown.damageDoneVariance! > 0}
+      <LogRDPSCritLuck split={playerBreakdown} />
+    {/if}
+
+    {#if "additionalDamage1percentDamage" in playerBreakdown}
+      <div class="grid grid-cols-2 gap-4">
+        <LogRDPSConversionUtilization split={playerBreakdown} />
+        <LogRDPSStatUpgrades split={playerBreakdown} {player} />
+      </div>
+    {/if}
+  {/if}
 
   <!-- Opener skills -->
   {#if chartType === ChartType.SKILL_LOG && player && player.entityType === EntityType.PLAYER}

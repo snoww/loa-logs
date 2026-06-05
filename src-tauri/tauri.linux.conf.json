@@ -2,8 +2,15 @@
   "$schema": "https://schema.tauri.app/config/2",
   "bundle": {
     "targets": [
-      "deb"
-    ]
+      "appimage"
+    ],
+    "linux": {
+      "appimage": {
+        "files": {
+          "/usr/bin/meter-data": "./meter-data"  
+        }
+      }
+    }
   },
   "identifier": "xyz.snow.loa-logs",
   "mainBinaryName": "loa-logs"

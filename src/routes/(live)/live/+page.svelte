@@ -2,7 +2,7 @@
   import LiveDamageMeter from "./LiveDamageMeter.svelte";
   import { addToast, removeToast } from "$lib/components/Toaster.svelte";
   import { EncounterState } from "$lib/encounter.svelte";
-  import { misc, settings } from "$lib/stores.svelte";
+  import { misc, nineveh, settings } from "$lib/stores.svelte";
   import { uploadLog } from "$lib/utils/sync";
   import {
     adminAlert,
@@ -20,18 +20,20 @@
   import { onMount } from "svelte";
   import {
     loadEncounter,
+    onEncounterUpdate,
+    onPartyUpdate,
+    onInvalidDamage,
+    onZoneChange,
+    onRaidStart,
+    onResetEncounter,
+    onPauseEncounter,
+    onSaveEncounter,
+    onPhaseTransition,
     onAdmin,
     onBannedEvent,
     onClearEncounter,
-    onEncounterUpdate,
-    onInvalidDamage,
-    onPartyUpdate,
-    onPauseEncounter,
-    onPhaseTransition,
-    onRaidStart,
-    onResetEncounter,
-    onSaveEncounter,
-    onZoneChange
+    onNinevehUpdate,
+    ninevehStateRequest
   } from "$lib/api";
   import type { UnlistenFn } from "@tauri-apps/api/event";
 
@@ -95,6 +97,7 @@
       misc.raidInProgress = false;
       misc.missingInfo = false;
       if (!event.payload) {
+        ninevehStateRequest();
         addToast(zoneChange);
         if (bannedToastId) {
           removeToast(bannedToastId);
@@ -171,12 +174,24 @@
     });
     handles.push(handle);
 
+    handle = await onNinevehUpdate((event) => {
+      nineveh.connections = event.payload;
+    });
+    handles.push(handle);
+
     return () => {
       for (const unlisten of handles) {
         unlisten();
       }
     };
   }
+
+  $effect(() => {
+    if (nineveh.connections.length === 0) {
+      const id = setInterval(() => ninevehStateRequest(), 3000);
+      return () => clearInterval(id);
+    }
+  });
 
   $effect(() => {
     if (enc.encounter && enc.encounter.fightStart) {

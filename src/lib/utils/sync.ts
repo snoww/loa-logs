@@ -1,3 +1,4 @@
+import { fetch } from "@tauri-apps/plugin-http";
 import { addToast } from "$lib/components/Toaster.svelte";
 import { raidGates } from "$lib/constants/encounters";
 import { settings } from "$lib/stores.svelte";

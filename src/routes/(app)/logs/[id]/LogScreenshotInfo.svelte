@@ -70,7 +70,7 @@
         {formatTimestampDate(encounter.fightStart)}
       </p>
     </div>
-    <div class="flex w-fit shrink-0 items-center gap-1 font-mono text-xs">
+    <div class="flex w-fit shrink-0 items-center gap-1 font-mono text-xs whitespace-nowrap">
       {#if !settings.app.general.hideLogo}
         <p>LOA Logs</p>
       {/if}
@@ -81,8 +81,8 @@
       {/await}
     </div>
   </div>
-  <div class="flex items-center">
-    <div class="flex items-baseline gap-1 text-neutral-300">
+  <div class="flex items-center whitespace-nowrap">
+    <div class="flex shrink-0 items-baseline gap-1 text-neutral-300">
       <div>Duration:</div>
       <div class="text-white">
         {timestampToMinutesAndSeconds(encounter.duration)}
@@ -96,7 +96,7 @@
 
     {@render middot()}
 
-    <div class="flex gap-1 text-neutral-300">
+    <div class="flex shrink-0 gap-1 text-neutral-300">
       <div>Total DMG:</div>
       {#if settings.app.logs.abbreviateHeader}
         <div class="text-white">
@@ -111,7 +111,7 @@
 
     {@render middot()}
 
-    <div class="flex gap-1 text-neutral-300">
+    <div class="flex shrink-0 gap-1 text-neutral-300">
       <div>Total DPS:</div>
       {#if settings.app.logs.abbreviateHeader}
         <div class="text-white">

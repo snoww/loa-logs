@@ -1,0 +1,294 @@
+use anyhow::Result;
+use nineveh_formats::ipc::{IPCClientToServerMessage, IPCServerToClientMessage};
+use rfd::{MessageButtons, MessageDialog, MessageLevel};
+use std::net::{IpAddr, Ipv4Addr, SocketAddr};
+use std::path::PathBuf;
+use std::sync::Arc;
+use tauri::{AppHandle, Emitter, Listener, Manager};
+use tokio::sync::Mutex;
+use tokio::{
+    sync::mpsc::{UnboundedReceiver, UnboundedSender},
+    task::JoinHandle,
+};
+
+use crate::constants::{NINEVEH_COMPAT_EXE_NAME, NINEVEH_EXE_NAME};
+use crate::context::AppContext;
+use crate::data::get_region_from_ip;
+use crate::shell::{ShellManager, find_nineveh_pid};
+
+mod ipc;
+
+const NINEVEH_ENDPOINT: SocketAddr = SocketAddr::new(IpAddr::V4(Ipv4Addr::LOCALHOST), 6971);
+
+fn error_and_exit(title: &str, description: &str) -> ! {
+    MessageDialog::new()
+        .set_title(title)
+        .set_description(description)
+        .set_level(MessageLevel::Error)
+        .set_buttons(MessageButtons::Ok)
+        .show();
+    std::process::exit(1);
+}
+
+/// Handle messages to/from Nineveh IPC server, update frontend about connection status, etc.
+/// The app_* channels are for forwarding messages to/from the Tauri app,
+/// while the conn_* channels are for communicating with the Nineveh IPC server. Packet messages
+/// are always forwarded to the app; connection lifecycle messages are handled here and then
+/// forwarded as well so the live meter can make injection decisions by port.
+async fn handle_nineveh_ipc_messages(
+    app: AppHandle,
+    mut app_rx: UnboundedReceiver<IPCClientToServerMessage>,
+    app_tx: UnboundedSender<IPCServerToClientMessage>,
+    conn_tx: UnboundedSender<IPCClientToServerMessage>,
+    mut conn_rx: UnboundedReceiver<IPCServerToClientMessage>,
+    mut conn_handle: JoinHandle<()>,
+) {
+    let active_connections = Arc::new(Mutex::new(Vec::new()));
+
+    let app_responder = app.clone();
+    let conns = active_connections.clone();
+    app.listen("nineveh-update-request", move |_event| {
+        let app_responder = app_responder.clone();
+        let conns = conns.clone();
+        // app events are emitted inside a spawned task, so we cannot use blocking_lock as
+        // tokio will (rightfully) panic if we try to block the event loop; kick off a new
+        // task where we can properly wait for the lock
+        tokio::spawn(async move {
+            // send current connection state to app when it boots
+            let conns = conns.lock().await.clone();
+            app_responder.emit("nineveh-update", &conns).unwrap();
+        });
+    });
+
+    loop {
+        tokio::select! {
+            // Handle connection closure
+            _ = &mut conn_handle => {
+                log::warn!("Nineveh IPC connection closed");
+                error_and_exit(
+                    "Backend Disconnected",
+                    "The process that LOA Logs uses to monitor game traffic has disconnected or crashed. Please restart LOA Logs.",
+                );
+            }
+
+            // Forward messages from app to Nineveh IPC connection
+            Some(message) = app_rx.recv() => {
+                let _ = conn_tx.send(message);
+            }
+
+            // Forward messages from Nineveh IPC connection to app
+            Some(message) = conn_rx.recv() => {
+                match &message {
+                    IPCServerToClientMessage::PacketReceived { .. } => {
+                        let _ = app_tx.send(message);
+                        continue;
+                    },
+                    IPCServerToClientMessage::HandshakeAck => {
+                        continue;
+                    },
+                    IPCServerToClientMessage::Connected { connections } => {
+                        let mut active_connections = active_connections.lock().await;
+                        active_connections.clear();
+                        active_connections.extend(connections.iter().cloned());
+                    },
+                    IPCServerToClientMessage::NewConnection { info } => {
+                        if let Some(region) = get_region_from_ip(info.remote_addr) {
+                            let ctx = app.state::<AppContext>();
+                            if let Ok(mut r) = ctx.region.write() {
+                                log::info!("region set to {}", region);
+                                *r = Some(region);
+                            }
+                        }
+                        let mut active_connections = active_connections.lock().await;
+                        active_connections.push(info.clone());
+                    },
+                    IPCServerToClientMessage::ConnectionClosed { id } => {
+                        let mut active_connections = active_connections.lock().await;
+                        active_connections.retain(|c| &c.id != id);
+                    },
+                };
+
+                let _ = app_tx.send(message.clone());
+
+                // send new connection state to app
+                let conns = active_connections.lock().await.clone();
+                app.emit("nineveh-update", &conns).unwrap();
+            }
+        }
+    }
+}
+
+pub type NinevehIPCPair = (
+    UnboundedSender<IPCClientToServerMessage>,
+    UnboundedReceiver<IPCServerToClientMessage>,
+);
+
+/// Pick the path to the nineveh binary to spawn. In compat mode we copy `nineveh.exe` to
+/// `LOSTARK.exe` next to the meter so that ExitLag's proxy works.
+/// Falls back to the plain `nineveh.exe` path if the copy fails
+#[cfg(windows)]
+fn resolve_nineveh_binary(app_dir: &std::path::Path, exitlag_compat: bool) -> PathBuf {
+    let source = app_dir.join(NINEVEH_EXE_NAME);
+    if !exitlag_compat {
+        return source;
+    }
+    let target = app_dir.join(NINEVEH_COMPAT_EXE_NAME);
+    let copy_needed = match (std::fs::metadata(&source), std::fs::metadata(&target)) {
+        (Ok(s), Ok(t)) => {
+            s.len() != t.len()
+                || match (s.modified(), t.modified()) {
+                    (Ok(sm), Ok(tm)) => sm > tm,
+                    _ => true,
+                }
+        }
+        (Ok(_), Err(_)) => true,
+        _ => false,
+    };
+    if copy_needed {
+        if let Err(e) = std::fs::copy(&source, &target) {
+            log::warn!(
+                "exitlag_compat: failed to copy {} -> {}: {e}; falling back to nineveh.exe",
+                source.display(),
+                target.display()
+            );
+            return source;
+        }
+        log::info!(
+            "exitlag_compat: copied {} -> {}",
+            source.display(),
+            target.display()
+        );
+    }
+    target
+}
+
+/// Attempt to connect to an existing Nineveh IPC server or start a new one if not found. Returns
+/// channels for receiving packet events from Nineveh and sending commands to it. Connections will
+/// be automatically managed and synchronized with the frontend.
+#[cfg(windows)]
+pub async fn setup_nineveh(app: AppHandle, exitlag_compat: bool) -> Result<NinevehIPCPair> {
+    let (from_tx, from_rx) = tokio::sync::mpsc::unbounded_channel();
+    let (to_tx, to_rx) = tokio::sync::mpsc::unbounded_channel();
+
+    let app_dir = app.state::<AppContext>().current_dir.clone();
+
+    // try to connect to existing server
+    if let Ok((rx, tx, handle)) = ipc::connect_to_nineveh(NINEVEH_ENDPOINT).await {
+        log::info!("Connected to existing Nineveh IPC server");
+        if let Some(pid) = find_nineveh_pid(&app_dir) {
+            app.state::<ShellManager>().set_nineveh_pid(pid.as_u32());
+        }
+        tokio::spawn(handle_nineveh_ipc_messages(
+            app, from_rx, to_tx, rx, tx, handle,
+        ));
+        return Ok((from_tx, to_rx));
+    }
+
+    // no existing server; check if there's a nineveh.exe running, in which case
+    // we'll want to exit as we can't kill the process ourselves (it's running as
+    // administrator), but clearly it's misbehaving if we can't connect to it.
+    // also checks lostark.exe if exitlag_compat is true
+    if find_nineveh_pid(&app_dir).is_some() {
+        log::error!(
+            "Nineveh process is already running but IPC connection could not be established."
+        );
+        let process_name = if exitlag_compat {
+            NINEVEH_COMPAT_EXE_NAME
+        } else {
+            NINEVEH_EXE_NAME
+        };
+        error_and_exit(
+            "Backend Unresponsive",
+            &format!(
+                "The process that LOA Logs uses to monitor game traffic is already running, but it is unresponsive. Please manually stop the '{process_name}' process inside the LOA Logs install folder, then restart LOA Logs."
+            ),
+        );
+    }
+
+    // pick which binary to spawn; when exitlag_compat is on we copy nineveh.exe to LOSTARK.exe
+    // so that ExitLag still works
+    let nineveh_path = resolve_nineveh_binary(&app_dir, exitlag_compat);
+
+    // start new nineveh process
+    log::info!(
+        "Starting Nineveh IPC server process: {}",
+        nineveh_path.display()
+    );
+    let mut command = tokio::process::Command::new(&nineveh_path);
+    command.arg("--ipc-port").arg("6971");
+
+    // forward standard output and error to our own process for logging
+    command.stdout(std::process::Stdio::inherit());
+    command.stderr(std::process::Stdio::inherit());
+
+    // suppress console window
+    command.creation_flags(0x08000000); // CREATE_NO_WINDOW
+
+    // launch command, then keep attempting to connect until either we have a success, or the
+    // child process exits.
+    let mut child = match command.spawn() {
+        Ok(c) => c,
+        Err(e) => {
+            log::error!("Failed to start Nineveh process: {}", e);
+            error_and_exit(
+                "Backend Failed to Start",
+                "The process that LOA Logs uses to monitor game traffic failed to start. Please ensure that your antivirus or security software is not blocking LOA Logs from running.",
+            );
+        }
+    };
+    if let Some(pid) = child.id() {
+        app.state::<ShellManager>().set_nineveh_pid(pid);
+    }
+    loop {
+        tokio::time::sleep(std::time::Duration::from_millis(500)).await;
+        match ipc::connect_to_nineveh(NINEVEH_ENDPOINT).await {
+            Ok((rx, tx, handle)) => {
+                log::info!("Connected to newly started Nineveh IPC server");
+                tokio::spawn(handle_nineveh_ipc_messages(
+                    app, from_rx, to_tx, rx, tx, handle,
+                ));
+                return Ok((from_tx, to_rx));
+            }
+            Err(e) => {
+                log::info!("Failed to connect to Nineveh IPC server: {}", e);
+            }
+        };
+
+        match child.try_wait()? {
+            Some(status) => {
+                log::error!(
+                    "Nineveh process exited unexpectedly with status: {}",
+                    status
+                );
+                error_and_exit(
+                    "Backend Failed to Start",
+                    r#"The process that LOA Logs uses to monitor game traffic failed to start. Please ensure that your antivirus or security software is not blocking LOA Logs from running."#,
+                );
+            }
+            None => {
+                // still running, continue trying
+            }
+        }
+    }
+}
+
+#[cfg(unix)]
+pub async fn setup_nineveh(app: AppHandle, _exitlag_compat: bool) -> Result<NinevehIPCPair> {
+    let (from_tx, from_rx) = tokio::sync::mpsc::unbounded_channel();
+    let (to_tx, to_rx) = tokio::sync::mpsc::unbounded_channel();
+
+    // try to connect to existing server
+    if let Ok((rx, tx, handle)) = ipc::connect_to_nineveh(NINEVEH_ENDPOINT).await {
+        log::info!("Connected to existing Nineveh IPC server");
+        tokio::spawn(handle_nineveh_ipc_messages(
+            app, from_rx, to_tx, rx, tx, handle,
+        ));
+        return Ok((from_tx, to_rx));
+    }
+
+    // no existing server or froze, tell user to spawn one
+    error_and_exit(
+        "Backend Not Found",
+        "Could not connect to a running `nineveh` instance. Make sure that the Nineveh binary is running and responsive.",
+    )
+}

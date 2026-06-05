@@ -1,0 +1,110 @@
+use std::collections::BTreeSet;
+use std::net::SocketAddr;
+
+use anyhow::{Result, anyhow};
+use log::error;
+use meter_defs::GamePacket;
+use meter_defs::defs::{
+    PKTDamageEncryptionKeyRequest, PKTDamageEncryptionKeyResult, PKTPCInspectResult,
+};
+use nineveh_formats::ipc::{
+    IPCClientToServerMessage, IPCServerToClientMessage, PacketFilter, PacketSubscription,
+};
+use tokio::{
+    sync::mpsc::{UnboundedReceiver, UnboundedSender},
+    task::JoinHandle,
+};
+
+/// Attempt to connect to the IPC server at the given address, and do an initial
+/// handshake. If successful, returns a tuple containing the packet read and write halves,
+/// as well as a join handle for the read loop task. The returned join handle will finish
+/// when the connection is closed or an error occurs.
+pub async fn connect_to_nineveh(
+    endpoint: SocketAddr,
+) -> Result<(
+    UnboundedSender<IPCClientToServerMessage>,
+    UnboundedReceiver<IPCServerToClientMessage>,
+    JoinHandle<()>,
+)> {
+    let socket = tokio::net::TcpSocket::new_v4()?;
+    let stream = socket.connect(endpoint).await?;
+    let (mut read_half, mut write_half) = stream.into_split();
+
+    // Send handshake message
+    let handshake_msg = IPCClientToServerMessage::Handshake {
+        subscription: PacketSubscription {
+            notify: PacketFilter::ALL,
+            modify: PacketFilter::Include(BTreeSet::from([
+                PKTDamageEncryptionKeyRequest::OPCODE,
+                PKTDamageEncryptionKeyResult::OPCODE,
+                PKTPCInspectResult::OPCODE,
+            ])),
+        },
+    };
+    nineveh_formats::io::write(&mut write_half, &handshake_msg).await?;
+
+    // Await handshake response, expect it within a timeout
+    match tokio::time::timeout(
+        std::time::Duration::from_secs(5),
+        nineveh_formats::io::read(&mut read_half),
+    )
+    .await
+    {
+        Ok(Ok(IPCServerToClientMessage::HandshakeAck {})) => {
+            // Handshake successful
+        }
+        Ok(Ok(_)) => {
+            return Err(anyhow!("Unexpected message during handshake"));
+        }
+        Ok(Err(e)) => {
+            return Err(anyhow!("Failed to read handshake response: {}", e));
+        }
+        Err(_) => {
+            return Err(anyhow!("Handshake response timed out"));
+        }
+    };
+
+    let (incoming_tx, incoming_rx) = tokio::sync::mpsc::unbounded_channel();
+    let (outgoing_tx, mut outgoing_rx) = tokio::sync::mpsc::unbounded_channel();
+
+    let recv_handle = tokio::spawn(async move {
+        loop {
+            let result = nineveh_formats::io::read(&mut read_half).await;
+
+            match result {
+                Ok(msg) => {
+                    if incoming_tx.send(msg).is_err() {
+                        error!("Failed to send incoming message to channel");
+                        break;
+                    }
+                }
+                Err(e) => {
+                    error!("Error reading IPC message: {}", e);
+                    break;
+                }
+            }
+        }
+    });
+
+    let send_handle = tokio::spawn(async move {
+        while let Some(msg) = outgoing_rx.recv().await {
+            if let Err(e) = nineveh_formats::io::write(&mut write_half, &msg).await {
+                error!("Error writing IPC message: {}", e);
+                break;
+            }
+        }
+    });
+
+    let handle = tokio::spawn(async move {
+        tokio::select! {
+            _ = recv_handle => {
+                log::info!("Receive loop ended, closing connection");
+            }
+            _ = send_handle => {
+                log::info!("Send loop ended, closing connection");
+            }
+        }
+    });
+
+    Ok((outgoing_tx, incoming_rx, handle))
+}

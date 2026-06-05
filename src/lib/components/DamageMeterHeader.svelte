@@ -6,7 +6,8 @@
   let { enc, sortable = true }: { enc: EncounterState; sortable?: boolean } = $props();
 
   const columnSortMap: Record<string, PlayerSort> = {
-    DMG: "damage",
+    DPS: "dps",
+    nDPS: "ndps",
     rDPS: "rdps",
     STAG: "stagger"
   };

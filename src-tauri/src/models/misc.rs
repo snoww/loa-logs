@@ -27,6 +27,8 @@ pub struct EncounterPreview {
     pub support_identity: Option<f32>,
     pub support_hyper: Option<f32>,
     pub udps: Option<i64>,
+    pub my_rdps: Option<i64>,
+    pub my_ndps: Option<i64>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]

@@ -15,14 +15,15 @@
       "meter-data/*.json"
     ],
     "icon": [
-      "icons/icon.ico"
+      "icons/icon.ico",
+      "icons/icon.png"
     ],
     "longDescription": "LOA Logs - Modern DPS Meter for Lost Ark written in Rust.",
     "shortDescription": "LOA Logs",
     "licenseFile": "../LICENSE"
   },
   "productName": "LOA Logs",
-  "version": "1.43.1",
+  "version": "1.44.0-nineveh.beta.25",
   "identifier": "xyz.snow",
   "plugins": {
     "updater": {
@@ -55,7 +56,7 @@
       },
       {
         "label": "logs",
-        "title": "LOA Logs",
+        "title": "LOA Logs Beta",
         "userAgent": "LOA Logs App",
         "url": "logs",
         "minWidth": 650,

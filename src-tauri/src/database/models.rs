@@ -30,9 +30,11 @@ pub struct InsertEncounterArgs {
     pub meter_version: String,
     pub ntp_fight_start: i64,
     pub rdps_valid: bool,
+    pub rdps_message: Option<String>,
     pub manual: bool,
     pub skill_cast_log: HashMap<u64, HashMap<u32, BTreeMap<i64, SkillCast>>>,
     pub skill_cooldowns: HashMap<u32, Vec<CastEvent>>,
     pub intermission_start: Option<i64>,
     pub intermission_end: Option<i64>,
+    pub contribution_splits: Vec<ContributionSplit>,
 }

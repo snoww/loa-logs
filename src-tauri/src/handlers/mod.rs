@@ -48,6 +48,8 @@ pub fn generate_handlers() -> Box<dyn Fn(Invoke) -> bool + Send + Sync> {
         set_start_on_boot,
         check_loa_running,
         start_loa_process,
+        check_nineveh_running,
+        stop_nineveh,
         get_sync_candidates,
         sync,
         remove_driver,
@@ -404,6 +406,16 @@ pub fn start_loa_process(shell_manager: State<ShellManager>) {
 }
 
 #[command]
+pub fn check_nineveh_running(shell_manager: State<ShellManager>) -> bool {
+    shell_manager.check_nineveh_running()
+}
+
+#[command]
+pub fn stop_nineveh(shell_manager: State<ShellManager>) {
+    shell_manager.kill_nineveh_process();
+}
+
+#[command]
 pub fn write_log(message: String) {
     info!("{}", message);
 }
@@ -445,6 +457,7 @@ pub async fn install_beta_update(app_handle: AppHandle) -> Result<()> {
     #[cfg(not(debug_assertions))]
     if let Some(update) = updater.check().await.map_err(anyhow::Error::new)? {
         info!("installing beta update: v{}", update.version);
+        shell_manager.unload_driver().await;
         shell_manager.remove_driver().await;
         update
             .download_and_install(|_, _| {}, || {})
@@ -467,6 +480,7 @@ pub async fn install_stable_update(app_handle: AppHandle) -> Result<()> {
     #[cfg(not(debug_assertions))]
     if let Some(update) = updater.check().await.map_err(anyhow::Error::new)? {
         info!("installing stable update: v{}", update.version);
+        shell_manager.unload_driver().await;
         shell_manager.remove_driver().await;
         update
             .download_and_install(|_, _| {}, || {})

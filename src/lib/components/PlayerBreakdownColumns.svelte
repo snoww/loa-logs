@@ -3,7 +3,7 @@
   import { EntityState } from "$lib/entity.svelte.js";
   import { SkillState } from "$lib/skill.svelte.js";
   import { settings } from "$lib/stores.svelte.js";
-  import { abbreviateNumber, abbreviateNumberSplit, customRound } from "$lib/utils";
+  import { abbreviateNumber, abbreviateNumberSplit, customRound, isSupportSpec } from "$lib/utils";
   import { hyperAwakeningIds } from "$lib/utils/buffs";
   import { damageValue, percentValue } from "./Snippets.svelte";
 
@@ -38,11 +38,23 @@
       supportPriority: 7
     },
 
+    // Neutral damage
+    {
+      show(enc) {
+        if (isSupportSpec(enc.entity.spec)) return false;
+        if (!enc.encounter.curSettings.breakdown.ndps) return false;
+        return enc.encounter.anyRdpsContributions;
+      },
+      headerText: "nDMG",
+      headerTooltip: "Neutral Damage (self damage with incoming buffs removed)",
+      value: ndmg,
+      valueTooltip: ndmgTooltip
+    },
+
     // Buffed damage (support's view)
     {
       show(enc) {
-        if (!enc.encounter.curSettings.breakdown.unbuffedDamage) return false;
-        return enc.hasRdpsContributions;
+        return enc.hasUdpsContributions;
       },
       headerText: "bDMG",
       headerTooltip: "Total Damage Buffed",
@@ -76,11 +88,23 @@
       supportPriority: 8
     },
 
+    // Neutral DPS
+    {
+      show(enc) {
+        if (isSupportSpec(enc.entity.spec)) return false;
+        if (!enc.encounter.curSettings.breakdown.ndps) return false;
+        return enc.encounter.anyRdpsContributions;
+      },
+      headerText: "nDPS",
+      headerTooltip: "Neutral Damage per second (self damage with incoming buffs removed)",
+      value: ndps,
+      valueTooltip: ndpsTooltip
+    },
+
     // Buffed dps (support's view)
     {
       show(enc) {
-        if (!enc.encounter.curSettings.breakdown.unbuffedDps) return false;
-        return enc.hasRdpsContributions;
+        return enc.hasUdpsContributions;
       },
       headerText: "bDPS",
       headerTooltip: "Damage Per Second Buffed",
@@ -105,7 +129,7 @@
     {
       show(enc) {
         if (!enc.encounter.curSettings.breakdown.unbuffedDamage) return false;
-        return enc.hasRdpsContributions;
+        return enc.hasUdpsContributions;
       },
       headerText: "bD%",
       headerTooltip: "Percentage of Total Buffed",
@@ -694,4 +718,36 @@
   {:else}
     N/A
   {/if}
+{/snippet}
+
+{#snippet ndmg(state: SkillState)}
+  {#if state.skill.rdpsDamageReceived > 0}
+    {@render damageValue(state.skillNdmgString)}
+  {:else}
+    -
+  {/if}
+{/snippet}
+
+{#snippet ndmgTooltip(state: SkillState)}
+  {#if state.skill.rdpsDamageReceived > 0}
+    {@const received = state.skill.rdpsDamageReceived}
+    <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
+      <span class="text-gray-300">Neutral: {state.skillNdmg.toLocaleString()}</span>
+      <span class="text-gray-300">rDPS received: {received.toLocaleString()}</span>
+    </div>
+  {:else}
+    N/A
+  {/if}
+{/snippet}
+
+{#snippet ndps(state: SkillState)}
+  {#if state.skill.rdpsDamageReceived > 0}
+    {@render damageValue(state.skillNdpsString)}
+  {:else}
+    -
+  {/if}
+{/snippet}
+
+{#snippet ndpsTooltip(state: SkillState)}
+  {state.skill.rdpsDamageReceived > 0 ? state.skillNdps.toLocaleString() : "N/A"}
 {/snippet}

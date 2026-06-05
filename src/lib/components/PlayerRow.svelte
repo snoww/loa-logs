@@ -4,10 +4,11 @@
   import type { EncounterState } from "$lib/encounter.svelte.js";
   import { EntityState } from "$lib/entity.svelte.js";
   import { IconExternalLink, IconFileClock } from "$lib/icons";
-  import { settings } from "$lib/stores.svelte.js";
+  import { screenshot, settings } from "$lib/stores.svelte.js";
   import { EntityType, type Entity } from "$lib/types";
   import { getClassIcon, isNameValid, LOA_BIBLE_URL } from "$lib/utils";
   import { openUrl } from "@tauri-apps/plugin-opener";
+  import { tick } from "svelte";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
   import { logColumns } from "./DamageMeterColumns.svelte";
@@ -47,6 +48,10 @@
     <QuickTooltip tooltip={entityState.name}>
       <img class="table-cell size-5" src={getClassIcon(estherNameToIcon[entityState.name])} alt={entityState.name} />
     </QuickTooltip>
+  {:else if entity.entityType === EntityType.DARK_GRENADE}
+    <QuickTooltip tooltip={entityState.name}>
+      <img class="table-cell size-5" src="/images/skills/battle_item_01_47.png" alt={entityState.name} />
+    </QuickTooltip>
   {:else}
     <ClassTooltip {entity} />
   {/if}
@@ -55,9 +60,13 @@
 <td colspan="2" onmouseenter={() => (hovering = true)} onmouseleave={() => (hovering = false)}>
   <div class="flex gap-1">
     <div class="truncate">
-      <ArkPassiveTooltip state={entityState} />
+      {#if entity.entityType === EntityType.DARK_GRENADE}
+        {entityState.name}
+      {:else}
+        <ArkPassiveTooltip state={entityState} />
+      {/if}
     </div>
-    {#if (enc.live && settings.app.meter.profileShortcut) || (!enc.live && isNameValid(entityState.entity.name) && hovering && entityState.entity.entityType === EntityType.PLAYER)}
+    {#if !screenshot.state && ((enc.live && settings.app.meter.profileShortcut) || (!enc.live && isNameValid(entityState.entity.name) && hovering && entityState.entity.entityType === EntityType.PLAYER))}
       <button
         class="shrink-0"
         title="View Character Profile"
@@ -69,7 +78,7 @@
         <IconExternalLink class="size-3" />
       </button>
     {/if}
-    {#if entityState.entity.loadoutHash && hovering}
+    {#if !screenshot.state && entityState.entity.loadoutHash && hovering}
       <button
         class="shrink-0 tracking-tighter hover:underline"
         title="View Loadout Snapshot"
@@ -88,9 +97,11 @@
   {#if columnDef.show(enc)}
     {@const isActiveSort =
       sortable &&
-      ((enc.playerSort === "damage" && columnDef.headerText === "DMG") ||
+      ((enc.playerSort === "dps" && columnDef.headerText === "DPS") ||
+        (enc.playerSort === "ndps" && columnDef.headerText === "nDPS") ||
         (enc.playerSort === "rdps" && columnDef.headerText === "rDPS") ||
         (enc.playerSort === "stagger" && columnDef.headerText === "STAG"))}
+    {@const isDarkGrenade = entity.entityType === EntityType.DARK_GRENADE}
     <td class="cursor-default px-1 text-center {isActiveSort ? 'bg-white/3' : ''}">
       {#snippet tooltip()}
         {#if columnDef.valueTooltip}
@@ -98,9 +109,13 @@
         {/if}
       {/snippet}
 
-      <QuickTooltip tooltip={columnDef.valueTooltip ? tooltip : null}>
-        {@render columnDef.value(entityState)}
-      </QuickTooltip>
+      {#if isDarkGrenade && columnDef.headerText !== "rDPS"}
+        -
+      {:else}
+        <QuickTooltip tooltip={columnDef.valueTooltip ? tooltip : null}>
+          {@render columnDef.value(entityState)}
+        </QuickTooltip>
+      {/if}
     </td>
   {/if}
 {/each}

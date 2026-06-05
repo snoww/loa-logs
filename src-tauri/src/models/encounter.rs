@@ -121,15 +121,25 @@ pub struct DamageStats {
     #[serde(default)]
     pub dps_rolling_10s_avg: Vec<i64>,
     #[serde(default)]
+    pub rdps_damage_received: i64,
+    #[serde(default)]
+    pub rdps_damage_received_support: i64,
+    #[serde(default)]
+    pub rdps_damage_given: i64,
+    #[serde(default)]
     pub incapacitations: Vec<IncapacitatedEvent>,
     #[serde(default)]
     pub stagger: i64,
     #[serde(skip)]
-    pub buffed_damage: i64, // amount of damage buffed by supports, used to tally unbuffed damage
+    pub buffed_damage: i64, // legacy uDPS-only buffed damage from PKTCombatAnalyzerNotify
     #[serde(default)]
-    pub unbuffed_damage: i64,
+    pub unbuffed_damage: i64, // legacy uDPS-only unbuffed damage derived from analyzer packets
     #[serde(default)]
-    pub unbuffed_dps: i64,
+    pub unbuffed_dps: i64, // legacy uDPS-only unbuffed dps derived from analyzer packets
+    #[serde(default)]
+    pub rdps: i64,
+    #[serde(default)]
+    pub ndps: i64,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
@@ -152,7 +162,7 @@ pub struct SkillStats {
     pub identity_stats: Option<String>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct DamageData {
     pub skill_id: u32,
     pub skill_effect_id: u32,
@@ -244,6 +254,61 @@ pub struct EncounterMisc {
     pub intermission_start: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub intermission_end: Option<i64>,
+    // rdps contribution breakdown
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub contribution_splits: Option<Vec<ContributionSplit>>,
+}
+
+#[derive(Debug, Default, Serialize, Deserialize, Clone, Copy)]
+#[serde(rename_all = "camelCase", default)]
+pub struct StatDamageContribution {
+    pub damage_done_by_stat: i64,
+    pub damage_done_by_stat_plus_value: i64,
+}
+
+impl StatDamageContribution {
+    pub fn add(&mut self, damage_new: f64, damage_base: f64) {
+        self.damage_done_by_stat += damage_base as i64;
+        self.damage_done_by_stat_plus_value += damage_new as i64;
+    }
+
+    pub fn merge(&mut self, other: Self) {
+        self.damage_done_by_stat += other.damage_done_by_stat;
+        self.damage_done_by_stat_plus_value += other.damage_done_by_stat_plus_value;
+    }
+}
+
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase", default)]
+pub struct ContributionSplit {
+    pub name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub party_number: Option<i32>,
+    pub damage_split_by_name: HashMap<String, i64>,
+    pub damage_done_by_entity_skill_group: HashMap<String, HashMap<String, i64>>,
+    pub damage_increase_by_entity_skill_group: HashMap<String, HashMap<String, i64>>,
+    pub damage_done_without_ultimate_awakening: i64,
+    pub hyper_awakening_damage: i64,
+    pub damage_done_without_crits: i64,
+    pub damage_done_with_all_crits: i64,
+    pub damage_done_with_average_crits: i64,
+    pub damage_done_from_crits: i64,
+    pub damage_done_variance: f64,
+    pub critical_hit_rate_adjusted_damage_raw: i64,
+    pub critical_hit_rate_adjusted_damage_raw_capped: i64,
+    pub additional_damage_1percent_damage: StatDamageContribution,
+    pub critical_hit_rate_1percent_damage: StatDamageContribution,
+    pub critical_damage_rate_1percent_damage: StatDamageContribution,
+    pub evo_damage_1percent_damage: StatDamageContribution,
+    pub weapon_power_1000_damage: StatDamageContribution,
+    pub weapon_power_1percent_damage: StatDamageContribution,
+    pub attack_power_1000_damage: StatDamageContribution,
+    pub attack_power_1percent_damage: StatDamageContribution,
+    pub main_stat_1000_damage: StatDamageContribution,
+    pub raid_captain_efficiency: StatDamageContribution,
+    pub blunt_thorn_efficiency: StatDamageContribution,
+    pub supersonic_breakthrough_efficiency: StatDamageContribution,
+    pub standing_striker_efficiency: StatDamageContribution,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]

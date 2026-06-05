@@ -122,7 +122,8 @@ pub fn prepare_get_encounter_preview_query(
     le.support_brand,   -- 12
     le.support_identity,-- 13
     le.support_hyper,   -- 14
-    le.unbuffed_dps     -- 15
+    le.unbuffed_dps,    -- 15
+    e.my_ndps           -- 16
     FROM encounter_preview e
     LEFT JOIN entity le ON le.encounter_id = e.id AND le.name = e.local_player
     {}
@@ -275,6 +276,8 @@ pub fn map_encounter_preview(row: &rusqlite::Row) -> rusqlite::Result<EncounterP
         support_identity: row.get("support_identity").unwrap_or_default(),
         support_hyper: row.get("support_hyper").unwrap_or_default(),
         udps: row.get("unbuffed_dps").unwrap_or_default(),
+        my_rdps: row.get("my_rdps").unwrap_or_default(),
+        my_ndps: row.get("my_ndps").unwrap_or_default(),
     })
 }
 
@@ -368,11 +371,15 @@ pub fn get_total_available_time(
 }
 
 pub fn should_insert_entity(entity: &EncounterEntity, local_player: &str) -> bool {
-    ((entity.entity_type == EntityType::Player && entity.class_id > 0)
+    if entity.entity_type == EntityType::DarkGrenade {
+        return entity.damage_stats.rdps_damage_given > 0;
+    }
+    let is_insertable_damage_entity = is_confirmed_player_entity(entity, local_player)
         || entity.name == local_player
         || entity.entity_type == EntityType::Esther
-        || (entity.entity_type == EntityType::Boss && entity.max_hp > 0))
-        && entity.damage_stats.damage_dealt > 0
+        || (entity.entity_type == EntityType::Boss && entity.max_hp > 0);
+
+    is_insertable_damage_entity && entity.damage_stats.damage_dealt > 0
 }
 
 pub fn update_entity_stats(
@@ -382,6 +389,7 @@ pub fn update_entity_stats(
     intermission_duration: i64,
     intermission: Option<(i64, i64)>,
     damage_log: &HashMap<String, Vec<(i64, i64)>>,
+    rdps_valid: bool,
 ) {
     let duration = fight_end - fight_start - intermission_duration;
     let duration_seconds = max(duration / 1000, 1);
@@ -415,10 +423,18 @@ pub fn update_entity_stats(
         // }
         //
         // let unbuffed_damage = entity.damage_stats.damage_dealt - buffed_damage;
-        let unbuffed_damage = entity.damage_stats.damage_dealt - entity.damage_stats.buffed_damage;
+        let buffed_damage = entity.damage_stats.buffed_damage;
+        let unbuffed_damage = entity.damage_stats.damage_dealt - buffed_damage;
         let unbuffed_dps = unbuffed_damage / duration_seconds;
         entity.damage_stats.unbuffed_damage = unbuffed_damage;
         entity.damage_stats.unbuffed_dps = unbuffed_dps;
+
+        if rdps_valid {
+            let ndmg = entity.damage_stats.damage_dealt - entity.damage_stats.rdps_damage_received;
+            let rdmg = ndmg + entity.damage_stats.rdps_damage_given;
+            entity.damage_stats.ndps = ndmg / duration_seconds;
+            entity.damage_stats.rdps = rdmg / duration_seconds;
+        }
     }
 
     entity.damage_stats.dps = entity.damage_stats.damage_dealt / duration_seconds;
@@ -428,7 +444,47 @@ pub fn update_entity_stats(
     }
 }
 
-pub fn apply_player_info(entity: &mut EncounterEntity, info: &InspectInfo) {
+pub fn sanitize_invalid_rdps(
+    encounter: &mut Encounter,
+    contribution_splits: &mut Vec<ContributionSplit>,
+) {
+    for entity in encounter.entities.values_mut() {
+        entity.damage_stats.rdps_damage_received = 0;
+        entity.damage_stats.rdps_damage_received_support = 0;
+        entity.damage_stats.rdps_damage_given = 0;
+        entity.damage_stats.rdps = 0;
+        entity.damage_stats.ndps = 0;
+
+        for skill in entity.skills.values_mut() {
+            skill.rdps_damage_received = 0;
+            skill.rdps_damage_received_support = 0;
+            for cast in &mut skill.skill_cast_log {
+                for hit in &mut cast.hits {
+                    hit.rdps_damage_received = 0;
+                    hit.rdps_damage_received_support = 0;
+                }
+            }
+        }
+    }
+
+    contribution_splits.retain_mut(|split| {
+        split.damage_done_by_entity_skill_group.clear();
+        split.damage_increase_by_entity_skill_group.clear();
+        split.damage_split_by_name.clear();
+        let Some(entity) = encounter.entities.get(&split.name) else {
+            return false;
+        };
+        if entity.entity_type != EntityType::Player || entity.damage_stats.damage_dealt <= 0 {
+            return false;
+        }
+        split
+            .damage_split_by_name
+            .insert(split.name.clone(), entity.damage_stats.damage_dealt);
+        true
+    });
+}
+
+pub fn apply_gems_to_skills(entity: &mut EncounterEntity, info: &InspectInfo) {
     for gem in info.gems.iter().flatten() {
         let skill_ids = if matches!(gem.gem_type, 34 | 35 | 65 | 63 | 61) {
             GEM_SKILL_MAP
@@ -458,6 +514,10 @@ pub fn apply_player_info(entity: &mut EncounterEntity, info: &InspectInfo) {
             }
         }
     }
+}
+
+pub fn apply_player_info(entity: &mut EncounterEntity, info: &InspectInfo, skip_support: bool) {
+    apply_gems_to_skills(entity, info);
 
     entity.ark_passive_active = Some(info.ark_passive_enabled);
     entity.engraving_data = get_engravings(&info.engravings);
@@ -465,20 +525,10 @@ pub fn apply_player_info(entity: &mut EncounterEntity, info: &InspectInfo) {
     entity.loadout_hash = info.loadout_snapshot.clone();
     entity.combat_power = info.combat_power.as_ref().map(|c| c.score);
 
-    // Set spec for special cases
-    if entity.class_id == 104
-        && let Some(engr) = &entity.engraving_data
-        && engr
-            .iter()
-            .any(|e| e == "Awakening" || e == "Drops of Ether")
-    {
-        entity.spec = Some("Princess".to_string());
-    }
-
-    // Fallback spec detection
-    if entity.spec.as_deref() == Some("Unknown")
-        && let Some(tree) = info.ark_passive_data.as_ref()
+    // get spec from inspect
+    if let Some(tree) = info.ark_passive_data.as_ref()
         && let Some(enlightenment) = tree.enlightenment.as_ref()
+        && !skip_support
     {
         for node in enlightenment.iter() {
             let spec = get_spec_from_ark_passive(node);
@@ -487,6 +537,16 @@ pub fn apply_player_info(entity: &mut EncounterEntity, info: &InspectInfo) {
                 break;
             }
         }
+    }
+
+    // princess gl check
+    if entity.class_id == 104
+        && let Some(engr) = &entity.engraving_data
+        && engr
+            .iter()
+            .any(|e| e == "Awakening" || e == "Drops of Ether")
+    {
+        entity.spec = Some("Princess".to_string());
     }
 }
 

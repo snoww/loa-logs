@@ -79,7 +79,7 @@
       transition:fly={{ x: -240, duration: 100 }}
     >
       <div class="m-4 flex items-center">
-        <p class="text-xl font-semibold">LOA Logs</p>
+        <p class="text-xl font-semibold">LOA Logs <span class="text-accent-500 text-base font-normal">Beta</span></p>
         <button use:melt={$close} class="ml-auto px-3 hover:opacity-60">
           <IconX class="size-7" />
         </button>

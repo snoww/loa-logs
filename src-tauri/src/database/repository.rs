@@ -226,6 +226,7 @@ impl Repository {
         encounter.sync = sync;
 
         encounter.entities = entities;
+        normalize_encounter_damage_totals(&mut encounter);
 
         Ok(encounter)
     }
@@ -269,6 +270,11 @@ impl Repository {
     }
 
     pub fn insert_data(&self, mut args: InsertEncounterArgs) -> Result<i64> {
+        normalize_encounter_damage_totals(&mut args.encounter);
+        if !args.rdps_valid {
+            sanitize_invalid_rdps(&mut args.encounter, &mut args.contribution_splits);
+        }
+
         let mut connection = self.0.get()?;
         let transaction = connection.transaction()?;
 
@@ -295,10 +301,12 @@ impl Repository {
             party_info,
             meter_version,
             rdps_valid,
+            rdps_message,
             ntp_fight_start,
             region,
             intermission_start,
             intermission_end,
+            contribution_splits,
             ..
         } = args;
 
@@ -331,12 +339,19 @@ impl Repository {
             rdps_message: if *rdps_valid {
                 None
             } else {
-                Some("invalid_stats".into())
+                rdps_message
+                    .clone()
+                    .or_else(|| Some("invalid_stats".into()))
             },
             ntp_fight_start: Some(*ntp_fight_start),
             manual_save: Some(args.manual),
             intermission_start: *intermission_start,
             intermission_end: *intermission_end,
+            contribution_splits: if contribution_splits.is_empty() {
+                None
+            } else {
+                Some(contribution_splits.clone())
+            },
             ..Default::default()
         };
 
@@ -382,6 +397,13 @@ impl Repository {
             let damage_dealt = entity.damage_stats.damage_dealt;
             let damage_without_hyper =
                 (damage_dealt - entity.damage_stats.hyper_awakening_damage) as f64;
+            let support_ratio = |damage: i64| {
+                if damage_without_hyper > 0.0 {
+                    damage as f64 / damage_without_hyper
+                } else {
+                    0.0
+                }
+            };
             let compressed_skills = compress_json(&entity.skills)?;
             let compressed_damage_stats = compress_json(&entity.damage_stats)?;
 
@@ -412,18 +434,23 @@ impl Repository {
                 json!(entity.ark_passive_data),
                 support_buffs
                     .map(|b| b.buff)
-                    .unwrap_or(entity.damage_stats.buffed_by_support as f64 / damage_without_hyper),
-                support_buffs.map(|b| b.brand).unwrap_or(
-                    entity.damage_stats.debuffed_by_support as f64 / damage_without_hyper
-                ),
-                support_buffs.map(|b| b.identity).unwrap_or(
-                    entity.damage_stats.buffed_by_identity as f64 / damage_without_hyper
-                ),
+                    .unwrap_or_else(|| support_ratio(entity.damage_stats.buffed_by_support)),
+                support_buffs
+                    .map(|b| b.brand)
+                    .unwrap_or_else(|| support_ratio(entity.damage_stats.debuffed_by_support)),
+                support_buffs
+                    .map(|b| b.identity)
+                    .unwrap_or_else(|| support_ratio(entity.damage_stats.buffed_by_identity)),
                 support_buffs
                     .map(|b| b.hyper)
-                    .unwrap_or(entity.damage_stats.buffed_by_hat as f64 / damage_without_hyper),
+                    .unwrap_or_else(|| support_ratio(entity.damage_stats.buffed_by_hat)),
                 entity.damage_stats.unbuffed_damage,
-                entity.damage_stats.unbuffed_dps
+                entity.damage_stats.unbuffed_dps,
+                entity.damage_stats.rdps_damage_received,
+                entity.damage_stats.rdps_damage_received_support,
+                entity.damage_stats.rdps_damage_given,
+                entity.damage_stats.rdps,
+                entity.damage_stats.ndps
             ];
 
             statement.execute(params)?;
@@ -451,16 +478,19 @@ impl Repository {
             .entities
             .values()
             .filter(|e| {
-                ((e.entity_type == EntityType::Player && e.class_id != 0)
+                (is_confirmed_player_entity(e, &encounter.local_player)
                     || e.name == encounter.local_player)
                     && e.damage_stats.damage_dealt > 0
             })
             .collect();
 
-        let local_player_dps = players
-            .iter()
-            .find(|e| e.name == encounter.local_player)
-            .map(|e| e.damage_stats.dps)
+        let local_player = players.iter().find(|e| e.name == encounter.local_player);
+        let local_player_dps = local_player.map(|e| e.damage_stats.dps).unwrap_or_default();
+        let local_player_rdps = local_player
+            .map(|e| e.damage_stats.rdps)
+            .unwrap_or_default();
+        let local_player_ndps = local_player
+            .map(|e| e.damage_stats.ndps)
             .unwrap_or_default();
 
         players.sort_unstable_by_key(|e| Reverse(e.damage_stats.damage_dealt));
@@ -487,6 +517,8 @@ impl Repository {
             local_player_dps,
             raid_clear,
             encounter.boss_only_damage,
+            local_player_rdps,
+            local_player_ndps,
         ];
 
         transaction
@@ -502,6 +534,7 @@ pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
         encounter,
         cast_log,
         damage_log,
+        rdps_valid,
         skill_cast_log,
         player_info,
         skill_cooldowns,
@@ -534,13 +567,20 @@ pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
             intermission_duration,
             intermission_range_seconds,
             damage_log,
+            *rdps_valid,
         );
 
         if let Some(info) = player_info
             .as_ref()
             .and_then(|stats| stats.get(&entity.name))
         {
-            apply_player_info(entity, info);
+            // if fight didnt request in-game inspect, apply api inspect
+            if entity.combat_power.is_none() || !*rdps_valid {
+                apply_player_info(entity, info, false);
+            } else {
+                entity.loadout_hash = info.loadout_snapshot.clone();
+                apply_gems_to_skills(entity, info);
+            }
         }
 
         apply_cast_logs(entity, cast_log, skill_cast_log);
@@ -556,8 +596,10 @@ pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
             }
         }
 
-        let spec = get_player_spec(entity, &encounter.encounter_damage_stats.buffs, false);
-        entity.spec = Some(spec.clone());
+        if entity.spec.as_deref().is_none_or(|spec| spec == "Unknown") {
+            let spec = get_player_spec(entity, &encounter.encounter_damage_stats.buffs, false);
+            entity.spec = Some(spec);
+        }
     }
 
     Ok(())
@@ -657,7 +699,8 @@ mod tests {
         let expected_encounter = {
             let mut cloned = args.clone();
             calculate_entities(&mut cloned).unwrap();
-            let encounter = cloned.encounter;
+            let mut encounter = cloned.encounter;
+            normalize_encounter_damage_totals(&mut encounter);
             encounter
         };
 
@@ -1561,6 +1604,7 @@ mod tests {
                 manual_save: None,
                 intermission_start: None,
                 intermission_end: None,
+                contribution_splits: None,
             };
 
             let encounter_damage_stats = EncounterDamageStats {
@@ -1609,11 +1653,13 @@ mod tests {
                 meter_version: self.version.clone(),
                 ntp_fight_start: fight_start,
                 rdps_valid: true,
+                rdps_message: None,
                 manual: false,
                 skill_cast_log,
                 skill_cooldowns,
                 intermission_start: None,
                 intermission_end: None,
+                contribution_splits: vec![],
             };
 
             insert_args

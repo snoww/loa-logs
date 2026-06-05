@@ -14,9 +14,14 @@ pub const DATABASE_PATH: &str = "encounters.db";
 pub const MIGRATIONS_PATH: &str = "migrations.tar";
 pub const SETTINGS_PATH: &str = "settings.json";
 pub const LOCAL_PLAYERS_PATH: &str = "local_players.json";
-pub const REGION_PATH: &str = "current_region";
 pub const STEAM_GAME_URL: &str = "steam://rungameid/1599340";
 pub const GAME_EXE_NAME: &str = "LOSTARK.exe";
+pub const NINEVEH_EXE_NAME: &str = "nineveh.exe";
+pub const DARK_GRENADE_ENTITY_ID: u64 = 0xFFFF_FFFF_3224_0000;
+pub const DARK_GRENADE_ENTITY_NAME: &str = "DarkGrenadeSynergy";
+/// alternate nineveh binary name used when `exitlag_compat` is enabled. ExitLag only proxies
+/// traffic for `LOSTARK.exe`, so we spawn a copy of nineveh named lostark
+pub const NINEVEH_COMPAT_EXE_NAME: &str = "LOSTARK.exe";
 pub const TASK_NAME: &str = "LOA_Logs_Auto_Start";
 pub const DEFAULT_BLUR: Color = (10, 10, 10, 50);
 pub const DEFAULT_PORT: u16 = 6040;

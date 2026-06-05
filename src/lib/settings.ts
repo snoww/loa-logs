@@ -2,7 +2,11 @@ export type FontScale = "0" | "1" | "2" | "3";
 
 export interface DisplayFlags {
   damage: boolean;
+  ndmg: boolean;
+  rdmg: boolean;
   dps: boolean;
+  ndps: boolean;
+  rdps: boolean;
   unbuffedDamage: boolean;
   unbuffedDps: boolean;
   damagePercent: boolean;
@@ -15,6 +19,7 @@ export interface DisplayFlags {
   percentBrand: boolean;
   percentHatBySup: boolean;
   supportContrib: boolean;
+  rdpsContrib: boolean;
 }
 
 export interface BreakdownBase extends DisplayFlags {
@@ -73,6 +78,7 @@ export interface GeneralSettings {
   autoShow: boolean;
   autoHideDelay: number;
   betaChannel: boolean;
+  exitlagCompat: boolean;
 }
 
 export interface Shortcuts {

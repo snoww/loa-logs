@@ -13,6 +13,7 @@ import IconCornerLeftUp from "~icons/lucide/corner-left-up";
 import IconExternalLink from "~icons/lucide/external-link";
 import IconFileClock from "~icons/lucide/file-clock";
 import IconFilter from "~icons/lucide/filter";
+import IconInfo from "~icons/lucide/info";
 import IconMenu from "~icons/lucide/menu";
 import IconMinus from "~icons/lucide/minus";
 import IconPointer from "~icons/lucide/pointer";
@@ -45,6 +46,7 @@ export {
   IconExternalLink,
   IconFileClock,
   IconFilter,
+  IconInfo,
   IconMenu,
   IconMinus,
   IconPause,

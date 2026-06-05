@@ -58,16 +58,54 @@
       width: "w-15"
     },
 
+    // Damage percentage
+    {
+      show(enc) {
+        if (!enc.curSettings.damagePercent) return false;
+        return !enc.isSolo;
+      },
+      headerText: "D%",
+      headerTooltip: "Damage %",
+      value: damagePct,
+      valueTooltip: null
+    },
+
     // Unbuffed damage dealt
     {
       show(enc) {
         if (!enc.curSettings.unbuffedDamage) return false;
-        return enc.anyUnbuffedDamage || enc.anyRdpsContributions;
+        return enc.anyUnbuffedDamage || enc.anyUdpsContributions;
       },
       headerText: "uDMG",
       headerTooltip: "Unbuffed Damage Dealt (damage dealt excluding buffs or debuffs from the support)",
       value: unbuffedDamage,
       valueTooltip: unbuffedDamageTooltip,
+      width: "w-15"
+    },
+
+    // Neutral damage
+    {
+      show(enc) {
+        if (!enc.curSettings.ndmg) return false;
+        return enc.anyRdpsContributions;
+      },
+      headerText: "nDMG",
+      headerTooltip: "Neutral Damage (self damage with incoming buffs removed)",
+      value: ndmg,
+      valueTooltip: ndmgTooltip,
+      width: "w-15"
+    },
+
+    // Raid damage
+    {
+      show(enc) {
+        if (!enc.curSettings.rdmg) return false;
+        return enc.anyRdpsContributions;
+      },
+      headerText: "rDMG",
+      headerTooltip: "Raid Damage (self damage + damage given to others from synergies and buffs)",
+      value: rdmg,
+      valueTooltip: rdmgTooltip,
       width: "w-15"
     },
 
@@ -83,11 +121,37 @@
       width: "w-14"
     },
 
+    // Net damage per second
+    {
+      show(enc) {
+        if (!enc.curSettings.ndps) return false;
+        return enc.anyRdpsContributions;
+      },
+      headerText: "nDPS",
+      headerTooltip: "Neutral Damage per second (self damage with incoming buffs removed)",
+      value: ndps,
+      valueTooltip: ndpsTooltip,
+      width: "w-14"
+    },
+
+    // Raid damage per second
+    {
+      show(enc) {
+        if (!enc.curSettings.rdps) return false;
+        return enc.anyRdpsContributions;
+      },
+      headerText: "rDPS",
+      headerTooltip: "Raid Damage per second (self damage + damage given to others from synergies and buffs)",
+      value: rdps,
+      valueTooltip: rdpsTooltip,
+      width: "w-14"
+    },
+
     // Unbuffed damage per second
     {
       show(enc) {
         if (!enc.curSettings.unbuffedDps) return false;
-        return enc.anyUnbuffedDamage || enc.anyRdpsContributions;
+        return enc.anyUnbuffedDamage || enc.anyUdpsContributions;
       },
       headerText: "uDPS",
       headerTooltip: "Unbuffed Damage per second (DPS excluding buffs or debuffs from the support)",
@@ -100,7 +164,7 @@
     {
       show(enc) {
         if (!enc.curSettings.supportContrib) return false;
-        return enc.anyRdpsContributions;
+        return enc.anyUdpsContributions;
       },
       headerText: "Con%",
       headerTooltip: "Support's % contribution to total party damage via buffs",
@@ -108,16 +172,17 @@
       valueTooltip: supportContribTooltip
     },
 
-    // Damage percentage
+    // rDPS contribution percentage
     {
       show(enc) {
-        if (!enc.curSettings.damagePercent) return false;
-        return !enc.isSolo;
+        if (!enc.curSettings.rdpsContrib) return false;
+        return enc.anyRdpsContributions;
       },
-      headerText: "D%",
-      headerTooltip: "Damage %",
-      value: damagePct,
-      valueTooltip: null
+      headerText: "rCon%",
+      headerTooltip: "Contribution % from all party members' buffs and synergies",
+      value: rdpsContribPct,
+      valueTooltip: rdpsContribTooltip,
+      width: "w-14"
     },
 
     // Crit rate
@@ -255,7 +320,7 @@
     // Counters
     {
       show(enc) {
-        return enc.curSettings.counters;
+        return enc.curSettings.counters && enc.anyCounters;
       },
       headerText: "CTR",
       headerTooltip: "Counters",
@@ -294,8 +359,8 @@
   {:else}
     {@const { knockDown, cc } = state.incapacitatedTimeMs}
     <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
-      <span class="text-gray-300">Knockdowns: {(knockDown / 1000).toFixed(1)}s</span>
-      <span class="text-gray-300">Crowd control: {(cc / 1000).toFixed(1)}s</span>
+      <span>Knockdowns: {(knockDown / 1000).toFixed(1)}s</span>
+      <span>Crowd control: {(cc / 1000).toFixed(1)}s</span>
     </div>
   {/if}
 {/snippet}
@@ -308,12 +373,51 @@
   {state.damageDealt.toLocaleString()}
 {/snippet}
 
+{#snippet ndmg(state: EntityState)}
+  {@render damageValue(state.ndmgString)}
+{/snippet}
+
+{#snippet ndmgTooltip(state: EntityState)}
+  {state.baseDamage.toLocaleString()}
+{/snippet}
+
+{#snippet rdmg(state: EntityState)}
+  {@render damageValue(state.rdmgString)}
+{/snippet}
+
+{#snippet rdmgTooltip(state: EntityState)}
+  {state.rdamage.toLocaleString()}
+{/snippet}
+
 {#snippet dps(state: EntityState)}
   {@render damageValue(state.dpsString)}
 {/snippet}
 
 {#snippet dpsTooltip(state: EntityState)}
   {state.dps.toLocaleString()}
+{/snippet}
+
+{#snippet ndps(state: EntityState)}
+  {@render damageValue(state.ndpsString)}
+{/snippet}
+
+{#snippet ndpsTooltip(state: EntityState)}
+  <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
+    <span>nDPS: {state.ndps.toLocaleString()}</span>
+    <span>Self DMG: {abbreviateNumber(state.baseDamage, 2)}</span>
+  </div>
+{/snippet}
+
+{#snippet rdps(state: EntityState)}
+  {@render damageValue(state.rdpsString)}
+{/snippet}
+
+{#snippet rdpsTooltip(state: EntityState)}
+  <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
+    <span>rDPS: {state.rdps.toLocaleString()}</span>
+    <span>Self DMG: {abbreviateNumber(state.baseDamage, 2)}</span>
+    <span>Outgoing: {abbreviateNumber(state.entity.damageStats.rdpsDamageGiven, 2)}</span>
+  </div>
 {/snippet}
 
 {#snippet damagePct(state: EntityState)}
@@ -389,7 +493,7 @@
 {/snippet}
 
 {#snippet unbuffedDamage(state: EntityState)}
-  {#if state.hasRdpsContributions}
+  {#if state.hasUdpsContributions}
     {@render damageValue(state.totalDamageBuffedString)}
   {:else if !state.anyUnbuffedDamage}
     -
@@ -399,9 +503,9 @@
 {/snippet}
 
 {#snippet unbuffedDamageTooltip(state: EntityState)}
-  {#if state.hasRdpsContributions}
+  {#if state.hasUdpsContributions}
     <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
-      <span class="text-gray-300">Total Damage Buffed: {abbreviateNumber(state.totalDamageBuffed, 2)}</span>
+      <span>Total Damage Buffed: {abbreviateNumber(state.totalDamageBuffed, 2)}</span>
     </div>
   {:else if !state.anyUnbuffedDamage}
     N/A
@@ -409,14 +513,14 @@
     {@const unbuffed = state.entity.damageStats.unbuffedDamage}
     {@const buffed = state.damageDealt - unbuffed}
     <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
-      <span class="text-gray-300">Base: {abbreviateNumber(unbuffed, 2)}</span>
-      <span class="text-gray-300">Buffed: {abbreviateNumber(buffed, 2)}</span>
+      <span>Base: {abbreviateNumber(unbuffed, 2)}</span>
+      <span>Buffed: {abbreviateNumber(buffed, 2)}</span>
     </div>
   {/if}
 {/snippet}
 
 {#snippet unbuffedDps(state: EntityState)}
-  {#if state.hasRdpsContributions}
+  {#if state.hasUdpsContributions}
     {@render damageValue(state.totalDpsBuffedString)}
   {:else if !state.anyUnbuffedDamage}
     -
@@ -426,9 +530,9 @@
 {/snippet}
 
 {#snippet unbuffedDpsTooltip(state: EntityState)}
-  {#if state.hasRdpsContributions}
+  {#if state.hasUdpsContributions}
     <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
-      <span class="text-gray-300">Buff DPS: {abbreviateNumber(state.totalDpsBuffed, 2)}</span>
+      <span>Buff DPS: {abbreviateNumber(state.totalDpsBuffed, 2)}</span>
     </div>
   {:else if !state.anyUnbuffedDamage}
     N/A
@@ -436,17 +540,17 @@
     {@const unbuffed = state.unbuffedDps}
     {@const buffed = state.dps - unbuffed}
     <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
-      <span class="text-gray-300">Base: {abbreviateNumber(unbuffed, 2)}</span>
-      <span class="text-gray-300">Buffed: {abbreviateNumber(buffed, 2)}</span>
+      <span>Base: {abbreviateNumber(unbuffed, 2)}</span>
+      <span>Buffed: {abbreviateNumber(buffed, 2)}</span>
       {#if state.dps > 0}
-        <span class="text-gray-300">Contribution: {((buffed / state.dps) * 100).toFixed(1)}%</span>
+        <span>Contribution: {((buffed / state.dps) * 100).toFixed(1)}%</span>
       {/if}
     </div>
   {/if}
 {/snippet}
 
 {#snippet supportContribPct(state: EntityState)}
-  {#if state.hasRdpsContributions}
+  {#if state.hasUdpsContributions}
     {@render percentValue(customRound(state.supportContribPercent))}
   {:else if state.anyUnbuffedDamage}
     {@const buffed = state.damageDealt - state.entity.damageStats.unbuffedDamage}
@@ -457,10 +561,56 @@
 {/snippet}
 
 {#snippet supportContribTooltip(state: EntityState)}
-  {#if state.hasRdpsContributions}
-    The support contributed {customRound(state.supportContribPercent)}% damage to the party
+  {#if state.hasUdpsContributions}
+    The support contributed {customRound(state.supportContribPercent)}% damage to the party with primary buffs
   {:else if state.anyUnbuffedDamage}
     {@const buffed = state.damageDealt - state.entity.damageStats.unbuffedDamage}
-    The support contributed {customRound((buffed / state.damageDealt) * 100)}% of the damage
+    The support contributed {customRound((buffed / state.damageDealt) * 100)}% of the damage from primary buffs
+  {/if}
+{/snippet}
+
+{#snippet rdpsContribPct(state: EntityState)}
+  {#if state.rdpsContribDamage > 0}
+    {@render percentValue(customRound(state.rdpsContribPercent))}
+  {:else}
+    -
+  {/if}
+{/snippet}
+
+{#snippet rdpsContribTooltip(state: EntityState)}
+  {#if state.rdpsContribDamage > 0}
+    <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
+      {#if state.isSupport}
+        <div>
+          The support contributed {customRound(state.rdpsContribPercent)}% damage to the party
+        </div>
+        <div>
+          Given: {abbreviateNumber(state.entity.damageStats.rdpsDamageGiven, 2)}
+        </div>
+      {:else}
+        {#if state.entity.damageStats.rdpsDamageReceivedSupport > 0 && state.damageDealt > 0}
+          {@const dpsContrib =
+            state.entity.damageStats.rdpsDamageReceived -
+            state.entity.damageStats.rdpsDamageReceivedSupport -
+            state.darkGrenadeDamageReceived}
+          <div>
+            Support Contribution: {customRound(
+              (state.entity.damageStats.rdpsDamageReceivedSupport / state.damageDealt) * 100
+            )}%
+          </div>
+          {#if dpsContrib > 0}
+            <div>DPS Contribution: {customRound((dpsContrib / state.damageDealt) * 100)}%</div>
+          {/if}
+          {#if state.darkGrenadeDamageReceived > 0}
+            <div>Dark Contribution: {customRound((state.darkGrenadeDamageReceived / state.damageDealt) * 100)}%</div>
+          {/if}
+        {/if}
+        <div>
+          Received: {abbreviateNumber(state.entity.damageStats.rdpsDamageReceived, 2)}
+        </div>
+      {/if}
+    </div>
+  {:else}
+    N/A
   {/if}
 {/snippet}

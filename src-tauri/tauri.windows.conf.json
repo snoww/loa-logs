@@ -5,6 +5,9 @@
       "WinDivert.dll",
       "meter-data/*.json"
     ],
+    "externalBin": [
+      "nineveh"
+    ],
     "windows": {
       "webviewInstallMode": {
         "type": "embedBootstrapper"

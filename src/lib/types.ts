@@ -13,6 +13,17 @@ export interface ZoneChangeEvent {
   payload?: string;
 }
 
+export interface NinevehEvent {
+  event: string;
+  payload: NinevehConnectionInfo[];
+}
+
+export interface NinevehConnectionInfo {
+  id: string;
+  remote_addr: string;
+  remote_port: number;
+}
+
 export interface Encounter {
   lastCombatPacket: number;
   fightStart: number;
@@ -54,6 +65,7 @@ export interface EncounterPreview {
   supportIdentity?: number;
   supportHyper?: number;
   udps?: number;
+  myNdps?: number;
 }
 
 export interface EncounterDamageStats {
@@ -82,6 +94,42 @@ export interface EncounterMisc {
   region?: string;
   intermissionStart?: number;
   intermissionEnd?: number;
+  contributionSplits?: ContributionSplit[];
+}
+
+export interface ContributionSplit {
+  name: string;
+  partyNumber?: number;
+  damageSplitByName: Record<string, number>;
+  damageDoneByEntitySkillGroup: Record<string, Record<string, number>>;
+  damageIncreaseByEntitySkillGroup: Record<string, Record<string, number>>;
+  damageDoneWithoutUltimateAwakening: number;
+  hyperAwakeningDamage: number;
+  damageDoneWithoutCrits: number;
+  damageDoneWithAllCrits: number;
+  damageDoneWithAverageCrits: number;
+  damageDoneFromCrits?: number;
+  damageDoneVariance?: number;
+  criticalHitRateAdjustedDamageRaw: number;
+  criticalHitRateAdjustedDamageRawCapped: number;
+  additionalDamage1percentDamage?: StatDamageContribution;
+  criticalHitRate1percentDamage?: StatDamageContribution;
+  criticalDamageRate1percentDamage?: StatDamageContribution;
+  evoDamage1percentDamage?: StatDamageContribution;
+  weaponPower1000Damage?: StatDamageContribution;
+  weaponPower1percentDamage?: StatDamageContribution;
+  attackPower1000Damage?: StatDamageContribution;
+  attackPower1percentDamage?: StatDamageContribution;
+  mainStat1000Damage?: StatDamageContribution;
+  raidCaptainEfficiency?: StatDamageContribution;
+  bluntThornEfficiency?: StatDamageContribution;
+  supersonicBreakthroughEfficiency?: StatDamageContribution;
+  standingStrikerEfficiency?: StatDamageContribution;
+}
+
+export interface StatDamageContribution {
+  damageDoneByStat: number;
+  damageDoneByStatPlusValue: number;
 }
 
 export interface PartyInfo {
@@ -183,8 +231,10 @@ export interface Skill {
   special?: boolean; // if special, this skill is not modifiable by buffs or crits
   timeAvailable?: number; // the total time in milliseconds this skill was off cooldown during the encounter
   stagger: number;
-  rdpsReceived: Record<number, Record<number, number>>; // rdps type -> buffedBy skill -> damage
-  rdpsContributed: Record<number, number>; // rdps type -> amount
+  rdpsReceived: Record<number, Record<number, number>>; // legacy bdps type -> buffedBy skill -> damage
+  rdpsContributed: Record<number, number>; // legacy udps type -> amount
+  rdpsDamageReceived: number; // total rdps received from party members
+  rdpsDamageReceivedSupport: number; // rdps received from support buffs
 }
 
 export interface SkillCast {
@@ -363,7 +413,8 @@ export enum EntityType {
   GUARDIAN = "GUARDIAN",
   PLAYER = "PLAYER",
   NPC = "NPC",
-  ESTHER = "ESTHER"
+  ESTHER = "ESTHER",
+  DARK_GRENADE = "DARK_GRENADE"
 }
 
 export interface ClassColors {
@@ -540,3 +591,4 @@ export interface PartyBuffs {
   partyPercentages: Array<number[]>;
   partyBuffs: Map<string, Map<string, Array<BuffDetails>>>;
 }
+

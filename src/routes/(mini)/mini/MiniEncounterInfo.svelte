@@ -1,7 +1,7 @@
 <script lang="ts">
   import { percentValue } from "$lib/components/Snippets.svelte";
   import { EncounterState } from "$lib/encounter.svelte";
-  import { settings } from "$lib/stores.svelte";
+  import { nineveh, settings } from "$lib/stores.svelte";
   import { EntityType } from "$lib/types";
   import { getBossHpBars, timestampToMinutesAndSeconds } from "$lib/utils";
 
@@ -60,7 +60,11 @@
         {durationPretty}
       </div>
       <div data-tauri-drag-region class="truncate">
-        {enc.encounter?.currentBoss ? enc.encounter.currentBoss.name : "No Boss"}
+        {enc.encounter?.currentBoss
+          ? enc.encounter.currentBoss.name
+          : !nineveh.connections.length
+            ? "Go to Server Select"
+            : "No Boss"}
       </div>
       <div data-tauri-drag-region class="text-neutral-300">
         {#if boss && settings.app.mini.bossHpBar}

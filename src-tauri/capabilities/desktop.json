@@ -27,6 +27,11 @@
     "process:allow-restart",
     "shell:allow-open",
     "shell:default",
-    "updater:default"
+    "updater:default",
+    "http:default",
+    {
+      "identifier": "http:allow-fetch",
+      "allow": [{ "url": "https://**" }]
+    }
   ]
 }

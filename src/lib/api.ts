@@ -1,6 +1,6 @@
 import { getVersion } from "@tauri-apps/api/app";
 import { invoke } from "@tauri-apps/api/core";
-import { emit, listen, type EventCallback, type UnlistenFn } from "@tauri-apps/api/event";
+import { emit, listen } from "@tauri-apps/api/event";
 import { relaunch } from "@tauri-apps/plugin-process";
 import type {
   Encounter,
@@ -8,10 +8,13 @@ import type {
   EncounterEvent,
   EncountersOverview,
   IdentityEvent,
+  NinevehEvent,
   PartyEvent,
   ZoneChangeEvent
 } from "./types";
 import type { AppSettings } from "./settings";
+
+export const BETA_MODAL_KEY = "betaPopupShown";
 
 export const getAppVersion = async (): Promise<string> => `v${await getVersion()}`;
 
@@ -70,6 +73,10 @@ export const installStableUpdate = (): Promise<void> => invoke("install_stable_u
 export const optimizeDatabase = (): Promise<void> => invoke("optimize_database");
 
 export const startLoaProcess = (): Promise<void> => invoke("start_loa_process");
+
+export const checkNinevehRunning = (): Promise<boolean> => invoke("check_nineveh_running");
+
+export const stopNineveh = (): Promise<void> => invoke("stop_nineveh");
 
 interface LoadEncountersCriteria {
   page: number;
@@ -170,6 +177,8 @@ export const resetRequest = (): Promise<void> => emit("reset-request");
 
 export const emitDetailsRequest = (): Promise<void> => emit("emit-details-request");
 
+export const ninevehStateRequest = (): Promise<void> => emit("nineveh-update-request");
+
 export const setBossOnlyDamage = (enabled: boolean): Promise<void> => emit("boss-only-damage-request", enabled);
 
 export const onLatestEncounter = (handler: (event: any) => void) => listen("show-latest-encounter", handler);
@@ -205,5 +214,7 @@ export const onPhaseTransition = (handler: (event: { payload: number }) => void)
 export const onAdmin = (handler: () => void) => listen("admin", handler);
 
 export const onClearEncounter = (handler: (event: { payload: number }) => void) => listen("clear-encounter", handler);
+
+export const onNinevehUpdate = (handler: (event: NinevehEvent) => void) => listen("nineveh-update", handler);
 
 export const onBannedEvent = (handler: () => void) => listen("banned-event", handler);

@@ -1,11 +1,15 @@
 {
-  "version": "v1.43.1",
-  "notes": "### v1.43.1 - May 18th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n### Try out rDPS by opting into beta updates. Settings > Enable Beta Updates\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed and improved bunch of screenshotting issues\n- fixed mini meter hp% setting not working`",
-  "pub_date": "2026-05-12T21:56:09.318Z",
+  "version": "v1.44.0-nineveh.beta.25",
+  "notes": "### v1.44.0-Nineveh Beta 25 - June 5th, 2026\n\n# MAKE SURE LOST ARK (OR NINEVEH.EXE) IS CLOSED WHEN UPDATING!\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\nThe LOA Logs beta uses a completely overhauled system for reading Lost Ark's networking data, giving us significantly\nmore control over how we read and query game information. It finally fixes the issue where damage numbers would\nsometimes completely glitch out, and provides us the necessary infrastructure to implement rDPS in the future. By\nhelping us test its stability, we can be confident that our new \"Nineveh\" packet library works correctly and efficiently\nacross all platforms, including Linux!\n\n### Note: ExitLag users must check the ExitLag Compatibility setting\n\n#### read about rdps in depth [here](https://github.com/snoww/loa-logs/wiki/rDPS-and-nDPS-Explained)\n\n#### NEW FEATURES\n- added rdps stats breakdown (thanks molen for the fancy graphs and breakdowns)\n    - crit luck chart will be inaccurate the closer you are to 100% crit rate\n    - stat dmg increase only works if you're not on low performance mode\n    - older logs might look weird\n\n![image](https://cdn.discordapp.com/attachments/1420857993863495701/1512237471578980573/image.png?ex=6a235c65&is=6a220ae5&hm=0228f88255bea48a433f1de7a43b69e7244859820873ba51d61b3afb93f16c7d&)\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- maybe fix kaz g2 intermission ending late",
+  "pub_date": "2026-06-05T04:20:08.001Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.43.1/LOA.Logs_1.43.1_x64-setup.exe",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmNyU0lhU0kyQnpub3RVNXZXWUY2dkNMVWgyYjlvVTRCS3hzVFlGTmVjWThUSEdtV1g4RDBFcnlOU0xHNGIzUEVyS05rcEdEN1I3WkFReU9wR1lXeHdBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc5MDYwNTE1CWZpbGU6TE9BIExvZ3NfMS40My4xX3g2NC1zZXR1cC5leGUKNGRCM3dDckEvZzVGOFRpa3EyZWFlRklFRUJtUnNVYWNSa0l0NWxCUS9EWEdLS3NmMk90YUkwalN1UVdXdTg5bktoalVoODcwQWpPL1l6akdaY2VNQWc9PQo="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.44.0-nineveh.beta.25/LOA.Logs_1.44.0-nineveh.beta.25_x64-setup.exe",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmRWSXU0K3p1eDZxdVh1MHdidktOTHFqVlVPc1ByM29LMG96RVFzdXBTTXMzM2hYRU52UE5XTDFTTXU3UzNIaVpCdEdHVUhvS2pySTRqN2dJL1B5aFE4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwNjMzNzUzCWZpbGU6TE9BIExvZ3NfMS40NC4wLW5pbmV2ZWguYmV0YS4yNV94NjQtc2V0dXAuZXhlCmY1YmJDcDJsNDZZVnJLNjBjemVRNExlVEczWnlGVXloenRxRkFwT0tMU1lGY01YeE5JVFQvcWo4UlJZblVzOGMyWTNMckFpMjJUeFdSL0NXOHhLSUNRPT0K"
+    },
+    "linux-x86_64": {
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.44.0-nineveh.beta.25/LOA.Logs_1.44.0-nineveh.beta.25_amd64.AppImage",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlUyODRYY2ZHK1pIWjBuWjVFYzlTNXJtemxTbW04NTd0NkFuTlA0aUJtbkk4T0twQWRhckFTZkpBeHhQS3F5YVVYZ3FoYzlnbjdrdzJzR0RpaUo4cWdJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwNjM0MDgyCWZpbGU6TE9BIExvZ3NfMS40NC4wLW5pbmV2ZWguYmV0YS4yNV9hbWQ2NC5BcHBJbWFnZQpIcmJVN09JUzRJRTQwNHpPOFVtdjZlaDRQMmVudXBHRVBEVDRtNkNnRWh2eE9wdUI2M1VyaUEvR2R3Y0VKeFZwYzJDUjNRUEVva2FKYVNuY1d1K2lBZz09Cg=="
     }
   }
 }

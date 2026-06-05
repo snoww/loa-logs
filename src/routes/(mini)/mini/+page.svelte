@@ -1,13 +1,14 @@
 <script lang="ts">
   import { EncounterState } from "$lib/encounter.svelte";
-  import { misc, settings } from "$lib/stores.svelte";
+  import { misc, nineveh, settings } from "$lib/stores.svelte";
   import type { EncounterEvent } from "$lib/types";
   import type { UnlistenFn } from "@tauri-apps/api/event";
   import { onMount } from "svelte";
   import MiniEncounterInfo from "./MiniEncounterInfo.svelte";
   import MiniPlayers from "./MiniPlayers.svelte";
   import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
-  import { onEncounterUpdate, onPhaseTransition, onRaidStart, onZoneChange } from "$lib/api";
+  import { ninevehStateRequest, onEncounterUpdate, onNinevehUpdate, onPhaseTransition, onRaidStart, onZoneChange } from "$lib/api";
+  import { zoneChange } from "$lib/utils/toasts";
 
   let enc = $derived(new EncounterState(undefined, true));
   let time = $state(+Date.now());
@@ -57,9 +58,12 @@
     });
     handles.push(handle);
 
-    handle = await onZoneChange(() => {
+    handle = await onZoneChange((event) => {
       misc.raidInProgress = false;
       misc.missingInfo = false;
+      if (!event.payload) {
+        ninevehStateRequest();
+      }
       trackTimeout(() => {
         misc.raidInProgress = true;
       }, 8000);
@@ -68,6 +72,11 @@
 
     handle = await onPhaseTransition((_) => {
       misc.raidInProgress = false;
+    });
+    handles.push(handle);
+
+    handle = await onNinevehUpdate((event) => {
+      nineveh.connections = event.payload;
     });
     handles.push(handle);
 
@@ -96,6 +105,13 @@
     return () => {
       if (hideTimeout) clearTimeout(hideTimeout);
     };
+  });
+
+  $effect(() => {
+    if (nineveh.connections.length === 0) {
+      const id = setInterval(() => ninevehStateRequest(), 3000);
+      return () => clearInterval(id);
+    }
   });
 
   $effect(() => {

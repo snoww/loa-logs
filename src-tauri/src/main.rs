@@ -2,7 +2,6 @@
 
 mod api;
 mod app;
-mod background;
 mod constants;
 mod context;
 mod data;
@@ -13,6 +12,7 @@ mod live;
 mod local;
 mod misc;
 mod models;
+mod nineveh;
 mod settings;
 mod setup;
 mod shell;
@@ -67,6 +67,7 @@ async fn main() -> Result<()> {
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_single_instance::init(|_app, _argv, _cwd| {}))
+        .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(
             tauri_plugin_window_state::Builder::new()

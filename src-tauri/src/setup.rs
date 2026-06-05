@@ -10,9 +10,9 @@ use log::*;
 use tauri::{App, AppHandle, Manager};
 use tauri_plugin_updater::UpdaterExt;
 
+use crate::api::BanList;
 use crate::{
     app,
-    background::{BackgroundWorker, BackgroundWorkerArgs},
     constants::{BETA_ENDPOINT, DEFAULT_PORT},
     context::AppContext,
     settings::*,
@@ -22,36 +22,90 @@ use crate::{
 
 pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
     #[cfg(not(debug_assertions))]
-    app::panic::add_hook_with_dialog(app.handle());
+    crate::app::panic::add_hook_with_dialog(app.handle());
 
     let app_handle = app.handle();
 
     let context = app.state::<AppContext>();
-    let shell_manger = ShellManager::new(app_handle.clone(), context.inner().clone());
+    let shell_manger = ShellManager::new(app_handle.clone(), context.database_path.clone());
     let settings_manager = app.state::<SettingsManager>();
 
     let settings = settings_manager.read().expect("Could not read settings");
 
-    let port = initialize_windows_and_settings(app_handle, settings.as_ref(), &shell_manger);
+    initialize_windows_and_settings(app_handle, settings.as_ref(), &shell_manger);
 
     app_handle.manage(shell_manger);
 
     info!("starting app v{}", context.version);
     setup_tray(app_handle)?;
-    let is_beta = settings.as_ref().map(|s| s.general.beta_channel).unwrap_or(false);
+    let is_beta = context.version.contains("beta")
+        || settings
+            .as_ref()
+            .map(|s| s.general.beta_channel)
+            .unwrap_or(false);
     let update_checked: Arc<AtomicBool> = check_updates(app_handle, is_beta);
 
-    let mut background = BackgroundWorker::new(app_handle.clone());
+    let exitlag_compat = settings
+        .as_ref()
+        .map(|s| s.general.exitlag_compat)
+        .unwrap_or(false);
+    let app_handle = app_handle.clone();
+    #[cfg(feature = "meter-core")]
+    tokio::task::spawn(async move {
+        while !update_checked.load(Ordering::Relaxed) {
+            tokio::time::sleep(std::time::Duration::from_millis(100)).await;
+        }
 
-    let args = BackgroundWorkerArgs {
-        update_checked,
-        port,
-        settings,
-        version: context.version.clone(),
-    };
+        info!("done checking for updates, starting packet handling");
 
-    background.start(args)?;
-    app_handle.manage(background);
+        let ipc = crate::nineveh::setup_nineveh(app_handle.clone(), exitlag_compat)
+            .await
+            .expect("could not setup nineveh IPC");
+
+        use crate::{
+            api::{HeartBeatApi, StatsApi},
+            live::StartArgs,
+            local::LocalPlayerRepository,
+        };
+
+        let context = app_handle.state::<AppContext>();
+
+        let base_url = option_env!("STATS_API")
+            .unwrap_or("https://api.snow.xyz")
+            .to_owned();
+        let local_player_path = context.local_player_path.clone();
+        let local_player_repository =
+            LocalPlayerRepository::new(local_player_path).expect("could not read local players");
+        let local_info = local_player_repository
+            .read()
+            .expect("could not read local players");
+        let heartbeat_api = HeartBeatApi::new(
+            base_url.clone(),
+            local_info.client_id.clone(),
+            context.version.clone(),
+        );
+        let ban_list = BanList::new();
+        app_handle.manage(StatsApi::new(
+            base_url,
+            local_info.client_id.clone(),
+            context.version.clone(),
+        ));
+        let args = StartArgs {
+            app: app_handle,
+            ipc,
+            settings,
+            local_info,
+            local_player_repository,
+            heartbeat_api,
+            ban_list,
+        };
+
+        tokio::task::spawn_blocking(move || {
+            crate::live::start(args).expect("unexpected error occurred in parser");
+        })
+        .await
+        .expect("parser live thread panicked");
+    });
 
     // #[cfg(debug_assertions)]
     // {
@@ -75,7 +129,11 @@ fn check_updates(app_handle: &AppHandle, is_beta: bool) -> Arc<AtomicBool> {
 
             let check_result = if is_beta {
                 let beta_url = url::Url::parse(BETA_ENDPOINT).expect("beta endpoint URL is valid");
-                match app_handle.updater_builder().endpoints(vec![beta_url]).and_then(|b| b.build()) {
+                match app_handle
+                    .updater_builder()
+                    .endpoints(vec![beta_url])
+                    .and_then(|b| b.build())
+                {
                     Ok(updater) => updater.check().await,
                     Err(e) => {
                         warn!("failed to build beta updater: {e}");
@@ -90,10 +148,15 @@ fn check_updates(app_handle: &AppHandle, is_beta: bool) -> Arc<AtomicBool> {
             match check_result {
                 #[cfg(not(debug_assertions))]
                 Ok(Some(update)) => {
-                    info!("update available, downloading update: v{}", update.version);
-                    shell_manager.remove_driver().await;
-                    if let Err(e) = update.download_and_install(|_, _| {}, || {}).await {
-                        error!("failed to download update: {}", e);
+                    if shell_manager.check_nineveh_running() && shell_manager.check_loa_running() {
+                        info!("nineveh and lost ark are running, skipping auto-update");
+                        update_checked.store(true, Ordering::Relaxed);
+                    } else {
+                        info!("update available, downloading update: v{}", update.version);
+                        shell_manager.remove_driver().await;
+                        if let Err(e) = update.download_and_install(|_, _| {}, || {}).await {
+                            error!("failed to download update: {}", e);
+                        }
                     }
                 }
                 Err(e) => {

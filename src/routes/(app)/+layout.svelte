@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import UpdateAvailable from "$lib/components/UpdateAvailable.svelte";
+  import BetaWelcome from "$lib/components/BetaWelcome.svelte";
   import Toaster from "$lib/components/Toaster.svelte";
   import { settings } from "$lib/stores.svelte";
   import { checkForUpdate } from "$lib/utils";
@@ -29,6 +30,7 @@
       events.add(openUrlEvent);
 
       let version = await getVersion();
+      settings.app.general.betaChannel = version.toLowerCase().includes("beta");
       if (settings.version !== version) {
         settings.version = version;
         goto("/changelog");
@@ -55,6 +57,7 @@
 </script>
 
 <UpdateAvailable />
+<BetaWelcome />
 <Toaster />
 <div class="min-h-screen bg-neutral-900 select-none">
   {@render children?.()}

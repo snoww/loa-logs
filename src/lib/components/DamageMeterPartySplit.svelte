@@ -44,21 +44,40 @@
 
   const esthers = $derived(enc.players.filter((entity) => entity.entityType === EntityType.ESTHER));
   const partiesWithEsthers = $derived.by(() => {
+    let result = parties;
     // don't add esther party if esthers aren't shown or parties aren't split
-    if (!esthers.length || !settings.app.general.showEsther || !settings.app.logs.splitPartyDamage || enc.live)
-      return parties;
-
-    return [
-      ...parties,
-      {
-        title: "Esthers",
-        sortable: false,
-        members: esthers.map((esther) => ({
-          entity: esther,
-          width: (esther.damageStats.damageDealt / enc.topDamageDealt) * 100
-        }))
-      }
-    ];
+    if (esthers.length && settings.app.general.showEsther && settings.app.logs.splitPartyDamage && !enc.live) {
+      result = [
+        ...result,
+        {
+          title: "Esthers",
+          sortable: false,
+          members: esthers.map((esther) => ({
+            entity: esther,
+            width: (esther.damageStats.damageDealt / enc.topDamageDealt) * 100
+          }))
+        }
+      ];
+    }
+    // dark grenade synergy table — only in logs view, when rDPS column is enabled
+    if (!enc.live && enc.curSettings.rdps && enc.darkGrenade) {
+      const dg = enc.darkGrenade;
+      const rdamage = dg.damageStats.rdpsDamageGiven;
+      result = [
+        ...result,
+        {
+          title: "Other",
+          sortable: false,
+          members: [
+            {
+              entity: dg,
+              width: enc.topDamageDealt > 0 ? (rdamage / enc.topDamageDealt) * 100 : 0
+            }
+          ]
+        }
+      ];
+    }
+    return result;
   });
 </script>
 
@@ -73,10 +92,11 @@
       </thead>
       <tbody class="relative z-10 text-neutral-200">
         {#each party.members as member (member.entity.name)}
+          {@const clickable = member.entity.entityType !== EntityType.DARK_GRENADE}
           <tr
             animate:flip={{ duration: 200 }}
-            class="h-7 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}"
-            onclick={() => inspectPlayer(member.entity.name)}
+            class="h-7 px-2 py-1 {clickable && settings.app.general.underlineHovered ? 'hover:underline' : ''}"
+            onclick={clickable ? () => inspectPlayer(member.entity.name) : null}
           >
             <PlayerRow {enc} entity={member.entity} width={member.width} sortable={party.sortable} />
           </tr>
