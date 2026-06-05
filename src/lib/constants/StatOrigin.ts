@@ -7,7 +7,8 @@ export type StatOrigin =
   | { t: "ag"; i: number } // ark grid
   | { t: "ap"; i: number } // ark passive
   | { t: "a"; i: number } // ability
-  | { t: "it"; i: number }; // item (battle items only for now)
+  | { t: "it"; i: number } // item (battle items only for now)
+  | { t: "gr"; i: number }; // guardian raid NPC mechanic
 
 const data: {
   ability_feature_roots: Record<string, number[]>;
@@ -17,7 +18,7 @@ const data: {
 
 // order in which stat origins should be normalized; an entry earlier
 // in this list is more likely to be shown as the "primary" origin for a stat
-const originSortList: StatOrigin["t"][] = ["s", "b", "c", "ag", "ap", "a", "it"];
+const originSortList: StatOrigin["t"][] = ["s", "b", "c", "ag", "ap", "a", "it", "gr"];
 
 export function compareOrigins(a: StatOrigin, b: StatOrigin): number {
   if (a.t !== b.t) return originSortList.indexOf(a.t) - originSortList.indexOf(b.t);
