@@ -31,10 +31,10 @@ export function normalizeOrigins(origins: StatOrigin[]): StatOrigin[] {
 
 export function getAbilityFeatureOrigin(feature: string): StatOrigin[] {
   const indices = data.ability_feature_roots[feature] || [];
-  return indices.map((i) => data.origins[i]);
+  return indices.map((i) => data.origins[i]).filter((origin): origin is StatOrigin => origin !== undefined);
 }
 
 export function getSkillBuffOrigin(buffId: number): StatOrigin[] {
   const indices = data.buff_roots[buffId] || [];
-  return indices.map((i) => data.origins[i]);
+  return indices.map((i) => data.origins[i]).filter((origin): origin is StatOrigin => origin !== undefined);
 }

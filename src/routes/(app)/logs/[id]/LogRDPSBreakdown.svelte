@@ -199,7 +199,7 @@
     if (breakdownByOrigin) {
       const maxEntries = 16;
       bucketEntries = sourceGroups.slice(0, maxEntries).map((g) => ({
-        name: statOriginName(g.origins[0]),
+        name: sourceGroupName(g),
         value: g.total
       }));
       const totalRemainder = sourceGroups.slice(maxEntries).reduce((sum, g) => sum + g.total, 0);
@@ -456,6 +456,11 @@
     if (origin.t === "a") return "Engraving";
     if (origin.t === "it") return "Battle Item";
     return "Unknown";
+  }
+
+  function sourceGroupName(group: SourceGroup): string {
+    const [origin] = group.origins;
+    return origin ? statOriginName(origin) : "Unknown Source, Please Report!";
   }
 
   function dedupeOriginsBasedOnName(origins: StatOrigin[]): StatOrigin[] {
