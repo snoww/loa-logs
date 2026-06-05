@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.44.0-Nineveh Beta 24 - June 3rd, 2026
+    v1.44.0-Nineveh Beta 25 - June 5th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -25,7 +25,15 @@ across all platforms, including Linux!
 
 #### read about rdps in depth [here](https://github.com/snoww/loa-logs/wiki/rDPS-and-nDPS-Explained)
 
+#### NEW FEATURES
+
+- added rdps stats breakdown (thanks molen for the fancy graphs and breakdowns)
+    - crit luck chart will be inaccurate the closer you are to 100% crit rate
+    - stat dmg increase only works if you're not on low performance mode
+    - older logs might look weird
+
+![image](https://cdn.discordapp.com/attachments/1420857993863495701/1512237471578980573/image.png?ex=6a235c65&is=6a220ae5&hm=0228f88255bea48a433f1de7a43b69e7244859820873ba51d61b3afb93f16c7d&)
+
 #### BUG FIXES AND IMPROVEMENTS
 
-- some buff source fixing and stats for average crit luck (for future ui still wip)
-- fix support breakdown columns tied to udps settings
+- maybe fix kaz g2 intermission ending late
