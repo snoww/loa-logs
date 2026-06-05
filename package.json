@@ -61,6 +61,7 @@
     "markdown-it": "^14.1.0",
     "pako": "^2.1.0",
     "peerjs": "^1.5.4",
-    "sorted-btree": "^1.8.1"
+    "sorted-btree": "^1.8.1",
+    "tinygradient": "^2.0.1"
   }
 }
