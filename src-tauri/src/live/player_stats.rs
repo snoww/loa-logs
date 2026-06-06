@@ -1383,10 +1383,12 @@ impl PlayerStats {
             runtime_data.cached_critical_hit_damage_bonus,
             StatSource::SkillTripods,
         );
-        self.attack_speed_rate.add_self(
-            runtime_data.cached_attack_speed_bonus,
-            StatSource::SkillTripods,
-        );
+        // atk spd from tripods does not get added to overall atk speed
+        // as it would affect ssb ark passive node, but it does not
+        // self.attack_speed_rate.add_self(
+        //     runtime_data.cached_attack_speed_bonus,
+        //     StatSource::SkillTripods,
+        // );
         if let Some(value) = runtime_data
             .cached_critical_rate_bonus_per_skill_effect
             .get(&skill_effect_id)
