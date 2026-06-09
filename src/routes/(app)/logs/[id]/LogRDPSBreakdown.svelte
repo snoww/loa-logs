@@ -199,7 +199,7 @@
     if (breakdownByOrigin) {
       const maxEntries = 16;
       bucketEntries = sourceGroups.slice(0, maxEntries).map((g) => ({
-        name: statOriginName(g.origins[0]),
+        name: sourceGroupName(g),
         value: g.total
       }));
       const totalRemainder = sourceGroups.slice(maxEntries).reduce((sum, g) => sum + g.total, 0);
@@ -317,6 +317,7 @@
     if (src[0] === StatSourceType.AbilityFeature) {
       if (src[1].startsWith("ap_identity_holyknight_female_radiant")) return "Shining Knight Crit Conversion";
       if (src[1] === "ap_identity_warlord_lonely_knight") return "Gunlance Skill Crit Conversion";
+      if (src[1].startsWith("ap_identity_destroyer")) return "Destroyer State Crit Conversion";
       if (src[1] === "blocky_thorn") return "Blunt Thorn";
       return "UNKNOWN: Please Report!";
     }
@@ -384,6 +385,11 @@
       return item ? `https://cdn.ags.lol/icon/${item[1]}.png` : "/images/skills/unknown.png";
     }
 
+    // guardian raid npc
+    if (origin.t === "gr") {
+      return "/images/icons/boss.png";
+    }
+
     return "/images/skills/unknown.png";
   }
 
@@ -429,6 +435,11 @@
       return item ? item[0] : "Unknown Item";
     }
 
+    // guardian raid npc
+    if (origin.t === "gr") {
+      return "Guardian Raid Mechanic";
+    }
+
     return "Unknown, Please Report! (" + JSON.stringify(origin) + ")";
   }
 
@@ -455,7 +466,13 @@
     }
     if (origin.t === "a") return "Engraving";
     if (origin.t === "it") return "Battle Item";
+    if (origin.t === "gr") return "Guardian Raids";
     return "Unknown";
+  }
+
+  function sourceGroupName(group: SourceGroup): string {
+    const [origin] = group.origins;
+    return origin ? statOriginName(origin) : "Unknown Source, Please Report!";
   }
 
   function dedupeOriginsBasedOnName(origins: StatOrigin[]): StatOrigin[] {
@@ -470,11 +487,18 @@
     }
     return deduped;
   }
-
-  function playerClass(name: string): number {
-    return enc.encounter!.entities[name]?.classId || 0;
-  }
 </script>
+
+{#snippet playerClassOrBoss(name: string, clazz: string)}
+  {@const playerEntity = enc.encounter!.entities[name]}
+  {#if !playerEntity}
+    <img src="/images/skills/unknown.png" alt="Unknown Entity" class={clazz} />
+  {:else if playerEntity.classId}
+    <img src={getClassIcon(playerEntity.classId)} alt={playerEntity.class} class={clazz} />
+  {:else}
+    <img src="/images/icons/boss.png" alt="Boss" class={clazz} />
+  {/if}
+{/snippet}
 
 {#snippet contributionSubgroupDetails(subgroup: ContributionSubBucket, showPct: boolean)}
   <div class="flex flex-col">
@@ -516,7 +540,7 @@
           <img src="https://cdn.ags.lol/icon/{BattleItemData[101151]![1]}.png" alt="Dark Grenade" class="size-3" />
           <span class="text-xs">Dark Grenade</span>
         {:else}
-          <img src={getClassIcon(playerClass(contribution.player))} alt={contribution.player} class="size-3" />
+          {@render playerClassOrBoss(contribution.player, "size-3")}
           <span class="text-xs">{contribution.player}</span>
         {/if}
         <QuickTooltip tooltip={contribution.amount.toLocaleString()} class="flex items-center">
@@ -538,7 +562,7 @@
         />
         <div class="text-sm font-semibold">Dark Grenade</div>
       {:else}
-        <img src={getClassIcon(playerClass(group.player))} alt={group.player} class="size-4 rounded-md" />
+        {@render playerClassOrBoss(group.player, "size-4 rounded-md")}
         <div class="text-sm font-semibold">{group.player}</div>
       {/if}
 

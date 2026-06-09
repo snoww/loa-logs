@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.44.0-Nineveh Beta 25 - June 5th, 2026
+    v1.44.0-Nineveh Beta 27 - June 7th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -36,4 +36,5 @@ across all platforms, including Linux!
 
 #### BUG FIXES AND IMPROVEMENTS
 
-- maybe fix kaz g2 intermission ending late
+- added buff sources from guardian raids
+- fixed skill atk speed tripods incorrectly counting towards supersonic breakthrough utilization
