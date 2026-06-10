@@ -28,12 +28,12 @@
 
 {#snippet difficultyColor(difficulty: string)}
   <span
-    class:text-yellow-300={difficulty === "Hard" || difficulty === "Lv. 2"}
+    class:text-yellow-300={difficulty === "Hard" || difficulty === "Level 2"}
     class:text-amber-600={difficulty === "Inferno" || difficulty === "Challenge" || difficulty === "Trial"}
     class:text-cyan-400={difficulty === "Solo"}
     class:text-violet-400={difficulty === "Nightmare"}
     class:text-purple-500={difficulty.includes("Extreme") || difficulty === "The First"}
-    class:text-rose-300={difficulty === "Lv. 3"}
+    class:text-rose-300={difficulty === "Level 3"}
   >
     {difficulty}
   </span>

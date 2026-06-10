@@ -192,9 +192,9 @@ export const difficultyMap: Array<string> = [
   "Extreme",
   "The First",
   "Nightmare",
-  "Lv. 1",
-  "Lv. 2",
-  "Lv. 3"
+  "Level 1",
+  "Level 2",
+  "Level 3"
 ];
 
 export const raidGates: Record<string, string> = Object.fromEntries(
