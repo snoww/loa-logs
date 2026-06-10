@@ -5511,7 +5511,7 @@
     "parameterType": "relative",
     "parameters": [
       0,
-      6
+      7
     ]
   },
   "2460502": {
@@ -5525,7 +5525,7 @@
     "parameterType": "relative",
     "parameters": [
       0,
-      12
+      14
     ]
   },
   "2461003": {
@@ -5738,36 +5738,10 @@
   },
   "3463100": {
     "id": 3463100,
-    "name": "[소울이터][AG][베타-A-2] 소울 시너스 마나 소모 감소",
+    "name": "[소울이터][AG][베타-A-2] 소울 시너스, 길로틴 스윙 마나 소모 감소",
     "desc": "",
-    "skillId": 46500,
-    "skillGroupId": 0,
-    "type": "change_cost",
-    "target": "pc",
-    "parameterType": "relative",
-    "parameters": [
-      -50
-    ]
-  },
-  "3463200": {
-    "id": 3463200,
-    "name": "[소울이터][AG][베타-A-3] 길로틴 스윙 마나 소모 감소",
-    "desc": "",
-    "skillId": 46520,
-    "skillGroupId": 0,
-    "type": "change_cost",
-    "target": "pc",
-    "parameterType": "relative",
-    "parameters": [
-      -50
-    ]
-  },
-  "3463300": {
-    "id": 3463300,
-    "name": "[소울이터][AG][베타-A-3.5] 길로틴 스윙 마나 소모 감소",
-    "desc": "",
-    "skillId": 46520,
-    "skillGroupId": 0,
+    "skillId": 0,
+    "skillGroupId": 3463100,
     "type": "change_cost",
     "target": "pc",
     "parameterType": "relative",
@@ -5814,6 +5788,19 @@
       15
     ]
   },
+  "3464201": {
+    "id": 3464201,
+    "name": "[소울이터][AG][베타-C-3] 망자 스킬 마나 감소",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 3461100,
+    "type": "change_cost",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      -50
+    ]
+  },
   "3464300": {
     "id": 3464300,
     "name": "[소울이터][AG][베타-C-3.5] 망자 스킬 공격속도 증가",
@@ -5825,6 +5812,19 @@
     "parameterType": "relative",
     "parameters": [
       15
+    ]
+  },
+  "3464301": {
+    "id": 3464301,
+    "name": "[소울이터][AG][베타-C-3.5] 망자 스킬 마나 감소",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 3461100,
+    "type": "change_cost",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      -50
     ]
   },
   "3464700": {
@@ -5946,18 +5946,45 @@
       -4000
     ]
   },
-  "3467100": {
-    "id": 3467100,
-    "name": "[소울이터][AG][감마-C-2] 글러트니 '빙의' 커마 피해 증가",
+  "3466700": {
+    "id": 3466700,
+    "name": "[소울이터][AG][감마-B-3] 베스티지 '강력한 일격' 커마 피해 증가",
     "desc": "",
-    "skillId": 46400,
+    "skillId": 46530,
     "skillGroupId": 0,
     "type": "change_dam_value",
     "target": "pc",
     "parameterType": "relative",
     "parameters": [
       0,
-      180
+      25
+    ]
+  },
+  "3466800": {
+    "id": 3466800,
+    "name": "[소울이터][AG][감마-B-3.5] 베스티지 '강력한 일격' 커마 피해 증가",
+    "desc": "",
+    "skillId": 46530,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      25
+    ]
+  },
+  "3467100": {
+    "id": 3467100,
+    "name": "[소울이터][AG][감마-C-2] 글러트니 '빙의' 커마 피면",
+    "desc": "",
+    "skillId": 46400,
+    "skillGroupId": 0,
+    "type": "add_skill_buff",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      3467100
     ]
   },
   "3467200": {
@@ -6588,7 +6615,7 @@
     "parameterType": "relative",
     "parameters": [
       0,
-      8
+      12
     ]
   },
   "3493800": {
@@ -6615,7 +6642,7 @@
     "parameterType": "relative",
     "parameters": [
       0,
-      10
+      14
     ]
   },
   "3496600": {
@@ -6730,6 +6757,19 @@
     "parameters": [
       0,
       20
+    ]
+  },
+  "3497101": {
+    "id": 3497101,
+    "name": "[아크 그리드] γ-C타입-14 리벤지 스피어 피격면역 추가",
+    "desc": "",
+    "skillId": 49210,
+    "skillGroupId": 0,
+    "type": "add_skill_buff",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      3497101
     ]
   },
   "3497200": {
@@ -8675,6 +8715,34 @@
       31
     ]
   },
+  "3223700": {
+    "id": 3223700,
+    "name": "[배틀마스터][아크그리드] β-B타입-17 근원의 엘리멘탈 사용 불가",
+    "desc": "",
+    "skillId": 22400,
+    "skillGroupId": 0,
+    "type": "change_skill_constraint",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      5,
+      3390100
+    ]
+  },
+  "3223800": {
+    "id": 3223800,
+    "name": "[배틀마스터][아크그리드] β-B타입-17+ 근원의 엘리멘탈 사용 불가",
+    "desc": "",
+    "skillId": 22400,
+    "skillGroupId": 0,
+    "type": "change_skill_constraint",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      5,
+      3390100
+    ]
+  },
   "3227100": {
     "id": 3227100,
     "name": "[배틀마스터][아크그리드] γ-C타입-14 방천격 '정의로운 빛' 사용 시 피해량 증가",
@@ -8703,6 +8771,19 @@
       100
     ]
   },
+  "3224701": {
+    "id": 3224701,
+    "name": "[배틀마스터][아크그리드] β-D타입-17 창룡패황권 공속증가 10%",
+    "desc": "",
+    "skillId": 22340,
+    "skillGroupId": 0,
+    "type": "change_attack_stage_speed",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      10
+    ]
+  },
   "3224800": {
     "id": 3224800,
     "name": "[배틀마스터][아크그리드] β-D타입-17+ 창룡패황권 재사용 대기시간 감소",
@@ -8715,6 +8796,49 @@
     "parameters": [
       -45,
       100
+    ]
+  },
+  "3224801": {
+    "id": 3224801,
+    "name": "[배틀마스터][아크그리드] β-D타입-17+ 창룡패황권 공속증가 10%",
+    "desc": "",
+    "skillId": 22340,
+    "skillGroupId": 0,
+    "type": "change_attack_stage_speed",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      10
+    ]
+  },
+  "3225700": {
+    "id": 3225700,
+    "name": "[배틀마스터][아크그리드] β-F타입-17 오의 스킬 무력화 10%",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 3225700,
+    "type": "change_skill_effect_ai_point",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      10,
+      10
+    ]
+  },
+  "3225800": {
+    "id": 3225800,
+    "name": "[배틀마스터][아크그리드] β-F타입-17 오의 스킬 무력화 10%",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 3225700,
+    "type": "change_skill_effect_ai_point",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      10,
+      10
     ]
   },
   "3227700": {
@@ -8731,6 +8855,19 @@
       100
     ]
   },
+  "3227701": {
+    "id": 3227701,
+    "name": "[배틀마스터][아크그리드] γ-D타입-17 풍신초래 공속증가 15%",
+    "desc": "",
+    "skillId": 22110,
+    "skillGroupId": 0,
+    "type": "change_attack_stage_speed",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      15
+    ]
+  },
   "3227800": {
     "id": 3227800,
     "name": "[배틀마스터][아크그리드] γ-D타입-17+ 풍신초래 재사용 대기시간 감소",
@@ -8743,6 +8880,19 @@
     "parameters": [
       0,
       100
+    ]
+  },
+  "3227801": {
+    "id": 3227801,
+    "name": "[배틀마스터][아크그리드] γ-D타입-17+ 풍신초래 공속증가 15%",
+    "desc": "",
+    "skillId": 22110,
+    "skillGroupId": 0,
+    "type": "change_attack_stage_speed",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      15
     ]
   },
   "3228200": {
@@ -13482,29 +13632,27 @@
   },
   "3288200": {
     "id": 3288200,
-    "name": "호크아이_감마_E_17_차징 샷_정조준 피해량 증가",
+    "name": "호크아이_감마_E_17_차징 샷_정조준 시전 속도 증가",
     "desc": "",
     "skillId": 28090,
     "skillGroupId": 0,
-    "type": "change_dam_value",
+    "type": "change_attack_stage_speed",
     "target": "pc",
     "parameterType": "relative",
     "parameters": [
-      0,
-      10
+      15
     ]
   },
   "3288300": {
     "id": 3288300,
-    "name": "호크아이_감마_E_17+_차징 샷_정조준 피해량 증가",
+    "name": "호크아이_감마_E_17+_차징 샷_정조준 시전 속도 증가",
     "desc": "",
     "skillId": 28090,
     "skillGroupId": 0,
-    "type": "change_dam_value",
+    "type": "change_attack_stage_speed",
     "target": "pc",
     "parameterType": "relative",
     "parameters": [
-      0,
       15
     ]
   },
@@ -13896,6 +14044,17 @@
       20
     ]
   },
+  "3382600": {
+    "id": 3382600,
+    "name": "건슬링어_AG_알파F14_피스 키퍼 방향성 제거",
+    "desc": "",
+    "skillId": 38260,
+    "skillGroupId": 0,
+    "type": "change_attack_mask",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": []
+  },
   "3384200": {
     "id": 3384200,
     "name": "건슬링어_AG_베타C17_타겟 다운 사용 시 받는 피해 감소",
@@ -13991,7 +14150,7 @@
   },
   "3388100": {
     "id": 3388100,
-    "name": "건슬링어_AG_감마E14_레인 오브 불릿 쿨타임 증가",
+    "name": "건슬링어_AG_감마E14_레인 오브 불릿 '원거리 사격' 쿨타임 증가",
     "desc": "",
     "skillId": 38190,
     "skillGroupId": 0,
@@ -14001,6 +14160,20 @@
     "parameters": [
       22000,
       100
+    ]
+  },
+  "3388101": {
+    "id": 3388101,
+    "name": "건슬링어_AG_감마E14_레인 오브 불릿 '원거리 사격' 피해량 증가",
+    "desc": "",
+    "skillId": 38190,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      122
     ]
   },
   "3388200": {
@@ -14040,7 +14213,7 @@
     "parameterType": "relative",
     "parameters": [
       0,
-      148
+      161
     ]
   },
   "3388700": {
@@ -14054,7 +14227,7 @@
     "parameterType": "relative",
     "parameters": [
       0,
-      20
+      28
     ]
   },
   "3388800": {
@@ -14068,7 +14241,7 @@
     "parameterType": "relative",
     "parameters": [
       0,
-      25
+      32
     ]
   },
   "2480000": {
@@ -14761,6 +14934,19 @@
     "parameterType": "relative",
     "parameters": [
       20
+    ]
+  },
+  "3486510": {
+    "id": 3486510,
+    "name": "[발키리][아크그리드][감마 B-1] 계시의 집행 시전 중 피격이상 면역 버프 부여",
+    "desc": "",
+    "skillId": 48180,
+    "skillGroupId": 0,
+    "type": "add_skill_buff",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      3486510
     ]
   },
   "3486600": {
@@ -17750,6 +17936,19 @@
       3204700
     ]
   },
+  "3205700": {
+    "id": 3205700,
+    "name": "[서머너][AG] β-F타입-17/17+  초각 제외 고정 피증 / 고정 액션 시간",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2201006,
+    "type": "change_attack_stage_speed",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      10
+    ]
+  },
   "3206500": {
     "id": 3206500,
     "name": "[서머너][AG] γ-B타입-10 슈르디 마나회복 피증",
@@ -20005,6 +20204,19 @@
       3000
     ]
   },
+  "2330000": {
+    "id": 2330000,
+    "name": "환수사_깨달음_1_2 야성_둔갑 스킬 마나 소모량 감소 효과",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2330010,
+    "type": "change_cost",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      -50
+    ]
+  },
   "2330600": {
     "id": 2330600,
     "name": "환수사_깨달음_3_3 환수의 정기 흡수 버프",
@@ -20366,16 +20578,15 @@
   },
   "2335700": {
     "id": 2335700,
-    "name": "환수사_도약_2-2_스택 쿨 다운",
+    "name": "환수사_도약_2-2_스택 차지 타임",
     "desc": "",
     "skillId": 33450,
     "skillGroupId": 0,
-    "type": "reduce_default_cooldown",
+    "type": "change_stack_charge_time",
     "target": "pc",
     "parameterType": "absolute",
     "parameters": [
-      -49000,
-      100
+      -25000
     ]
   },
   "2335710": {
@@ -20516,12 +20727,26 @@
       -10
     ]
   },
-  "3336500": {
-    "id": 3336500,
-    "name": "환수사_감마 B-1 어흥 곰 시전 속도 증가",
+  "3330500": {
+    "id": 3330500,
+    "name": "환수사_해 B-1_여우 스킬 제한",
     "desc": "",
-    "skillId": 33220,
-    "skillGroupId": 0,
+    "skillId": 0,
+    "skillGroupId": 3330500,
+    "type": "change_skill_constraint",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      5,
+      3330500
+    ]
+  },
+  "3336000": {
+    "id": 3336000,
+    "name": "환수사_감마 A-1 슈웅 곰 시전 속도 증가",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 3336000,
     "type": "change_attack_stage_speed",
     "target": "pc",
     "parameterType": "relative",
@@ -20529,18 +20754,57 @@
       20
     ]
   },
-  "3336600": {
-    "id": 3336600,
-    "name": "환수사_감마 B-2 뒤집 곰 '대지 충격' 피해량 증가",
+  "3336100": {
+    "id": 3336100,
+    "name": "환수사_감마 A-2 여우 꼬리물기 '사냥 본능' 트라이포드",
     "desc": "",
-    "skillId": 33210,
+    "skillId": 33310,
     "skillGroupId": 0,
-    "type": "change_dam_value",
+    "type": "change_cost",
     "target": "pc",
     "parameterType": "relative",
     "parameters": [
       0,
-      10
+      -30
+    ]
+  },
+  "3336500": {
+    "id": 3336500,
+    "name": "환수사_감마 B-1 빙글빙글 꽝 2스택 변경",
+    "desc": "",
+    "skillId": 33170,
+    "skillGroupId": 0,
+    "type": "change_stack_charge_time",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      30000
+    ]
+  },
+  "3336600": {
+    "id": 3336600,
+    "name": "환수사_감마 B-2 빙글빙글 꽝 '멈출수 없는 힘' 피격면역",
+    "desc": "",
+    "skillId": 33170,
+    "skillGroupId": 0,
+    "type": "add_skill_buff",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      3336600
+    ]
+  },
+  "3337000": {
+    "id": 3337000,
+    "name": "환수사_감마 C-1 여우 폴짝 시전 속도 증가",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 3337000,
+    "type": "change_attack_stage_speed",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      20
     ]
   },
   "3337700": {
@@ -23350,43 +23614,40 @@
   "3367900": {
     "id": 3367900,
     "name": "홀리나이트 감마 IV : 보너스 (1P 효과)",
-    "desc": "신성검 재사용 대기시간 감소",
+    "desc": "신성검 재사용 스택 시간 감소",
     "skillId": 36190,
     "skillGroupId": 0,
-    "type": "reduce_default_cooldown",
+    "type": "change_stack_charge_time",
     "target": "pc",
     "parameterType": "relative",
     "parameters": [
-      -2,
-      100
+      -2
     ]
   },
   "3367901": {
     "id": 3367901,
     "name": "홀리나이트 감마 IV : 보너스 (1P 효과)",
-    "desc": "신성검 재사용 대기시간 감소",
+    "desc": "신성검 재사용 스택 시간 감소",
     "skillId": 36190,
     "skillGroupId": 0,
-    "type": "reduce_default_cooldown",
+    "type": "change_stack_charge_time",
     "target": "pc",
     "parameterType": "relative",
     "parameters": [
-      -2,
-      100
+      -2
     ]
   },
   "3367902": {
     "id": 3367902,
     "name": "홀리나이트 감마 IV : 보너스 (1P 효과)",
-    "desc": "신성검 재사용 대기시간 감소",
+    "desc": "신성검 재사용 스택 시간 감소",
     "skillId": 36190,
     "skillGroupId": 0,
-    "type": "reduce_default_cooldown",
+    "type": "change_stack_charge_time",
     "target": "pc",
     "parameterType": "relative",
     "parameters": [
-      -2,
-      100
+      -2
     ]
   },
   "3368000": {

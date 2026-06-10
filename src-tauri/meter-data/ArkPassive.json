@@ -532,7 +532,7 @@
     "levels": {
       "1": {
         "name": "Extreme Body Movement",
-        "desc": "All Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2251000/> /100 />%</FONT>. Deathblade Surge changes to a piercing attack that slashes enemies while traveling to the target location. Always hits as a Back Attack regardless of attack direction.",
+        "desc": "All Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2251000/> /100 />%</FONT>. Deathblade Surge changes to a slashing attack that moves to the target location. All hits are considered Back Attacks regardless of position. Ignore collision with adventurers and Guardian Monsters while moving.",
         "icon": "ark_passive_bl_8.png",
         "level": 1,
         "addons": [
@@ -564,7 +564,7 @@
       },
       "2": {
         "name": "Extreme Body Movement",
-        "desc": "All Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2251001/> /100 />%</FONT>. Deathblade Surge changes to a piercing attack that slashes enemies while traveling to the target location. Always hits as a Back Attack regardless of attack direction.",
+        "desc": "All Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2251001/> /100 />%</FONT>. Deathblade Surge changes to a slashing attack that moves to the target location. All hits count as Back Attacks. Ignore collision with adventurers and Guardian Monsters while moving.",
         "icon": "ark_passive_bl_8.png",
         "level": 2,
         "addons": [
@@ -596,7 +596,7 @@
       },
       "3": {
         "name": "Extreme Body Movement",
-        "desc": "All Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2251002/> /100 />%</FONT>. Deathblade Surge changes to a piercing attack that slashes enemies while traveling to the target location. Always hits as a Back Attack regardless of attack direction.",
+        "desc": "All Damage to foes <FONT COLOR='#99ff99'>+<$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2251002/> /100 />%</FONT>. Deathblade Surge changes to a slashing attack that moves to the target location. All hits count as Back Attacks. Ignore collision with adventurers and Guardian Monsters while moving.",
         "icon": "ark_passive_bl_8.png",
         "level": 3,
         "addons": [
@@ -2090,7 +2090,7 @@
     "levels": {
       "1": {
         "name": "Slaughterer",
-        "desc": "You can no longer enter Persona Mode, but you can press <FONT COLOR='#ffff99'><$HOTKEY 107 1/></FONT> in Chaos Mode to use Fatal Step, which flies to the target location and slashes foes. When using Fatal Step, gains the Slaughterer effect for <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_SKILLBUFF DURATION 2261001 />/1000/>s</FONT>. While the Slaughterer effect is active, Dagger, Shadow, and Swoop Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value02 2260400 1 />/100 />%</FONT>.",
+        "desc": "You can no longer enter Persona Mode, but in Chaos Mode, use <FONT COLOR='#ffff99'><$HOTKEY 107 1/></FONT> to activate Fatal Step, flying to the target location with a slashing attack. On Fatal Step use, gain the Slaughterer effect for <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_SKILLBUFF DURATION 2261001 />/1000/>s</FONT>. While the effect is active, Dagger, Shadow, Swoop Skill, Corrosive Poison, Bleeding Poison, and Heavy Bleeding Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value02 2260400 1 />/100 />%</FONT>.",
         "icon": "ark_passive_rp_6.png",
         "level": 1,
         "addons": [
@@ -2116,7 +2116,7 @@
       },
       "2": {
         "name": "Slaughterer",
-        "desc": "You can no longer enter Persona Mode, but you can press <FONT COLOR='#ffff99'><$HOTKEY 107 1/></FONT> in Chaos Mode to use Fatal Step, which flies to the target location and slashes foes. When using Fatal Step, gain the Slaughterer effect for <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_SKILLBUFF DURATION 2261001 />/1000/>s</FONT>. While the Slaughterer effect is active, Dagger, Shadow, and Swoop Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value02 2260400 2 />/100 />%</FONT>.",
+        "desc": "You can no longer enter Persona Mode, but in Chaos Mode, use <FONT COLOR='#ffff99'><$HOTKEY 107 1/></FONT> to activate Fatal Step, flying to the target location with a slashing attack. On Fatal Step use, gain the Slaughterer effect for <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_SKILLBUFF DURATION 2261001 />/1000/>s</FONT>. While the effect is active, Dagger, Shadow, Swoop Skill, Corrosive Poison, Bleeding Poison, and Heavy Bleeding Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value02 2260400 2 />/100 />%</FONT>.",
         "icon": "ark_passive_rp_6.png",
         "level": 2,
         "addons": [
@@ -2142,7 +2142,7 @@
       },
       "3": {
         "name": "Slaughterer",
-        "desc": "You can no longer enter Persona Mode, but you can press <FONT COLOR='#ffff99'><$HOTKEY 107 1/></FONT> in Chaos Mode to use Fatal Step, which flies to the target location and slashes foes. When using Fatal Step, gain the Slaughterer effect for <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_SKILLBUFF DURATION 2261001 />/1000/>s</FONT>. While the Slaughterer effect is active, Dagger, Shadow, and Swoop Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value02 2260400 3 />/100 />%</FONT>.",
+        "desc": "You can no longer enter Persona Mode, but in Chaos Mode, use <FONT COLOR='#ffff99'><$HOTKEY 107 1/></FONT> to activate Fatal Step, flying to the target location with a slashing attack. On Fatal Step use, gain the Slaughterer effect for <FONT COLOR='#ffff99'><$CALC %1 <$TABLE_SKILLBUFF DURATION 2261001 />/1000/>s</FONT>. While the effect is active, Dagger, Shadow, Swoop Skill, Corrosive Poison, Bleeding Poison, and Heavy Bleeding Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value02 2260400 3 />/100 />%</FONT>.",
         "icon": "ark_passive_rp_6.png",
         "level": 3,
         "addons": [
@@ -2173,7 +2173,7 @@
     "levels": {
       "1": {
         "name": "Chaos Enhancement",
-        "desc": "On using a Swoop Skill in Chaos Mode, Chaos effect duration -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2260600 1 />/1000 /></FONT>s, but Dagger, Shadow, and Swoop Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2260600 1 />/100 />%</FONT>.",
+        "desc": "On Swoop Skill use in Chaos Mode, Chaos effect duration -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2260600 1 />/1000 />s</FONT>, but Dagger, Shadow, Swoop Skill, Corrosive Poison, Bleeding Poison, and Heavy Bleeding Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2260600 1 />/100 />%</FONT>.",
         "icon": "ark_passive_rp_7.png",
         "level": 1,
         "addons": [
@@ -2187,7 +2187,7 @@
       },
       "2": {
         "name": "Chaos Enhancement",
-        "desc": "On using a Swoop Skill in Chaos Mode, Chaos effect duration -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2260600 2 />/1000 /></FONT>s, but Dagger, Shadow, and Swoop Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2260600 2 />/100 />%</FONT>.",
+        "desc": "On Swoop Skill use in Chaos Mode, Chaos effect duration -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2260600 2 />/1000 />s</FONT>, but Dagger, Shadow, Swoop Skill, Corrosive Poison, Bleeding Poison, and Heavy Bleeding Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2260600 2 />/100 />%</FONT>.",
         "icon": "ark_passive_rp_7.png",
         "level": 2,
         "addons": [
@@ -2201,7 +2201,7 @@
       },
       "3": {
         "name": "Chaos Enhancement",
-        "desc": "On using a Swoop Skill in Chaos Mode, Chaos effect duration -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2260600 3 />/1000 /></FONT>s, but Dagger, Shadow, and Swoop Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2260600 3 />/100 />%</FONT>.",
+        "desc": "On Swoop Skill use in Chaos Mode, Chaos effect duration -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2260600 3 />/1000 />s</FONT>, but Dagger, Shadow, Swoop Skill, Corrosive Poison, Bleeding Poison, and Heavy Bleeding Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2260600 3 />/100 />%</FONT>.",
         "icon": "ark_passive_rp_7.png",
         "level": 3,
         "addons": [
@@ -2215,7 +2215,7 @@
       },
       "4": {
         "name": "Chaos Enhancement",
-        "desc": "On using a Swoop Skill in Chaos Mode, Chaos effect duration -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2260600 4 />/1000 /></FONT>s, but Dagger, Shadow, and Swoop Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2260600 4 />/100 />%</FONT>.",
+        "desc": "On Swoop Skill use in Chaos Mode, Chaos effect duration -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2260600 4 />/1000 />s</FONT>, but Dagger, Shadow, Swoop Skill, Corrosive Poison, Bleeding Poison, and Heavy Bleeding Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2260600 4 />/100 />%</FONT>.",
         "icon": "ark_passive_rp_7.png",
         "level": 4,
         "addons": [
@@ -2229,7 +2229,7 @@
       },
       "5": {
         "name": "Chaos Enhancement",
-        "desc": "On using a Swoop Skill in Chaos Mode, Chaos effect duration -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2260600 5 />/1000 /></FONT>s, but Dagger, Shadow, and Swoop Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2260600 5 />/100 />%</FONT>.",
+        "desc": "On Swoop Skill use in Chaos Mode, Chaos effect duration -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ABILITYFEATURE Value00 2260600 5 />/1000 />s</FONT>, but Dagger, Shadow, Swoop Skill, Corrosive Poison, Bleeding Poison, and Heavy Bleeding Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2260600 5 />/100 />%</FONT>.",
         "icon": "ark_passive_rp_7.png",
         "level": 5,
         "addons": [
@@ -4331,7 +4331,7 @@
     "levels": {
       "1": {
         "name": "Demon's Ascension",
-        "desc": "Gain Push Immunity while using Blood Marsh. While moving, you can pierce through Guardian Monsters. Blood Burst delivers a total of <FONT COLOR='#99ff99'>9</FONT> attacks. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2275900/> /100 />%</FONT>.",
+        "desc": "Gain Push Immunity while using Blood Marsh. Ignore collisions with adventurers and Guardian monsters while moving. Blood Burst delivers a total of <FONT COLOR='#99ff99'>9</FONT> attacks. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2275900/> /100 />%</FONT>.",
         "icon": "ark_passive_dm_16.png",
         "level": 1,
         "addons": [
@@ -4351,7 +4351,7 @@
       },
       "2": {
         "name": "Demon's Ascension",
-        "desc": "Gain Push Immunity while using Blood Marsh. While moving, you can pierce through Guardian Monsters. Blood Burst delivers a total of <FONT COLOR='#99ff99'>9</FONT> attacks. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2275901/> /100 />%</FONT>.",
+        "desc": "Gain Push Immunity while using Blood Marsh. Ignore collisions with adventurers and Guardian monsters while moving. Blood Burst delivers a total of <FONT COLOR='#99ff99'>9</FONT> attacks. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2275901/> /100 />%</FONT>.",
         "icon": "ark_passive_dm_16.png",
         "level": 2,
         "addons": [
@@ -4371,7 +4371,7 @@
       },
       "3": {
         "name": "Demon's Ascension",
-        "desc": "Gain Push Immunity while using Blood Marsh. While moving, you can pierce through Guardian Monsters. Blood Burst delivers a total of <FONT COLOR='#99ff99'>9</FONT> attacks. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2275902/> /100 />%</FONT>.",
+        "desc": "Gain Push Immunity while using Blood Marsh. Ignore collisions with adventurers and Guardian monsters while moving. Blood Burst delivers a total of <FONT COLOR='#99ff99'>9</FONT> attacks. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2275902/> /100 />%</FONT>.",
         "icon": "ark_passive_dm_16.png",
         "level": 3,
         "addons": [
@@ -13197,7 +13197,7 @@
     "levels": {
       "1": {
         "name": "First Intention",
-        "desc": "Disables Esoteric Meter gain. Damage to foes +<FONT COLOR='#99ff99'>20%</FONT>.",
+        "desc": "Disables Esoteric Meter gain. Damage to foes +<FONT COLOR='#99ff99'>25%</FONT>.",
         "icon": "ark_passive_bm_1.png",
         "level": 1,
         "addons": [
@@ -13211,13 +13211,13 @@
             "type": "stat",
             "statType": "skill_damage_sub_rate_1",
             "keyIndex": 0,
-            "keyValue": 3500
+            "keyValue": 4000
           }
         ]
       },
       "2": {
         "name": "First Intention",
-        "desc": "Disables Esoteric Meter gain. Damage to foes +<FONT COLOR='#99ff99'>30%</FONT>.",
+        "desc": "Disables Esoteric Meter gain. Damage to foes +<FONT COLOR='#99ff99'>35%</FONT>.",
         "icon": "ark_passive_bm_1.png",
         "level": 2,
         "addons": [
@@ -13231,13 +13231,13 @@
             "type": "stat",
             "statType": "skill_damage_sub_rate_1",
             "keyIndex": 0,
-            "keyValue": 4500
+            "keyValue": 5000
           }
         ]
       },
       "3": {
         "name": "First Intention",
-        "desc": "Disables Esoteric Meter gain. Damage to foes +<FONT COLOR='#99ff99'>40%</FONT>.",
+        "desc": "Disables Esoteric Meter gain. Damage to foes +<FONT COLOR='#99ff99'>45%</FONT>.",
         "icon": "ark_passive_bm_1.png",
         "level": 3,
         "addons": [
@@ -13251,7 +13251,7 @@
             "type": "stat",
             "statType": "skill_damage_sub_rate_1",
             "keyIndex": 0,
-            "keyValue": 5500
+            "keyValue": 6000
           }
         ]
       }
@@ -13489,7 +13489,7 @@
     "levels": {
       "1": {
         "name": "Esoteric Origin",
-        "desc": "Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2220900/> /100 />%</FONT>. Upon using a Normal Skill, Esoteric Origin Orb +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2220900/> /1000 /></FONT> from a source that cannot be used for Esoteric Skills. When you have <FONT COLOR='#ffff99'>3</FONT> Orbs, press <FONT COLOR='#ffff99'><$HOTKEY 107 1/></FONT> to use <FONT COLOR='#ffff99'>3</FONT> Orbs to increase Damage dealt from the next <FONT COLOR='#ffff99'>Leaping Dragon</FONT>, <FONT COLOR='#ffff99'>Moon Flash Kick</FONT>, <FONT COLOR='#ffff99'>Sweeping Kick</FONT>, or <FONT COLOR='#ffff99'>Deadly Dive</FONT> Skill by <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value04 2220902 1 />/100 />%</FONT>.",
+        "desc": "Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2220900/> /100 />%</FONT>. Upon using a Normal Skill, Esoteric Origin Orb +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2220900/> /1000 /></FONT> from a source that cannot be used for Esoteric Skills. When you have <FONT COLOR='#ffff99'>3</FONT> Orbs, press <FONT COLOR='#ffff99'><$HOTKEY 107 1/></FONT> to use <FONT COLOR='#ffff99'>3</FONT> Orbs to increase Damage dealt from the next <FONT COLOR='#ffff99'>Leaping Dragon</FONT>, <FONT COLOR='#ffff99'>Moon Flash Kick</FONT>, <FONT COLOR='#ffff99'>Sweeping Kick</FONT>, or <FONT COLOR='#ffff99'>Deadly Dive</FONT> Skill by <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value04 2220902 1 />/100 />%</FONT>, and gain Push Immunity for <FONT COLOR='#ffff99'><$MACRO bufftime_st @1:2220506/>s</FONT>.",
         "icon": "ark_passive_bm_4.png",
         "level": 1,
         "addons": [
@@ -13522,12 +13522,18 @@
             "statType": "none",
             "keyIndex": 2220900,
             "keyValue": 0
+          },
+          {
+            "type": "combat_effect",
+            "statType": "none",
+            "keyIndex": 2220903,
+            "keyValue": 0
           }
         ]
       },
       "2": {
         "name": "Esoteric Origin",
-        "desc": "Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2220901/> /100 />%</FONT>. Upon using a Normal Skill, Esoteric Origin Orb +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2220900/> /1000 /></FONT> from a source that cannot be used for Esoteric Skills. When you have <FONT COLOR='#ffff99'>3</FONT> Orbs, press <FONT COLOR='#ffff99'><$HOTKEY 107 1/></FONT> to use <FONT COLOR='#ffff99'>3</FONT> Orbs to increase Damage dealt from the next <FONT COLOR='#ffff99'>Leaping Dragon</FONT>, <FONT COLOR='#ffff99'>Moon Flash Kick</FONT>, <FONT COLOR='#ffff99'>Sweeping Kick</FONT>, or <FONT COLOR='#ffff99'>Deadly Dive</FONT> Skill by <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value04 2220902 2 />/100 />%</FONT>.",
+        "desc": "Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2220901/> /100 />%</FONT>. Upon using a Normal Skill, Esoteric Origin Orb +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2220900/> /1000 /></FONT> from a source that cannot be used for Esoteric Skills. When you have <FONT COLOR='#ffff99'>3</FONT> Orbs, press <FONT COLOR='#ffff99'><$HOTKEY 107 1/></FONT> to use <FONT COLOR='#ffff99'>3</FONT> Orbs to increase Damage dealt from the next <FONT COLOR='#ffff99'>Leaping Dragon</FONT>, <FONT COLOR='#ffff99'>Moon Flash Kick</FONT>, <FONT COLOR='#ffff99'>Sweeping Kick</FONT>, or <FONT COLOR='#ffff99'>Deadly Dive</FONT> Skill by <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value04 2220902 2 />/100 />%</FONT>, and gain Push Immunity for <FONT COLOR='#ffff99'><$MACRO bufftime_st @1:2220506/>s</FONT>.",
         "icon": "ark_passive_bm_4.png",
         "level": 2,
         "addons": [
@@ -13560,12 +13566,18 @@
             "statType": "none",
             "keyIndex": 2220901,
             "keyValue": 0
+          },
+          {
+            "type": "combat_effect",
+            "statType": "none",
+            "keyIndex": 2220903,
+            "keyValue": 0
           }
         ]
       },
       "3": {
         "name": "Esoteric Origin",
-        "desc": "Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2220902/> /100 />%</FONT>. Upon using a Normal Skill, Esoteric Origin Orb +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2220900/> /1000 /></FONT> from a source that cannot be used for Esoteric Skills. When you have <FONT COLOR='#ffff99'>3</FONT> Orbs, press <FONT COLOR='#ffff99'><$HOTKEY 107 1/></FONT> to use <FONT COLOR='#ffff99'>3</FONT> Orbs to increase Damage dealt from the next <FONT COLOR='#ffff99'>Leaping Dragon</FONT>, <FONT COLOR='#ffff99'>Moon Flash Kick</FONT>, <FONT COLOR='#ffff99'>Sweeping Kick</FONT>, or <FONT COLOR='#ffff99'>Deadly Dive</FONT> Skill by <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value04 2220902 3 />/100 />%</FONT>.",
+        "desc": "Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2220902/> /100 />%</FONT>. Upon using a Normal Skill, Esoteric Origin Orb +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2220900/> /1000 /></FONT> from a source that cannot be used for Esoteric Skills. When you have <FONT COLOR='#ffff99'>3</FONT> Orbs, press <FONT COLOR='#ffff99'><$HOTKEY 107 1/></FONT> to use <FONT COLOR='#ffff99'>3</FONT> Orbs to increase Damage dealt from the next <FONT COLOR='#ffff99'>Leaping Dragon</FONT>, <FONT COLOR='#ffff99'>Moon Flash Kick</FONT>, <FONT COLOR='#ffff99'>Sweeping Kick</FONT>, or <FONT COLOR='#ffff99'>Deadly Dive</FONT> Skill by <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value04 2220902 3 />/100 />%</FONT>, and gain Push Immunity for <FONT COLOR='#ffff99'><$MACRO bufftime_st @1:2220506/>s</FONT>.",
         "icon": "ark_passive_bm_4.png",
         "level": 3,
         "addons": [
@@ -13597,6 +13609,12 @@
             "type": "combat_effect",
             "statType": "none",
             "keyIndex": 2220902,
+            "keyValue": 0
+          },
+          {
+            "type": "combat_effect",
+            "statType": "none",
+            "keyIndex": 2220903,
             "keyValue": 0
           }
         ]
@@ -20493,7 +20511,7 @@
     "levels": {
       "1": {
         "name": "Pistoleer",
-        "desc": "Can only be used in Handgun Stance. Movement Skill switches to Relentless Assault. Use Relentless Assault to gain the Assault buff, which lasts for <FONT COLOR='#ffff99'>6s</FONT>. Movement Skills stack up to <FONT COLOR='#ffff99'>2</FONT> times.\nDamage to foes from the Clay Bombardment Awakening Skill +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value02 2290200 1 />/100 />%</FONT>, and Stagger Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2290200 1 />/100 />%</FONT>.\n\nAssault: Atk. Speed and Move Speed +<FONT COLOR='#99ff99'><$CALC (<$TABLE_SKILLBUFF PassiveOptionValue0 293200/>/100)/>%</FONT>, Skill Cooldown -<FONT COLOR='#99ff99'><$CALC (<$TABLE_SKILLBUFF PassiveOptionValue2 293200/>/100)/>%</FONT>.",
+        "desc": "Can only be used in Handgun Stance. Movement Skill switches to Relentless Assault. Use Relentless Assault to gain the Assault buff, which lasts for <FONT COLOR='#ffff99'>6s</FONT>. Movement Skills stack up to <FONT COLOR='#ffff99'>2</FONT> times.\nHandgun Skills' Stagger Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2290200 1 />/100 />%</FONT>.\nDamage to foes from the Clay Bombardment Awakening Skill +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value02 2290200 1 />/100 />%</FONT>, and Stagger Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2290200 1 />/100 />%</FONT>.\n\nAssault: Atk. Speed and Move Speed +<FONT COLOR='#99ff99'><$CALC (<$TABLE_SKILLBUFF PassiveOptionValue0 293200/>/100)/>%</FONT>, Skill Cooldown -<FONT COLOR='#99ff99'><$CALC (<$TABLE_SKILLBUFF PassiveOptionValue2 293200/>/100)/>%</FONT>.",
         "icon": "ark_passive_dh_4.png",
         "level": 1,
         "addons": [
@@ -20507,7 +20525,7 @@
       },
       "2": {
         "name": "Pistoleer",
-        "desc": "Can only be used in Handgun Stance. Movement Skill switches to Relentless Assault. Use Relentless Assault to gain the Assault buff, which lasts for <FONT COLOR='#ffff99'>6s</FONT>. Movement Skills stack up to <FONT COLOR='#ffff99'>2</FONT> times.\nDamage to foes from the Clay Bombardment Awakening Skill +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value02 2290200 2 />/100 />%</FONT>, and Stagger Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2290200 2 />/100 />%</FONT>.\n\nAssault: Atk. Speed and Move Speed +<FONT COLOR='#99ff99'><$CALC (<$TABLE_SKILLBUFF PassiveOptionValue0 293200/>/100)/>%</FONT>, Skill Cooldown -<FONT COLOR='#99ff99'><$CALC (<$TABLE_SKILLBUFF PassiveOptionValue2 293200/>/100)/>%</FONT>.",
+        "desc": "Can only be used in Handgun Stance. Movement Skill switches to Relentless Assault. Use Relentless Assault to gain the Assault buff, which lasts for <FONT COLOR='#ffff99'>6s</FONT>. Movement Skills stack up to <FONT COLOR='#ffff99'>2</FONT> times.\nHandgun Skills' Stagger Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2290200 2 />/100 />%</FONT>.\nDamage to foes from the Clay Bombardment Awakening Skill +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value02 2290200 2 />/100 />%</FONT>, and Stagger Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2290200 2 />/100 />%</FONT>.\n\nAssault: Atk. Speed and Move Speed +<FONT COLOR='#99ff99'><$CALC (<$TABLE_SKILLBUFF PassiveOptionValue0 293200/>/100)/>%</FONT>, Skill Cooldown -<FONT COLOR='#99ff99'><$CALC (<$TABLE_SKILLBUFF PassiveOptionValue2 293200/>/100)/>%</FONT>.",
         "icon": "ark_passive_dh_4.png",
         "level": 2,
         "addons": [
@@ -20521,7 +20539,7 @@
       },
       "3": {
         "name": "Pistoleer",
-        "desc": "Can only be used in Handgun Stance. Movement Skill switches to Relentless Assault. Use Relentless Assault to gain the Assault buff, which lasts for <FONT COLOR='#ffff99'>6s</FONT>. Movement Skills stack up to <FONT COLOR='#ffff99'>2</FONT> times.\nDamage to foes from the Clay Bombardment Awakening Skill +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value02 2290200 3 />/100 />%</FONT>, and Stagger Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2290200 3 />/100 />%</FONT>.\n\nAssault: Atk. Speed and Move Speed +<FONT COLOR='#99ff99'><$CALC (<$TABLE_SKILLBUFF PassiveOptionValue0 293200/>/100)/>%</FONT>, Skill Cooldown -<FONT COLOR='#99ff99'><$CALC (<$TABLE_SKILLBUFF PassiveOptionValue2 293200/>/100)/>%</FONT>.",
+        "desc": "Can only be used in Handgun Stance. Movement Skill switches to Relentless Assault. Use Relentless Assault to gain the Assault buff, which lasts for <FONT COLOR='#ffff99'>6s</FONT>. Movement Skills stack up to <FONT COLOR='#ffff99'>2</FONT> times.\nHandgun Skills' Stagger Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2290200 3 />/100 />%</FONT>.\nDamage to foes from the Clay Bombardment Awakening Skill +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value02 2290200 3 />/100 />%</FONT>, and Stagger Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2290200 3 />/100 />%</FONT>.\n\nAssault: Atk. Speed and Move Speed +<FONT COLOR='#99ff99'><$CALC (<$TABLE_SKILLBUFF PassiveOptionValue0 293200/>/100)/>%</FONT>, Skill Cooldown -<FONT COLOR='#99ff99'><$CALC (<$TABLE_SKILLBUFF PassiveOptionValue2 293200/>/100)/>%</FONT>.",
         "icon": "ark_passive_dh_4.png",
         "level": 3,
         "addons": [
@@ -21702,7 +21720,7 @@
     "levels": {
       "1": {
         "name": "Hurricane",
-        "desc": "Movement now possible while charging Quick Fire. On hit, Movement Skill Cooldown -<FONT COLOR='#99ff99'>0.4</FONT>s. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2295600/> /100 />%</FONT>.",
+        "desc": "Move and gain Push Immunity while charging Quick Fire. On hit, Movement Skill cooldown -<FONT COLOR='#99ff99'>0.4s</FONT>. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2295600/> /100 />%</FONT>.",
         "icon": "ark_passive_dh_9.png",
         "level": 1,
         "addons": [
@@ -21728,7 +21746,7 @@
       },
       "2": {
         "name": "Hurricane",
-        "desc": "Movement now possible while charging Quick Fire. On hit, Movement Skill Cooldown -<FONT COLOR='#99ff99'>0.4</FONT>s. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2295601/> /100 />%</FONT>.",
+        "desc": "Move and gain Push Immunity while charging Quick Fire. On hit, Movement Skill cooldown -<FONT COLOR='#99ff99'>0.4s</FONT>. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2295601/> /100 />%</FONT>.",
         "icon": "ark_passive_dh_9.png",
         "level": 2,
         "addons": [
@@ -21754,7 +21772,7 @@
       },
       "3": {
         "name": "Hurricane",
-        "desc": "Movement now possible while charging Quick Fire. On hit, Movement Skill Cooldown -<FONT COLOR='#99ff99'>0.4</FONT>s. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2295602/> /100 />%</FONT>.",
+        "desc": "Move and gain Push Immunity while charging Quick Fire. On hit, Movement Skill cooldown -<FONT COLOR='#99ff99'>0.4s</FONT>. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2295602/> /100 />%</FONT>.",
         "icon": "ark_passive_dh_9.png",
         "level": 3,
         "addons": [
@@ -21785,7 +21803,7 @@
     "levels": {
       "1": {
         "name": "Quick Storm",
-        "desc": "Quick Fire changes to a Normal Skill. Immediately executes an overcharged attack. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2295700/> /100 />%</FONT>.",
+        "desc": "Quick Fire becomes a Normal Skill with Push Immunity upon attack preparation. Immediately executes an overcharged attack. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2295700/> /100 />%</FONT>.",
         "icon": "ark_passive_dh_10.png",
         "level": 1,
         "addons": [
@@ -21805,7 +21823,7 @@
       },
       "2": {
         "name": "Quick Storm",
-        "desc": "Quick Fire changes to a Normal Skill. Immediately executes an overcharged attack. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2295701/> /100 />%</FONT>.",
+        "desc": "Quick Fire becomes a Normal Skill with Push Immunity upon attack preparation. Immediately executes an overcharged attack. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2295701/> /100 />%</FONT>.",
         "icon": "ark_passive_dh_10.png",
         "level": 2,
         "addons": [
@@ -21825,7 +21843,7 @@
       },
       "3": {
         "name": "Quick Storm",
-        "desc": "Quick Fire changes to a Normal Skill. Immediately executes an overcharged attack. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2295702/> /100 />%</FONT>.",
+        "desc": "Quick Fire becomes a Normal Skill with Push Immunity upon attack preparation. Immediately executes an overcharged attack. Damage to foes +<FONT COLOR='#99ff99'>+<$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2295702/> /100 />%</FONT>.",
         "icon": "ark_passive_dh_10.png",
         "level": 3,
         "addons": [
@@ -22453,7 +22471,7 @@
     "levels": {
       "1": {
         "name": "Maintain Firepower",
-        "desc": "On using a Normal Skill or Barrage Skill, Firepower Meter duration is reset.",
+        "desc": "On using a Normal Skill or Barrage Skill, Firepower Meter is reset and Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2300400/> /100 />%</FONT>.",
         "icon": "ark_passive_bs_3.png",
         "level": 1,
         "addons": [
@@ -26771,7 +26789,7 @@
     "levels": {
       "1": {
         "name": "Task Force",
-        "desc": "Lock-On can now pierce Guardian monsters. Casting Speed +<FONT COLOR='#99ff99'>38.5%</FONT>. MP Cost -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2285910/> />%</FONT>.\nGain Push Immunity while casting a skill. Cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2285920/> />%</FONT>.",
+        "desc": "Lock-On now ignores Collisions with adventurers and Guardian monsters. Casting Speed +<FONT COLOR='#99ff99'>38.5%</FONT>. MP Cost -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2285910/> />%</FONT>.\nGain Push Immunity while casting a skill. Cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2285920/> />%</FONT>.",
         "icon": "ark_passive_he_10.png",
         "level": 1,
         "addons": [
@@ -26797,7 +26815,7 @@
       },
       "2": {
         "name": "Task Force",
-        "desc": "Lock-On can now pierce Guardian monsters. Casting Speed +<FONT COLOR='#99ff99'>38.5%</FONT>. MP Cost -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2285910/> />%</FONT>.\nGain Push Immunity while casting a skill. Cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2285921/> />%</FONT>.",
+        "desc": "Lock-On now ignores Collisions with adventurers and Guardian monsters. Casting Speed +<FONT COLOR='#99ff99'>38.5%</FONT>. MP Cost -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2285910/> />%</FONT>.\nGain Push Immunity while casting a skill. Cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2285921/> />%</FONT>.",
         "icon": "ark_passive_he_10.png",
         "level": 2,
         "addons": [
@@ -26823,7 +26841,7 @@
       },
       "3": {
         "name": "Task Force",
-        "desc": "Lock-On can now pierce Guardian monsters. Casting Speed +<FONT COLOR='#99ff99'>38.5%</FONT>. MP Cost -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2285910/> />%</FONT>.\nGain Push Immunity while casting a skill. Cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2285922/> />%</FONT>.",
+        "desc": "Lock-On now ignores Collisions with adventurers and Guardian monsters. Casting Speed +<FONT COLOR='#99ff99'>38.5%</FONT>. MP Cost -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2285910/> />%</FONT>.\nGain Push Immunity while casting a skill. Cooldown -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2285922/> />%</FONT>.",
         "icon": "ark_passive_he_10.png",
         "level": 3,
         "addons": [
@@ -27614,7 +27632,7 @@
       },
       "2": {
         "name": "Dead Center",
-        "desc": "Use the Rose Blossom Skill to fully consume the Quick Scope effect. Damage to foes increases up to <FONT COLOR='#99ff99'>70%</FONT> depending on number of stacks. Adds <FONT COLOR='#ffff99'>1</FONT> Rifle Skill slot.",
+        "desc": "Use the Rose Blossom Skill to fully consume the Quick Scope effect. Damage to foes increases up to <FONT COLOR='#99ff99'>80%</FONT> depending on number of stacks. Adds <FONT COLOR='#ffff99'>1</FONT> Rifle Skill slot.",
         "icon": "ark_passive_dhf_9.png",
         "level": 2,
         "addons": [
@@ -27634,7 +27652,7 @@
       },
       "3": {
         "name": "Dead Center",
-        "desc": "Use the Rose Blossom Skill to fully consume the Quick Scope effect. Damage to foes increases up to <FONT COLOR='#99ff99'>100%</FONT> depending on number of stacks. Adds <FONT COLOR='#ffff99'>1</FONT> Rifle Skill slot.",
+        "desc": "Use the Rose Blossom Skill to fully consume the Quick Scope effect. Damage to foes increases up to <FONT COLOR='#99ff99'>120%</FONT> depending on number of stacks. Adds <FONT COLOR='#ffff99'>1</FONT> Rifle Skill slot.",
         "icon": "ark_passive_dhf_9.png",
         "level": 3,
         "addons": [
@@ -28276,7 +28294,7 @@
     "levels": {
       "1": {
         "name": "Wind Walk",
-        "desc": "Gain Push Immunity while using the Seven Shotguns Skill, and charge up to <FONT COLOR='#ffff99'>12 meters</FONT> to the target location. While charging, you can pierce through Guardian Monsters. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2385800/> /100 />%</FONT>.",
+        "desc": "Gain Push Immunity while using the Seven Shotguns Skill, and move up to <FONT COLOR='#ffff99'>12 meters</FONT> to the target location. Ignore Collisions with adventurers and Guardian monsters while moving. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2385800/> /100 />%</FONT>.",
         "icon": "ark_passive_dhf_13.png",
         "level": 1,
         "addons": [
@@ -28296,7 +28314,7 @@
       },
       "2": {
         "name": "Wind Walk",
-        "desc": "Gain Push Immunity while using the Seven Shotguns Skill, and charge up to <FONT COLOR='#ffff99'>12 meters</FONT> to the target location. While charging, you can pierce through Guardian Monsters. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2385801/> /100 />%</FONT>.",
+        "desc": "Gain Push Immunity while using the Seven Shotguns Skill, and move up to <FONT COLOR='#ffff99'>12 meters</FONT> to the target location. Ignore Collisions with adventurers and Guardian monsters while moving. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2385801/> /100 />%</FONT>.",
         "icon": "ark_passive_dhf_13.png",
         "level": 2,
         "addons": [
@@ -28316,7 +28334,7 @@
       },
       "3": {
         "name": "Wind Walk",
-        "desc": "Gain Push Immunity while using the Seven Shotguns Skill, and charge up to <FONT COLOR='#ffff99'>12 meters</FONT> to the target location. While charging, you can pierce through Guardian Monsters. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2385802/> /100 />%</FONT>.",
+        "desc": "Gain Push Immunity while using the Seven Shotguns Skill, and move up to <FONT COLOR='#ffff99'>12 meters</FONT> to the target location. Ignore Collisions with adventurers and Guardian monsters while moving. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2385802/> /100 />%</FONT>.",
         "icon": "ark_passive_dhf_13.png",
         "level": 3,
         "addons": [
@@ -31839,7 +31857,7 @@
             "type": "skill_group_damage",
             "statType": "none",
             "keyIndex": 2200920,
-            "keyValue": 2000
+            "keyValue": 2800
           }
         ]
       },
@@ -31865,7 +31883,7 @@
             "type": "skill_group_damage",
             "statType": "none",
             "keyIndex": 2200920,
-            "keyValue": 2800
+            "keyValue": 3700
           }
         ]
       },
@@ -31891,7 +31909,7 @@
             "type": "skill_group_damage",
             "statType": "none",
             "keyIndex": 2200920,
-            "keyValue": 3600
+            "keyValue": 4500
           }
         ]
       }
@@ -35301,7 +35319,7 @@
     "levels": {
       "1": {
         "name": "Magick Cycle",
-        "desc": "Doomsday, Explosion, and Punishing Strike skills's Damage +<FONT COLOR='#99ff99'>5%</FONT>. When using Arcane Rupture, Damage to foes +<FONT COLOR='#99ff99'>7%</FONT>. After Arcane Rupture ends, the Magick Cycle effect increases Atk. Speed by <FONT COLOR='#99ff99'>8%</FONT> for up to <FONT COLOR='#ffff99'>30s</FONT>. The Magick Cycle effect is canceled upon using Arcane Rupture.",
+        "desc": "Doomsday, Explosion, and Punishing Strike Skill Damage +<FONT COLOR='#99ff99'>5%</FONT>. When using Arcane Rupture, Damage to foes +<FONT COLOR='#99ff99'>10%</FONT>. After Arcane Rupture ends, the Magick Cycle effect increases Atk. Speed by <FONT COLOR='#99ff99'>8%</FONT> for up to <FONT COLOR='#ffff99'>30s</FONT>. The Magick Cycle effect is canceled upon using Arcane Rupture.",
         "icon": "ark_passive_scs_8.png",
         "level": 1,
         "addons": [
@@ -35327,7 +35345,7 @@
       },
       "2": {
         "name": "Magick Cycle",
-        "desc": "Doomsday, Explosion, and Punishing Strike skills's Damage +<FONT COLOR='#99ff99'>10%</FONT>. When using Arcane Rupture, Damage to foes +<FONT COLOR='#99ff99'>10%</FONT>. After Arcane Rupture ends, the Magick Cycle effect increases Atk. Speed by <FONT COLOR='#99ff99'>8%</FONT> for up to <FONT COLOR='#ffff99'>30s</FONT>. The Magick Cycle effect is canceled upon using Arcane Rupture.",
+        "desc": "Doomsday, Explosion, and Punishing Strike Skill Damage +<FONT COLOR='#99ff99'>10%</FONT>. When using Arcane Rupture, Damage to foes +<FONT COLOR='#99ff99'>14%</FONT>. After Arcane Rupture ends, the Magick Cycle effect increases Atk. Speed by <FONT COLOR='#99ff99'>8%</FONT> for up to <FONT COLOR='#ffff99'>30s</FONT>. The Magick Cycle effect is canceled upon using Arcane Rupture.",
         "icon": "ark_passive_scs_8.png",
         "level": 2,
         "addons": [
@@ -35353,7 +35371,7 @@
       },
       "3": {
         "name": "Magick Cycle",
-        "desc": "Doomsday, Explosion, and Punishing Strike skills's Damage +<FONT COLOR='#99ff99'>15%</FONT>. When using Arcane Rupture, Damage to foes +<FONT COLOR='#99ff99'>14%</FONT>. After Arcane Rupture ends, the Magick Cycle effect increases Atk. Speed by <FONT COLOR='#99ff99'>8%</FONT> for up to <FONT COLOR='#ffff99'>30s</FONT>. The Magick Cycle effect is canceled upon using Arcane Rupture.",
+        "desc": "Doomsday, Explosion, and Punishing Strike Skill Damage +<FONT COLOR='#99ff99'>15%</FONT>. When using Arcane Rupture, Damage to foes +<FONT COLOR='#99ff99'>18%</FONT>. After Arcane Rupture ends, the Magick Cycle effect increases Atk. Speed by <FONT COLOR='#99ff99'>8%</FONT> for up to <FONT COLOR='#ffff99'>30s</FONT>. The Magick Cycle effect is canceled upon using Arcane Rupture.",
         "icon": "ark_passive_scs_8.png",
         "level": 3,
         "addons": [
@@ -39114,7 +39132,7 @@
     "levels": {
       "1": {
         "name": "Ferality",
-        "desc": "On using Shapeshift Skills except for <FONT COLOR='#ffff99'>Forbidden Sorcery: Ripping Bear and Forbidden Sorcery: Fox Star Rainstorm</FONT>, gain the <FONT COLOR='#ffff99'>Ferality</FONT> effect. The <FONT COLOR='#ffff99'>Ferality</FONT> effect can stack up to <FONT COLOR='#ffff99'>3</FONT> times and gains new effects based on the number of stacks. If a non-Shapeshift Skill is used, the <FONT COLOR='#ffff99'>Ferality</FONT> effect disappears.\n\n<FONT COLOR='#ffff99'>Ferality</FONT> 1 stack: On using Shapeshift Skill, Max HP is recovered by <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLEFFECT ValueB 2330010/>/100/>%</FONT> once every <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Cooldown 2330010/> /1000/>s</FONT>.\n<FONT COLOR='#ffff99'>Ferality</FONT> 2 stacks: Shapeshift Skill's Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2330010/>/100 />%</FONT>.\n<FONT COLOR='#ffff99'>Ferality</FONT> 3 stacks: Defense of target hit by Shapeshift Skill -<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF ValueC 2330020 />/100/>%</FONT> for <$MACRO bufftime @1:2330020/>s.",
+        "desc": "On using Shapeshift Skills except for <FONT COLOR='#ffff99'>Forbidden Sorcery: Ripping Bear and Forbidden Sorcery: Fox Star Rainstorm</FONT>, gain the <FONT COLOR='#ffff99'>Ferality</FONT> effect and decrease Shapeshift Skills' MP Cost -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2330000/> />%</FONT>. The <FONT COLOR='#ffff99'>Ferality</FONT> effect can stack up to <FONT COLOR='#ffff99'>3</FONT> times and gains new effects based on the number of stacks. If a non-Shapeshift Skill is used, the <FONT COLOR='#ffff99'>Ferality</FONT> effect disappears.\n\n<FONT COLOR='#ffff99'>Ferality</FONT> 1 stack: On using Shapeshift Skill, Max HP is recovered by <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLEFFECT ValueB 2330010/>/100/>%</FONT> once every <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Cooldown 2330010/> /1000/>s</FONT>.\n<FONT COLOR='#ffff99'>Ferality</FONT> 2 stacks: Shapeshift Skill's Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2330010/>/100 />%</FONT>.\n<FONT COLOR='#ffff99'>Ferality</FONT> 3 stacks: Defense of target hit by Shapeshift Skill -<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF ValueC 2330020 />/100/>%</FONT> for <$MACRO bufftime @1:2330020/>s.",
         "icon": "ark_passive_dr_1.png",
         "level": 1,
         "addons": [
@@ -39129,12 +39147,18 @@
             "statType": "none",
             "keyIndex": 2330010,
             "keyValue": 0
+          },
+          {
+            "type": "skill_feature",
+            "statType": "none",
+            "keyIndex": 2330000,
+            "keyValue": 0
           }
         ]
       },
       "2": {
         "name": "Ferality",
-        "desc": "On using Shapeshift Skills except for <FONT COLOR='#ffff99'>Forbidden Sorcery: Ripping Bear and Forbidden Sorcery: Fox Star Rainstorm</FONT>, gain the <FONT COLOR='#ffff99'>Ferality</FONT> effect. The <FONT COLOR='#ffff99'>Ferality</FONT> effect can stack up to <FONT COLOR='#ffff99'>3</FONT> times and gains new effects based on the number of stacks. If a non-Shapeshift Skill is used, the <FONT COLOR='#ffff99'>Ferality</FONT> effect disappears.\n\n<FONT COLOR='#ffff99'>Ferality</FONT> 1 stack: On using Shapeshift Skill, Max HP is recovered by <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLEFFECT ValueB 2330010/>/100/>%</FONT> once every <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Cooldown 2330010/> /1000/>s</FONT>.\n<FONT COLOR='#ffff99'>Ferality</FONT> 2 stacks: Shapeshift Skill's Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2330011/>/100 />%</FONT>.\n<FONT COLOR='#ffff99'>Ferality</FONT> 3 stacks: Defense of target hit by Shapeshift Skill -<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF ValueC 2330020 />/100/>%</FONT> for <$MACRO bufftime @1:2330020/>s.",
+        "desc": "On using Shapeshift Skills except for <FONT COLOR='#ffff99'>Forbidden Sorcery: Ripping Bear and Forbidden Sorcery: Fox Star Rainstorm</FONT>, gain the <FONT COLOR='#ffff99'>Ferality</FONT> effect and decrease Shapeshift Skills' MP Cost -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2330000/> />%</FONT>. The <FONT COLOR='#ffff99'>Ferality</FONT> effect can stack up to <FONT COLOR='#ffff99'>3</FONT> times and gains new effects based on the number of stacks. If a non-Shapeshift Skill is used, the <FONT COLOR='#ffff99'>Ferality</FONT> effect disappears.\n\n<FONT COLOR='#ffff99'>Ferality</FONT> 1 stack: On using Shapeshift Skill, Max HP is recovered by <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLEFFECT ValueB 2330010/>/100/>%</FONT> once every <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Cooldown 2330010/> /1000/>s</FONT>.\n<FONT COLOR='#ffff99'>Ferality</FONT> 2 stacks: Shapeshift Skill's Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2330011/>/100 />%</FONT>.\n<FONT COLOR='#ffff99'>Ferality</FONT> 3 stacks: Defense of target hit by Shapeshift Skill -<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF ValueC 2330020 />/100/>%</FONT> for <$MACRO bufftime @1:2330020/>s.",
         "icon": "ark_passive_dr_1.png",
         "level": 2,
         "addons": [
@@ -39149,12 +39173,18 @@
             "statType": "none",
             "keyIndex": 2330010,
             "keyValue": 0
+          },
+          {
+            "type": "skill_feature",
+            "statType": "none",
+            "keyIndex": 2330000,
+            "keyValue": 0
           }
         ]
       },
       "3": {
         "name": "Ferality",
-        "desc": "On using Shapeshift Skills except for <FONT COLOR='#ffff99'>Forbidden Sorcery: Ripping Bear and Forbidden Sorcery: Fox Star Rainstorm</FONT>, gain the <FONT COLOR='#ffff99'>Ferality</FONT> effect. The <FONT COLOR='#ffff99'>Ferality</FONT> effect can stack up to <FONT COLOR='#ffff99'>3</FONT> times and gains new effects based on the number of stacks. If a non-Shapeshift Skill is used, the <FONT COLOR='#ffff99'>Ferality</FONT> effect disappears.\n\n<FONT COLOR='#ffff99'>Ferality</FONT> 1 stack: On using Shapeshift Skill, Max HP is recovered by <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLEFFECT ValueB 2330010/>/100/>%</FONT> once every <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Cooldown 2330010/> /1000/>s</FONT>.\n<FONT COLOR='#ffff99'>Ferality</FONT> 2 stacks: Shapeshift Skill's Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2330012/>/100 />%</FONT>.\n<FONT COLOR='#ffff99'>Ferality</FONT> 3 stacks: Defense of target hit by Shapeshift Skill -<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF ValueC 2330020 />/100/>%</FONT> for <$MACRO bufftime @1:2330020/>s.",
+        "desc": "On using Shapeshift Skills except for <FONT COLOR='#ffff99'>Forbidden Sorcery: Ripping Bear and Forbidden Sorcery: Fox Star Rainstorm</FONT>, gain the <FONT COLOR='#ffff99'>Ferality</FONT> effect and decrease Shapeshift Skills' MP Cost -<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param0 2330000/> />%</FONT>. The <FONT COLOR='#ffff99'>Ferality</FONT> effect can stack up to <FONT COLOR='#ffff99'>3</FONT> times and gains new effects based on the number of stacks. If a non-Shapeshift Skill is used, the <FONT COLOR='#ffff99'>Ferality</FONT> effect disappears.\n\n<FONT COLOR='#ffff99'>Ferality</FONT> 1 stack: On using Shapeshift Skill, Max HP is recovered by <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLEFFECT ValueB 2330010/>/100/>%</FONT> once every <FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Cooldown 2330010/> /1000/>s</FONT>.\n<FONT COLOR='#ffff99'>Ferality</FONT> 2 stacks: Shapeshift Skill's Atk. Speed +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2330012/>/100 />%</FONT>.\n<FONT COLOR='#ffff99'>Ferality</FONT> 3 stacks: Defense of target hit by Shapeshift Skill -<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF ValueC 2330020 />/100/>%</FONT> for <$MACRO bufftime @1:2330020/>s.",
         "icon": "ark_passive_dr_1.png",
         "level": 3,
         "addons": [
@@ -39168,6 +39198,12 @@
             "type": "combat_effect",
             "statType": "none",
             "keyIndex": 2330010,
+            "keyValue": 0
+          },
+          {
+            "type": "skill_feature",
+            "statType": "none",
+            "keyIndex": 2330000,
             "keyValue": 0
           }
         ]
@@ -39818,6 +39854,12 @@
             "statType": "none",
             "keyIndex": 2330900,
             "keyValue": 0
+          },
+          {
+            "type": "combat_effect",
+            "statType": "none",
+            "keyIndex": 2330910,
+            "keyValue": 0
           }
         ]
       },
@@ -39844,6 +39886,12 @@
             "statType": "none",
             "keyIndex": 2330901,
             "keyValue": 0
+          },
+          {
+            "type": "combat_effect",
+            "statType": "none",
+            "keyIndex": 2330910,
+            "keyValue": 0
           }
         ]
       },
@@ -39869,6 +39917,12 @@
             "type": "combat_effect",
             "statType": "none",
             "keyIndex": 2330902,
+            "keyValue": 0
+          },
+          {
+            "type": "combat_effect",
+            "statType": "none",
+            "keyIndex": 2330910,
             "keyValue": 0
           }
         ]
@@ -40462,7 +40516,7 @@
     "levels": {
       "1": {
         "name": "Ancient Strength",
-        "desc": "When using One-Hit Bear, an ancient strength awakens, causing a growth in size and AoE Radius +<FONT COLOR='#99ff99'>20%</FONT>. Immediately flies forward and attacks. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335610/> />%</FONT>.",
+        "desc": "When using One-Hit Bear, gain <FONT COLOR='#99ff99'><$CALC <$TABLE_SKILLEFFECT ValueB 2335600/>/></FONT> Bear Energy, and an ancient strength awakens, causing a growth in size and AoE Radius +<FONT COLOR='#99ff99'>20%</FONT>. Immediately flies forward and attacks. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335610/> />%</FONT>.",
         "icon": "ark_passive_dr_10.png",
         "level": 1,
         "addons": [
@@ -40488,7 +40542,7 @@
       },
       "2": {
         "name": "Ancient Strength",
-        "desc": "When using One-Hit Bear, an ancient strength awakens, causing a growth in size and AoE Radius +<FONT COLOR='#99ff99'>20%</FONT>. Immediately flies forward and attacks. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335611/> />%</FONT>.",
+        "desc": "When using One-Hit Bear, gain <FONT COLOR='#99ff99'><$CALC <$TABLE_SKILLEFFECT ValueB 2335600/>/></FONT> Bear Energy, and an ancient strength awakens, causing a growth in size and AoE Radius +<FONT COLOR='#99ff99'>20%</FONT>. Immediately flies forward and attacks. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335611/> />%</FONT>.",
         "icon": "ark_passive_dr_10.png",
         "level": 2,
         "addons": [
@@ -40514,7 +40568,7 @@
       },
       "3": {
         "name": "Ancient Strength",
-        "desc": "When using One-Hit Bear, an ancient strength awakens, causing a growth in size and AoE Radius +<FONT COLOR='#99ff99'>20%</FONT>. Immediately flies forward and attacks. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335612/> />%</FONT>.",
+        "desc": "When using One-Hit Bear, gain <FONT COLOR='#99ff99'><$CALC <$TABLE_SKILLEFFECT ValueB 2335600/>/></FONT> Bear Energy, and an ancient strength awakens, causing a growth in size and AoE Radius +<FONT COLOR='#99ff99'>20%</FONT>. Immediately flies forward and attacks. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335612/> />%</FONT>.",
         "icon": "ark_passive_dr_10.png",
         "level": 3,
         "addons": [
@@ -40545,7 +40599,7 @@
     "levels": {
       "1": {
         "name": "Nimble Movement",
-        "desc": "One-Hit Bear's Damage to foes -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335710/>/>%</FONT>, but can stack up to <FONT COLOR='#ffff99'>2</FONT> times. Cooldown -<FONT COLOR='#99ff99'>50%</FONT>.",
+        "desc": "One-Hit Bear's Damage to foes -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335710/>/>%</FONT>, but cooldown -<FONT COLOR='#99ff99'>50%</FONT>.",
         "icon": "ark_passive_dr_11.png",
         "level": 1,
         "addons": [
@@ -40565,7 +40619,7 @@
       },
       "2": {
         "name": "Nimble Movement",
-        "desc": "One-Hit Bear's Damage to foes -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335711/>/>%</FONT>, but can stack up to <FONT COLOR='#ffff99'>2</FONT> times. Cooldown -<FONT COLOR='#99ff99'>50%</FONT>.",
+        "desc": "One-Hit Bear's Damage to foes -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335711/>/>%</FONT>, but cooldown -<FONT COLOR='#99ff99'>50%</FONT>.",
         "icon": "ark_passive_dr_11.png",
         "level": 2,
         "addons": [
@@ -40585,7 +40639,7 @@
       },
       "3": {
         "name": "Nimble Movement",
-        "desc": "One-Hit Bear's Damage to foes -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335712/>/>%</FONT>, but can stack up to <FONT COLOR='#ffff99'>2</FONT> times. Cooldown -<FONT COLOR='#99ff99'>50%</FONT>.",
+        "desc": "One-Hit Bear's Damage to foes -<FONT COLOR='#ff9999'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2335712/>/>%</FONT>, but cooldown -<FONT COLOR='#99ff99'>50%</FONT>.",
         "icon": "ark_passive_dr_11.png",
         "level": 3,
         "addons": [
@@ -43614,7 +43668,7 @@
     "levels": {
       "1": {
         "name": "Reckless",
-        "desc": "Shield Dash Charge Speed +<FONT COLOR='#99ff99'>20%</FONT>. Pierces through Normal Monsters during Skill use.\nDuring Charge, deals additional <FONT COLOR='#99ff99'><$CALC %1 (7.5 * (100 + <$TABLE_ADDONSKILLFEATURE Param1 2175600/>))/100/>%</FONT> of Base Damage <FONT COLOR='#ffff99'>3</FONT> time.",
+        "desc": "Shield Dash Charge Speed +<FONT COLOR='#99ff99'>20%</FONT>. Ignore collisions with adventurers and normal monsters during Skill use.\nDuring Charge, deals additional <FONT COLOR='#99ff99'><$CALC %1 (7.5 * (100 + <$TABLE_ADDONSKILLFEATURE Param1 2175600/>))/100/>%</FONT> of Base Damage <FONT COLOR='#ffff99'>3</FONT> times.",
         "icon": "ark_passive_gl_9.png",
         "level": 1,
         "addons": [
@@ -43634,7 +43688,7 @@
       },
       "2": {
         "name": "Reckless",
-        "desc": "Shield Dash Charge Speed +<FONT COLOR='#99ff99'>20%</FONT>. Pierces through Normal Monsters during Skill use.\nDuring Charge, deals additional <FONT COLOR='#99ff99'><$CALC %1 (7.5 * (100 + <$TABLE_ADDONSKILLFEATURE Param1 2175601/>))/100/>%</FONT> of Base Damage <FONT COLOR='#ffff99'>3</FONT> time.",
+        "desc": "Shield Dash Charge Speed +<FONT COLOR='#99ff99'>20%</FONT>. Ignore collisions with adventurers and normal monsters during Skill use.\nDuring Charge, deals additional <FONT COLOR='#99ff99'><$CALC %1 (7.5 * (100 + <$TABLE_ADDONSKILLFEATURE Param1 2175601/>))/100/>%</FONT> of Base Damage <FONT COLOR='#ffff99'>3</FONT> times.",
         "icon": "ark_passive_gl_9.png",
         "level": 2,
         "addons": [
@@ -43654,7 +43708,7 @@
       },
       "3": {
         "name": "Reckless",
-        "desc": "Shield Dash Charge Speed +<FONT COLOR='#99ff99'>20%</FONT>. Pierces through Normal Monsters during Skill use.\nDuring Charge, deals additional <FONT COLOR='#99ff99'><$CALC %1 (7.5 * (100 + <$TABLE_ADDONSKILLFEATURE Param1 2175602/>))/100/>%</FONT> of Base Damage <FONT COLOR='#ffff99'>3</FONT> time.",
+        "desc": "Shield Dash Charge Speed +<FONT COLOR='#99ff99'>20%</FONT>. Ignore collisions with adventurers and normal monsters during Skill use.\nDuring Charge, deals additional <FONT COLOR='#99ff99'><$CALC %1 (7.5 * (100 + <$TABLE_ADDONSKILLFEATURE Param1 2175602/>))/100/>%</FONT> of Base Damage <FONT COLOR='#ffff99'>3</FONT> times.",
         "icon": "ark_passive_gl_9.png",
         "level": 3,
         "addons": [
@@ -43874,7 +43928,7 @@
     "levels": {
       "1": {
         "name": "Gravity Armor",
-        "desc": "When using a Gravity Release Skill, All Defense +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2180000/>/100 />%</FONT> based on the amount of Cores consumed.",
+        "desc": "Gravity Release Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2180000/>/100/>%</FONT>. When using a Gravity Release Skill, All Defense +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2180000/>/100 />%</FONT> based on the amount of Cores consumed.",
         "icon": "ark_passive_dt_1.png",
         "level": 1,
         "addons": [
@@ -43883,12 +43937,18 @@
             "statType": "none",
             "keyIndex": 2180000,
             "keyValue": 1
+          },
+          {
+            "type": "combat_effect",
+            "statType": "none",
+            "keyIndex": 2180000,
+            "keyValue": 0
           }
         ]
       },
       "2": {
         "name": "Gravity Armor",
-        "desc": "When using a Gravity Release Skill, All Defense +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2180001/>/100 />%</FONT> based on the amount of Cores consumed.",
+        "desc": "Gravity Release Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2180001/>/100/>%</FONT>. When using a Gravity Release Skill, All Defense +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2180001/>/100 />%</FONT> based on the amount of Cores consumed.",
         "icon": "ark_passive_dt_1.png",
         "level": 2,
         "addons": [
@@ -43897,12 +43957,18 @@
             "statType": "none",
             "keyIndex": 2180000,
             "keyValue": 2
+          },
+          {
+            "type": "combat_effect",
+            "statType": "none",
+            "keyIndex": 2180001,
+            "keyValue": 0
           }
         ]
       },
       "3": {
         "name": "Gravity Armor",
-        "desc": "When using a Gravity Release Skill, All Defense +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2180002/>/100 />%</FONT> based on the amount of Cores consumed.",
+        "desc": "Gravity Release Skill Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2180002/>/100/>%</FONT>. When using a Gravity Release Skill, All Defense +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLBUFF PassiveOptionValue0 2180002/>/100 />%</FONT> based on the amount of Cores consumed.",
         "icon": "ark_passive_dt_1.png",
         "level": 3,
         "addons": [
@@ -43911,6 +43977,12 @@
             "statType": "none",
             "keyIndex": 2180000,
             "keyValue": 3
+          },
+          {
+            "type": "combat_effect",
+            "statType": "none",
+            "keyIndex": 2180002,
+            "keyValue": 0
           }
         ]
       }
@@ -44186,7 +44258,7 @@
     "levels": {
       "1": {
         "name": "Gravity Training",
-        "desc": "Hypergravity Mode and Vortex Gravity Basic Attack Crit Rate +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2180100 5 />/100 />%</FONT>, Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2180060/>/100/>%</FONT>.",
+        "desc": "Hypergravity Mode Basic Attack and Vortex Gravity Crit Rate +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2180100 5 />/100 />%</FONT>. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2180060/>/100/>%</FONT>.",
         "icon": "ark_passive_01_8.png",
         "level": 1,
         "addons": [
@@ -44206,7 +44278,7 @@
       },
       "2": {
         "name": "Gravity Training",
-        "desc": "Hypergravity Mode and Vortex Gravity Basic Attack Crit Rate +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2180100 6 />/100 />%</FONT>, Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2180061/>/100/>%</FONT>.",
+        "desc": "Hypergravity Mode Basic Attack and Vortex Gravity Crit Rate +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2180100 6 />/100 />%</FONT>. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2180061/>/100/>%</FONT>.",
         "icon": "ark_passive_01_8.png",
         "level": 2,
         "addons": [
@@ -44226,7 +44298,7 @@
       },
       "3": {
         "name": "Gravity Training",
-        "desc": "Hypergravity Mode and Vortex Gravity Basic Attack Crit Rate +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2180100 7 />/100 />%</FONT>, Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2180062/>/100/>%</FONT>.",
+        "desc": "Hypergravity Mode Basic Attack and Vortex Gravity Crit Rate +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value01 2180100 7 />/100 />%</FONT>. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2180062/>/100/>%</FONT>.",
         "icon": "ark_passive_01_8.png",
         "level": 3,
         "addons": [
@@ -44688,7 +44760,7 @@
     "levels": {
       "1": {
         "name": "New Core",
-        "desc": "Upon activating or deactivating Hypergravity Zone, resets Gravity Core, and a new <FONT COLOR='#ffff99'>Gravity Core</FONT> is charged every <FONT COLOR='#ffff99'>3</FONT> hits. Hypergravity Basic Attack Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value05 2180100 8 />/100 />%</FONT> per Core.",
+        "desc": "Gravity Cores are reset on Hypergravity Zone activation and deactivation, and a new <FONT COLOR='#ffff99'>Gravity Core</FONT> is charged every <FONT COLOR='#ffff99'>3</FONT> hits. Damage inflicted by hypergravity Basic Attacks per Core +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value05 2180100 8 />/100 />%</FONT>.",
         "icon": "ark_passive_dt_5.png",
         "level": 1,
         "addons": [
@@ -44708,7 +44780,7 @@
       },
       "2": {
         "name": "New Core",
-        "desc": "Upon activating or deactivating Hypergravity Zone, resets Gravity Core, and a new <FONT COLOR='#ffff99'>Gravity Core</FONT> is charged every <FONT COLOR='#ffff99'>3</FONT> hits. Hypergravity Basic Attack Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value05 2180100 9 />/100 />%</FONT> per Core.",
+        "desc": "Gravity Core resets on Hypergravity Zone activation and deactivation, and every <FONT COLOR='#ffff99'>3</FONT> hits charge a new <FONT COLOR='#ffff99'>Gravity Core</FONT>. Hypergravity Basic Attack Damage per Core +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value05 2180100 9 />/100 />%</FONT>.",
         "icon": "ark_passive_dt_5.png",
         "level": 2,
         "addons": [
@@ -44728,7 +44800,7 @@
       },
       "3": {
         "name": "New Core",
-        "desc": "Upon activating or deactivating Hypergravity Zone, resets Gravity Core, and a new <FONT COLOR='#ffff99'>Gravity Core</FONT> is charged every <FONT COLOR='#ffff99'>3</FONT> hits. Hypergravity Basic Attack Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value05 2180100 10 />/100 />%</FONT> per Core.",
+        "desc": "Gravity Cores are reset on Hypergravity Zone activation and deactivation, and every <FONT COLOR='#ffff99'>3</FONT> hits charge a new <FONT COLOR='#ffff99'>Gravity Core</FONT>. Per Core, hypergravity Basic Attack Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ABILITYFEATURE Value05 2180100 10 />/100 />%</FONT>.",
         "icon": "ark_passive_dt_5.png",
         "level": 3,
         "addons": [
