@@ -11986,6 +11986,16 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   8204100: ["Fast Sailing", [["Advance full speed ahead."]], "voyage_skill_22"],
   8204105: ["Fast Sailing", [["Advance full speed ahead."]], "voyage_skill_22"],
   8204111: ["Fast Sailing", [["Advance full speed ahead."]], "voyage_skill_22"],
+  8208000: ["Fast Sailing", [["Advance full speed ahead."]], "voyage_skill_22"],
+  8208002: ["Fast Sailing", [["Advance full speed ahead."]], "voyage_skill_22"],
+  8208005: ["Fast Sailing", [["Advance full speed ahead."]], "voyage_skill_22"],
+  8208008: ["Fast Sailing", [["Advance full speed ahead."]], "voyage_skill_22"],
+  8208012: ["Fast Sailing", [["Advance full speed ahead."]], "voyage_skill_22"],
+  8208016: ["Fast Sailing", [["Advance full speed ahead."]], "voyage_skill_22"],
+  8208020: ["Fast Sailing", [["Advance full speed ahead."]], "voyage_skill_22"],
+  8208025: ["Fast Sailing", [["Advance full speed ahead."]], "voyage_skill_22"],
+  8208030: ["Fast Sailing", [["Advance full speed ahead."]], "voyage_skill_22"],
+  8208035: ["Fast Sailing", [["Advance full speed ahead."]], "voyage_skill_22"],
   4000301: ["Darkness", [["Becomes unable to look far, shrouded in darkness."]], "buff_13"],
   4000501: ["Magick Addiction", [["Further exposure to magick will cause a magick reversal."]], "buff_23"],
   4000502: ["Magick Reversal", [["Inflicts Damage to nearby allies."]], "buff_38"],
@@ -12517,6 +12527,46 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "buff_71"
   ],
   90000121: [
+    "Berserk",
+    [
+      [
+        [5, 80],
+        " +",
+        [2, "#99ff99", ["100%"]],
+        ". ",
+        [5, 78],
+        " +",
+        [2, "#99ff99", ["100%"]],
+        ". ",
+        [5, 49],
+        " +",
+        [2, "#99ff99", ["400%"]],
+        "."
+      ]
+    ],
+    "buff_71"
+  ],
+  90000123: [
+    "Berserk",
+    [
+      [
+        [5, 80],
+        " +",
+        [2, "#99ff99", ["100%"]],
+        ". ",
+        [5, 78],
+        " +",
+        [2, "#99ff99", ["100%"]],
+        ". ",
+        [5, 49],
+        " +",
+        [2, "#99ff99", ["400%"]],
+        "."
+      ]
+    ],
+    "buff_71"
+  ],
+  90000124: [
     "Berserk",
     [
       [
@@ -15782,6 +15832,52 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [["Primal Strength surges within.\nThe time has come to end the long war and write a new destiny."]],
     "buff_872"
   ],
+  12971: ["Divine Whisper", [["Your heart grows tranquil and the presence of god is faintly felt."]], "buff_339"],
+  12972: ["Piety Pulse", [["Piety rises from deep within and doubt gradually fades away."]], "buff_492"],
+  12973: ["Royal Grace", [["The will of god becomes my will."]], "buff_105"],
+  12988: ["Whirlpool Aftermath", [["The ship was damaged by a fierce whirlpool."]], "buff_213"],
+  12989: [
+    "Passing the Whirlpool",
+    [["We were nearly caught in a fierce whirlpool, but made it safely thanks to the sailors' resourcefulness."]],
+    "buff_10"
+  ],
+  12997: [
+    "Brainwashing Token",
+    [
+      [
+        'A mark created to deceive the Twilight Priests. It must be dispelled by reciting a prayer containing "your embrace" during the Proof of Faith ritual.'
+      ]
+    ],
+    "buff_91"
+  ],
+  12998: [
+    "Brainwashing Token",
+    [
+      [
+        'A mark created to deceive the Twilight Priests. It must be dispelled by reciting a prayer containing "your embrace" during the Proof of Faith ritual.'
+      ]
+    ],
+    "buff_91"
+  ],
+  15007: ["Luminas's Protection", [["A mysterious power that protects Luminas from the Maelstrom Sea."]], "buff_835"],
+  15008: ["Pleasant Day", [["I have a good feeling about today."]], "buff_569"],
+  15009: ["Gentle Aroma", [["A sweet fragrance wafts from somewhere."]], "buff_640"],
+  15011: [
+    "Tipsiness",
+    [
+      [
+        "I can feel the tipsiness getting more intense.\n",
+        [2, "#FFFFFFAC", ["Something might change if I keep drinking."]]
+      ]
+    ],
+    "buff_140"
+  ],
+  15012: [
+    "Drunken Drunk",
+    [["My hed iz shakin. Wanna go sumwhere cool.\n", [2, "#FFFFFFAC", ["You can find a Special Space..."]]]],
+    "all_quest_03_76"
+  ],
+  15018: ["Stun", [["Becomes Stunned and Incapacitated."]], "buff_39"],
   66805101: [
     "Transcendence",
     [
@@ -17539,7 +17635,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "Slaughterer",
     [
       [
-        "The urge to kill intensifies. Dagger, Shadow, and Swoop Skill Damage +",
+        "The murderous impulse intensifies. Dagger, Shadow, Swoop Skills, Corrosive Poison, Bleeding Poison, and Heavy Bleeding Damage +",
         [2, "#99ff99", ["20.0%"]],
         ". When Chaos Mode ends, the Slaughterer effect also ends."
       ]
@@ -17550,7 +17646,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "Slaughterer",
     [
       [
-        "The urge to kill intensifies. Dagger, Shadow, and Swoop Skill Damage +",
+        "The murderous impulse intensifies. Dagger, Shadow, Swoop Skills, Corrosive Poison, Bleeding Poison, and Heavy Bleeding Damage +",
         [2, "#99ff99", ["40.0%"]],
         ". When Chaos Mode ends, the Slaughterer effect also ends."
       ]
@@ -17561,7 +17657,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "Slaughterer",
     [
       [
-        "The urge to kill intensifies. Dagger, Shadow, and Swoop Skill Damage +",
+        "The murderous impulse intensifies. Dagger, Shadow, Swoop Skills, Corrosive Poison, Bleeding Poison, and Heavy Bleeding Damage +",
         [2, "#99ff99", ["60.0%"]],
         ". When Chaos Mode ends, the Slaughterer effect also ends."
       ]
@@ -17599,12 +17695,12 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "buff_884"
   ],
   3260700: [
-    "Destiny: Moon Shadow",
+    "Destiny: Nightmare's Omen",
     [["At ", [2, "#ffff99", ["3"]], " stacks, gain the ", [2, "#bf9ef6", ["Destiny: Lunar Nightmare"]], " effect."]],
     "buff_886"
   ],
   3260701: [
-    "Destiny: Moon Shadow",
+    "Destiny: Lunar Nightmare",
     [
       [
         "Damage of next Nightmare's downward attack +",
@@ -17969,7 +18065,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   383202: ["Atk. Speed Reduction", [["Atk. Speed -", [2, "#ff9999", ["40.0%"]], "."]], "buff_42"],
   389000: [
     "Quick Scope",
-    [["Atk. Speed of Basic Rifle attacks and Rifle Skills +", [2, "#99ff99", ["0.5%"]], " per stack."]],
+    [["Atk. Speed of Basic Attack and Rifle Skills +", [2, "#99ff99", ["0.5%"]], " per stack."]],
     "buff_828"
   ],
   3380100: [
@@ -18052,20 +18148,13 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
       [
         "Rifle Skill Damage +",
         [2, "#99ff99", [[4, "v0", 1], "%"]],
-        ". On Rose Blossom use, gain the ",
-        [2, "#bf9ef6", ["Destiny: Aromatic Rose"]],
-        " effect for ",
-        [2, "#ffff99", ["12.0s"]],
+        ", and on Rose Blossom use, Rifle Skill cooldown (excluding Rose Blossom) -",
+        [2, "#99ff99", ["2.0s"]],
         "."
       ],
-      { v0: ["combateffect_sk", [3.5, 0]] }
+      { v0: ["combateffect_sk", [3.5, 33816.1]] }
     ],
     "buff_884"
-  ],
-  3381610: [
-    "Destiny: Aromatic Rose",
-    [["Rifle Skill cooldown -", [2, "#99ff99", ["8.0%"]], " (excluding Rose Blossom)."]],
-    "buff_885"
   ],
   3382100: [
     "Destiny: Lawless",
@@ -18090,8 +18179,13 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   3382200: ["Swiftness", [["Atk./Move Speed +", [2, "#99ff99", ["10.0%"]], "."]], "buff_20"],
   3382600: [
     "Destiny: Black Belt",
-    [["Move Speed +", [2, "#99ff99", ["20.0%"]], ". Peace Keeper Damage +", [2, "#99ff99", ["50.0%"]], "."]],
+    [["Move Speed +", [2, "#99ff99", ["20.0%"]], ". Peace Keeper Damage +", [2, "#99ff99", ["70.0%"]], "."]],
     "buff_884"
+  ],
+  3382700: [
+    "Destiny: Mastery",
+    [["Using Peace Keeper consumes ", [2, "#ffff99", ["1"]], " stack to reset Peace Keeper cooldown."]],
+    "buff_890"
   ],
   490407: ["Party: Damage Amplification", [["Damage from foes +", [2, "#ff9999", ["6%"]], "."]], "buff_26"],
   491010: ["Party: Damage Amplification", [["Damage from foes +", [2, "#ff9999", ["6%"]], "."]], "buff_26"],
@@ -18284,14 +18378,14 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   3490600: [
     "Destiny: Quintessential",
     [
-      ["Atk./Move Speed +", [2, "#99ff99", ["10.0%"]], ". Manifestation Skill Damage +", [2, "#99ff99", ["50.0%"]], "."]
+      ["Atk./Move Speed +", [2, "#99ff99", ["10.0%"]], ". Manifestation Skill Damage +", [2, "#99ff99", ["57.0%"]], "."]
     ],
     "buff_884"
   ],
   3490700: [
     "Destiny: Quintessential",
     [
-      ["Atk./Move Speed +", [2, "#99ff99", ["10.0%"]], ". Manifestation Skill Damage +", [2, "#99ff99", ["50.0%"]], "."]
+      ["Atk./Move Speed +", [2, "#99ff99", ["10.0%"]], ". Manifestation Skill Damage +", [2, "#99ff99", ["57.0%"]], "."]
     ],
     "buff_884"
   ],
@@ -18318,8 +18412,8 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "buff_885"
   ],
   3491100: ["Destiny: Red Wings", [["Avenging Spear Damage +", [2, "#99ff99", ["70.0%"]], "."]], "buff_884"],
-  3491200: ["Destiny: Red Wings", [["Avenging Spear Damage +", [2, "#99ff99", ["100.0%"]], "."]], "buff_884"],
-  3491300: ["Destiny: Red Wings", [["Avenging Spear Damage +", [2, "#99ff99", ["114.0%"]], "."]], "buff_884"],
+  3491200: ["Destiny: Red Wings", [["Avenging Spear Damage +", [2, "#99ff99", ["132.0%"]], "."]], "buff_884"],
+  3491300: ["Destiny: Red Wings", [["Avenging Spear Damage +", [2, "#99ff99", ["150.0%"]], "."]], "buff_884"],
   3491600: [
     "Hyperfocus",
     [["Quake Smash, Piercing Shock, and Rending Finisher's Charge Mode Damage +", [2, "#99ff99", ["138.0%"]], "."]],
@@ -18327,12 +18421,12 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   ],
   3491700: [
     "Destiny: Charge Enhancement",
-    [["On Charge Skill use, consume ", [2, "#ffff99", ["1"]], " stack. Damage +", [2, "#99ff99", ["6.0%"]], "."]],
+    [["On Charge Skill use, consume ", [2, "#ffff99", ["1"]], " stack. Damage +", [2, "#99ff99", ["8.0%"]], "."]],
     "buff_885"
   ],
   3491800: [
     "Destiny: Charge Enhancement",
-    [["On Charge Skill use, consume ", [2, "#ffff99", ["1"]], " stack. Damage +", [2, "#99ff99", ["7.5%"]], "."]],
+    [["On Charge Skill use, consume ", [2, "#ffff99", ["1"]], " stack. Damage +", [2, "#99ff99", ["9.5%"]], "."]],
     "buff_885"
   ],
   3492100: [
@@ -18462,51 +18556,12 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "ark_passive_dr_9"
   ],
-  3330600: ["Destiny: Bear Energy", [["On Bear Skill use, Bear Energy +", [2, "#99ff99", ["500"]], "."]], "buff_884"],
   3330700: [
-    "Destiny: Bear-To-Be!",
-    [
-      [
-        "Next Forbidden Sorcery: Ripping Bear Damage +",
-        [2, "#99ff99", ["14.0%"]],
-        ". Consumed upon using Forbidden Sorcery: Ripping Bear."
-      ]
-    ],
+    "Destiny: Bear Frenzy",
+    [["Continuously enhances Forbidden Sorcery: Ripping Bear. Atk. and Move Speed +", [2, "#99ff99", ["15.0%"]], "."]],
     "buff_885"
   ],
-  3330701: [
-    "Destiny: Bear-To-Be!",
-    [
-      [
-        "Next Forbidden Sorcery: Ripping Bear Damage +",
-        [2, "#99ff99", ["15.5%"]],
-        ". Consumed upon using Forbidden Sorcery: Ripping Bear."
-      ]
-    ],
-    "buff_885"
-  ],
-  3331200: [
-    "Destiny: Fox-To-Be!",
-    [
-      [
-        "Next Forbidden Sorcery: Fox Star Rainstorm Damage +",
-        [2, "#99ff99", ["7.0%"]],
-        ". Consumed upon using Forbidden Sorcery: Fox Star Rainstorm."
-      ]
-    ],
-    "buff_884"
-  ],
-  3331201: [
-    "Destiny: Fox-To-Be!",
-    [
-      [
-        "Next Forbidden Sorcery: Fox Star Rainstorm Damage +",
-        [2, "#99ff99", ["9.0%"]],
-        ". Consumed upon using Forbidden Sorcery: Fox Star Rainstorm."
-      ]
-    ],
-    "buff_884"
-  ],
+  3331200: ["Destiny: Fox-To-Be!", [["Atk. Speed +", [2, "#99ff99", ["8.0%"]], "."]], "buff_884"],
   3331600: [
     "Destiny: Infinite Awakening",
     [
@@ -18545,11 +18600,6 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
       ]
     ],
     "buff_884"
-  ],
-  3333600: [
-    "Fragmented Destiny",
-    [["Using Bear Skills ", [2, "#ffff99", ["5"]], " time(s) activates ", [2, "#bf9ef6", ["Destiny"]], "."]],
-    "buff_883"
   ],
   3334100: [
     "Fragmented Destiny",
@@ -19099,6 +19149,11 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "buff_27"
   ],
   223208: ["Pure Excellence", [["Incoming Phy./Mag. Damage received +", [2, "#ff9999", ["100%"]], "."]], "buff_27"],
+  223410: [
+    "Shield",
+    [["Creates a shield that absorbs Damage equal to ", [2, "#99ff99", ["15.0%"]], " of Max HP."]],
+    "buff_18"
+  ],
   221816: ["Darkness", [["Darkness reduces sight range."]], "buff_13"],
   223201: ["Electric Attack", [["Inflicts Electric Attack Damage every", [2, "#ffff99", [" 1s"]], "."]], "buff_161"],
   223300: [
@@ -20346,6 +20401,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "ark_passive_bm_4"
   ],
+  2220506: ["Push Immunity", [["Gain Push Immunity."]], "buff_21"],
   2221100: ["Esoteric Skill Preparation", [["At max stack, Esoteric Skill Damage increases."]], "ark_passive_bm_6"],
   2240600: [
     "Level 3 Hype",
@@ -20530,39 +20586,15 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "buff_884"
   ],
   3220600: ["Destiny: Celestial Strike", [["Next Sweeping Kick Damage +", [2, "#99ff99", ["15.0%"]]]], "buff_885"],
-  3220700: [
-    "Destiny: Enlightened Origin",
-    [
-      [
-        "When holding ",
-        [2, "#ffff99", ["3"]],
-        " Esoteric Origin Orbs, Damage to foes +",
-        [2, "#99ff99", ["15.0%"]],
-        "."
-      ]
-    ],
-    "buff_884"
-  ],
-  3220800: [
-    "Destiny: Enlightened Origin",
-    [
-      [
-        "When holding ",
-        [2, "#ffff99", ["3"]],
-        " Esoteric Origin Orbs, Damage to foes +",
-        [2, "#99ff99", ["16.0%"]],
-        "."
-      ]
-    ],
-    "buff_884"
-  ],
+  3220700: ["Destiny: Enlightened Origin", [["Damage to foes +", [2, "#99ff99", ["12.0%"]], "."]], "buff_884"],
+  3220800: ["Destiny: Enlightened Origin", [["Damage to foes +", [2, "#99ff99", ["13.5%"]], "."]], "buff_884"],
   3221100: [
     "Destiny: Opening Three Gates",
     [["At ", [2, "#ffff99", ["3"]], " stacks, recovers all Esoteric Origin."]],
     "buff_884"
   ],
-  3221200: ["Destiny: Declaration of War", [["Damage to foes +", [2, "#99ff99", ["3.0%"]], "."]], "buff_885"],
-  3221300: ["Destiny: Declaration of War", [["Damage to foes +", [2, "#99ff99", ["4.0%"]], "."]], "buff_885"],
+  3221200: ["Destiny: Declaration of War", [["Damage to foes +", [2, "#99ff99", ["8.0%"]], "."]], "buff_885"],
+  3221300: ["Destiny: Declaration of War", [["Damage to foes +", [2, "#99ff99", ["9.0%"]], "."]], "buff_885"],
   3221600: [
     "Destiny: Undefeated Overlord",
     [
@@ -20881,15 +20913,15 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [["After ", [2, "#ffff99", ["4"]], " Stamina Skill uses, activates ", [2, "#bf9ef6", ["Destiny"]], "."]],
     "buff_883"
   ],
-  3390100: ["Destiny: Esoteric Skill", [["Esoteric Skill Crit Damage +", [2, "#99ff99", ["13.0%"]], "."]], "buff_884"],
+  3390100: ["Destiny: Esoteric Skill", [["Esoteric Skill Crit Damage +", [2, "#99ff99", ["16.5%"]], "."]], "buff_884"],
   3390201: [
     "Destiny: Tiger's Roar",
-    [["Esoteric Skill Damage +", [2, "#99ff99", [[4, "v0", 1], "%"]], "."], { v0: ["combateffect_sk", [5, 33902.03]] }],
+    [["Esoteric Skill Damage +", [2, "#99ff99", [[4, "v0", 1], "%"]], "."], { v0: ["combateffect_sk", [6, 33902.03]] }],
     "buff_885"
   ],
   3390301: [
     "Destiny: Tiger's Roar",
-    [["Esoteric Skill Damage +", [2, "#99ff99", [[4, "v0", 1], "%"]], "."], { v0: ["combateffect_sk", [6, 33903.03]] }],
+    [["Esoteric Skill Damage +", [2, "#99ff99", [[4, "v0", 1], "%"]], "."], { v0: ["combateffect_sk", [7, 33903.03]] }],
     "buff_885"
   ],
   3390600: [
@@ -21133,13 +21165,13 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_884"
   ],
-  3340100: ["Destiny: Red Dragon Energy", [["Damage to foes +", [2, "#99ff99", ["2.5%"]], "."]], "buff_884"],
+  3340100: ["Destiny: Red Dragon Energy", [["Damage to foes +", [2, "#99ff99", ["4.0%"]], "."]], "buff_884"],
   3340200: [
     "Destiny: Pinpoint Focus",
     [
       [
-        "Next Red Dragon's Horn Damage +",
-        [2, "#99ff99", ["10.0%"]],
+        "Next Red Dragon's Horn or Deadly Red Dragon Damage +",
+        [2, "#99ff99", ["12.0%"]],
         " for ",
         [2, "#ffff99", ["1"]],
         " use(s), and always hits as a Back Attack."
@@ -21587,7 +21619,15 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   ],
   282204: ["Ghillie Suit", [["Become Stealthed. Invisible to foes."]], "buff_148"],
   282215: ["Agility", [["Movement Skill Cooldown -", [2, "#99ff99", ["50%"]], "."]], "buff_114"],
-  282410: ["Golden Eye", [["Become Stealthed. Expires upon use of any skill."]], "he_skill_01_24"],
+  282410: [
+    "Golden Eye",
+    [
+      [
+        "Become Stealthed and Invisible to foes. Ignore collision with Adventurers and Monsters while moving. Expires upon use of any Skill."
+      ]
+    ],
+    "he_skill_01_24"
+  ],
   282502: ["Silver Master", [["Recovers Hawk Meter every ", [2, "#ffff99", ["1s"]], "."]], "ability_47"],
   282503: ["Silver Master", [["Recovers Hawk Meter every ", [2, "#ffff99", ["1s"]], "."]], "ability_47"],
   282504: ["Silver Master", [["Recovers Hawk Meter every ", [2, "#ffff99", ["1s"]], "."]], "ability_47"],
@@ -21595,7 +21635,15 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   282506: ["Silver Master", [["Recovers Hawk Meter every ", [2, "#ffff99", ["1s"]], "."]], "ability_47"],
   282510: ["Frost", [["Move Speed -", [2, "#ff9999", ["30.0%"]], "."]], "buff_43"],
   282511: ["Freeze", [["Become Incapacitated while Frozen."]], "buff_35"],
-  282710: ["Deadeye", [["Become Stealthed. Expires upon use of any skill."]], "he_skill_01_29"],
+  282710: [
+    "Deadeye",
+    [
+      [
+        "Become Stealthed and Invisible to foes. Ignore collision with Adventurers and Monsters while moving. Expires upon use of any Skill."
+      ]
+    ],
+    "he_skill_01_29"
+  ],
   2282300: ["Hawk Support", [["Atk. Power +", [2, "#99ff99", ["8.0%"]], "."]], "ark_passive_01_18"],
   2282301: ["Hawk Support", [["Atk. Power +", [2, "#99ff99", ["16.0%"]], "."]], "ark_passive_01_18"],
   2282302: ["Hawk Support", [["Atk. Power +", [2, "#99ff99", ["24.0%"]], "."]], "ark_passive_01_18"],
@@ -21980,6 +22028,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   290991: ["Move Speed Reduction", [["Move Speed -", [2, "#ff9999", ["40%"]], "."]], "buff_43"],
   290992: ["Atk. Speed Reduction", [["Atk. Speed -", [2, "#ff9999", ["15%"]], "."]], "buff_42"],
   290993: ["Move Speed Reduction", [["Move Speed -", [2, "#ff9999", ["30%"]], "."]], "buff_43"],
+  290994: ["Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
   291018: ["Move Speed Bonus", [["Move Speed +", [2, "#99ff99", ["30.0%"]], "."]], "buff_10"],
   291206: ["Freeze", [["Become Incapacitated while Frozen."]], "buff_35"],
   291208: ["Ignite", [["Receives Damage upon expiration."]], "buff_85"],
@@ -22237,9 +22286,9 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   300217: ["Overheat", [["Normal Skill Damage +", [2, "#99ff99", ["7.0%"]], "."]], "ability_271"],
   300218: ["Overheat", [["Normal Skill Damage +", [2, "#99ff99", ["14.0%"]], "."]], "ability_271"],
   300219: ["Overheat", [["Normal Skill Damage +", [2, "#99ff99", ["28.0%"]], "."]], "ability_271"],
-  300220: ["Overheat", [["Normal Skill Damage +", [2, "#99ff99", ["22.0%"]], "."]], "ability_271"],
-  300221: ["Overheat", [["Normal Skill Damage +", [2, "#99ff99", ["32.0%"]], "."]], "ability_271"],
-  300222: ["Overheat", [["Normal Skill Damage +", [2, "#99ff99", ["42.0%"]], "."]], "ability_271"],
+  300220: ["Overheat", [["Normal Skill Damage +", [2, "#99ff99", ["25.0%"]], "."]], "ability_271"],
+  300221: ["Overheat", [["Normal Skill Damage +", [2, "#99ff99", ["35.0%"]], "."]], "ability_271"],
+  300222: ["Overheat", [["Normal Skill Damage +", [2, "#99ff99", ["45.0%"]], "."]], "ability_271"],
   300223: ["Firepower Enhancement III", [["Crit Rate +", [2, "#99ff99", ["30.0%"]], "."]], "buff_171"],
   300224: ["Firepower Enhancement III", [["Crit Rate +", [2, "#99ff99", ["35.0%"]], "."]], "buff_171"],
   300225: ["Firepower Enhancement III", [["Crit Rate +", [2, "#99ff99", ["40.0%"]], "."]], "buff_171"],
@@ -22514,7 +22563,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [
       [
         "Atk./Move Speed +",
-        [2, "#99ff99", [[0, "Unsupported function call: table_skillbuffpassiveoptionvalue0"], "%"]],
+        [2, "#99ff99", ["10.0%"]],
         ". Barrage Attack Damage +",
         [2, "#99ff99", [[4, "v0", 1], "%"]],
         "."
@@ -25649,9 +25698,9 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [["Lightning Damage taken +", [2, "#99ff99", ["3.5%"]], "."]],
     "card_skill_38"
   ],
-  610001320: ["Path of Faith", [["Dark Damage taken +", [2, "#99ff99", ["1%"]]]], "card_skill_30"],
-  610001321: ["Path of Faith", [["Dark Damage taken +", [2, "#99ff99", ["2%"]]]], "card_skill_30"],
-  610001322: ["Path of Faith", [["Dark Damage taken +", [2, "#99ff99", ["3.5%"]]]], "card_skill_30"],
+  610001320: ["Path of Faith", [["Dark Damage taken +", [2, "#99ff99", ["1%"]], "."]], "card_skill_30"],
+  610001321: ["Path of Faith", [["Dark Damage taken +", [2, "#99ff99", ["2%"]], "."]], "card_skill_30"],
+  610001322: ["Path of Faith", [["Dark Damage taken +", [2, "#99ff99", ["3.5%"]], "."]], "card_skill_30"],
   611000000: ["Resuscitation", [["Stand Up Cooldown -", [2, "#99ff99", ["5%"]], "."]], "buff_243"],
   611000001: ["Resuscitation", [["Stand Up Cooldown -", [2, "#99ff99", ["10%"]], "."]], "buff_243"],
   611000002: ["Resuscitation", [["Stand Up Cooldown -", [2, "#99ff99", ["15%"]], "."]], "buff_243"],
@@ -30432,7 +30481,13 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   190509: ["Poison", [["Receives Mag. Damage every", [2, "#ffff99", [" 1s"]], "."]], "buff_12"],
   190900: [
     "Ghost",
-    [["Ignore any impact as you move past monsters. Move Speed +", [2, "#99ff99", ["20%"]], "."]],
+    [
+      [
+        "Ignores collision with Adventurers and Normal Monsters while moving. Move Speed +",
+        [2, "#99ff99", ["20%"]],
+        "."
+      ]
+    ],
     "ac_skill_01_25"
   ],
   190911: ["Twisted Fate: Enhance", [["Damage to foes + ", [2, "#99ff99", ["40%"]], "."]], "ac_skill_01_36"],
@@ -30477,11 +30532,11 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
       [
         "Basic Attack changes into ",
         [2, "#ffff99", ["3"]],
-        " directions. On hit, the Stacking becomes ",
+        " directions. On hit, Stacking gains ",
         [2, "#ffff99", ["1"]],
         " stack. Damage to foes +",
         [2, "#99ff99", ["100%"]],
-        ". Damage to Challenge or lower foes +",
+        ". Additionally, Damage to Challenge or lower foes +",
         [2, "#99ff99", ["500%"]],
         "."
       ]
@@ -30600,7 +30655,11 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_123"
   ],
-  191718: ["Ignore Collision", [["Ignore impact as you move past foes."]], "buff_114"],
+  191718: [
+    "Ignore Collision",
+    [["During movement, ignore collision with Adventurers and Normal Monsters."]],
+    "buff_114"
+  ],
   191720: ["Party: Weakness Exposure", [["Crit Resistance -", [2, "#ff9999", ["10.0%"]], "."]], "buff_62"],
   191826: [
     "Weakness Detection",
@@ -30617,7 +30676,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "Quick Pace",
     [
       [
-        "Ignore any impact as you move past monsters. Move Speed +",
+        "Ignores collision with Adventurers and Normal Monsters while moving. Move Speed +",
         [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
         "."
       ]
@@ -30852,7 +30911,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "Ignore Collision",
     [
       [
-        "Ignore any impact as you move past monsters. Move Speed +",
+        "Ignores collision with Adventurers and Normal Monsters while moving. Move Speed +",
         [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
         "."
       ]
@@ -32169,18 +32228,18 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   ],
   3201100: [
     "Destiny: Basic Training",
-    [["Igna, Maririn, Pauru Basic Attack Damage +", [2, "#99ff99", ["15.0%"]], "."]],
+    [["Igna, Maririn, Pauru Basic Attack Damage +", [2, "#99ff99", ["20.0%"]], "."]],
     "buff_884"
   ],
   3201600: ["Destiny: Inherited Power", [["Normal Skill Damage +", [2, "#99ff99", ["20.0%"]], "."]], "buff_884"],
   3201700: [
     "Destiny: Inherited Power",
-    [["Normal Skill Damage +", [2, "#99ff99", ["32.0%"]], ". Atk. Speed +", [2, "#99ff99", ["8.0%"]], "."]],
+    [["Normal Skill Damage +", [2, "#99ff99", ["40.0%"]], ". Atk. Speed +", [2, "#99ff99", ["8.0%"]], "."]],
     "buff_884"
   ],
   3201800: [
     "Destiny: Inherited Power",
-    [["Normal Skill Damage +", [2, "#99ff99", ["36.0%"]], ". Atk. Speed +", [2, "#99ff99", ["8.0%"]], "."]],
+    [["Normal Skill Damage +", [2, "#99ff99", ["44.0%"]], ". Atk. Speed +", [2, "#99ff99", ["8.0%"]], "."]],
     "buff_884"
   ],
   3202100: [
@@ -32222,7 +32281,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_884"
   ],
-  3202600: ["Destiny: Osh", [["Osh's Damage +", [2, "#99ff99", ["100.0%"]], "."]], "sm_skill_01_11"],
+  3202600: ["Destiny: Osh", [["Osh's Damage +", [2, "#99ff99", ["125.0%"]], "."]], "sm_skill_01_11"],
   3202601: ["Destiny: Alimaji", [["Alimaji's Damage +", [2, "#99ff99", ["35.0%"]], "."]], "sm_skill_01_12"],
   3202602: ["Destiny: Phoenix", [["Phoenix's Damage +", [2, "#99ff99", ["20.0%"]], "."]], "sm_skill_01_22"],
   3202603: [
@@ -32230,21 +32289,21 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [["Jahia & Ligheas's Damage +", [2, "#99ff99", ["10.0%"]], "."]],
     "sm_skill_01_13"
   ],
-  3202604: ["Destiny: Akir", [["Akir's Damage +", [2, "#99ff99", ["25.0%"]], "."]], "sm_skill_01_35"],
-  3202700: ["Destiny: Osh", [["Osh's Damage +", [2, "#99ff99", ["100.0%"]], "."]], "sm_skill_01_11"],
-  3202701: ["Destiny: Alimaji", [["Alimaji's Damage +", [2, "#99ff99", ["45.0%"]], "."]], "sm_skill_01_12"],
-  3202702: ["Destiny: Phoenix", [["Phoenix's Damage +", [2, "#99ff99", ["30.0%"]]]], "sm_skill_01_22"],
+  3202604: ["Destiny: Akir", [["Akir's Damage +", [2, "#99ff99", ["40.0%"]], "."]], "sm_skill_01_35"],
+  3202700: ["Destiny: Osh", [["Osh's Damage +", [2, "#99ff99", ["125.0%"]], "."]], "sm_skill_01_11"],
+  3202701: ["Destiny: Alimaji", [["Alimaji's Damage +", [2, "#99ff99", ["60.0%"]], "."]], "sm_skill_01_12"],
+  3202702: ["Destiny: Phoenix", [["Phoenix's Damage +", [2, "#99ff99", ["45.0%"]]]], "sm_skill_01_22"],
   3202703: [
     "Destiny: Jahia & Ligheas",
-    [["Jahia & Ligheas's Damage +", [2, "#99ff99", ["20.0%"]], "."]],
+    [["Jahia & Ligheas's Damage +", [2, "#99ff99", ["30.0%"]], "."]],
     "sm_skill_01_13"
   ],
-  3202704: ["Destiny: Akir", [["Akir's Damage +", [2, "#99ff99", ["25.0%"]], "."]], "sm_skill_01_35"],
-  3202800: ["Destiny: Osh", [["Osh's Damage +", [2, "#99ff99", ["110.0%"]]]], "sm_skill_01_11"],
-  3202801: ["Destiny: Alimaji", [["Alimaji's Damage +", [2, "#99ff99", ["45.0%"]]]], "sm_skill_01_12"],
-  3202802: ["Destiny: Phoenix", [["Phoenix's Damage +", [2, "#99ff99", ["30.0%"]], "."]], "sm_skill_01_22"],
-  3202803: ["Destiny: Jahia & Ligheas", [["Jahia & Ligheas's Damage +", [2, "#99ff99", ["20.0%"]]]], "sm_skill_01_13"],
-  3202804: ["Destiny: Akir", [["Akir's Damage +", [2, "#99ff99", ["35.0%"]]]], "sm_skill_01_35"],
+  3202704: ["Destiny: Akir", [["Akir's Damage +", [2, "#99ff99", ["40.0%"]], "."]], "sm_skill_01_35"],
+  3202800: ["Destiny: Osh", [["Osh's Damage +", [2, "#99ff99", ["135.0%"]]]], "sm_skill_01_11"],
+  3202801: ["Destiny: Alimaji", [["Alimaji's Damage +", [2, "#99ff99", ["60.0%"]]]], "sm_skill_01_12"],
+  3202802: ["Destiny: Phoenix", [["Phoenix's Damage +", [2, "#99ff99", ["45.0%"]], "."]], "sm_skill_01_22"],
+  3202803: ["Destiny: Jahia & Ligheas", [["Jahia & Ligheas's Damage +", [2, "#99ff99", ["30.0%"]]]], "sm_skill_01_13"],
+  3202804: ["Destiny: Akir", [["Akir's Damage +", [2, "#99ff99", ["48.0%"]]]], "sm_skill_01_35"],
   3210100: [
     "Destiny: Serenade of Fortitude",
     [["Skill Damage +", [2, "#99ff99", ["2.5%"]], " (excluding Awakening Skills)."]],
@@ -32651,11 +32710,11 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [
       [
         "Recovers ",
-        [2, "#99ff99", ["1,000"]],
+        [2, "#99ff99", ["5,000"]],
         " HP every ",
         [2, "#ffff99", ["1s"]],
-        ". Max of ",
-        [2, "#99ff99", ["20,000"]],
+        ", up to ",
+        [2, "#99ff99", ["100,000"]],
         " HP."
       ]
     ],
@@ -34288,7 +34347,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
       [
         "Every ",
         [2, "#ffff99", ["2s"]],
-        ", become engulfed in a sacred flame causing periodic Damage. Greatly decreases self HP Regen."
+        ", become engulfed in a Holy Flame causing periodic Damage. Greatly decreases self healing."
       ]
     ],
     "buff_219"
@@ -35105,6 +35164,59 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_4"
   ],
+  430450503: [
+    "Critical Shock",
+    [["Hit by Arcenos's powerful attack. At 3 stacks, the debuff transforms into Conviction."]],
+    "buff_344"
+  ],
+  430500140: ["Stun", [["Stunned by Arcenos's wave attack. Unable to act for a certain time."]], "buff_39"],
+  430450210: ["Stun", [["Stunned by Arcenos's hefty attack. Unable to act for a certain time."]], "buff_39"],
+  430450404: ["Stun", [["Stunned by Arcenos's destructive attack. Unable to act for a certain time."]], "buff_39"],
+  430451817: ["Bell's Protection", [["Arcenos is protected by the Bell of Grace he summoned."]], "buff_866"],
+  430451820: ["Scar", [["A scar left by Arcenos's attack. Atk. Power -20%."]], "buff_28"],
+  430450125: ["Inquisitor's Gaze", [["Archbishop Arcenos turns his gaze upon you."]], "buff_234"],
+  430450126: ["Inquisitor's Gaze", [["Archbishop Arcenos turns his gaze upon you."]], "buff_234"],
+  430450127: ["Inquisitor's Gaze", [["Archbishop Arcenos turns his gaze upon you."]], "buff_234"],
+  430451948: ["Bind", [["Bound by the chains of Arcenos. Unable to move for a brief moment."]], "buff_491"],
+  430480414: ["Blind", [["Blinded by Arcenos's attack. Field of vision narrows for a brief moment."]], "buff_519"],
+  430450504: ["Conviction", [["Arcenos summons a giant hammer to deliver Conviction."]], "buff_392"],
+  430451970: [
+    "Seize the Moment",
+    [["Increases Damage inflicted on Bell's Protection that protects Arcenos."]],
+    "buff_830"
+  ],
+  430455001: ["Inquisitor's Gaze", [["Archbishop Arcenos turns his gaze upon you."]], "buff_234"],
+  430455002: ["Inquisitor's Gaze", [["Archbishop Arcenos turns his gaze upon you."]], "buff_234"],
+  430560063: ["Gaze", [["Arcenos's gaze is upon you."]], "buff_341"],
+  430560065: [
+    "Plosive",
+    [["Weakened by the shockwave from the Bell.\nIncoming Damage +", [2, "#ff9999", ["50%"]], "."]],
+    "buff_27"
+  ],
+  430560501: ["Stun", [["Stunned by the shockwave from the Bell.\nBecome Incapacitated."]], "buff_39"],
+  430561091: ["Gaze", [["Arcenos's gaze is upon you."]], "buff_341"],
+  430561093: ["Gaze", [["Arcenos's gaze is upon you."]], "buff_341"],
+  430562405: ["Chain Bind", [["Bound by Arcenos's chains.\nBecome Incapacitated."]], "buff_422"],
+  430562931: [
+    "Resonance",
+    [
+      [
+        "The Bell of Obedience and Sylmael Tuning Fork are resonating.\nThe effect stacks based on the number of Resonances. Incoming Damage -",
+        [2, "#99ff99", ["1.5%"]],
+        " per stack."
+      ]
+    ],
+    "buff_21"
+  ],
+  430563231: [
+    "Sylmael Poison",
+    [["Poisoned by the destroyed Sylmael energy.\nPeriodically take Damage. Damage increases with each stack."]],
+    "buff_168"
+  ],
+  430563660: ["Gaze", [["The Tuning Fork is watching."]], "buff_341"],
+  430563661: ["Gaze", [["The Tuning Fork is watching."]], "buff_341"],
+  430564001: ["Echo", [["Arcenos's Bell has been rung.\nAtk. Power +", [2, "#99ff99", ["10%"]], "."]], "buff_646"],
+  430565200: ["Damage Reduction", [["Incoming Damage -", [2, "#ff9999", ["90%"]], "."]], "buff_19"],
   426590011: ["Condensed Red Moon Energy", [["Enhanced by the Red Moon's energy."]], "buff_611"],
   426590021: [
     "Organism",
@@ -36599,6 +36711,11 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "buff_757"
   ],
   430161805: ["Incoming Damage Increase", [["Increases Damage received."]], "buff_27"],
+  452101900: [
+    "Incoming Damage Increase",
+    [["The New Year's Bow Rascals' incoming Damage increases. At max stacks, receive even more Damage."]],
+    "buff_27"
+  ],
   73110601: ["Guardian", [["Life Energy protects you from all harm."]], "buff_22"],
   73110604: ["Life Energy", [["The air is filled with Life Energy."]], "buff_156"],
   422000013: [
@@ -37998,6 +38115,13 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   ],
   428530269: ["Electrocution", [["Become Incapacitated while Electrocuted."]], "buff_51"],
   428530280: ["Overcurrent", [["Atk. Power slightly increases per stack due to Overcurrent."]], "buff_310"],
+  428530295: [
+    "Striking Lightning",
+    [["Generate an electric field at the previous location after a short time."]],
+    "buff_712"
+  ],
+  428530299: ["Charge Area", [["Inflict Damage in the vicinity of the charge area."]], "buff_783"],
+  428530302: ["Charge Area", [["Inflict Damage in the vicinity of the charge area."]], "buff_783"],
   427480116: [
     "Frost Crown",
     [["A Frost Crown forms on Narok the Butcher's head.\nNarok's incoming Damage -", [2, "#99ff99", ["30%"]], "."]],
@@ -42946,17 +43070,17 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   ],
   3480700: [
     "Destiny: Prayer",
-    [["Holy Blade Skill Damage +", [2, "#99ff99", ["6.0%"]], ". Removed when Shining Knight ends."]],
+    [["Holy Blade Skill Damage +", [2, "#99ff99", ["10.0%"]], ". Removed when Shining Knight ends."]],
     "buff_884"
   ],
   3480701: [
     "Destiny: Prayer",
-    [["Holy Blade Skill Damage +", [2, "#99ff99", ["15.5%"]], ". Removed when Shining Knight ends."]],
+    [["Holy Blade Skill Damage +", [2, "#99ff99", ["19.5%"]], ". Removed when Shining Knight ends."]],
     "buff_884"
   ],
   3480702: [
     "Destiny: Prayer",
-    [["Holy Blade Skill Damage +", [2, "#99ff99", ["18.5%"]], ". Removed when Shining Knight ends."]],
+    [["Holy Blade Skill Damage +", [2, "#99ff99", ["22.5%"]], ". Removed when Shining Knight ends."]],
     "buff_884"
   ],
   3481100: [
@@ -43604,6 +43728,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "po_skill_01_158"
   ],
   437320: ["Binding Light", [["Becomes Bound."]], "po_skill_01_158"],
+  437401: ["Fast Sailing", [["Greatly increases the ship's speed for a brief moment."]], "voyage_skill_22"],
   500760: [
     "Covetous Shard",
     [["The violent desire imbued within the sword speaks to the soul, increasing Atk. Power."]],
@@ -44432,7 +44557,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [
       [
         "Sync-type Skill Damage +",
-        [2, "#99ff99", ["7.0%"]],
+        [2, "#99ff99", ["3.0%"]],
         ".\nZero Sync Skills accelerate the core, decreasing the cooldown of certain Hypersync Skills.\n\nSonic Impact: ",
         [2, "#ffff99", ["Laser Blade"]],
         " and ",
@@ -44465,7 +44590,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [
       [
         "Sync-type Skill Damage +",
-        [2, "#99ff99", ["14.0%"]],
+        [2, "#99ff99", ["9.0%"]],
         ".\nZero Sync Skills accelerate the core, decreasing the cooldown of certain Hypersync Skills.\n\nSonic Impact: ",
         [2, "#ffff99", ["Laser Blade"]],
         " and ",
@@ -44498,7 +44623,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [
       [
         "Sync-type Skill Damage +",
-        [2, "#99ff99", ["21.0%"]],
+        [2, "#99ff99", ["15.0%"]],
         ".\nZero Sync Skills accelerate the core, decreasing the cooldown of certain Hypersync Skills.\n\nSonic Impact: ",
         [2, "#ffff99", ["Laser Blade"]],
         " and ",
@@ -45513,7 +45638,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   372120: ["Party: Damage Amplification", [["Damage from foes +", [2, "#ff9999", ["6.0%"]], "."]], "buff_26"],
   372452: ["Party: Damage Amplification", [["Damage from foes +", [2, "#ff9999", ["6.0%"]], "."]], "buff_26"],
   374015: ["Freeze", [["Become Incapacitated while Frozen."]], "buff_35"],
-  3370100: ["Destiny: Magick Catalyst", [["Non-Awakening Skill Damage +", [2, "#99ff99", ["7.5%"]], "."]], "buff_884"],
+  3370100: ["Destiny: Magick Catalyst", [["Non-Awakening Skill Damage +", [2, "#99ff99", ["12.0%"]], "."]], "buff_884"],
   3370200: [
     "Destiny: Magick Acceleration",
     [
@@ -45780,7 +45905,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_19"
   ],
-  3460600: ["Destiny: Swift Demise", [["Damage to foes +", [2, "#99ff99", ["6.0%"]], "."]], "buff_884"],
+  3460600: ["Destiny: Swift Demise", [["Damage to foes +", [2, "#99ff99", ["8.0%"]], "."]], "buff_884"],
   3460610: ["Destiny: Rapid Step", [["Atk./Move Speed +", [2, "#99ff99", ["8.0%"]], "."]], "buff_885"],
   3461101: ["Destiny: Death Step", [["Move Speed +", [2, "#99ff99", ["5.0%"]], "."]], "buff_884"],
   3461200: [
@@ -46478,56 +46603,56 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [["Move Speed +", [2, "#99ff99", ["40%"]], " for ", [2, "#ffff99", ["3s"]], "."]],
     "buff_114"
   ],
-  170019000: ["Humidity C", [[""]], "use_15"],
-  170019001: ["Humidity B", [[""]], "use_15"],
-  170019002: ["Humidity A", [[""]], "use_15"],
-  170019003: ["Humidity S", [[""]], "use_15"],
-  170019004: ["Humidity SS", [[""]], "use_15"],
-  170019010: ["Electrocution C", [[""]], "buff_347"],
-  170019011: ["Electrocution B", [[""]], "buff_347"],
-  170019012: ["Electrocution A", [[""]], "buff_347"],
-  170019013: ["Electrocution S", [[""]], "buff_347"],
-  170019014: ["Electrocution SS", [[""]], "buff_347"],
-  170019020: ["Lightning Strike C", [[""]], "buff_346"],
-  170019021: ["Lightning Strike B", [[""]], "buff_346"],
-  170019022: ["Lightning Strike A", [[""]], "buff_346"],
-  170019023: ["Lightning Strike S", [[""]], "buff_346"],
-  170019024: ["Lightning Strike SS", [[""]], "buff_346"],
-  170019030: ["Chill C", [[""]], "buff_144"],
-  170019031: ["Chill B", [[""]], "buff_144"],
-  170019032: ["Chill A", [[""]], "buff_144"],
-  170019033: ["Chill S", [[""]], "buff_144"],
-  170019034: ["Chill SS", [[""]], "buff_144"],
-  170019040: ["Frostburst C", [[""]], "buff_145"],
-  170019041: ["Frostburst B", [[""]], "buff_145"],
-  170019042: ["Frostburst A", [[""]], "buff_145"],
-  170019043: ["Frostburst S", [[""]], "buff_145"],
-  170019044: ["Frostburst SS", [[""]], "buff_145"],
-  170019050: ["Blazing C", [[""]], "buff_56"],
-  170019051: ["Blazing B", [[""]], "buff_56"],
-  170019052: ["Blazing A", [[""]], "buff_56"],
-  170019053: ["Blazing S", [[""]], "buff_56"],
-  170019054: ["Blazing SS", [[""]], "buff_56"],
-  170019060: ["Brilliance C", [[""]], "buff_499"],
-  170019061: ["Brilliance B", [[""]], "buff_499"],
-  170019062: ["Brilliance A", [[""]], "buff_499"],
-  170019063: ["Brilliance S", [[""]], "buff_499"],
-  170019064: ["Brilliance SS", [[""]], "buff_499"],
-  170019070: ["Torch C", [[""]], "buff_489"],
-  170019071: ["Torch B", [[""]], "buff_489"],
-  170019072: ["Torch A", [[""]], "buff_489"],
-  170019073: ["Torch S", [[""]], "buff_489"],
-  170019074: ["Torch SS", [[""]], "buff_489"],
-  170019080: ["Shade C", [[""]], "buff_498"],
-  170019081: ["Shade B", [[""]], "buff_498"],
-  170019082: ["Shade A", [[""]], "buff_498"],
-  170019083: ["Shade S", [[""]], "buff_498"],
-  170019084: ["Shade SS", [[""]], "buff_498"],
-  170019090: ["Void C", [[""]], "ability_41"],
-  170019091: ["Void B", [[""]], "ability_41"],
-  170019092: ["Void A", [[""]], "ability_41"],
-  170019093: ["Void S", [[""]], "ability_41"],
-  170019094: ["Void SS", [[""]], "ability_41"],
+  170019000: ["Humidity C", [["Water/Lightning Resistance -10%, Fire Resistance +10%"]], "use_15"],
+  170019001: ["Humidity B", [["Water/Lightning Resistance -12%, Fire Resistance +12%"]], "use_15"],
+  170019002: ["Humidity A", [["Water/Lightning Resistance -15%, Fire Resistance +15%"]], "use_15"],
+  170019003: ["Humidity S", [["Water/Lightning Resistance -18%, Fire Resistance +18%"]], "use_15"],
+  170019004: ["Humidity SS", [["Water/Lightning Resistance -20%, Fire Resistance +20%"]], "use_15"],
+  170019010: ["Electrocution C", [["Mag. Damage Resistance -10%"]], "buff_347"],
+  170019011: ["Electrocution B", [["Mag. Damage Resistance -12%"]], "buff_347"],
+  170019012: ["Electrocution A", [["Mag. Damage Resistance -15%"]], "buff_347"],
+  170019013: ["Electrocution S", [["Mag. Damage Resistance -18%"]], "buff_347"],
+  170019014: ["Electrocution SS", [["Mag. Damage Resistance -20%"]], "buff_347"],
+  170019020: ["Lightning Strike C", [["x2 Electrocution Effect"]], "buff_346"],
+  170019021: ["Lightning Strike B", [["x2 Electrocution Effect"]], "buff_346"],
+  170019022: ["Lightning Strike A", [["x2 Electrocution Effect"]], "buff_346"],
+  170019023: ["Lightning Strike S", [["x2 Electrocution Effect"]], "buff_346"],
+  170019024: ["Lightning Strike SS", [["x2 Electrocution Effect"]], "buff_346"],
+  170019030: ["Chill C", [["Phy. Damage Resistance -10%"]], "buff_144"],
+  170019031: ["Chill B", [["Phy. Damage Resistance -12%"]], "buff_144"],
+  170019032: ["Chill A", [["Phy. Damage Resistance -15%"]], "buff_144"],
+  170019033: ["Chill S", [["Phy. Damage Resistance -18%"]], "buff_144"],
+  170019034: ["Chill SS", [["Phy. Damage Resistance -20%"]], "buff_144"],
+  170019040: ["Frostburst C", [["x2 Chill Effect"]], "buff_145"],
+  170019041: ["Frostburst B", [["x2 Chill Effect"]], "buff_145"],
+  170019042: ["Frostburst A", [["x2 Chill Effect"]], "buff_145"],
+  170019043: ["Frostburst S", [["x2 Chill Effect"]], "buff_145"],
+  170019044: ["Frostburst SS", [["x2 Chill Effect"]], "buff_145"],
+  170019050: ["Blazing C", [["Phy./Mag. Damage Resistance -5%"]], "buff_56"],
+  170019051: ["Blazing B", [["Phy./Mag. Damage Resistance -6%"]], "buff_56"],
+  170019052: ["Blazing A", [["Phy./Mag. Damage Resistance -7.5%"]], "buff_56"],
+  170019053: ["Blazing S", [["Phy./Mag. Damage Resistance -9%"]], "buff_56"],
+  170019054: ["Blazing SS", [["Phy./Mag. Damage Resistance -10%"]], "buff_56"],
+  170019060: ["Brilliance C", [["Elemental Resistance -5%, Holy Resistance -5%"]], "buff_499"],
+  170019061: ["Brilliance B", [["Elemental Resistance -6%, Holy Resistance -6%"]], "buff_499"],
+  170019062: ["Brilliance A", [["Elemental Resistance -7.5%, Holy Resistance -7.5%"]], "buff_499"],
+  170019063: ["Brilliance S", [["Elemental Resistance -9%, Holy Resistance -9%"]], "buff_499"],
+  170019064: ["Brilliance SS", [["Elemental Resistance -10%, Holy Resistance -10%"]], "buff_499"],
+  170019070: ["Torch C", [["x2 Brilliance Effect"]], "buff_489"],
+  170019071: ["Torch B", [["x2 Brilliance Effect"]], "buff_489"],
+  170019072: ["Torch A", [["x2 Brilliance Effect"]], "buff_489"],
+  170019073: ["Torch S", [["x2 Brilliance Effect"]], "buff_489"],
+  170019074: ["Torch SS", [["x2 Brilliance Effect"]], "buff_489"],
+  170019080: ["Shade C", [["Elemental Resistance +10%, Dark Resistance -20%"]], "buff_498"],
+  170019081: ["Shade B", [["Elemental Resistance +12%, Dark Resistance -24%"]], "buff_498"],
+  170019082: ["Shade A", [["Elemental Resistance +15%, Dark Resistance -30%"]], "buff_498"],
+  170019083: ["Shade S", [["Elemental Resistance +18%, Dark Resistance -36%"]], "buff_498"],
+  170019084: ["Shade SS", [["Elemental Resistance +20%, Dark Resistance -40%"]], "buff_498"],
+  170019090: ["Void C", [["Holy/Dark Resistance -10%"]], "ability_41"],
+  170019091: ["Void B", [["Holy/Dark Resistance -12%"]], "ability_41"],
+  170019092: ["Void A", [["Holy/Dark Resistance -15%"]], "ability_41"],
+  170019093: ["Void S", [["Holy/Dark Resistance -18%"]], "ability_41"],
+  170019094: ["Void SS", [["Holy/Dark Resistance -20%"]], "ability_41"],
   9782101: ["Light", [["Activates Dantier Roader's Light for a certain period of time."]], "vehicle_63"],
   9783200: ["Unleash", [["Unleashes the power of fire for a period of time. "]], "vehicle_64"],
   9680001: ["Acceleration", [["Increases the Flying Nimbus Move Speed."]], "vehicle_63"],
@@ -47859,12 +47984,12 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   3180100: ["Destiny: Singularity", [["Perfect Swing always hits as a Frontal Attack."]], "buff_884"],
   3180200: [
     "Destiny: Singularity",
-    [["Perfect Swing always hits as a Frontal Attack. Damage +", [2, "#99ff99", ["12.0%"]], "."]],
+    [["Perfect Swing always hits as a Frontal Attack. Damage +", [2, "#99ff99", ["18.0%"]], "."]],
     "buff_885"
   ],
   3180300: [
     "Destiny: Singularity",
-    [["Perfect Swing always hits as a Frontal Attack. Damage +", [2, "#99ff99", ["15.0%"]], "."]],
+    [["Perfect Swing always hits as a Frontal Attack. Damage +", [2, "#99ff99", ["21.0%"]], "."]],
     "buff_885"
   ],
   3180600: [
@@ -47939,6 +48064,11 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_886"
   ],
+  3180708: [
+    "Party: Armor Destruction",
+    [["Phy. Defense -", [2, "#ff9999", ["12.0%"]], ". Mag. Defense -", [2, "#ff9999", ["12.0%"]], "."]],
+    "buff_61"
+  ],
   3180800: [
     "Destiny: Distortion",
     [
@@ -47985,8 +48115,62 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_886"
   ],
-  3181200: ["Destiny: Earthquake", [["Earth Wave Damage +", [2, "#99ff99", ["30.0%"]], "."]], "buff_884"],
-  3181300: ["Destiny: Earthquake", [["Earth Wave Damage +", [2, "#99ff99", ["35.0%"]], "."]], "buff_884"],
+  3180808: [
+    "Party: Armor Destruction",
+    [["Phy. Defense -", [2, "#ff9999", ["12.0%"]], ". Mag. Defense -", [2, "#ff9999", ["12.0%"]], "."]],
+    "buff_61"
+  ],
+  3181101: [
+    "Destiny: Gravity Run",
+    [
+      [
+        "At ",
+        [2, "#ffff99", ["2"]],
+        " stacks, recover ",
+        [2, "#99ff99", ["12.0%"]],
+        " of Max MP. Cooldown of Seismic Hammer, Perfect Swing, and Earth Wave -",
+        [2, "#99ff99", ["30.0%"]],
+        "."
+      ]
+    ],
+    "buff_886"
+  ],
+  3181200: ["Destiny: Earthquake", [["Earth Wave Damage +", [2, "#99ff99", ["48.0%"]], "."]], "buff_884"],
+  3181201: [
+    "Destiny: Gravity Run",
+    [
+      [
+        "At ",
+        [2, "#ffff99", ["2"]],
+        " stacks, recover ",
+        [2, "#99ff99", ["12.0%"]],
+        " of Max MP. Cooldown of Seismic Hammer, Perfect Swing, and Earth Wave -",
+        [2, "#99ff99", ["30.0%"]],
+        ". Afterward, gain the ",
+        [2, "#bf9ef6", ["Destiny: Earthquake"]],
+        " effect."
+      ]
+    ],
+    "buff_886"
+  ],
+  3181300: ["Destiny: Earthquake", [["Earth Wave Damage +", [2, "#99ff99", ["54.0%"]], "."]], "buff_884"],
+  3181301: [
+    "Destiny: Gravity Run",
+    [
+      [
+        "At ",
+        [2, "#ffff99", ["2"]],
+        " stacks, recover ",
+        [2, "#99ff99", ["12.0%"]],
+        " of Max MP. Cooldown of Seismic Hammer, Perfect Swing, and Earth Wave -",
+        [2, "#99ff99", ["30.0%"]],
+        ". Afterward, gain the ",
+        [2, "#bf9ef6", ["Destiny: Earthquake"]],
+        " effect."
+      ]
+    ],
+    "buff_886"
+  ],
   3181600: [
     "Destiny: Gravity Acceleration",
     [["Lasts only for duration of Hypergravity Zone. Atk. Speed +", [2, "#99ff99", ["20.0%"]], "."]],
@@ -48265,9 +48449,9 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   ],
   457308: ["Earthquake", [["Become Incapacitated by an Earthquake."]], "buff_49"],
   458300: ["Earthquake", [["Become Incapacitated by an Earthquake."]], "buff_49"],
-  2450000: ["Punisher", [["Damage to foes +", [2, "#99ff99", ["15.0%"]], "."]], "ark_passive_bkf_1"],
-  2450001: ["Punisher", [["Damage to foes +", [2, "#99ff99", ["25.0%"]], "."]], "ark_passive_bkf_1"],
-  2450002: ["Punisher", [["Damage to foes +", [2, "#99ff99", ["35.0%"]], "."]], "ark_passive_bkf_1"],
+  2450000: ["Punisher", [["Damage to foes +", [2, "#99ff99", ["20.0%"]], "."]], "ark_passive_bkf_1"],
+  2450001: ["Punisher", [["Damage to foes +", [2, "#99ff99", ["30.0%"]], "."]], "ark_passive_bkf_1"],
+  2450002: ["Punisher", [["Damage to foes +", [2, "#99ff99", ["40.0%"]], "."]], "ark_passive_bkf_1"],
   2450010: ["Predator", [["Crit Damage +", [2, "#99ff99", ["17.0%"]], "."]], "ark_passive_bkf_2"],
   2450011: ["Predator", [["Crit Damage +", [2, "#99ff99", ["34.0%"]], "."]], "ark_passive_bkf_2"],
   2450012: ["Predator", [["Crit Damage +", [2, "#99ff99", ["51.0%"]], "."]], "ark_passive_bkf_2"],
@@ -48326,7 +48510,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_884"
   ],
-  3451600: ["Destiny: Pulverize", [["Crit Damage +", [2, "#99ff99", ["12.0%"]], "."]], "buff_884"],
+  3451600: ["Destiny: Pulverize", [["Crit Damage +", [2, "#99ff99", ["18.0%"]], "."]], "buff_884"],
   3451700: [
     "Destiny: Seething Fury",
     [
@@ -48334,8 +48518,8 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         "On Brutal Impact use, consume ",
         [2, "#bf9ef6", ["Destiny: Seething Fury"]],
         " to inflict ",
-        [2, "#99ff99", ["14.0%"]],
-        " increased Damage per stack."
+        [2, "#99ff99", ["36.0%"]],
+        " increased Damage."
       ]
     ],
     "buff_885"
@@ -48347,8 +48531,8 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         "On Brutal Impact use, consume ",
         [2, "#bf9ef6", ["Destiny: Seething Fury"]],
         " to inflict ",
-        [2, "#99ff99", ["16.0%"]],
-        " increased Damage per stack."
+        [2, "#99ff99", ["40.0%"]],
+        " increased Damage."
       ]
     ],
     "buff_885"
@@ -48356,12 +48540,12 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   3452600: ["Destiny: Tornado", [["Hurricane Sword Crit Damage +", [2, "#99ff99", ["50.0%"]], "."]], "buff_884"],
   3452700: [
     "Destiny: Tornado",
-    [["Hurricane Sword Crit Damage +", [2, "#99ff99", ["50.0%"]], ". Damage +", [2, "#99ff99", ["50.0%"]], "."]],
+    [["Hurricane Sword Crit Damage +", [2, "#99ff99", ["50.0%"]], ". Damage +", [2, "#99ff99", ["56.0%"]], "."]],
     "buff_884"
   ],
   3452800: [
     "Destiny: Tornado",
-    [["Hurricane Sword Crit Damage +", [2, "#99ff99", ["50.0%"]], ". Damage +", [2, "#99ff99", ["52.0%"]], "."]],
+    [["Hurricane Sword Crit Damage +", [2, "#99ff99", ["50.0%"]], ". Damage +", [2, "#99ff99", ["60.0%"]], "."]],
     "buff_884"
   ],
   3454600: [
@@ -48552,12 +48736,12 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   ],
   3321201: [
     "Destiny: Wind Blade",
-    [["Next Piercing Wind Damage +", [2, "#99ff99", ["37.0%"]], ". Buff is removed on Piercing Wind use."]],
+    [["Next Piercing Wind Damage +", [2, "#99ff99", ["40.0%"]], ". Buff is removed on Piercing Wind use."]],
     "buff_884"
   ],
   3321202: [
     "Destiny: Wind Blade",
-    [["Next Piercing Wind Damage +", [2, "#99ff99", ["40.0%"]], ". Buff is removed on Piercing Wind use."]],
+    [["Next Piercing Wind Damage +", [2, "#99ff99", ["44.0%"]], ". Buff is removed on Piercing Wind use."]],
     "buff_884"
   ],
   3321700: [
@@ -48565,9 +48749,9 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [
       [
         "While in Sun Shower status, Basic Attack Damage +",
-        [2, "#99ff99", ["10.0%"]],
+        [2, "#99ff99", ["20.0%"]],
         ", Weather Skill Damage +",
-        [2, "#99ff99", ["1.5%"]],
+        [2, "#99ff99", ["2.0%"]],
         "."
       ]
     ],
@@ -48578,9 +48762,9 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [
       [
         "While in Sun Shower status, Basic Attack Damage +",
-        [2, "#99ff99", ["10.0%"]],
+        [2, "#99ff99", ["20.0%"]],
         ", Weather Skill Damage +",
-        [2, "#99ff99", ["2.5%"]],
+        [2, "#99ff99", ["3.0%"]],
         "."
       ]
     ],
@@ -48610,12 +48794,12 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   ],
   3322601: [
     "Destiny: Sun and Wind",
-    [["Next Wiping Wind Damage +", [2, "#99ff99", ["60.0%"]], ". Buff is removed on Wiping Wind use."]],
+    [["Next Wiping Wind Damage +", [2, "#99ff99", ["66.0%"]], ". Buff is removed on Wiping Wind use."]],
     "buff_884"
   ],
   3322602: [
     "Destiny: Sun and Wind",
-    [["Next Wiping Wind Damage +", [2, "#99ff99", ["67.0%"]], ". Buff is removed on Wiping Wind use."]],
+    [["Next Wiping Wind Damage +", [2, "#99ff99", ["74.0%"]], ". Buff is removed on Wiping Wind use."]],
     "buff_884"
   ],
   310501: ["Moonfall", [["Damage to foes +", [2, "#99ff99", ["10.0%"]], "."]], "buff_838"],
