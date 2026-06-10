@@ -2,6 +2,7 @@
   import { page } from "$app/state";
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import BossOnlyDamage from "$lib/components/BossOnlyDamage.svelte";
+  import { difficultyColor } from "$lib/components/Snippets.svelte";
   import { raidGates } from "$lib/constants/encounters";
   import { IconArrowLeft, IconStar } from "$lib/icons";
   import type { Encounter } from "$lib/types";
@@ -47,17 +48,8 @@
           {@render badge(raidGate)}
         {/if}
         {#if encounter.difficulty}
-          <p
-            class="rounded-sm bg-neutral-700/80 px-2 py-0.5"
-            class:text-yellow-300={encounter.difficulty === "Hard"}
-            class:text-amber-600={encounter.difficulty === "Inferno" ||
-              encounter.difficulty === "Challenge" ||
-              encounter.difficulty === "Trial"}
-            class:text-cyan-400={encounter.difficulty === "Solo"}
-            class:text-violet-400={encounter.difficulty === "Nightmare"}
-            class:text-purple-500={encounter.difficulty.includes("Extreme") || encounter.difficulty === "The First"}
-          >
-            {encounter.difficulty}
+          <p class="rounded-sm bg-neutral-700/80 px-2 py-0.5">
+            {@render difficultyColor(encounter.difficulty)}
           </p>
         {/if}
 

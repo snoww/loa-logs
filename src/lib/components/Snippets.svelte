@@ -1,5 +1,5 @@
 <script lang="ts" module>
-  export { damageValue, percentValue, skillTooltip, middot, badTooltip, fadTooltip };
+  export { damageValue, percentValue, skillTooltip, middot, badTooltip, fadTooltip, difficultyColor };
 </script>
 
 <script lang="ts">
@@ -24,6 +24,19 @@
 <!-- Render value + percent -->
 {#snippet percentValue(val: string | number)}
   {val}<span class="text-xxs text-gray-300">%</span>
+{/snippet}
+
+{#snippet difficultyColor(difficulty: string)}
+  <span
+    class:text-yellow-300={difficulty === "Hard" || difficulty === "Lv. 2"}
+    class:text-amber-600={difficulty === "Inferno" || difficulty === "Challenge" || difficulty === "Trial"}
+    class:text-cyan-400={difficulty === "Solo"}
+    class:text-violet-400={difficulty === "Nightmare"}
+    class:text-purple-500={difficulty.includes("Extreme") || difficulty === "The First"}
+    class:text-rose-400={difficulty === "Lv. 3"}
+  >
+    {difficulty}
+  </span>
 {/snippet}
 
 {#snippet badTooltip(state: EntityState)}

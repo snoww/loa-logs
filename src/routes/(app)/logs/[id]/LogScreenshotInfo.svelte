@@ -11,7 +11,7 @@
     getBossHpBars,
     timestampToMinutesAndSeconds
   } from "$lib/utils";
-  import { middot } from "$lib/components/Snippets.svelte";
+  import { difficultyColor, middot } from "$lib/components/Snippets.svelte";
 
   let { encounter }: { encounter: Encounter } = $props();
 
@@ -44,18 +44,7 @@
         <BossOnlyDamage />
       {/if}
       {#if encounter.difficulty}
-        <p
-          class="shrink-0"
-          class:text-yellow-300={encounter.difficulty === "Hard"}
-          class:text-amber-600={encounter.difficulty === "Inferno" ||
-            encounter.difficulty === "Challenge" ||
-            encounter.difficulty === "Trial"}
-          class:text-cyan-400={encounter.difficulty === "Solo"}
-          class:text-violet-400={encounter.difficulty === "Nightmare"}
-          class:text-purple-500={encounter.difficulty.includes("Extreme") || encounter.difficulty === "The First"}
-        >
-          [{encounter.difficulty}]
-        </p>
+        <p class="shrink-0">[{@render difficultyColor(encounter.difficulty)}]</p>
       {/if}
       {#if !settings.app.general.showGate && raidGate}
         <p class="shrink-0 text-sky-200">
