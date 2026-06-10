@@ -245,7 +245,7 @@ fn apply_item(
 
     if should_parse_extended_item_data {
         if let Some(equippable) = item_data.equippable_item_data.as_ref() {
-            let ark_passive_data = &equippable.sub_p_k_t_ability_engrave_item_result_5_3_32;
+            let ark_passive_data = &equippable.ark_passive_data;
             if ark_passive_data.b_0 == 1 {
                 item_debug.ark_passive_line_count = ark_passive_data
                     .bytearraylist_0
@@ -262,11 +262,9 @@ fn apply_item(
                 }
             }
 
-            let bracer_data = &equippable.sub_p_k_t_ability_engrave_item_result_5_2_74;
+            let bracer_data = &equippable.bracer_data;
             if bracer_data.b_0 != 0
-                && let Some(bracer) = bracer_data
-                    .sub_p_k_t_ability_engrave_item_result_6_6_73
-                    .as_ref()
+                && let Some(bracer) = bracer_data.bracer_stats.as_ref()
             {
                 item_debug.bracer_line_count =
                     bracer.bytearraylist_0.len() + bracer.bytearraylist_1.len();
@@ -285,7 +283,7 @@ fn apply_item(
         }
 
         if item_data.b_0 == 7
-            && let Some(gem_bytes) = item_data.bytearraylist_4.as_deref()
+            && let Some(gem_bytes) = item_data.bytearraylist_3.as_deref()
         {
             item_debug.gem_line_count = split_fixed_chunks(gem_bytes, 9).count();
             if let Some(gem_layout) = resolve_gem_layout_once(gem_bytes) {
@@ -847,12 +845,12 @@ fn parse_ark_passive_addon(bytes: &[u8]) -> ParsedItemAddon {
         "invalid ark passive addon byte length: {}",
         bytes.len()
     );
-    let addon_type = bytes[5];
-    let _item_grade_option_id = read_u32(bytes, 6);
-    let _max_value = read_i32(bytes, 10) as i64;
-    let original_stat = read_u32(bytes, 18);
-    let _min_value = read_i32(bytes, 22) as i64;
-    let mut value = read_i32(bytes, 26) as i64;
+    let _item_grade_option_id = read_u32(bytes, 0);
+    let addon_type = bytes[4];
+    let _min_value = read_i32(bytes, 5) as i64;
+    let original_stat = read_u32(bytes, 9);
+    let _max_value = read_i32(bytes, 13) as i64;
+    let mut value = read_i32(bytes, 17) as i64;
     let mut stat_type = original_stat;
 
     match AddonType::from_raw(addon_type) {
@@ -906,10 +904,10 @@ fn parse_bracer_addon(bytes: &[u8]) -> ParsedItemAddon {
         bytes.len()
     );
     let addon_type = bytes[5];
-    let _max_value = read_i32(bytes, 10) as i64;
-    let original_stat = read_u32(bytes, 18);
-    let _min_value = read_i32(bytes, 22) as i64;
-    let value = read_i32(bytes, 26) as i64;
+    let _min_value = read_i32(bytes, 6) as i64;
+    let original_stat = read_u32(bytes, 10);
+    let _max_value = read_i32(bytes, 14) as i64;
+    let value = read_i32(bytes, 18) as i64;
     let mut stat_type = original_stat;
 
     match AddonType::from_raw(addon_type) {
@@ -947,9 +945,9 @@ fn parse_quality_addon(bytes: &[u8]) -> ParsedItemAddon {
 
     ParsedItemAddon {
         addon_type,
-        stat_type: read_u32(bytes, 17),
-        original_stat: read_u32(bytes, 17),
-        value: read_i32(bytes, 9) as i64,
+        stat_type: read_u32(bytes, 9),
+        original_stat: read_u32(bytes, 9),
+        value: read_i32(bytes, 17) as i64,
     }
 }
 
