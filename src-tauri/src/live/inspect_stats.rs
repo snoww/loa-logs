@@ -224,7 +224,7 @@ fn apply_item(
         .as_ref()
         .and_then(|equippable| {
             equippable
-                .sub_p_k_t_ability_engrave_item_result_5_5_15
+                .sub_p_k_t_item_add_result_4_5_15
                 .as_ref()
                 .map(|advanced| advanced.b_0.max(advanced.b_1))
         })
