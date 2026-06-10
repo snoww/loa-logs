@@ -33,7 +33,7 @@
     class:text-cyan-400={difficulty === "Solo"}
     class:text-violet-400={difficulty === "Nightmare"}
     class:text-purple-500={difficulty.includes("Extreme") || difficulty === "The First"}
-    class:text-rose-400={difficulty === "Lv. 3"}
+    class:text-rose-300={difficulty === "Lv. 3"}
   >
     {difficulty}
   </span>

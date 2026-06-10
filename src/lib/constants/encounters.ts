@@ -103,9 +103,15 @@ export const encounterMap: { [key: string]: { [key: string]: Array<string> } } =
   Serca: {
     "Serca G1": ["Witch of Agony, Serca"],
     "Serca G2": ["Corvus Tul Rak"]
+  },
+  "Horizon Cathedral": {
+    "Horizon Cathedral G1": ["Archbishop Arcenos"],
+    "Horizon Cathedral G2": ["Arcenos, Vanguard of Fanaticism"]
   }
 };
 
+// static list that will no longer be updated with new bosses after kazeros
+// new logs will use bosshpbar property inside entity object
 export const bossHpMap: Record<string, number> = {
   "Dark Mountain Predator": 50,
   "Destroyer Lucas": 50,
@@ -185,7 +191,10 @@ export const difficultyMap: Array<string> = [
   "Trial",
   "Extreme",
   "The First",
-  "Nightmare"
+  "Nightmare",
+  "Lv. 1",
+  "Lv. 2",
+  "Lv. 3"
 ];
 
 export const raidGates: Record<string, string> = Object.fromEntries(
