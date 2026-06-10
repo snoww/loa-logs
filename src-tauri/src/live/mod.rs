@@ -52,6 +52,8 @@ pub(crate) const DEBUG_DUMP_DAMAGE_STATE_JSON: bool = false;
 
 static COMPUTE_STAT_DAMAGE_METRICS: AtomicBool = AtomicBool::new(true);
 
+const HORIZON_CATHEDRAL_ZONE_IDS: &[u32] = &[37561, 37562];
+
 pub(crate) fn compute_stat_damage_metrics() -> bool {
     COMPUTE_STAT_DAMAGE_METRICS.load(Ordering::Relaxed)
 }
@@ -332,6 +334,10 @@ pub fn start(args: StartArgs) -> Result<()> {
             }
             PKTInitPC::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTInitPC>().unwrap() {
+                    if pkt.player_id == 0 {
+                        warn!("empty initpc");
+                        continue;
+                    }
                     let (hp, max_hp) = get_current_and_max_hp(&pkt.stat_pairs);
                     let entity = entity_tracker.init_pc(pkt);
                     info!(
@@ -1216,32 +1222,11 @@ pub fn start(args: StartArgs) -> Result<()> {
                     debug_print!("raid zone id: {}", &pkt.zone_id);
                     debug_print!("raid zone level: {}", &pkt.zone_level);
                     state.set_lal_debug_zone(pkt.zone_id, Some(pkt.zone_level as u32));
-                    match pkt.zone_level {
-                        0 => {
-                            state.raid_difficulty = "Normal".to_string();
-                            state.raid_difficulty_id = 0;
-                        }
-                        1 => {
-                            state.raid_difficulty = "Hard".to_string();
-                            state.raid_difficulty_id = 1;
-                        }
-                        2 => {
-                            state.raid_difficulty = "Nightmare".to_string();
-                            state.raid_difficulty_id = 2;
-                        }
-                        3 => {
-                            state.raid_difficulty = "Challenge".to_string();
-                            state.raid_difficulty_id = 3;
-                        }
-                        4 => {
-                            state.raid_difficulty = "Solo".to_string();
-                            state.raid_difficulty_id = 4;
-                        }
-                        5 => {
-                            state.raid_difficulty = "The First".to_string();
-                            state.raid_difficulty_id = 5;
-                        }
-                        _ => {}
+                    if let Some((difficulty, difficulty_id)) =
+                        raid_difficulty_from_zone(pkt.zone_id, pkt.zone_level as u32)
+                    {
+                        state.raid_difficulty = difficulty.to_string();
+                        state.raid_difficulty_id = difficulty_id;
                     }
                 }
             }
@@ -1615,6 +1600,27 @@ fn queue_missing_party_inspects(
         }
         damage_handler.cancel_inspect_request(&name);
         entity_tracker.clear_inspect_request(&name);
+    }
+}
+
+fn raid_difficulty_from_zone(zone_id: u32, zone_level: u32) -> Option<(&'static str, u32)> {
+    if HORIZON_CATHEDRAL_ZONE_IDS.contains(&zone_id) {
+        return match zone_level {
+            0 => Some(("Level 1", 9)),
+            1 => Some(("Level 2", 10)),
+            2 => Some(("Level 3", 11)),
+            _ => None,
+        };
+    }
+
+    match zone_level {
+        0 => Some(("Normal", 0)),
+        1 => Some(("Hard", 1)),
+        2 => Some(("Nightmare", 2)),
+        3 => Some(("Challenge", 3)),
+        4 => Some(("Solo", 4)),
+        5 => Some(("The First", 5)),
+        _ => None,
     }
 }
 
