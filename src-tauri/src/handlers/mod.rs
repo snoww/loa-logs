@@ -23,6 +23,7 @@ pub fn generate_handlers() -> Box<dyn Fn(Invoke) -> bool + Send + Sync> {
         load_encounters_preview,
         load_encounter,
         get_encounter_count,
+        get_last_encounter_version,
         open_most_recent_encounter,
         delete_encounter,
         delete_encounters,
@@ -111,6 +112,15 @@ pub fn get_encounter_count(repository: State<Repository>) -> Result<i32> {
         .context("could not get encounter count")?;
 
     Ok(count)
+}
+
+#[command]
+pub fn get_last_encounter_version(repository: State<Repository>) -> Result<Option<String>> {
+    let version = repository
+        .get_last_encounter_version()
+        .context("could not get encounter version")?;
+
+    Ok(version)
 }
 
 #[command]

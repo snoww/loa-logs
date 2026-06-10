@@ -16,6 +16,8 @@ import type { AppSettings } from "./settings";
 
 export const BETA_MODAL_KEY = "betaPopupShown";
 
+export const NINEVEH_MIGRATION_MODAL_KEY = "ninevehMigrationModalShown";
+
 export const getAppVersion = async (): Promise<string> => `v${await getVersion()}`;
 
 export const openUrl = (url: string): Promise<void> => invoke("open_url", { url });
@@ -63,8 +65,7 @@ export const setAlwaysOnTop = (enabled: boolean): Promise<void> => {
 
 export const writeLog = (message: string): Promise<void> => invoke("write_log", { message });
 
-export const checkBetaUpdate = (): Promise<{ version: string; body?: string } | null> =>
-  invoke("check_beta_update");
+export const checkBetaUpdate = (): Promise<{ version: string; body?: string } | null> => invoke("check_beta_update");
 
 export const installBetaUpdate = (): Promise<void> => invoke("install_beta_update");
 
@@ -169,6 +170,8 @@ export const getSyncCandidates = (forceResync: boolean): Promise<number[]> =>
 
 export const loadEncounter = (id: string): Promise<Encounter> => invoke("load_encounter", { id });
 
+export const getLastEncounterVersion = (): Promise<string | null> => invoke("get_last_encounter_version");
+
 export const pauseRequest = (): Promise<void> => emit("pause-request");
 
 export const saveRequest = (): Promise<void> => emit("save-request");
@@ -218,3 +221,4 @@ export const onClearEncounter = (handler: (event: { payload: number }) => void) 
 export const onNinevehUpdate = (handler: (event: NinevehEvent) => void) => listen("nineveh-update", handler);
 
 export const onBannedEvent = (handler: () => void) => listen("banned-event", handler);
+

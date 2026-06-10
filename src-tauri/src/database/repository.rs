@@ -253,6 +253,16 @@ impl Repository {
         Ok(count)
     }
 
+    pub fn get_last_encounter_version(&self) -> Result<Option<String>> {
+        let connection = self.0.get()?;
+        let mut statement = connection.prepare_cached(SELECT_MOST_RECENT_ENCOUNTER_MISC)?;
+
+        let misc = statement.query_row(params![], |row| row.get::<_, String>(0))?;
+        let misc: EncounterMisc = serde_json::from_str(&misc)?;
+
+        Ok(misc.version)
+    }
+
     pub fn get_sync_candidates(&self, force_resync: bool) -> Result<Vec<i32>> {
         let connection = self.0.get()?;
 

@@ -227,6 +227,13 @@ WHERE id IN (
 );
 ";
 
+pub const SELECT_MOST_RECENT_ENCOUNTER_MISC: &str = r"
+SELECT misc
+FROM encounter
+ORDER BY id DESC
+LIMIT 1;
+";
+
 /// Enables foreign key enforcement for the current SQLite connection.
 ///
 /// By default, SQLite does not enforce foreign key constraints. Running this
