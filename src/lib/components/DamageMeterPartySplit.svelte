@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { EncounterState } from "$lib/encounter.svelte.js";
-  import { settings } from "$lib/stores.svelte.js";
+  import { screenshot, settings } from "$lib/stores.svelte.js";
   import { EntityType } from "$lib/types";
   import { flip } from "svelte/animate";
   import DamageMeterHeader from "./DamageMeterHeader.svelte";
@@ -82,11 +82,19 @@
 </script>
 
 <div class="flex flex-col space-y-2">
-  {#each partiesWithEsthers.filter((p) => p.members.length > 0) as party}
+  {#each partiesWithEsthers.filter((p) => p.members.length > 0) as party (party.title)}
     <table class="isolate w-full table-fixed">
       <thead class="z-40 h-6 {enc.live ? 'sticky top-0' : ''}">
         <tr class="bg-neutral-900">
-          <th class="w-7 px-2 font-normal tracking-tight whitespace-nowrap">{party.title}</th>
+          <th class="relative w-7 px-2 font-normal tracking-tight whitespace-nowrap">
+            {#if screenshot.state && party.title}
+              <span class="pointer-events-none absolute top-1/2 left-2 -translate-y-1/2 whitespace-nowrap">
+                {party.title}
+              </span>
+            {:else}
+              {party.title}
+            {/if}
+          </th>
           <DamageMeterHeader {enc} sortable={party.sortable ?? true} />
         </tr>
       </thead>

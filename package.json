@@ -56,7 +56,7 @@
     "@tauri-apps/plugin-opener": "^2.5.0",
     "@tauri-apps/plugin-process": "^2.3.0",
     "@tauri-apps/plugin-updater": "^2.9.0",
-    "@zumer/snapdom": "^2.12.0",
+    "@zumer/snapdom": "^2.12.8",
     "heap-js": "^2.3.0",
     "markdown-it": "^14.1.0",
     "pako": "^2.1.0",
