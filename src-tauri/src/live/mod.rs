@@ -1609,7 +1609,7 @@ fn raid_difficulty_from_zone(zone_id: u32, zone_level: u32) -> Option<(&'static 
             0 => Some(("Level 1", 9)),
             1 => Some(("Level 2", 10)),
             2 => Some(("Level 3", 11)),
-            _ => None,
+            _ => Some(("Normal", 0)), // temp workaround in case
         };
     }
 
