@@ -1,8 +1,10 @@
 use anyhow::Result;
 use nineveh_formats::ipc::{IPCClientToServerMessage, IPCServerToClientMessage};
 use rfd::{MessageButtons, MessageDialog, MessageLevel};
+use std::fs::{File, OpenOptions};
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use std::path::PathBuf;
+use std::process::Stdio;
 use std::sync::Arc;
 use tauri::{AppHandle, Emitter, Listener, Manager};
 use tokio::sync::Mutex;
@@ -19,6 +21,32 @@ use crate::shell::{ShellManager, find_nineveh_pid};
 mod ipc;
 
 const NINEVEH_ENDPOINT: SocketAddr = SocketAddr::new(IpAddr::V4(Ipv4Addr::LOCALHOST), 6971);
+
+fn open_nineveh_log_file() -> std::io::Result<File> {
+    OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(crate::app::path::log_dir().join("loa_logs_rCURRENT.log"))
+}
+
+fn redirect_nineveh_output(command: &mut tokio::process::Command) {
+    match (open_nineveh_log_file(), open_nineveh_log_file()) {
+        (Ok(stdout), Ok(stderr)) => {
+            command.stdout(Stdio::from(stdout));
+            command.stderr(Stdio::from(stderr));
+        }
+        (stdout, stderr) => {
+            if let Err(e) = stdout {
+                log::warn!("Failed to open Nineveh stdout log file: {e}");
+            }
+            if let Err(e) = stderr {
+                log::warn!("Failed to open Nineveh stderr log file: {e}");
+            }
+            command.stdout(Stdio::null());
+            command.stderr(Stdio::null());
+        }
+    }
+}
 
 fn error_and_exit(title: &str, description: &str) -> ! {
     MessageDialog::new()
@@ -216,10 +244,10 @@ pub async fn setup_nineveh(app: AppHandle, exitlag_compat: bool) -> Result<Ninev
     );
     let mut command = tokio::process::Command::new(&nineveh_path);
     command.arg("--ipc-port").arg("6971");
+    command.env("NO_COLOR", "1");
 
-    // forward standard output and error to our own process for logging
-    command.stdout(std::process::Stdio::inherit());
-    command.stderr(std::process::Stdio::inherit());
+    // redirect standard output and error to our own process for logging
+    redirect_nineveh_output(&mut command);
 
     // suppress console window
     command.creation_flags(0x08000000); // CREATE_NO_WINDOW
