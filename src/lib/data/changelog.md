@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.45.0 - June 10th, 2026
+    v1.45.1 - June 14th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -17,7 +17,7 @@
 
 #### read about rdps in depth [here](https://github.com/snoww/loa-logs/wiki/rDPS-and-nDPS-Explained)
 
-#### NEW FEATURES
+#### BUG FIXES AND IMPROVEMENTS
 
-- updated meter for twilight isle patch
-- rdps stable release
+- fixed names in screenshot image being offset
+- added some logging for nineveh

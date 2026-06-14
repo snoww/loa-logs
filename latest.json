@@ -1,15 +1,15 @@
 {
-  "version": "v1.45.0",
-  "notes": "### v1.45.0 - June 10th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n### Note: ExitLag users must check the ExitLag Compatibility setting\n\n#### read about rdps in depth [here](https://github.com/snoww/loa-logs/wiki/rDPS-and-nDPS-Explained)\n\n#### NEW FEATURES\n\n- updated meter for twilight isle patch\n- rdps stable release\n",
-  "pub_date": "2026-06-10T04:20:08.001Z",
+  "version": "v1.45.1",
+  "notes": "### v1.45.1 - June 14th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n### Note: ExitLag users must check the ExitLag Compatibility setting\n\n#### read about rdps in depth [here](https://github.com/snoww/loa-logs/wiki/rDPS-and-nDPS-Explained)\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed names in screenshot image being offset\n- added some logging for nineveh\n",
+  "pub_date": "2026-06-14T04:20:08.001Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.45.0/LOA.Logs_1.45.0_x64-setup.exe",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlFhM1VMSmhwVVJ6N29JOVNZQkdXSVFMOGozcGFiQjlWUWpzV1o3RmM1dUMyZFA5a0M0Ym9odTV6a0xpZU5LNVV2OFE1SVBLWmVTdUswWkJucXZtR2drPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgxMTEwNjk4CWZpbGU6TE9BIExvZ3NfMS40NS4wX3g2NC1zZXR1cC5leGUKQUtuSlRuaVVPNEVWVFo2bGwrR1Q5cndmd0ZDdS9HRmhLenVrYjJSSkZyTzJKN3FGMnRTMCtUbjY5Tk5ha0t5VDQycGdLdi9rMUJFc3F6Q2RGRTF4QWc9PQo="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.45.1/LOA.Logs_1.45.1_x64-setup.exe",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlhzSHlwcVc5UzFQMGxNYjFLbksxa1M2SmgwMFUwRFFuZ000UWk1dW41eE4ra2JZMmRCeHRMU2U3UEtkdmsxd2htZTVyN2lwZnlDMjRzUVdycGhmQndBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgxNDQyNTQwCWZpbGU6TE9BIExvZ3NfMS40NS4xX3g2NC1zZXR1cC5leGUKemlublFJV1FmT3hZajYyR2RwR3FndDNWRHRGbWc5TnFwL01lbkRaaVBKU0JCYmFicEs0a3pWa2hrYzdxaEtwaDlueVhKakVIc3FtZktqZ2pNUmZmQ0E9PQo="
     },
     "linux-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.45.0/LOA.Logs_1.45.0_amd64.AppImage",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmJLdHJIQ3h4YkxoOXpzb2ZQUFMrYjJzNFV4YmRFei93SzM3UlJ1QU1taXZnaGNPWWdUSllNQlpLYWRoYUJwcjhZc29xOUR3YUJFaGZZS0tyS3FaZGdZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgxMTExMDM5CWZpbGU6TE9BIExvZ3NfMS40NS4wX2FtZDY0LkFwcEltYWdlCjZtZk1teHlxenA5dlh1V2R5SGo5c3hQcGJoUlo2Q3lNallJbHgrRjh0c0htMm1meXhDQjRVU3IxbEx2SFpVUVNiYUdwM1FSRXNHaW9sckcrRk4vYUNnPT0K"
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.45.1/LOA.Logs_1.45.1_amd64.AppImage",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlMrN0pIVHJPTnBaTlFpaENXakNvazJsT0dQRlIxcVhudmZ5dUxGaW5XM1dZdDdWNjZuNFY5c3hIeWkzaWxVQnliRlM0aG56NkU2TEhDNjNPbGQwS3dNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgxNDQzMzA3CWZpbGU6TE9BIExvZ3NfMS40NS4xX2FtZDY0LkFwcEltYWdlCm51U1hhWG1xVWdZNCtyOGZRclRrYU0zWkNjTXRteDFzcENKdFdUTUlaSzZ0emFKdHJGTG44aUUyMEtvLzBTRXNWT2NvV2M2Y05ucmhQN3ZPaWFaTEFRPT0K"
     }
   }
 }
