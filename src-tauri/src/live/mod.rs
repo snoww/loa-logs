@@ -51,8 +51,7 @@ pub(crate) const DEBUG_TRACE_INSPECT_PACKETS: bool = true;
 pub(crate) const DEBUG_DUMP_DAMAGE_STATE_JSON: bool = false;
 
 static COMPUTE_STAT_DAMAGE_METRICS: AtomicBool = AtomicBool::new(true);
-
-const HORIZON_CATHEDRAL_ZONE_IDS: &[u32] = &[37561, 37562];
+const LIVE_DURATION_EXCEED: Duration = Duration::from_millis(100);
 
 pub(crate) fn compute_stat_damage_metrics() -> bool {
     COMPUTE_STAT_DAMAGE_METRICS.load(Ordering::Relaxed)
@@ -177,6 +176,7 @@ pub fn start(args: StartArgs) -> Result<()> {
 
         // always unconditionally forward, but let the damage handler process first
         if packet_id != 0 {
+            let packet_action_start = Instant::now();
             let action = match damage_handler.process_packet(&packet) {
                 PacketProcessResult::ForwardOriginal => PacketAction::Send(packet.clone()),
                 PacketProcessResult::ForwardModified(packet) => PacketAction::Send(packet),
@@ -187,9 +187,17 @@ pub fn start(args: StartArgs) -> Result<()> {
                 packet_id,
                 action,
             });
+            exceed_process_duration(
+                packet.header.opcode,
+                "packet_action",
+                packet_action_start.elapsed(),
+            );
         }
 
-        for inspect_event in damage_handler.drain_inspect_results() {
+        let inspect_start = Instant::now();
+        let inspect_results = damage_handler.drain_inspect_results();
+        let inspect_result_count = inspect_results.len();
+        for inspect_event in inspect_results {
             let inspect_name = inspect_event.result.name.clone();
             if DEBUG_TRACE_INSPECT_PACKETS {
                 info!("inspect result received: name={inspect_name}");
@@ -205,11 +213,24 @@ pub fn start(args: StartArgs) -> Result<()> {
                 info!("inspect result deferred: name={inspect_name}");
             }
         }
+        let inspect_elapsed = inspect_start.elapsed();
+        if inspect_elapsed >= LIVE_DURATION_EXCEED {
+            warn!(
+                "slow inspect_results for opcode {:?}: {:?}, count={}",
+                packet.header.opcode, inspect_elapsed, inspect_result_count
+            );
+        }
         // state.set_lal_debug_damage_key_base64(damage_handler.current_damage_key_base64());
+        let barrier_start = Instant::now();
         state.try_flush_startup_barrier(&mut entity_tracker);
         if state.startup_barrier_active() && !connection_ids_by_port.contains_key(&6020) {
             state.force_release_startup_barrier(&mut entity_tracker, "inspect_unavailable");
         }
+        exceed_process_duration(
+            packet.header.opcode,
+            "startup_barrier_pre_handler",
+            barrier_start.elapsed(),
+        );
 
         if matches!(direction, PacketDirection::ClientToServer) {
             // ignore c2s packets
@@ -236,6 +257,7 @@ pub fn start(args: StartArgs) -> Result<()> {
         }
 
         if manager.has_saved() {
+            let save_start = Instant::now();
             state.party_info = update_party(&party_tracker, &entity_tracker);
             if !banned {
                 state.force_release_startup_barrier(&mut entity_tracker, "forced_save");
@@ -243,6 +265,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                 state.saved = true;
             }
             state.resetting = true;
+            exceed_process_duration(packet.header.opcode, "manual_save", save_start.elapsed());
         }
 
         if manager.has_toggled_boss_only_damage() {
@@ -253,6 +276,7 @@ pub fn start(args: StartArgs) -> Result<()> {
         }
 
         let start = Instant::now();
+        let handler_start = Instant::now();
         match packet.header.opcode {
             // PKTBattleItemUseNotify::OPCODE => {
             //     if let Some(pkt) =
@@ -1335,11 +1359,22 @@ pub fn start(args: StartArgs) -> Result<()> {
             }
             _ => {}
         }
+        exceed_process_duration(
+            packet.header.opcode,
+            "packet_handler",
+            handler_start.elapsed(),
+        );
 
+        let barrier_start = Instant::now();
         state.try_flush_startup_barrier(&mut entity_tracker);
         if state.startup_barrier_active() && !connection_ids_by_port.contains_key(&6020) {
             state.force_release_startup_barrier(&mut entity_tracker, "inspect_unavailable");
         }
+        exceed_process_duration(
+            packet.header.opcode,
+            "startup_barrier_post_handler",
+            barrier_start.elapsed(),
+        );
 
         if last_update.elapsed() >= duration || state.resetting || state.boss_dead_update {
             state.try_flush_startup_barrier(&mut entity_tracker);
@@ -1398,7 +1433,13 @@ pub fn start(args: StartArgs) -> Result<()> {
                 None
             };
 
+            let live_snapshot_start = Instant::now();
             let live_update = state.live_snapshot(boss_dead);
+            exceed_process_duration(
+                packet.header.opcode,
+                "live_snapshot",
+                live_snapshot_start.elapsed(),
+            );
 
             tokio::task::spawn(async move {
                 if !live_update.entities.is_empty() {
@@ -1424,18 +1465,20 @@ pub fn start(args: StartArgs) -> Result<()> {
         }
 
         if state.resetting {
+            let reset_start = Instant::now();
             state.soft_reset(true);
             state.resetting = false;
             state.saved = false;
             party_freeze = false;
             party_cache = None;
+            exceed_process_duration(packet.header.opcode, "soft_reset", reset_start.elapsed());
         }
 
         if let Some(ref region) = state.region {
             heartbeat_api.heartbeat(region);
         }
 
-        if start.elapsed() >= Duration::from_millis(100) {
+        if start.elapsed() >= LIVE_DURATION_EXCEED {
             log::error!(
                 "took too long to process packet {:?}: {:?}",
                 packet.header.opcode,
@@ -1564,12 +1607,13 @@ fn queue_missing_party_inspects(
 }
 
 fn raid_difficulty_from_zone(zone_id: u32, zone_level: u32) -> Option<(&'static str, u32)> {
-    if HORIZON_CATHEDRAL_ZONE_IDS.contains(&zone_id) {
+    if matches!(zone_id, 37561 | 37562) {
+        // horizon cathedral
         return match zone_level {
             0 => Some(("Level 1", 9)),
             1 => Some(("Level 2", 10)),
             2 => Some(("Level 3", 11)),
-            _ => Some(("Normal", 0)), // temp workaround in case
+            _ => None,
         };
     }
 
@@ -1590,6 +1634,15 @@ fn get_and_set_region(app: &AppHandle, state: &mut EncounterState, ban_list: &mu
         state.region = region.clone();
         state.encounter.region = region.clone();
         ban_list.set_region(region.clone());
+    }
+}
+
+fn exceed_process_duration(opcode: impl std::fmt::Debug, step: &str, elapsed: Duration) {
+    if elapsed >= LIVE_DURATION_EXCEED {
+        warn!(
+            "took too long to process packet step {} for opcode {:?}: {:?}",
+            step, opcode, elapsed
+        );
     }
 }
 
