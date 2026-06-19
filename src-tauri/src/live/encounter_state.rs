@@ -297,11 +297,10 @@ impl EncounterState {
 
     // keep all player entities, reset all stats
     pub fn soft_reset(&mut self, keep_bosses: bool) {
-        let clone = self.encounter.clone();
+        let entities = std::mem::take(&mut self.encounter.entities);
 
         self.encounter.fight_start = 0;
         self.encounter.boss_only_damage = self.boss_only_damage;
-        self.encounter.entities = HashMap::new();
         self.encounter.current_boss_name = "".to_string();
         self.encounter.encounter_damage_stats = Default::default();
         self.raid_clear = false;
@@ -333,7 +332,7 @@ impl EncounterState {
         self.lal_debug_end_time_ms = None;
         self.lal_debug_damage_key_base64.clear();
 
-        for (key, entity) in clone.entities.into_iter().filter(|(_, e)| {
+        for (key, entity) in entities.into_iter().filter(|(_, e)| {
             e.entity_type == EntityType::Player
                 || (keep_bosses && e.entity_type == EntityType::Boss)
         }) {
