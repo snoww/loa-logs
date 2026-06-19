@@ -1365,7 +1365,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                 continue;
             }
 
-            let mut clone = state.encounter.clone();
             let damage_valid = state.damage_is_valid;
             let app_handle = app.clone();
 
@@ -1399,56 +1398,17 @@ pub fn start(args: StartArgs) -> Result<()> {
                 None
             };
 
+            let live_update = state.live_snapshot(boss_dead);
+
             tokio::task::spawn(async move {
-                if !clone.current_boss_name.is_empty() {
-                    let current_boss = clone.entities.get(&clone.current_boss_name).cloned();
-                    if let Some(mut current_boss) = current_boss {
-                        if boss_dead {
-                            current_boss.is_dead = true;
-                            current_boss.current_hp = 0;
-                        }
-                        clone.current_boss = Some(current_boss);
-                    } else {
-                        clone.current_boss_name = String::new();
-                    }
-                }
-                clone.entities.retain(|_, e| match e.entity_type {
-                    EntityType::DarkGrenade => e.damage_stats.rdps_damage_given > 0,
-                    EntityType::Player => {
-                        is_confirmed_player_entity(e, &clone.local_player)
-                            && e.damage_stats.damage_dealt > 0
-                    }
-                    EntityType::Esther | EntityType::Boss => e.damage_stats.damage_dealt > 0,
-                    _ => false,
-                });
-
-                // strip data not needed for live meter to reduce payload size and frontend memory
-                clone.encounter_damage_stats.boss_hp_log.clear();
-                for entity in clone.entities.values_mut() {
-                    entity.damage_stats.dps_average.clear();
-                    entity.damage_stats.dps_rolling_10s_avg.clear();
-                    for skill in entity.skills.values_mut() {
-                        skill.cast_log.clear();
-                        skill.skill_cast_log.clear();
-                    }
-                }
-                if let Some(ref mut boss) = clone.current_boss {
-                    boss.damage_stats.dps_average.clear();
-                    boss.damage_stats.dps_rolling_10s_avg.clear();
-                    for skill in boss.skills.values_mut() {
-                        skill.cast_log.clear();
-                        skill.skill_cast_log.clear();
-                    }
-                }
-
-                if !clone.entities.is_empty() {
+                if !live_update.entities.is_empty() {
                     if !damage_valid {
                         app_handle
                             .emit("invalid-damage", "")
                             .expect("failed to emit invalid-damage");
                     } else {
                         app_handle
-                            .emit("encounter-update", Some(clone))
+                            .emit("encounter-update", Some(live_update))
                             .expect("failed to emit encounter-update");
 
                         if party_info.is_some() {

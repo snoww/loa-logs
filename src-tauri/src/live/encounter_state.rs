@@ -362,6 +362,195 @@ impl EncounterState {
         normalize_encounter_damage_totals(&mut self.encounter);
     }
 
+    pub fn live_snapshot(&self, boss_dead: bool) -> Encounter {
+        let mut current_boss_name = self.encounter.current_boss_name.clone();
+        let mut current_boss = None;
+
+        if !current_boss_name.is_empty() {
+            if let Some(boss) = self.encounter.entities.get(&current_boss_name) {
+                let mut boss = Self::live_snapshot_entity(boss);
+                if boss_dead {
+                    boss.is_dead = true;
+                    boss.current_hp = 0;
+                }
+                current_boss = Some(boss);
+            } else {
+                current_boss_name.clear();
+            }
+        }
+
+        let entities = self
+            .encounter
+            .entities
+            .iter()
+            .filter(|(_, entity)| match entity.entity_type {
+                EntityType::DarkGrenade => entity.damage_stats.rdps_damage_given > 0,
+                EntityType::Player => {
+                    is_confirmed_player_entity(entity, &self.encounter.local_player)
+                        && entity.damage_stats.damage_dealt > 0
+                }
+                EntityType::Esther | EntityType::Boss => entity.damage_stats.damage_dealt > 0,
+                _ => false,
+            })
+            .map(|(name, entity)| (name.clone(), Self::live_snapshot_entity(entity)))
+            .collect();
+
+        Encounter {
+            last_combat_packet: self.encounter.last_combat_packet,
+            fight_start: self.encounter.fight_start,
+            local_player: self.encounter.local_player.clone(),
+            entities,
+            current_boss_name,
+            current_boss,
+            encounter_damage_stats: EncounterDamageStats {
+                total_damage_dealt: self.encounter.encounter_damage_stats.total_damage_dealt,
+                top_damage_dealt: self.encounter.encounter_damage_stats.top_damage_dealt,
+                total_damage_taken: self.encounter.encounter_damage_stats.total_damage_taken,
+                top_damage_taken: self.encounter.encounter_damage_stats.top_damage_taken,
+                dps: self.encounter.encounter_damage_stats.dps,
+                buffs: self.encounter.encounter_damage_stats.buffs.clone(),
+                debuffs: self.encounter.encounter_damage_stats.debuffs.clone(),
+                total_shielding: self.encounter.encounter_damage_stats.total_shielding,
+                total_effective_shielding: self
+                    .encounter
+                    .encounter_damage_stats
+                    .total_effective_shielding,
+                applied_shield_buffs: self
+                    .encounter
+                    .encounter_damage_stats
+                    .applied_shield_buffs
+                    .clone(),
+                unknown_buffs: Default::default(),
+                misc: self.encounter.encounter_damage_stats.misc.clone(),
+                boss_hp_log: HashMap::new(),
+            },
+            duration: self.encounter.duration,
+            difficulty: self.encounter.difficulty.clone(),
+            favorite: self.encounter.favorite,
+            cleared: self.encounter.cleared,
+            boss_only_damage: self.encounter.boss_only_damage,
+            sync: self.encounter.sync.clone(),
+            region: self.encounter.region.clone(),
+        }
+    }
+
+    fn live_snapshot_entity(entity: &EncounterEntity) -> EncounterEntity {
+        EncounterEntity {
+            id: entity.id,
+            character_id: entity.character_id,
+            npc_id: entity.npc_id,
+            hp_bars: entity.hp_bars,
+            name: entity.name.clone(),
+            entity_type: entity.entity_type,
+            class_id: entity.class_id,
+            class: entity.class.clone(),
+            gear_score: entity.gear_score,
+            current_hp: entity.current_hp,
+            max_hp: entity.max_hp,
+            current_shield: entity.current_shield,
+            is_dead: entity.is_dead,
+            skills: entity
+                .skills
+                .iter()
+                .map(|(id, skill)| (*id, Self::live_snapshot_skill(skill)))
+                .collect(),
+            damage_stats: Self::live_snapshot_damage_stats(&entity.damage_stats),
+            skill_stats: entity.skill_stats.clone(),
+            engraving_data: entity.engraving_data.clone(),
+            ark_passive_active: entity.ark_passive_active,
+            ark_passive_data: entity.ark_passive_data.clone(),
+            spec: entity.spec.clone(),
+            loadout_hash: entity.loadout_hash.clone(),
+            combat_power: entity.combat_power,
+        }
+    }
+
+    fn live_snapshot_damage_stats(stats: &DamageStats) -> DamageStats {
+        DamageStats {
+            damage_dealt: stats.damage_dealt,
+            hyper_awakening_damage: stats.hyper_awakening_damage,
+            damage_taken: stats.damage_taken,
+            buffed_by: stats.buffed_by.clone(),
+            debuffed_by: stats.debuffed_by.clone(),
+            buffed_by_support: stats.buffed_by_support,
+            buffed_by_identity: stats.buffed_by_identity,
+            debuffed_by_support: stats.debuffed_by_support,
+            buffed_by_hat: stats.buffed_by_hat,
+            crit_damage: stats.crit_damage,
+            back_attack_damage: stats.back_attack_damage,
+            front_attack_damage: stats.front_attack_damage,
+            shields_given: stats.shields_given,
+            shields_received: stats.shields_received,
+            damage_absorbed: stats.damage_absorbed,
+            damage_absorbed_on_others: stats.damage_absorbed_on_others,
+            shields_given_by: stats.shields_given_by.clone(),
+            shields_received_by: stats.shields_received_by.clone(),
+            damage_absorbed_by: stats.damage_absorbed_by.clone(),
+            damage_absorbed_on_others_by: stats.damage_absorbed_on_others_by.clone(),
+            deaths: stats.deaths,
+            death_time: stats.death_time,
+            death_info: stats.death_info.clone(),
+            boss_hp_at_death: stats.boss_hp_at_death,
+            dps: stats.dps,
+            dps_average: Vec::new(),
+            dps_rolling_10s_avg: Vec::new(),
+            rdps_damage_received: stats.rdps_damage_received,
+            rdps_damage_received_support: stats.rdps_damage_received_support,
+            rdps_damage_given: stats.rdps_damage_given,
+            incapacitations: stats.incapacitations.clone(),
+            stagger: stats.stagger,
+            buffed_damage: stats.buffed_damage,
+            unbuffed_damage: stats.unbuffed_damage,
+            unbuffed_dps: stats.unbuffed_dps,
+            rdps: stats.rdps,
+            ndps: stats.ndps,
+        }
+    }
+
+    fn live_snapshot_skill(skill: &Skill) -> Skill {
+        Skill {
+            id: skill.id,
+            name: skill.name.clone(),
+            icon: skill.icon.clone(),
+            total_damage: skill.total_damage,
+            max_damage: skill.max_damage,
+            max_damage_cast: skill.max_damage_cast,
+            buffed_by: skill.buffed_by.clone(),
+            debuffed_by: skill.debuffed_by.clone(),
+            buffed_by_support: skill.buffed_by_support,
+            buffed_by_identity: skill.buffed_by_identity,
+            buffed_by_hat: skill.buffed_by_hat,
+            debuffed_by_support: skill.debuffed_by_support,
+            casts: skill.casts,
+            hits: skill.hits,
+            crits: skill.crits,
+            adjusted_crit: skill.adjusted_crit,
+            crit_damage: skill.crit_damage,
+            back_attacks: skill.back_attacks,
+            front_attacks: skill.front_attacks,
+            back_attack_damage: skill.back_attack_damage,
+            front_attack_damage: skill.front_attack_damage,
+            dps: skill.dps,
+            cast_log: Vec::new(),
+            tripod_index: skill.tripod_index,
+            tripod_level: skill.tripod_level,
+            gem_cooldown: skill.gem_cooldown,
+            gem_tier: skill.gem_tier,
+            gem_damage: skill.gem_damage,
+            gem_tier_dmg: skill.gem_tier_dmg,
+            skill_cast_log: Vec::new(),
+            stagger: skill.stagger,
+            is_hyper_awakening: skill.is_hyper_awakening,
+            special: skill.special,
+            last_timestamp: skill.last_timestamp,
+            time_available: skill.time_available,
+            rdps_received: skill.rdps_received.clone(),
+            rdps_contributed: skill.rdps_contributed.clone(),
+            rdps_damage_received: skill.rdps_damage_received,
+            rdps_damage_received_support: skill.rdps_damage_received_support,
+        }
+    }
+
     fn refresh_encounter_entity_metadata(
         encounter_entity: &mut EncounterEntity,
         entity: &Entity,
