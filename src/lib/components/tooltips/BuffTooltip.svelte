@@ -42,7 +42,7 @@
           [Drops of Ether]
         {/if}
         <div>
-          {@html removeUnknownHtmlTags(buff.source.name)}
+          {removeUnknownHtmlTags(buff.source.name)}
         </div>
       </div>
     {/if}
@@ -50,7 +50,7 @@
     <div class="flex items-center tracking-tight">
       <img src={getSkillIcon(buff.source.icon)} alt={buff.name} class="mr-1 size-5 shrink-0" />
       <div>
-        {@html removeUnknownHtmlTags(buff.source.desc)}
+        {removeUnknownHtmlTags(buff.source.desc)}
       </div>
     </div>
   </div>
