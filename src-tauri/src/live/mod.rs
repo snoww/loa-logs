@@ -176,7 +176,6 @@ pub fn start(args: StartArgs) -> Result<()> {
 
         // always unconditionally forward, but let the damage handler process first
         if packet_id != 0 {
-            let packet_action_start = Instant::now();
             let action = match damage_handler.process_packet(&packet) {
                 PacketProcessResult::ForwardOriginal => PacketAction::Send(packet.clone()),
                 PacketProcessResult::ForwardModified(packet) => PacketAction::Send(packet),
@@ -187,11 +186,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                 packet_id,
                 action,
             });
-            exceed_process_duration(
-                packet.header.opcode,
-                "packet_action",
-                packet_action_start.elapsed(),
-            );
         }
 
         let inspect_start = Instant::now();
@@ -257,7 +251,6 @@ pub fn start(args: StartArgs) -> Result<()> {
         }
 
         if manager.has_saved() {
-            let save_start = Instant::now();
             state.party_info = update_party(&party_tracker, &entity_tracker);
             if !banned {
                 state.force_release_startup_barrier(&mut entity_tracker, "forced_save");
@@ -265,7 +258,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                 state.saved = true;
             }
             state.resetting = true;
-            exceed_process_duration(packet.header.opcode, "manual_save", save_start.elapsed());
         }
 
         if manager.has_toggled_boss_only_damage() {
@@ -1365,16 +1357,10 @@ pub fn start(args: StartArgs) -> Result<()> {
             handler_start.elapsed(),
         );
 
-        let barrier_start = Instant::now();
         state.try_flush_startup_barrier(&mut entity_tracker);
         if state.startup_barrier_active() && !connection_ids_by_port.contains_key(&6020) {
             state.force_release_startup_barrier(&mut entity_tracker, "inspect_unavailable");
         }
-        exceed_process_duration(
-            packet.header.opcode,
-            "startup_barrier_post_handler",
-            barrier_start.elapsed(),
-        );
 
         if last_update.elapsed() >= duration || state.resetting || state.boss_dead_update {
             state.try_flush_startup_barrier(&mut entity_tracker);
@@ -1433,13 +1419,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                 None
             };
 
-            let live_snapshot_start = Instant::now();
             let live_update = state.live_snapshot(boss_dead);
-            exceed_process_duration(
-                packet.header.opcode,
-                "live_snapshot",
-                live_snapshot_start.elapsed(),
-            );
 
             tokio::task::spawn(async move {
                 if !live_update.entities.is_empty() {
@@ -1465,13 +1445,11 @@ pub fn start(args: StartArgs) -> Result<()> {
         }
 
         if state.resetting {
-            let reset_start = Instant::now();
             state.soft_reset(true);
             state.resetting = false;
             state.saved = false;
             party_freeze = false;
             party_cache = None;
-            exceed_process_duration(packet.header.opcode, "soft_reset", reset_start.elapsed());
         }
 
         if let Some(ref region) = state.region {
