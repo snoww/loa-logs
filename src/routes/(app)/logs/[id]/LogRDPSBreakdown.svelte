@@ -487,6 +487,14 @@
     }
     return deduped;
   }
+
+  // do we not have origins for this buff, but it's only caused by a boss?
+  function isGroupUnknownAndBossOnly(group: SourceGroup): boolean {
+    if (group.origins.length !== 0) return false;
+    if (group.players.length !== 1) return false;
+    const playerEntity = enc.encounter!.entities[group.players[0].player];
+    return !!playerEntity && !playerEntity.classId;
+  }
 </script>
 
 {#snippet playerClassOrBoss(name: string, clazz: string)}
@@ -699,6 +707,7 @@
       <div class="grid grid-cols-4 gap-4 px-4 py-2">
         {#each sourceGroups as group}
           {@const pct = (group.total / player.damageStats.damageDealt) * 100}
+          {@const unknownAndBossOnly = isGroupUnknownAndBossOnly(group)}
           <div class="flex flex-col gap-1">
             <div class="flex flex-row justify-between gap-2">
               <Tooltipped
@@ -714,6 +723,9 @@
                   {#if group.origins.length > 1}
                     <span class="border-b border-dashed text-xs text-neutral-300">+{group.origins.length - 1}</span>
                   {/if}
+                {:else if unknownAndBossOnly}
+                  <img src="/images/icons/boss.png" alt="Raid Mechanics" class="size-4 rounded-sm" />
+                  <span class="truncate">Raid Mechanics</span>
                 {:else}
                   <img src="/images/skills/unknown.png" alt="Unknown Source" class="size-4 rounded-sm" />
                   <span class="truncate">Unknown Source, Please Report!</span>
