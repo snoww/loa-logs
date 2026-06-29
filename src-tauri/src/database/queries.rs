@@ -74,16 +74,18 @@ SELECT
     e.id,
     e.current_boss,
     e.difficulty,
-    e.fight_start,
+    json_extract(en.misc, '$.ntpFightStart') AS ntp_fight_start,
     e.duration,
     e.local_player,
     s.upstream_id
 FROM encounter_preview e
+JOIN encounter en ON en.id = e.id
 LEFT JOIN sync_logs s ON s.encounter_id = e.id AND s.failed = 0
 WHERE e.cleared = 1
-  AND e.fight_start >= ?1
-  AND e.fight_start <= ?2
-ORDER BY e.fight_start ASC";
+  AND json_extract(en.misc, '$.ntpFightStart') IS NOT NULL
+  AND json_extract(en.misc, '$.ntpFightStart') >= ?1
+  AND json_extract(en.misc, '$.ntpFightStart') <= ?2
+ORDER BY ntp_fight_start ASC";
 
 /// Read-only: latest class/ilvl per local character. SQLite returns the bare
 /// columns (class_id, class) from the row holding MAX(gear_score).
