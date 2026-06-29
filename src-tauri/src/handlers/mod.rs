@@ -238,9 +238,6 @@ pub fn get_local_api_status(local_api: State<LocalApiManager>) -> LocalApiStatus
     local_api.status()
 }
 
-/// Start/stop/restart the local API on demand — bound to the Apply/Restart
-/// button so saving unrelated settings (or other windows syncing settings)
-/// never thrashes the listener. Reads the just-persisted settings.
 #[command]
 pub fn restart_local_api(
     settings_manager: State<SettingsManager>,

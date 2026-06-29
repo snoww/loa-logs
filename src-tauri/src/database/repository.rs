@@ -174,8 +174,6 @@ impl Repository {
         Ok(characters)
     }
 
-    /// Read-only: sanitized cleared-encounter summaries within a time window for
-    /// the local HTTP API. Contains no damage/player/party data.
     pub fn get_cleared_encounters_in_range(
         &self,
         since_ms: i64,
@@ -200,8 +198,6 @@ impl Repository {
         Ok(clears)
     }
 
-    /// Read-only: latest class/ilvl metadata per local character. When `names` is
-    /// non-empty, only those names (case-insensitive) are returned.
     pub fn get_meter_characters(&self, names: &[String]) -> Result<Vec<MeterCharacter>> {
         let connection = self.0.get()?;
         let mut statement = connection.prepare_cached(SELECT_METER_CHARACTERS)?;

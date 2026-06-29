@@ -1,19 +1,4 @@
-//! Read-only local HTTP API.
-//!
-//! Lets a browser running on an allow-listed origin (e.g. neria.dev) read
-//! *sanitized* meter clears from this machine so private logs can still be
-//! detected by external trackers. Security model:
-//!
-//! - Bound to `127.0.0.1` only, disabled by default.
-//! - Every data endpoint requires `Authorization: Bearer <token>`.
-//! - No cookies/credentials are ever used or reflected.
-//! - CORS `Access-Control-Allow-Origin` is reflected *only* for exact matches
-//!   in the configured allowlist (never `*`), and Chromium Private Network
-//!   Access preflights are answered only for those origins.
-//! - Responses are `Cache-Control: no-store`.
-//!
-//! No combat logs, damage, player breakdowns, skill/buff logs or party details
-//! are ever exposed.
+//! Read-only localhost API for external tools.
 
 use std::sync::{Arc, Mutex};
 
@@ -37,8 +22,6 @@ use crate::settings::{LocalApiSettings, Settings};
 
 const SCHEMA_VERSION: u32 = 1;
 
-/// Manages the lifecycle of the local API server. Managed as Tauri state so it
-/// can be reconciled at app launch and from the Apply/Restart button.
 pub struct LocalApiManager {
     repository: Arc<Repository>,
     version: String,
@@ -86,8 +69,6 @@ impl LocalApiManager {
         }
     }
 
-    /// Stop the server (if any). Called on app exit so the port is released
-    /// promptly on a clean shutdown.
     pub fn shutdown(&self) {
         let mut guard = self.inner.lock().unwrap();
         if let Some(mut server) = guard.take() {
@@ -101,20 +82,17 @@ impl LocalApiManager {
         st.port = None;
     }
 
-    /// Start, stop, or restart the server to match the given settings. Never
-    /// blocks the caller: binding (and any rebind retry) happens on the async
-    /// runtime, so calling this from a UI/command thread can't freeze the app.
-    /// Idempotent — only restarts when the relevant config changed.
     pub fn reconcile(&self, settings: Option<&Settings>) {
         let cfg = settings.map(|s| s.local_api.clone()).unwrap_or_default();
         let should_run = cfg.enabled && !cfg.token.is_empty() && cfg.port > 0;
 
         let mut guard = self.inner.lock().unwrap();
 
-        // Already running with identical config: nothing to do.
+        let running = self.status.lock().unwrap().running;
         let unchanged = match guard.as_ref() {
             Some(s) => {
                 should_run
+                    && running
                     && s.cfg.port == cfg.port
                     && s.cfg.token == cfg.token
                     && s.cfg.allowed_origins == cfg.allowed_origins
@@ -125,7 +103,6 @@ impl LocalApiManager {
             return;
         }
 
-        // Stop any existing server (config changed, or we're disabling).
         if let Some(mut server) = guard.take() {
             if let Some(tx) = server.shutdown.take() {
                 let _ = tx.send(());
@@ -223,10 +200,6 @@ fn build_router(state: ApiState) -> Router {
         .with_state(state)
 }
 
-// ---------------------------------------------------------------------------
-// Responses / requests
-// ---------------------------------------------------------------------------
-
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 struct StatusResponse {
@@ -289,10 +262,6 @@ struct EncountersQuery {
 struct CharactersQuery {
     names: Option<String>,
 }
-
-// ---------------------------------------------------------------------------
-// Handlers
-// ---------------------------------------------------------------------------
 
 async fn status_handler(State(state): State<ApiState>, headers: HeaderMap) -> Response {
     if let Err(e) = check_auth(&headers, &state.token) {
@@ -393,10 +362,6 @@ async fn fallback_handler() -> Response {
     StatusCode::NOT_FOUND.into_response()
 }
 
-// ---------------------------------------------------------------------------
-// CORS / Private Network Access + auth
-// ---------------------------------------------------------------------------
-
 async fn cors_middleware(State(state): State<ApiState>, req: Request, next: Next) -> Response {
     let origin = req
         .headers()
@@ -409,7 +374,6 @@ async fn cors_middleware(State(state): State<ApiState>, req: Request, next: Next
         .unwrap_or(false);
 
     if req.method() == Method::OPTIONS {
-        // Preflight: never requires auth.
         if !allowed {
             return StatusCode::FORBIDDEN.into_response();
         }
@@ -502,8 +466,6 @@ fn now_ms() -> i64 {
     Utc::now().timestamp_millis()
 }
 
-/// Bind 127.0.0.1:port on the async runtime, retrying briefly so an in-place
-/// restart doesn't fail while the previous listener is still being torn down.
 async fn bind_with_retry(port: u16) -> std::io::Result<tokio::net::TcpListener> {
     let mut last_err: Option<std::io::Error> = None;
     for attempt in 0..10 {

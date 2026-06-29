@@ -89,7 +89,6 @@ async fn main() -> Result<()> {
         .build(tauri_context)
         .expect("error while building application")
         .run(|app_handle, event| {
-            // Release the local API port promptly on a clean exit.
             if let tauri::RunEvent::Exit = event {
                 app_handle.state::<LocalApiManager>().shutdown();
             }

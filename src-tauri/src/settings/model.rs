@@ -11,9 +11,6 @@ pub struct Settings {
     pub extra: Map<String, Value>,
 }
 
-/// Settings for the read-only local HTTP API that lets a browser (e.g. neria.dev)
-/// read sanitized meter clears from this machine. Disabled by default and bound to
-/// 127.0.0.1 only. See `crate::local_api`.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", default)]
 pub struct LocalApiSettings {
@@ -42,12 +39,7 @@ fn default_local_api_port() -> u16 {
 }
 
 fn default_allowed_origins() -> Vec<String> {
-    vec![
-        "https://neria.dev".to_string(),
-        "https://dev-neria.niome.dev".to_string(),
-        "http://localhost:5173".to_string(),
-        "http://127.0.0.1:5173".to_string(),
-    ]
+    vec![]
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]

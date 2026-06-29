@@ -57,7 +57,6 @@ export interface LocalApiStatus {
 
 export const getLocalApiStatus = (): Promise<LocalApiStatus> => invoke("get_local_api_status");
 
-// Apply local API settings on demand (Apply/Restart button); returns new status.
 export const restartLocalApi = (): Promise<LocalApiStatus> => invoke("restart_local_api");
 
 export const getDbInfo = (minDuration: number): Promise<EncounterDbInfo> => invoke("get_db_info", { minDuration });
@@ -232,4 +231,3 @@ export const onClearEncounter = (handler: (event: { payload: number }) => void) 
 export const onNinevehUpdate = (handler: (event: NinevehEvent) => void) => listen("nineveh-update", handler);
 
 export const onBannedEvent = (handler: () => void) => listen("banned-event", handler);
-

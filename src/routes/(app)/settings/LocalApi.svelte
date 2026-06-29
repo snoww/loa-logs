@@ -38,20 +38,14 @@
 
   async function apply() {
     syncOrigins();
-    // Guard against an emptied/invalid port field persisting a null.
     if (!settings.app.localApi.port || settings.app.localApi.port < 1) {
       settings.app.localApi.port = 16724;
     }
-    // A token is required for the server to start.
     if (settings.app.localApi.enabled && !settings.app.localApi.token) {
       settings.app.localApi.token = genToken();
     }
     await saveSettings(settings.app);
-    // Reconcile only happens here (not on every save), so unrelated saves and
-    // multi-window settings sync never restart the listener.
     await restartLocalApi();
-    // The server binds asynchronously, so poll until it's actually up (or
-    // errors) rather than flashing a stale "stopped".
     await pollStatus(settings.app.localApi.enabled);
     addToast({ data: { title: "", description: "Local API settings applied", color: "border-green-500/30" } });
   }
@@ -87,9 +81,7 @@
 <div class="flex max-w-2xl flex-col gap-4">
   <div class="text-sm text-neutral-300">
     Exposes a <span class="font-semibold">read-only</span> API on
-    <span class="font-mono">127.0.0.1</span> so an allow-listed website (e.g. neria.dev) can detect your private
-    clears. Only sanitized clear summaries are shared — never combat logs, damage, or party details. Disabled by
-    default.
+    <span class="font-mono">127.0.0.1</span> so allow-listed websites can read sanitized clear summaries. Disabled by default.
   </div>
 
   <label class="flex items-center gap-2">
@@ -141,23 +133,23 @@
       </div>
       <div class="text-xs text-neutral-300">
         Required for all data requests (sent as <span class="font-mono">Authorization: Bearer &lt;token&gt;</span>).
-        Paste this into Neria's local meter settings.
       </div>
     </div>
 
     <div class="flex flex-col gap-1">
       <div class="text-sm">Allowed Origins</div>
       <textarea
-        class="form-textarea h-28 w-96 rounded-md border-0 bg-neutral-700 font-mono text-xs focus:ring-0"
+        class="h-28 w-96 form-textarea rounded-md border-0 bg-neutral-700 font-mono text-xs focus:ring-0"
         bind:value={originsText}
         onblur={syncOrigins}
+        placeholder="https://example.com"
       ></textarea>
       <div class="text-xs text-neutral-300">One origin per line. Only these websites may read your meter data.</div>
     </div>
   {/if}
 
   <div class="flex items-center gap-3">
-    <button class="bg-accent-800/80 hover:bg-accent-700/80 rounded-md px-3 py-1.5 text-sm" onclick={apply}>
+    <button class="rounded-md bg-accent-800/80 px-3 py-1.5 text-sm hover:bg-accent-700/80" onclick={apply}>
       Apply / Restart
     </button>
     <button class="rounded-md bg-neutral-700 px-3 py-1.5 text-sm hover:bg-neutral-600" onclick={refreshStatus}>

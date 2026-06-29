@@ -16,8 +16,6 @@ pub struct GetEncounterPreviewArgs {
     pub filter: SearchFilter,
 }
 
-/// Sanitized cleared-encounter summary exposed by the read-only local API.
-/// Intentionally contains no damage, player breakdowns, or party details.
 #[derive(Debug, Clone)]
 pub struct MeterClear {
     pub id: i64,
@@ -29,7 +27,6 @@ pub struct MeterClear {
     pub upload_id: Option<String>,
 }
 
-/// Latest class/ilvl metadata the meter knows for a local character.
 #[derive(Debug, Clone)]
 pub struct MeterCharacter {
     pub name: String,

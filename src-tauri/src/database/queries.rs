@@ -67,8 +67,6 @@ WHERE le.gear_score > 0
 GROUP BY e.local_player
 ORDER BY max_gs DESC";
 
-/// Read-only: cleared encounters within a time window, joined to their upstream
-/// (lostark.bible) upload id if one exists. Used by the local HTTP API.
 pub const SELECT_CLEARED_ENCOUNTERS_IN_RANGE: &str = r"
 SELECT
     e.id,
@@ -87,8 +85,6 @@ WHERE e.cleared = 1
   AND json_extract(en.misc, '$.ntpFightStart') <= ?2
 ORDER BY ntp_fight_start ASC";
 
-/// Read-only: latest class/ilvl per local character. SQLite returns the bare
-/// columns (class_id, class) from the row holding MAX(gear_score).
 pub const SELECT_METER_CHARACTERS: &str = r"
 SELECT
     e.local_player,
