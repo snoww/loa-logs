@@ -35,6 +35,7 @@ use crate::setup::setup;
 use crate::ui::on_window_event;
 use anyhow::Result;
 use std::sync::Arc;
+use tauri::Manager;
 use tauri::async_runtime;
 use tokio::runtime::Handle;
 
@@ -85,8 +86,14 @@ async fn main() -> Result<()> {
         .setup(setup)
         .on_window_event(on_window_event)
         .invoke_handler(generate_handlers())
-        .run(tauri_context)
-        .expect("error while running application");
+        .build(tauri_context)
+        .expect("error while building application")
+        .run(|app_handle, event| {
+            // Release the local API port promptly on a clean exit.
+            if let tauri::RunEvent::Exit = event {
+                app_handle.state::<LocalApiManager>().shutdown();
+            }
+        });
 
     Ok(())
 }

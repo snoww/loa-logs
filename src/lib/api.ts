@@ -57,6 +57,9 @@ export interface LocalApiStatus {
 
 export const getLocalApiStatus = (): Promise<LocalApiStatus> => invoke("get_local_api_status");
 
+// Apply local API settings on demand (Apply/Restart button); returns new status.
+export const restartLocalApi = (): Promise<LocalApiStatus> => invoke("restart_local_api");
+
 export const getDbInfo = (minDuration: number): Promise<EncounterDbInfo> => invoke("get_db_info", { minDuration });
 
 export const openDbPath = (): Promise<void> => invoke("open_db_path");

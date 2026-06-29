@@ -38,7 +38,7 @@ impl Default for LocalApiSettings {
 }
 
 fn default_local_api_port() -> u16 {
-    6041
+    16724
 }
 
 fn default_allowed_origins() -> Vec<String> {

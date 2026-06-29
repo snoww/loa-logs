@@ -30,7 +30,7 @@ hashbrown = { version = "0.16.0", features = ["serde"] }
 r2d2_sqlite = "0.31.0"
 r2d2 = "0.8.10"
 rusqlite = { version = "0.37.0", features = ["bundled", "serde_json"] }
-tokio = { version = "1.48.0", features = ["rt", "rt-multi-thread", "macros", "process", "net", "sync"] }
+tokio = { version = "1.48.0", features = ["rt", "rt-multi-thread", "macros", "process", "net", "sync", "time"] }
 axum = "0.8"
 serde_with = "3.12.0"
 log = "0.4.18"

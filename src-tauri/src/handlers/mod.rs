@@ -61,6 +61,7 @@ pub fn generate_handlers() -> Box<dyn Fn(Invoke) -> bool + Send + Sync> {
         install_stable_update,
         get_local_characters,
         get_local_api_status,
+        restart_local_api,
     ])
 }
 
@@ -224,23 +225,29 @@ pub fn open_url(app_handle: AppHandle, url: String) {
 }
 
 #[command]
-pub fn save_settings(
-    settings_manager: State<SettingsManager>,
-    local_api: State<LocalApiManager>,
-    settings: Settings,
-) -> Result<()> {
+pub fn save_settings(settings_manager: State<SettingsManager>, settings: Settings) -> Result<()> {
     settings_manager
         .save(&settings)
         .context("could not write to settings file")?;
-
-    // Apply any local API changes (start/stop/restart) immediately.
-    local_api.reconcile(Some(&settings));
 
     Ok(())
 }
 
 #[command]
 pub fn get_local_api_status(local_api: State<LocalApiManager>) -> LocalApiStatus {
+    local_api.status()
+}
+
+/// Start/stop/restart the local API on demand — bound to the Apply/Restart
+/// button so saving unrelated settings (or other windows syncing settings)
+/// never thrashes the listener. Reads the just-persisted settings.
+#[command]
+pub fn restart_local_api(
+    settings_manager: State<SettingsManager>,
+    local_api: State<LocalApiManager>,
+) -> LocalApiStatus {
+    let settings = settings_manager.read().ok().flatten();
+    local_api.reconcile(settings.as_ref());
     local_api.status()
 }
 

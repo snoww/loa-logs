@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getLocalApiStatus, saveSettings, type LocalApiStatus } from "$lib/api";
+  import { getLocalApiStatus, restartLocalApi, saveSettings, type LocalApiStatus } from "$lib/api";
   import { addToast } from "$lib/components/Toaster.svelte";
   import { settings } from "$lib/stores.svelte";
   import { onMount } from "svelte";
@@ -38,13 +38,35 @@
 
   async function apply() {
     syncOrigins();
+    // Guard against an emptied/invalid port field persisting a null.
+    if (!settings.app.localApi.port || settings.app.localApi.port < 1) {
+      settings.app.localApi.port = 16724;
+    }
     // A token is required for the server to start.
     if (settings.app.localApi.enabled && !settings.app.localApi.token) {
       settings.app.localApi.token = genToken();
     }
     await saveSettings(settings.app);
-    await refreshStatus();
+    // Reconcile only happens here (not on every save), so unrelated saves and
+    // multi-window settings sync never restart the listener.
+    await restartLocalApi();
+    // The server binds asynchronously, so poll until it's actually up (or
+    // errors) rather than flashing a stale "stopped".
+    await pollStatus(settings.app.localApi.enabled);
     addToast({ data: { title: "", description: "Local API settings applied", color: "border-green-500/30" } });
+  }
+
+  async function pollStatus(expectRunning = true) {
+    checking = true;
+    try {
+      for (let i = 0; i < 10; i++) {
+        status = await getLocalApiStatus();
+        if (!expectRunning || status.running || status.error) break;
+        await new Promise((r) => setTimeout(r, 300));
+      }
+    } finally {
+      checking = false;
+    }
   }
 
   async function refreshStatus() {
@@ -82,55 +104,57 @@
     </div>
   </label>
 
-  <label class="flex items-center">
-    <input
-      type="number"
-      class="form-input h-8 w-24 rounded-md border-0 bg-neutral-700 text-sm focus:ring-0"
-      bind:value={settings.app.localApi.port}
-    />
-    <div class="ml-5">
-      <div class="text-sm">Port</div>
-      <div class="text-xs text-neutral-300">Default is 6041.</div>
-    </div>
-  </label>
-
-  <div class="flex flex-col gap-1">
-    <div class="text-sm">API Token</div>
-    <div class="flex items-center gap-2">
+  {#if settings.app.localApi.enabled}
+    <label class="flex items-center">
       <input
-        type={showToken ? "text" : "password"}
-        class="form-input h-8 w-96 rounded-md border-0 bg-neutral-700 font-mono text-xs focus:ring-0"
-        bind:value={settings.app.localApi.token}
-        placeholder="generate a token"
+        type="number"
+        class="form-input h-8 w-24 rounded-md border-0 bg-neutral-700 text-sm focus:ring-0"
+        bind:value={settings.app.localApi.port}
       />
-      <button
-        class="rounded-md bg-neutral-700 px-2 py-1 text-xs hover:bg-neutral-600"
-        onclick={() => (showToken = !showToken)}
-      >
-        {showToken ? "Hide" : "Show"}
-      </button>
-      <button class="rounded-md bg-neutral-700 px-2 py-1 text-xs hover:bg-neutral-600" onclick={copyToken}>
-        Copy
-      </button>
-      <button class="rounded-md bg-neutral-700 px-2 py-1 text-xs hover:bg-neutral-600" onclick={regenerateToken}>
-        Regenerate
-      </button>
-    </div>
-    <div class="text-xs text-neutral-300">
-      Required for all data requests (sent as <span class="font-mono">Authorization: Bearer &lt;token&gt;</span>). Paste
-      this into Neria's local meter settings.
-    </div>
-  </div>
+      <div class="ml-5">
+        <div class="text-sm">Port</div>
+        <div class="text-xs text-neutral-300">Default is 16724.</div>
+      </div>
+    </label>
 
-  <div class="flex flex-col gap-1">
-    <div class="text-sm">Allowed Origins</div>
-    <textarea
-      class="form-textarea h-28 w-96 rounded-md border-0 bg-neutral-700 font-mono text-xs focus:ring-0"
-      bind:value={originsText}
-      onblur={syncOrigins}
-    ></textarea>
-    <div class="text-xs text-neutral-300">One origin per line. Only these websites may read your meter data.</div>
-  </div>
+    <div class="flex flex-col gap-1">
+      <div class="text-sm">API Token</div>
+      <div class="flex items-center gap-2">
+        <input
+          type={showToken ? "text" : "password"}
+          class="form-input h-8 w-96 rounded-md border-0 bg-neutral-700 font-mono text-xs focus:ring-0"
+          bind:value={settings.app.localApi.token}
+          placeholder="generate a token"
+        />
+        <button
+          class="rounded-md bg-neutral-700 px-2 py-1 text-xs hover:bg-neutral-600"
+          onclick={() => (showToken = !showToken)}
+        >
+          {showToken ? "Hide" : "Show"}
+        </button>
+        <button class="rounded-md bg-neutral-700 px-2 py-1 text-xs hover:bg-neutral-600" onclick={copyToken}>
+          Copy
+        </button>
+        <button class="rounded-md bg-neutral-700 px-2 py-1 text-xs hover:bg-neutral-600" onclick={regenerateToken}>
+          Regenerate
+        </button>
+      </div>
+      <div class="text-xs text-neutral-300">
+        Required for all data requests (sent as <span class="font-mono">Authorization: Bearer &lt;token&gt;</span>).
+        Paste this into Neria's local meter settings.
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <div class="text-sm">Allowed Origins</div>
+      <textarea
+        class="form-textarea h-28 w-96 rounded-md border-0 bg-neutral-700 font-mono text-xs focus:ring-0"
+        bind:value={originsText}
+        onblur={syncOrigins}
+      ></textarea>
+      <div class="text-xs text-neutral-300">One origin per line. Only these websites may read your meter data.</div>
+    </div>
+  {/if}
 
   <div class="flex items-center gap-3">
     <button class="bg-accent-800/80 hover:bg-accent-700/80 rounded-md px-3 py-1.5 text-sm" onclick={apply}>

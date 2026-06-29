@@ -337,7 +337,7 @@ export const defaultSettings: AppSettings = {
   },
   localApi: {
     enabled: false,
-    port: 6041,
+    port: 16724,
     token: "",
     allowedOrigins: [
       "https://neria.dev",

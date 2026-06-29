@@ -38,20 +38,25 @@ use crate::settings::{LocalApiSettings, Settings};
 const SCHEMA_VERSION: u32 = 1;
 
 /// Manages the lifecycle of the local API server. Managed as Tauri state so it
-/// can be reconciled whenever settings are saved.
+/// can be reconciled at app launch and from the Apply/Restart button.
 pub struct LocalApiManager {
     repository: Arc<Repository>,
     version: String,
     inner: Mutex<Option<RunningServer>>,
-    last_error: Mutex<Option<String>>,
+    status: Arc<Mutex<RuntimeState>>,
 }
 
 struct RunningServer {
-    port: u16,
-    token: String,
-    allowed_origins: Vec<String>,
+    cfg: LocalApiSettings,
     shutdown: Option<oneshot::Sender<()>>,
     handle: JoinHandle<()>,
+}
+
+#[derive(Default)]
+struct RuntimeState {
+    running: bool,
+    port: Option<u16>,
+    error: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -68,41 +73,51 @@ impl LocalApiManager {
             repository,
             version,
             inner: Mutex::new(None),
-            last_error: Mutex::new(None),
+            status: Arc::new(Mutex::new(RuntimeState::default())),
         }
     }
 
     pub fn status(&self) -> LocalApiStatus {
-        let running = self.inner.lock().unwrap();
+        let st = self.status.lock().unwrap();
         LocalApiStatus {
-            running: running.is_some(),
-            port: running.as_ref().map(|s| s.port),
-            error: self.last_error.lock().unwrap().clone(),
+            running: st.running,
+            port: st.port,
+            error: st.error.clone(),
         }
     }
 
-    fn set_error(&self, error: Option<String>) {
-        *self.last_error.lock().unwrap() = error;
+    /// Stop the server (if any). Called on app exit so the port is released
+    /// promptly on a clean shutdown.
+    pub fn shutdown(&self) {
+        let mut guard = self.inner.lock().unwrap();
+        if let Some(mut server) = guard.take() {
+            if let Some(tx) = server.shutdown.take() {
+                let _ = tx.send(());
+            }
+            server.handle.abort();
+        }
+        let mut st = self.status.lock().unwrap();
+        st.running = false;
+        st.port = None;
     }
 
-    /// Start, stop, or restart the server to match the given settings. Safe to
-    /// call repeatedly; it only restarts when the relevant config changed.
+    /// Start, stop, or restart the server to match the given settings. Never
+    /// blocks the caller: binding (and any rebind retry) happens on the async
+    /// runtime, so calling this from a UI/command thread can't freeze the app.
+    /// Idempotent — only restarts when the relevant config changed.
     pub fn reconcile(&self, settings: Option<&Settings>) {
-        let cfg = settings
-            .map(|s| s.local_api.clone())
-            .unwrap_or_default();
-
+        let cfg = settings.map(|s| s.local_api.clone()).unwrap_or_default();
         let should_run = cfg.enabled && !cfg.token.is_empty() && cfg.port > 0;
 
         let mut guard = self.inner.lock().unwrap();
 
         // Already running with identical config: nothing to do.
         let unchanged = match guard.as_ref() {
-            Some(r) => {
+            Some(s) => {
                 should_run
-                    && r.port == cfg.port
-                    && r.token == cfg.token
-                    && r.allowed_origins == cfg.allowed_origins
+                    && s.cfg.port == cfg.port
+                    && s.cfg.token == cfg.token
+                    && s.cfg.allowed_origins == cfg.allowed_origins
             }
             None => false,
         };
@@ -116,72 +131,77 @@ impl LocalApiManager {
                 let _ = tx.send(());
             }
             server.handle.abort();
-            info!("local api stopped");
+        }
+
+        {
+            let mut st = self.status.lock().unwrap();
+            st.running = false;
+            st.port = None;
+            st.error = if cfg.enabled && cfg.token.is_empty() {
+                Some("no token configured".to_string())
+            } else {
+                None
+            };
         }
 
         if !should_run {
-            if cfg.enabled && cfg.token.is_empty() {
-                self.set_error(Some("no token configured".to_string()));
-            } else {
-                self.set_error(None);
-            }
             return;
         }
 
-        match self.start(&cfg) {
-            Ok(server) => {
-                *guard = Some(server);
-                self.set_error(None);
-            }
-            Err(e) => {
-                error!("failed to start local api: {e}");
-                self.set_error(Some(e.to_string()));
-            }
-        }
+        *guard = Some(self.spawn(&cfg));
     }
 
-    fn start(&self, cfg: &LocalApiSettings) -> anyhow::Result<RunningServer> {
-        // Bind synchronously so port-in-use errors surface immediately.
-        let std_listener = std::net::TcpListener::bind(("127.0.0.1", cfg.port))?;
-        std_listener.set_nonblocking(true)?;
-
+    fn spawn(&self, cfg: &LocalApiSettings) -> RunningServer {
         let state = ApiState {
             repository: self.repository.clone(),
             version: self.version.clone(),
             token: Arc::new(cfg.token.clone()),
             allowed_origins: Arc::new(cfg.allowed_origins.clone()),
         };
-
+        let status = self.status.clone();
         let (tx, rx) = oneshot::channel::<()>();
         let port = cfg.port;
 
         let handle = tauri::async_runtime::spawn(async move {
-            let listener = match tokio::net::TcpListener::from_std(std_listener) {
+            let listener = match bind_with_retry(port).await {
                 Ok(l) => l,
                 Err(e) => {
-                    error!("local api listener error: {e}");
+                    error!("local api failed to bind 127.0.0.1:{port}: {e}");
+                    let mut st = status.lock().unwrap();
+                    st.running = false;
+                    st.port = None;
+                    st.error = Some(format!("could not bind port {port} ({e})"));
                     return;
                 }
             };
+
+            {
+                let mut st = status.lock().unwrap();
+                st.running = true;
+                st.port = Some(port);
+                st.error = None;
+            }
+            info!("local api listening on 127.0.0.1:{port}");
+
             let app = build_router(state);
-            let server = axum::serve(listener, app)
-                .with_graceful_shutdown(async move {
-                    let _ = rx.await;
-                });
+            let server = axum::serve(listener, app).with_graceful_shutdown(async move {
+                let _ = rx.await;
+            });
             if let Err(e) = server.await {
                 error!("local api server error: {e}");
             }
+
+            info!("local api stopped");
+            let mut st = status.lock().unwrap();
+            st.running = false;
+            st.port = None;
         });
 
-        info!("local api listening on 127.0.0.1:{port}");
-
-        Ok(RunningServer {
-            port,
-            token: cfg.token.clone(),
-            allowed_origins: cfg.allowed_origins.clone(),
+        RunningServer {
+            cfg: cfg.clone(),
             shutdown: Some(tx),
             handle,
-        })
+        }
     }
 }
 
@@ -480,4 +500,22 @@ fn constant_time_eq(a: &[u8], b: &[u8]) -> bool {
 
 fn now_ms() -> i64 {
     Utc::now().timestamp_millis()
+}
+
+/// Bind 127.0.0.1:port on the async runtime, retrying briefly so an in-place
+/// restart doesn't fail while the previous listener is still being torn down.
+async fn bind_with_retry(port: u16) -> std::io::Result<tokio::net::TcpListener> {
+    let mut last_err: Option<std::io::Error> = None;
+    for attempt in 0..10 {
+        match tokio::net::TcpListener::bind(("127.0.0.1", port)).await {
+            Ok(listener) => return Ok(listener),
+            Err(e) => {
+                last_err = Some(e);
+                if attempt < 9 {
+                    tokio::time::sleep(std::time::Duration::from_millis(150)).await;
+                }
+            }
+        }
+    }
+    Err(last_err.expect("bind loop ran at least once"))
 }
