@@ -16,6 +16,28 @@ pub struct GetEncounterPreviewArgs {
     pub filter: SearchFilter,
 }
 
+/// Sanitized cleared-encounter summary exposed by the read-only local API.
+/// Intentionally contains no damage, player breakdowns, or party details.
+#[derive(Debug, Clone)]
+pub struct MeterClear {
+    pub id: i64,
+    pub boss: String,
+    pub difficulty: Option<String>,
+    pub fight_start_ms: i64,
+    pub duration_ms: i64,
+    pub local_player: Option<String>,
+    pub upload_id: Option<String>,
+}
+
+/// Latest class/ilvl metadata the meter knows for a local character.
+#[derive(Debug, Clone)]
+pub struct MeterCharacter {
+    pub name: String,
+    pub class_id: i32,
+    pub class: Option<String>,
+    pub gear_score: f32,
+}
+
 #[derive(Debug, Clone)]
 pub struct InsertEncounterArgs {
     pub encounter: Encounter,

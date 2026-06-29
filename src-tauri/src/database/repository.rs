@@ -174,6 +174,58 @@ impl Repository {
         Ok(characters)
     }
 
+    /// Read-only: sanitized cleared-encounter summaries within a time window for
+    /// the local HTTP API. Contains no damage/player/party data.
+    pub fn get_cleared_encounters_in_range(
+        &self,
+        since_ms: i64,
+        until_ms: i64,
+    ) -> Result<Vec<MeterClear>> {
+        let connection = self.0.get()?;
+        let mut statement = connection.prepare_cached(SELECT_CLEARED_ENCOUNTERS_IN_RANGE)?;
+
+        let rows = statement.query_map(params![since_ms, until_ms], |row| {
+            Result::Ok(MeterClear {
+                id: row.get(0)?,
+                boss: row.get::<_, Option<String>>(1)?.unwrap_or_default(),
+                difficulty: row.get(2)?,
+                fight_start_ms: row.get::<_, Option<i64>>(3)?.unwrap_or(0),
+                duration_ms: row.get::<_, Option<i64>>(4)?.unwrap_or(0),
+                local_player: row.get(5)?,
+                upload_id: row.get(6)?,
+            })
+        })?;
+
+        let clears = rows.collect::<std::result::Result<Vec<_>, _>>()?;
+        Ok(clears)
+    }
+
+    /// Read-only: latest class/ilvl metadata per local character. When `names` is
+    /// non-empty, only those names (case-insensitive) are returned.
+    pub fn get_meter_characters(&self, names: &[String]) -> Result<Vec<MeterCharacter>> {
+        let connection = self.0.get()?;
+        let mut statement = connection.prepare_cached(SELECT_METER_CHARACTERS)?;
+
+        let rows = statement.query_map([], |row| {
+            Result::Ok(MeterCharacter {
+                name: row.get::<_, Option<String>>(0)?.unwrap_or_default(),
+                class_id: row.get::<_, Option<i32>>(1)?.unwrap_or(0),
+                class: row.get(2)?,
+                gear_score: row.get::<_, Option<f32>>(3)?.unwrap_or(0.0),
+            })
+        })?;
+
+        let mut characters = rows.collect::<std::result::Result<Vec<_>, _>>()?;
+
+        if !names.is_empty() {
+            let wanted: std::collections::HashSet<String> =
+                names.iter().map(|n| n.to_lowercase()).collect();
+            characters.retain(|c| wanted.contains(&c.name.to_lowercase()));
+        }
+
+        Ok(characters)
+    }
+
     pub fn delete_all_uncleared_encounters(&self, keep_favorites: bool) -> Result<()> {
         let connection = self.0.get()?;
 

@@ -67,6 +67,39 @@ WHERE le.gear_score > 0
 GROUP BY e.local_player
 ORDER BY max_gs DESC";
 
+/// Read-only: cleared encounters within a time window, joined to their upstream
+/// (lostark.bible) upload id if one exists. Used by the local HTTP API.
+pub const SELECT_CLEARED_ENCOUNTERS_IN_RANGE: &str = r"
+SELECT
+    e.id,
+    e.current_boss,
+    e.difficulty,
+    e.fight_start,
+    e.duration,
+    e.local_player,
+    s.upstream_id
+FROM encounter_preview e
+LEFT JOIN sync_logs s ON s.encounter_id = e.id AND s.failed = 0
+WHERE e.cleared = 1
+  AND e.fight_start >= ?1
+  AND e.fight_start <= ?2
+ORDER BY e.fight_start ASC";
+
+/// Read-only: latest class/ilvl per local character. SQLite returns the bare
+/// columns (class_id, class) from the row holding MAX(gear_score).
+pub const SELECT_METER_CHARACTERS: &str = r"
+SELECT
+    e.local_player,
+    le.class_id,
+    le.class,
+    MAX(le.gear_score) AS max_gs
+FROM encounter_preview e
+JOIN entity le ON le.encounter_id = e.id AND le.name = e.local_player
+WHERE le.gear_score > 0
+  AND e.local_player IS NOT NULL
+GROUP BY e.local_player
+ORDER BY max_gs DESC";
+
 pub const INSERT_ENCOUNTER: &str = r"
 INSERT INTO encounter
 (

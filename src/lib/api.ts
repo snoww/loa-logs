@@ -49,6 +49,14 @@ export const saveSettings = (settings: AppSettings): Promise<void> => invoke("sa
 
 export const getSettings = (): Promise<AppSettings> => invoke("get_settings");
 
+export interface LocalApiStatus {
+  running: boolean;
+  port: number | null;
+  error: string | null;
+}
+
+export const getLocalApiStatus = (): Promise<LocalApiStatus> => invoke("get_local_api_status");
+
 export const getDbInfo = (minDuration: number): Promise<EncounterDbInfo> => invoke("get_db_info", { minDuration });
 
 export const openDbPath = (): Promise<void> => invoke("open_db_path");

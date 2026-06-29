@@ -334,6 +334,17 @@ export const defaultSettings: AppSettings = {
   },
   buffs: {
     default: true
+  },
+  localApi: {
+    enabled: false,
+    port: 6041,
+    token: "",
+    allowedOrigins: [
+      "https://neria.dev",
+      "https://dev-neria.niome.dev",
+      "http://localhost:5173",
+      "http://127.0.0.1:5173"
+    ]
   }
 };
 

@@ -12,6 +12,7 @@ mod handlers;
 #[cfg(feature = "meter-core")]
 mod live;
 mod local;
+mod local_api;
 mod misc;
 mod models;
 mod nineveh;
@@ -27,11 +28,13 @@ use crate::context::AppContext;
 use crate::data::AssetPreloader;
 use crate::database::Database;
 use crate::handlers::generate_handlers;
+use crate::local_api::LocalApiManager;
 use crate::misc::load_windivert;
 use crate::settings::SettingsManager;
 use crate::setup::setup;
 use crate::ui::on_window_event;
 use anyhow::Result;
+use std::sync::Arc;
 use tauri::async_runtime;
 use tokio::runtime::Handle;
 
@@ -52,6 +55,8 @@ async fn main() -> Result<()> {
     let database = Database::new(context.database_path.clone(), &context.version)
         .expect("error setting up database: {}");
     let repository = database.create_repository();
+    let local_api_manager =
+        LocalApiManager::new(Arc::new(database.create_repository()), context.version.clone());
     let auto_launch_manager = AutoLaunchManager::new(&package_info.name, &context.app_path);
 
     let handle = Handle::current();
@@ -63,6 +68,7 @@ async fn main() -> Result<()> {
         .manage(database)
         .manage(repository)
         .manage(settings_manager)
+        .manage(local_api_manager)
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
