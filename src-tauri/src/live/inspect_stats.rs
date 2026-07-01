@@ -283,7 +283,7 @@ fn apply_item(
         }
 
         if item_data.b_0 == 7
-            && let Some(gem_bytes) = item_data.bytearraylist_2.as_deref()
+            && let Some(gem_bytes) = item_data.bytearraylist_3.as_deref()
         {
             item_debug.gem_line_count = split_fixed_chunks(gem_bytes, 9).count();
             if let Some(gem_layout) = resolve_gem_layout_once(gem_bytes) {
@@ -851,12 +851,12 @@ fn parse_ark_passive_addon(bytes: &[u8]) -> ParsedItemAddon {
         "invalid ark passive addon byte length: {}",
         bytes.len()
     );
-    let _item_grade_option_id = read_u32(bytes, 26);
-    let addon_type = bytes[13];
-    let _min_value = read_i32(bytes, 5) as i64;
-    let original_stat = read_u32(bytes, 22);
-    let _max_value = read_i32(bytes, 14) as i64;
-    let mut value = read_i32(bytes, 9) as i64;
+    let _item_grade_option_id = read_u32(bytes, 22);
+    let addon_type = bytes[1];
+    let _min_value = read_i32(bytes, 6) as i64;
+    let original_stat = read_u32(bytes, 26);
+    let _max_value = read_i32(bytes, 18) as i64;
+    let mut value = read_i32(bytes, 10) as i64;
     let mut stat_type = original_stat;
 
     match AddonType::from_raw(addon_type) {
@@ -909,10 +909,10 @@ fn parse_bracer_addon(bytes: &[u8]) -> ParsedItemAddon {
         "invalid bracer addon byte length: {}",
         bytes.len()
     );
-    let addon_type = bytes[13];
+    let addon_type = bytes[0];
     let _min_value = read_i32(bytes, 5) as i64;
-    let original_stat = read_u32(bytes, 22);
-    let _max_value = read_i32(bytes, 14) as i64;
+    let original_stat = read_u32(bytes, 25);
+    let _max_value = read_i32(bytes, 17) as i64;
     let value = read_i32(bytes, 9) as i64;
     let mut stat_type = original_stat;
 
@@ -943,7 +943,7 @@ fn parse_quality_addon(bytes: &[u8]) -> ParsedItemAddon {
         "invalid quality addon byte length: {}",
         bytes.len()
     );
-    let addon_type = bytes[12];
+    let addon_type = bytes[0];
     assert!(
         AddonType::from_raw(addon_type) == Some(AddonType::STAT),
         "unhandled quality addon type: {addon_type}"
@@ -951,9 +951,9 @@ fn parse_quality_addon(bytes: &[u8]) -> ParsedItemAddon {
 
     ParsedItemAddon {
         addon_type,
-        stat_type: read_u32(bytes, 21),
-        original_stat: read_u32(bytes, 21),
-        value: read_i32(bytes, 8) as i64,
+        stat_type: read_u32(bytes, 25),
+        original_stat: read_u32(bytes, 25),
+        value: read_i32(bytes, 9) as i64,
     }
 }
 
