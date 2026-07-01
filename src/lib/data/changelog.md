@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.46.0 - June 14th, 2026
+    v1.47.0 - July 1st, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -20,8 +20,3 @@
 #### NEW FEATURES
 
 - updated meter for weekly patch
-
-#### BUG FIXES AND IMPROVEMENTS
-
-- minor improvements to performance
-- add more logging for packet timeouts
