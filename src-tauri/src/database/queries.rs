@@ -67,6 +67,37 @@ WHERE le.gear_score > 0
 GROUP BY e.local_player
 ORDER BY max_gs DESC";
 
+pub const SELECT_CLEARED_ENCOUNTERS_IN_RANGE: &str = r"
+SELECT
+    e.id,
+    e.current_boss,
+    e.difficulty,
+    json_extract(en.misc, '$.ntpFightStart') AS ntp_fight_start,
+    e.duration,
+    e.local_player,
+    s.upstream_id
+FROM encounter_preview e
+JOIN encounter en ON en.id = e.id
+LEFT JOIN sync_logs s ON s.encounter_id = e.id AND s.failed = 0
+WHERE e.cleared = 1
+  AND json_extract(en.misc, '$.ntpFightStart') IS NOT NULL
+  AND json_extract(en.misc, '$.ntpFightStart') >= ?1
+  AND json_extract(en.misc, '$.ntpFightStart') <= ?2
+ORDER BY ntp_fight_start ASC";
+
+pub const SELECT_METER_CHARACTERS: &str = r"
+SELECT
+    e.local_player,
+    le.class_id,
+    le.class,
+    MAX(le.gear_score) AS max_gs
+FROM encounter_preview e
+JOIN entity le ON le.encounter_id = e.id AND le.name = e.local_player
+WHERE le.gear_score > 0
+  AND e.local_player IS NOT NULL
+GROUP BY e.local_player
+ORDER BY max_gs DESC";
+
 pub const INSERT_ENCOUNTER: &str = r"
 INSERT INTO encounter
 (

@@ -19,6 +19,7 @@
   import Header from "../Header.svelte";
   import ClassColors from "./ClassColors.svelte";
   import DatabaseInfo from "./DatabaseInfo.svelte";
+  import LocalApi from "./LocalApi.svelte";
   import Shortcuts from "./Shortcuts.svelte";
 
   let currentTab = $state("General");
@@ -238,6 +239,7 @@
       {@render settingsTab("Colors")}
       {@render settingsTab("Shortcuts")}
       {@render settingsTab("Database")}
+      {@render settingsTab("Local API")}
     </div>
     <div class="flex flex-col gap-2 px-4 py-2">
       {#if currentTab === "General"}
@@ -1051,6 +1053,8 @@
         <ClassColors />
       {:else if currentTab === "Shortcuts"}
         <Shortcuts />
+      {:else if currentTab === "Local API"}
+        <LocalApi />
       {/if}
     </div>
   </div>

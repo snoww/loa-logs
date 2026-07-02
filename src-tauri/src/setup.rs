@@ -34,6 +34,10 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
 
     initialize_windows_and_settings(app_handle, settings.as_ref(), &shell_manger);
 
+    app_handle
+        .state::<crate::local_api::LocalApiManager>()
+        .reconcile(settings.as_ref());
+
     app_handle.manage(shell_manger);
 
     info!("starting app v{}", context.version);

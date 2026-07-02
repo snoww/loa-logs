@@ -334,6 +334,12 @@ export const defaultSettings: AppSettings = {
   },
   buffs: {
     default: true
+  },
+  localApi: {
+    enabled: false,
+    port: 16724,
+    token: "",
+    allowedOrigins: []
   }
 };
 
