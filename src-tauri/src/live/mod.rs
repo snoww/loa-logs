@@ -176,6 +176,7 @@ pub fn start(args: StartArgs) -> Result<()> {
 
         // always unconditionally forward, but let the damage handler process first
         if packet_id != 0 {
+            let action_start = Instant::now();
             let action = match damage_handler.process_packet(&packet) {
                 PacketProcessResult::ForwardOriginal => PacketAction::Send(packet.clone()),
                 PacketProcessResult::ForwardModified(packet) => PacketAction::Send(packet),
@@ -186,6 +187,11 @@ pub fn start(args: StartArgs) -> Result<()> {
                 packet_id,
                 action,
             });
+            exceed_process_duration(
+                packet.header.opcode,
+                "ipc_packet_action",
+                action_start.elapsed(),
+            );
         }
 
         let inspect_start = Instant::now();
