@@ -1,6 +1,5 @@
 import { fetch } from "@tauri-apps/plugin-http";
 import { addToast } from "$lib/components/Toaster.svelte";
-import { raidGates } from "$lib/constants/encounters";
 import { settings } from "$lib/stores.svelte";
 import { type Encounter, EntityType } from "$lib/types";
 import pako from "pako";
@@ -10,7 +9,53 @@ import { sync, writeLog } from "$lib/api";
 export const API_URL = "https://api.snow.xyz";
 // export const API_URL = "http://localhost:5180";
 
-export async function uploadLog(id: number | string, encounter: Encounter, showToast = true, bulk = false) {
+type SupportedBosses = Record<string, string[]>;
+
+let supportedBossesCache: SupportedBosses | undefined;
+let supportedBossesFetch: Promise<SupportedBosses> | undefined;
+
+async function getSupportedBosses(forceRefresh = false) {
+  if (forceRefresh) {
+    supportedBossesCache = undefined;
+    supportedBossesFetch = undefined;
+  }
+
+  if (supportedBossesCache) {
+    return supportedBossesCache;
+  }
+
+  supportedBossesFetch ??= (async () => {
+    const resp = await fetch(API_URL + "/logs/upload/bosses");
+    if (!resp.ok) {
+      throw new Error(`could not fetch supported bosses list ${resp.status}`);
+    }
+
+    const body: SupportedBosses = await resp.json();
+    supportedBossesCache = body;
+    return body;
+  })().finally(() => {
+    supportedBossesFetch = undefined;
+  });
+
+  return supportedBossesFetch;
+}
+
+function supportedBosses(encounter: Encounter, bosses: SupportedBosses) {
+  if (!encounter.difficulty) {
+    return false;
+  }
+
+  const difficulties = bosses[encounter.currentBossName];
+  return !!difficulties && (difficulties.length === 0 || difficulties.includes(encounter.difficulty));
+}
+
+export async function uploadLog(
+  id: number | string,
+  encounter: Encounter,
+  showToast = true,
+  bulk = false,
+  refreshSupportedBosses = false
+) {
   if (!encounter.bossOnlyDamage) {
     if (showToast && !bulk) {
       addToast(uploadError("Boss only damage not enabled for this log", id));
@@ -23,14 +68,26 @@ export async function uploadLog(id: number | string, encounter: Encounter, showT
     !encounter.cleared ||
     !encounter.difficulty ||
     encounter.difficulty === "Solo" ||
-    Object.values(encounter.entities).filter((e) => e.entityType === EntityType.PLAYER).length > 8 ||
-    !Object.hasOwn(raidGates, encounter.currentBossName)
+    Object.values(encounter.entities).filter((e) => e.entityType === EntityType.PLAYER).length > 8
   ) {
     if (showToast && !bulk) {
       addToast(uploadError("Log not supported for upload", id));
     }
 
     return;
+  }
+
+  try {
+    const supportedBossesList = await getSupportedBosses(refreshSupportedBosses);
+    if (!supportedBosses(encounter, supportedBossesList)) {
+      if (showToast && !bulk) {
+        addToast(uploadError("Boss not supported for upload", id));
+      }
+
+      return;
+    }
+  } catch {
+    await writeLog("failed to check upload support");
   }
 
   const jsonString = JSON.stringify(encounter);

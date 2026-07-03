@@ -52,7 +52,7 @@
       for (let i = 0; i < ids.length; i++) {
         let id = ids[i];
         const encounter = await loadEncounter(id.toString());
-        let upstream = await uploadLog(id, encounter, true, true);
+        let upstream = await uploadLog(id, encounter, true, true, force && i === 0);
         if (upstream) {
           syncProgress.uploaded++;
           addToast(uploadSuccess);

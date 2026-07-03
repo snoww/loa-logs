@@ -20,17 +20,17 @@
   async function forceReupload() {
     showReupload = false;
     sync = undefined;
-    await upload();
+    await upload(true);
   }
 
-  async function upload() {
+  async function upload(refreshSupportedBosses = false) {
     if (!settings.sync.validToken) {
       addToast(uploadTokenError);
       return;
     }
     uploading = true;
     try {
-      sync = await uploadLog(id, encounter);
+      sync = await uploadLog(id, encounter, true, false, refreshSupportedBosses);
       if (sync) {
         addToast(uploadSuccess);
       }
