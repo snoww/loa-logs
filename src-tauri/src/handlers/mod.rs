@@ -10,6 +10,7 @@ use crate::app::autostart::{AutoLaunch, AutoLaunchManager};
 use crate::constants::*;
 use crate::database::models::{GetEncounterPreviewArgs, InsertSyncLogsArgs};
 use crate::database::{Database, Repository};
+use crate::local_api::{LocalApiManager, LocalApiStatus};
 use crate::models::*;
 use crate::settings::{Settings, SettingsManager};
 use crate::shell::ShellManager;
@@ -59,6 +60,8 @@ pub fn generate_handlers() -> Box<dyn Fn(Invoke) -> bool + Send + Sync> {
         install_beta_update,
         install_stable_update,
         get_local_characters,
+        get_local_api_status,
+        restart_local_api,
     ])
 }
 
@@ -228,6 +231,21 @@ pub fn save_settings(settings_manager: State<SettingsManager>, settings: Setting
         .context("could not write to settings file")?;
 
     Ok(())
+}
+
+#[command]
+pub fn get_local_api_status(local_api: State<LocalApiManager>) -> LocalApiStatus {
+    local_api.status()
+}
+
+#[command]
+pub fn restart_local_api(
+    settings_manager: State<SettingsManager>,
+    local_api: State<LocalApiManager>,
+) -> LocalApiStatus {
+    let settings = settings_manager.read().ok().flatten();
+    local_api.reconcile(settings.as_ref());
+    local_api.status()
 }
 
 #[command]

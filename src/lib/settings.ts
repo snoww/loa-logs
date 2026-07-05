@@ -127,6 +127,13 @@ export interface BuffSettings {
   default: boolean;
 }
 
+export interface LocalApiSettings {
+  enabled: boolean;
+  port: number;
+  token: string;
+  allowedOrigins: string[];
+}
+
 export interface AppSettings {
   general: GeneralSettings;
   shortcuts: Shortcuts;
@@ -134,4 +141,5 @@ export interface AppSettings {
   logs: LogsSettings;
   mini: MiniSettings;
   buffs: BuffSettings;
+  localApi: LocalApiSettings;
 }
