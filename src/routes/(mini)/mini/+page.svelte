@@ -96,7 +96,9 @@
 
   $effect(() => {
     let hideTimeout: ReturnType<typeof setTimeout> | undefined;
-    if (settings.app.general.autoShow && settings.app.general.mini) {
+    if (settings.app.general.mini && settings.app.general.miniEdit) {
+      getCurrentWebviewWindow().show();
+    } else if (settings.app.general.autoShow && settings.app.general.mini) {
       const appWindow = getCurrentWebviewWindow();
       if (misc.raidInProgress && enc.encounter?.currentBossName) {
         appWindow.show();

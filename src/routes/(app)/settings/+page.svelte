@@ -58,6 +58,7 @@
 
   $effect(() => {
     let isMini = settings.app.general.mini;
+    settings.app.general.miniEdit;
     (async () => {
       await setMeterMode(isMini);
     })();
