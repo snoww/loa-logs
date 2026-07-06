@@ -49,9 +49,13 @@ pub fn on_tray_icon_event(tray: &TrayIcon, event: TrayIconEvent) {
         } = event
         {
             let app_handle = tray.app_handle();
-            if let Some(meter) = app_handle.get_meter_window() {
-                meter.restore_and_focus();
-            }
+            let settings_manager = app_handle.state::<SettingsManager>();
+            let settings = settings_manager
+                .read()
+                .unwrap_or_default()
+                .unwrap_or_default();
+            let window = app_handle.get_window(settings.general.mini);
+            window.restore_and_focus();
         }
     }
 }

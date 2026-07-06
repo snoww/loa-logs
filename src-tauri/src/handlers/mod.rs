@@ -28,6 +28,7 @@ pub fn generate_handlers() -> Box<dyn Fn(Invoke) -> bool + Send + Sync> {
         delete_encounter,
         delete_encounters,
         toggle_meter_window,
+        set_meter_mode,
         toggle_logs_window,
         open_url,
         save_settings,
@@ -197,6 +198,23 @@ pub fn toggle_meter_window(app: AppHandle, settings_manager: State<SettingsManag
         } else {
             meter.show().unwrap();
         }
+    }
+
+    Ok(())
+}
+
+#[command]
+pub fn set_meter_mode(app_handle: AppHandle, mini: bool) -> Result<()> {
+    if mini {
+        if let Some(meter_window) = app_handle.get_meter_window() {
+            meter_window.hide()?;
+        }
+
+        if let Some(mini_window) = app_handle.get_mini_window() {
+            mini_window.show()?;
+        }
+    } else if let Some(mini_window) = app_handle.get_mini_window() {
+        mini_window.hide()?;
     }
 
     Ok(())

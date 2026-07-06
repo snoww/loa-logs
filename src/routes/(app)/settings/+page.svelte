@@ -5,6 +5,7 @@
     setAlwaysOnTop,
     setBlur,
     setBossOnlyDamage,
+    setMeterMode,
     setStartOnBoot,
     stopNineveh
   } from "$lib/api";
@@ -12,7 +13,6 @@
   import { settings } from "$lib/stores.svelte";
   import { networkSettingsChanged } from "$lib/utils/toasts";
   import { createDialog, createRadioGroup, createSlider, melt } from "@melt-ui/svelte";
-  import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
   import { fade } from "svelte/transition";
@@ -59,14 +59,7 @@
   $effect(() => {
     let isMini = settings.app.general.mini;
     (async () => {
-      const mini = await WebviewWindow.getByLabel("mini");
-      const main = await WebviewWindow.getByLabel("main");
-      if (isMini) {
-        main?.hide();
-        mini?.show();
-      } else {
-        mini?.hide();
-      }
+      await setMeterMode(isMini);
     })();
   });
 

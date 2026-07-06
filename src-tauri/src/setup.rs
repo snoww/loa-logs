@@ -189,9 +189,11 @@ fn initialize_windows_and_settings(
     if let Some(settings) = settings {
         info!("settings loaded");
         if settings.general.mini {
+            meter_window.hide().unwrap();
             mini_window.restore_default_state();
             mini_window.show().unwrap();
         } else if !settings.general.hide_meter_on_start && !settings.general.mini {
+            mini_window.hide().unwrap();
             meter_window.restore_default_state();
             meter_window.show().unwrap();
         } else {
@@ -223,6 +225,7 @@ fn initialize_windows_and_settings(
             shell_manger.start_loa_process();
         }
     } else {
+        mini_window.hide().unwrap();
         meter_window.show().unwrap();
         logs_window.show().unwrap();
     }

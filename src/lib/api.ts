@@ -35,6 +35,8 @@ export const toggleWindow = (window: Window): Promise<void> => {
   return invoke("toggle_meter_window");
 };
 
+export const setMeterMode = (mini: boolean): Promise<void> => invoke("set_meter_mode", { mini });
+
 export const openMostRecentEncounter = (): Promise<void> => invoke("open_most_recent_encounter");
 
 export const checkStartOnBoot = (): Promise<boolean> => invoke("check_start_on_boot");

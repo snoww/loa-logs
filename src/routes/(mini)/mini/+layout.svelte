@@ -32,7 +32,6 @@
   class="flex h-screen w-full flex-col gap-2 overflow-hidden select-none {settings.app.general.miniEdit
     ? 'rounded border-2 border-red-500 '
     : ''}"
-  class:hidden={!settings.app.general.mini}
 >
   {@render children?.()}
 </div>
