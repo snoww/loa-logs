@@ -23,7 +23,7 @@
 {#snippet shieldTab(selectedTab: ShieldTab, tabName: string, tooltip: string)}
   <QuickTooltip {tooltip}>
     <button
-      class="text-nowrap rounded-lg px-2 py-1 transition {tab === selectedTab
+      class="rounded-lg px-2 py-1 text-nowrap transition {tab === selectedTab
         ? 'bg-accent-500/80'
         : 'hover:bg-neutral-800/40'}"
       onclick={() => {
@@ -50,7 +50,7 @@
           <thead class="z-40 h-6" id="buff-head">
             <tr class="bg-neutral-900">
               {#if buffs.shieldParties.length > 1}
-                <th class="w-7 whitespace-nowrap px-2 font-normal tracking-tight">Party {+partyId + 1}</th>
+                <th class="w-7 px-2 font-normal tracking-tight whitespace-nowrap">Party {+partyId + 1}</th>
               {:else}
                 <th class="w-7 px-2 font-normal"></th>
               {/if}

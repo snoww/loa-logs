@@ -11,7 +11,7 @@
 
 <div
   bind:this={self}
-  class="rounded-xs flex flex-col divide-y divide-neutral-950/80 bg-neutral-800 shadow-sm shadow-neutral-800 {extraClass}"
+  class="flex flex-col divide-y divide-neutral-950/80 rounded-xs bg-neutral-800 shadow-sm shadow-neutral-800 {extraClass}"
   {style}
 >
   {@render children()}

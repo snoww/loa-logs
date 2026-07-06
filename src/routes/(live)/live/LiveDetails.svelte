@@ -49,7 +49,7 @@
     >
   </div>
   <div>
-    <div class="relative grid select-text grid-cols-[6rem_6rem_6rem_6rem] gap-x-2 py-1">
+    <div class="relative grid grid-cols-[6rem_6rem_6rem_6rem] gap-x-2 py-1 select-text">
       <b>Timestamp</b>
       <b class="text-right">Gauge 1</b>
       <b class="text-right">Gauge 2</b>
@@ -59,7 +59,7 @@
 
   {#if startTime}
     <div class="overflow-y-auto" style="height: calc(100% - 1.5rem - 1.5rem );">
-      <div class="grid select-text grid-cols-[6rem_6rem_6rem_6rem] gap-x-2 gap-y-1">
+      <div class="grid grid-cols-[6rem_6rem_6rem_6rem] gap-x-2 gap-y-1 select-text">
         {#each { length: identityEvents.length } as _, i}
           {@const event = identityEvents[identityEvents.length - 1 - i]}
           <p class="font-mono">+{customRound((event.timestamp - startTime) / 1000, 2)}s</p>

@@ -47,7 +47,9 @@
     </div>
     {#if emperorProcRate !== null}
       <div class="flex">
-        <QuickTooltip tooltip="Estimate based on total Emperor hits on the boss. May be inaccurate if fighting multiple bosses or if Emperor hits were missed.">
+        <QuickTooltip
+          tooltip="Estimate based on total Emperor hits on the boss. May be inaccurate if fighting multiple bosses or if Emperor hits were missed."
+        >
           Emperor proc rate: <span class="font-semibold">{emperorProcRate.toFixed(1)}%</span>
         </QuickTooltip>
       </div>
@@ -63,7 +65,7 @@
     </thead>
     <tbody class="relative z-10">
       {#each cards as card, i}
-        <tr class="text-xxs h-6 px-2 py-1 {settings.app.general.underlineHovered ? 'hover:underline' : ''}">
+        <tr class="h-6 px-2 py-1 text-xxs {settings.app.general.underlineHovered ? 'hover:underline' : ''}">
           <td class="px-1">
             <div class="flex items-center space-x-1">
               <img class="size-5" src={getSkillIcon(card.icon)} alt={card.name} />

@@ -252,9 +252,7 @@ export class EncounterState {
 
       // Step 4: Extrapolate: how much brand bDMG was hidden in identity udpsContributed?
       // identityBrandBDmg = regularBrandBDmg * (identityBrandWindowDmg / regularBrandWindowDmg)
-      const identityBrandBDmg = Math.round(
-        regularBrandBDmg * (identityBrandWindowDmg / regularBrandWindowDmg)
-      );
+      const identityBrandBDmg = Math.round(regularBrandBDmg * (identityBrandWindowDmg / regularBrandWindowDmg));
       if (identityBrandBDmg <= 0) continue;
 
       // Step 5: Identify which of this support's skills are identity skills by matching

@@ -55,7 +55,7 @@
     transition:fade={{ duration: 100 }}
     class="z-50 rounded-md border border-neutral-700 bg-neutral-800 p-0 shadow-xl"
   >
-    <div use:melt={$arrow} class="rounded-tl border-l border-t border-neutral-700"></div>
+    <div use:melt={$arrow} class="rounded-tl border-t border-l border-neutral-700"></div>
     <p class="px-2 py-1 text-sm text-neutral-100">
       {#if typeof tooltip === "string"}
         {tooltip}

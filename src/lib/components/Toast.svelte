@@ -43,7 +43,7 @@
         {data.description}
       </div>
     </div>
-    <button use:melt={$close(id)} class="group absolute right-2 top-1.5 grid size-6 place-items-center">
+    <button use:melt={$close(id)} class="group absolute top-1.5 right-2 grid size-6 place-items-center">
       <IconX class="size-4 group-hover:opacity-70" />
     </button>
   </div>

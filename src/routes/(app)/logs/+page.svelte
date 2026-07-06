@@ -94,7 +94,7 @@
 <div>
   <Header title="Past Encounters">
     <button
-      class="bg-accent-500/70 hover:bg-accent-500/60 rounded-md p-1"
+      class="rounded-md bg-accent-500/70 p-1 hover:bg-accent-500/60"
       onclick={() => {
         refresh = !refresh;
         encounterFilter.page = 1;
@@ -107,7 +107,7 @@
     <div class="flex flex-col gap-1">
       <Search bind:selectMode bind:selected bind:refresh />
       <div
-        class="overflow-y-auto overflow-x-hidden rounded-md border border-neutral-700/70"
+        class="overflow-x-hidden overflow-y-auto rounded-md border border-neutral-700/70"
         style="max-height: calc(100vh - 10.5rem);"
         bind:this={container}
       >

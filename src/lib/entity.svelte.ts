@@ -275,8 +275,7 @@ export class EntityState {
 
   private skillSortValue(skill: Skill): number {
     if (this.skillSort === "stagger") return skill.stagger ?? 0;
-    if (this.skillSort === "buffed" && this.isSupport)
-      return sumUdpsContributed(skill, [1, 3, 5]);
+    if (this.skillSort === "buffed" && this.isSupport) return sumUdpsContributed(skill, [1, 3, 5]);
     return skill.totalDamage;
   }
 

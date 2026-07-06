@@ -29,7 +29,7 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
   oncontextmenu={(e) => e.preventDefault()}
-  class="flex h-screen w-full select-none flex-col gap-2 overflow-hidden {settings.app.general.miniEdit
+  class="flex h-screen w-full flex-col gap-2 overflow-hidden select-none {settings.app.general.miniEdit
     ? 'rounded border-2 border-red-500 '
     : ''}"
   class:hidden={!settings.app.general.mini}

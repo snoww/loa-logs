@@ -77,7 +77,7 @@
   <input
     type="checkbox"
     bind:checked={settings.app.general.keepFavorites}
-    class="form-checkbox checked:text-accent-600 size-5 rounded-sm border-0 bg-neutral-700 focus:ring-0"
+    class="form-checkbox size-5 rounded-sm border-0 bg-neutral-700 checked:text-accent-600 focus:ring-0"
   />
   <div class="ml-5">
     <div>Keep Favorites</div>
@@ -186,7 +186,7 @@
   <div use:melt={$portalled}>
     <div use:melt={$overlay} class="fixed inset-0 z-50 bg-black/50" transition:fade={{ duration: 150 }}></div>
     <div
-      class="fixed left-1/2 top-1/2 z-50 max-h-[85vh] w-[90vw] max-w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-neutral-800 p-4 shadow-lg
+      class="fixed top-1/2 left-1/2 z-50 max-h-[85vh] w-[90vw] max-w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-neutral-800 p-4 shadow-lg
       {settings.app.general.accentColor} flex flex-col items-center gap-4 text-white"
       use:melt={$content}
     >

@@ -75,7 +75,7 @@
 
 {#snippet tab(tab: string)}
   <button
-    class="hover:text-accent-500 p-2 first:rounded-tl {currentTab === tab ? 'bg-neutral-800' : ''}"
+    class="p-2 first:rounded-tl hover:text-accent-500 {currentTab === tab ? 'bg-neutral-800' : ''}"
     onclick={() => (currentTab = tab)}
   >
     {tab}
@@ -84,7 +84,7 @@
 
 <div class="flex items-center justify-between py-1">
   <div class="relative flex items-center gap-2">
-    <button class="hover:text-accent-500 absolute left-2.5" use:melt={$trigger}>
+    <button class="absolute left-2.5 hover:text-accent-500" use:melt={$trigger}>
       <QuickTooltip tooltip="Filter encounters" placement="top">
         <IconFilter class={active ? "text-accent-500" : ""} />
       </QuickTooltip>
@@ -93,7 +93,7 @@
       type="text"
       maxlength="128"
       bind:value={search}
-      class="focus:border-accent-500 block w-96 rounded-lg border border-neutral-600 bg-neutral-800 px-8 text-sm text-neutral-300 placeholder-neutral-500 focus:ring-0"
+      class="block w-96 rounded-lg border border-neutral-600 bg-neutral-800 px-8 text-sm text-neutral-300 placeholder-neutral-500 focus:border-accent-500 focus:ring-0"
       placeholder="Search encounters, names, or class:name pairs"
       oninput={handleSearchInput}
     />
@@ -146,7 +146,7 @@
         {@render tab("Characters")}
       </div>
       <button
-        class="hover:text-accent-500 px-2 {active ? 'text-accent-500' : ''}"
+        class="px-2 hover:text-accent-500 {active ? 'text-accent-500' : ''}"
         onclick={() => {
           search = "";
           encounterFilter.reset();
@@ -156,14 +156,14 @@
       </button>
     </div>
     {#if currentTab === "Encounters"}
-      <div class="flex flex-col gap-1 overflow-y-auto overflow-x-hidden py-1 text-xs">
+      <div class="flex flex-col gap-1 overflow-x-hidden overflow-y-auto py-1 text-xs">
         <div class="flex items-center space-x-4 px-3 py-1">
           <label class="flex items-center">
             <div class="mr-2">Raid Cleared</div>
             <input
               type="checkbox"
               bind:checked={encounterFilter.cleared}
-              class="form-checkbox checked:text-accent-500 size-4 rounded-sm bg-neutral-700 focus:ring-0 focus:ring-offset-0"
+              class="form-checkbox size-4 rounded-sm bg-neutral-700 checked:text-accent-500 focus:ring-0 focus:ring-offset-0"
             />
           </label>
           <label class="flex items-center">
@@ -171,7 +171,7 @@
             <input
               type="checkbox"
               bind:checked={encounterFilter.favorite}
-              class="form-checkbox checked:text-accent-500 size-4 rounded-sm bg-neutral-700 focus:ring-0 focus:ring-offset-0"
+              class="form-checkbox size-4 rounded-sm bg-neutral-700 checked:text-accent-500 focus:ring-0 focus:ring-offset-0"
             />
           </label>
         </div>
@@ -245,12 +245,12 @@
       <div class="flex flex-col gap-1 overflow-y-auto px-1 py-2 text-xs">
         {#each characters as character (character.name)}
           <button
-            class="flex items-center justify-between rounded border border-neutral-700 px-2 py-1 {encounterFilter.localPlayer === character.name
+            class="flex items-center justify-between rounded border border-neutral-700 px-2 py-1 {encounterFilter.localPlayer ===
+            character.name
               ? 'bg-neutral-700'
               : 'bg-neutral-800/80 hover:bg-neutral-700/80'}"
             onclick={() => {
-              encounterFilter.localPlayer =
-                encounterFilter.localPlayer === character.name ? "" : character.name;
+              encounterFilter.localPlayer = encounterFilter.localPlayer === character.name ? "" : character.name;
             }}
           >
             <span class="flex items-center gap-1">
@@ -276,7 +276,7 @@
   <div use:melt={$portalled}>
     <div use:melt={$overlay} class="fixed inset-0 z-50 bg-black/50" transition:fade={{ duration: 150 }}></div>
     <div
-      class="fixed left-1/2 top-1/2 z-50 max-h-[85vh] w-[90vw] max-w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-neutral-800 p-4 shadow-lg
+      class="fixed top-1/2 left-1/2 z-50 max-h-[85vh] w-[90vw] max-w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-neutral-800 p-4 shadow-lg
       {settings.app.general.accentColor} flex flex-col items-center gap-4 text-white"
       use:melt={$content}
     >

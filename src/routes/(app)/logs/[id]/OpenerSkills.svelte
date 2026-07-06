@@ -38,7 +38,7 @@
   <div class="flex flex-wrap items-center p-2">
     {#each openerSkills as skill, i (i)}
       <QuickTooltip tooltip={skill.name}>
-        <img class="rounded-xs m-1 h-10 w-10" src={getSkillIcon(skill.icon)} alt={skill.name} />
+        <img class="m-1 h-10 w-10 rounded-xs" src={getSkillIcon(skill.icon)} alt={skill.name} />
       </QuickTooltip>
       {#if i < openerSkills.length - 1}
         <IconChevronRight class="mx-2 size-5 text-neutral-400" />

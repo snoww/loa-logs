@@ -22,17 +22,17 @@
 
 {#snippet toggle()}
   <div
-    class="peer-checked:bg-accent-500/80 peer-focus:outline-hidden peer h-5 w-9 rounded-full border-neutral-600 bg-neutral-800 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-neutral-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white"
+    class="peer h-5 w-9 rounded-full border-neutral-600 bg-neutral-800 peer-checked:bg-accent-500/80 peer-focus:outline-hidden after:absolute after:top-[2px] after:left-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-neutral-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white"
   ></div>
 {/snippet}
 
 <button
   use:melt={$trigger}
-  class="focus:outline-hidden border-l-1 flex flex-row items-center text-nowrap rounded-r-lg border-neutral-900/80 px-2 py-1 text-sm text-white transition {$open &&
+  class="flex flex-row items-center rounded-r-lg border-l-1 border-neutral-900/80 px-2 py-1 text-sm text-nowrap text-white transition focus:outline-hidden {$open &&
     'bg-accent-600/60'}"
 >
   Settings
-  <IconChevronDown class="ml-0.5 mt-0.5 size-4 transform transition-all duration-300 {$open ? '-rotate-180' : ''}" />
+  <IconChevronDown class="mt-0.5 ml-0.5 size-4 transform transition-all duration-300 {$open ? '-rotate-180' : ''}" />
 </button>
 
 {#if $open}
@@ -114,12 +114,12 @@
     <div use:melt={$separator} class="mt-1 h-px bg-neutral-600"></div>
     <button
       use:melt={$dialogTrigger}
-      class="hover:bg-accent-600/40 flex items-center gap-2 px-2 py-1 text-left text-sm transition"
+      class="flex items-center gap-2 px-2 py-1 text-left text-sm transition hover:bg-accent-600/40"
     >
       Delete Log
       <IconTrash />
     </button>
-    <a use:melt={$item} href="/settings" class="hover:bg-accent-600/40 rounded-b-md px-2 py-1 transition">
+    <a use:melt={$item} href="/settings" class="rounded-b-md px-2 py-1 transition hover:bg-accent-600/40">
       <span class="text-sm">All Settings</span>
     </a>
 
@@ -131,7 +131,7 @@
   <div use:melt={$portalled}>
     <div use:melt={$overlay} class="fixed inset-0 z-50 bg-black/50" transition:fade={{ duration: 150 }}></div>
     <div
-      class="fixed left-1/2 top-1/2 z-50 max-h-[85vh] w-[90vw] max-w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-neutral-800 p-4 shadow-lg
+      class="fixed top-1/2 left-1/2 z-50 max-h-[85vh] w-[90vw] max-w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-neutral-800 p-4 shadow-lg
       {settings.app.general.accentColor} flex flex-col items-center gap-4 text-white"
       use:melt={$content}
     >

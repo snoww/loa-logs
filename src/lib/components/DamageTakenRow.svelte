@@ -43,7 +43,7 @@
     </QuickTooltip>
   </div>
 </td>
-<td class="pl-1 pr-2 text-right">
+<td class="pr-2 pl-1 text-right">
   <QuickTooltip tooltip={player.damageStats.damageTaken.toLocaleString()}>
     {entityState.damageTakenString[0]}<span class="text-xxs text-gray-300">{entityState.damageTakenString[1]}</span>
   </QuickTooltip>

@@ -39,7 +39,7 @@
     } else if (keyName.startsWith("Numpad")) {
       keyName = keyName; // Keep as is for numpad keys
     }
-    
+
     // Don't add modifier keys as separate keys
     if (!["Control", "Alt", "Shift"].includes(e.key)) {
       const fullKey = [...modifiers, keyName].join("+");
@@ -110,7 +110,7 @@
   <div use:melt={$portalled}>
     <div use:melt={$overlay} class="fixed inset-0 z-50 bg-black/50" transition:fade={{ duration: 150 }}></div>
     <div
-      class="fixed left-1/2 top-1/2 z-50 max-h-[85vh] w-[90vw] max-w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-neutral-800 p-4 shadow-lg
+      class="fixed top-1/2 left-1/2 z-50 max-h-[85vh] w-[90vw] max-w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-neutral-800 p-4 shadow-lg
       {settings.app.general.accentColor} flex flex-col items-center gap-4 text-white"
       use:melt={$content}
     >
@@ -118,10 +118,10 @@
       <p use:melt={$description} class="min-w-40 rounded bg-neutral-900 px-4 text-center font-mono">
         {keys.length === 0 ? "listening..." : keys.join(" + ")}
       </p>
-      <div class="gap-30 flex items-center pt-5">
+      <div class="flex items-center gap-30 pt-5">
         <button
           use:melt={$close}
-          class="bg-accent-500/70 hover:bg-accent-500/60 rounded-md px-2 py-1"
+          class="rounded-md bg-accent-500/70 px-2 py-1 hover:bg-accent-500/60"
           onclick={() => {
             if (currentAction) {
               settings.app.shortcuts[currentAction as keyof typeof settings.app.shortcuts] = keys.join("+");

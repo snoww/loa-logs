@@ -13,7 +13,7 @@
     <label for="rowsPerPage">Rows per page:</label>
     <select
       id="rowsPerPage"
-      class="focus:border-accent-500 inline rounded-lg border border-neutral-700 bg-neutral-800 p-1 text-sm focus:ring-0"
+      class="inline rounded-lg border border-neutral-700 bg-neutral-800 p-1 text-sm focus:border-accent-500 focus:ring-0"
       onchange={(e) => {
         settings.app.general.logsPerPage = parseInt((e.target as HTMLSelectElement).value);
       }}
@@ -44,7 +44,7 @@
         page = 1;
       }}
     >
-      <IconChevronFirst class="hover:text-accent-500 size-5" />
+      <IconChevronFirst class="size-5 hover:text-accent-500" />
     </button>
     <button
       onclick={() => {
@@ -53,7 +53,7 @@
         }
       }}
     >
-      <IconChevronLeft class="hover:text-accent-500 size-5" />
+      <IconChevronLeft class="size-5 hover:text-accent-500" />
     </button>
     <button
       onclick={() => {
@@ -62,14 +62,14 @@
         }
       }}
     >
-      <IconChevronRight class="hover:text-accent-500 size-5" />
+      <IconChevronRight class="size-5 hover:text-accent-500" />
     </button>
     <button
       onclick={() => {
         page = Math.ceil((total || 0) / logsPerPage);
       }}
     >
-      <IconChevronLast class="hover:text-accent-500 size-5" />
+      <IconChevronLast class="size-5 hover:text-accent-500" />
     </button>
   </div>
 </div>

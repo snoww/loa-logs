@@ -7,7 +7,14 @@
   import MiniEncounterInfo from "./MiniEncounterInfo.svelte";
   import MiniPlayers from "./MiniPlayers.svelte";
   import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
-  import { ninevehStateRequest, onEncounterUpdate, onNinevehUpdate, onPhaseTransition, onRaidStart, onZoneChange } from "$lib/api";
+  import {
+    ninevehStateRequest,
+    onEncounterUpdate,
+    onNinevehUpdate,
+    onPhaseTransition,
+    onRaidStart,
+    onZoneChange
+  } from "$lib/api";
   import { zoneChange } from "$lib/utils/toasts";
 
   let enc = $derived(new EncounterState(undefined, true));

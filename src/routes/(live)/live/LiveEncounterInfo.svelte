@@ -95,21 +95,21 @@
         {#if minWidth.current}
           <button class="group" onclick={() => openMostRecentEncounter()}>
             <QuickTooltip tooltip="Open Recent Log">
-              <IconUndo class="group-hover:text-accent-500/80 size-5" />
+              <IconUndo class="size-5 group-hover:text-accent-500/80" />
             </QuickTooltip>
           </button>
         {/if}
         {#if showTwo.current}
           <button class="group" onclick={() => takeScreenshot(screenshotDiv)}>
             <QuickTooltip tooltip="Take Screenshot">
-              <IconCamera class="group-hover:text-accent-500/80 size-5" />
+              <IconCamera class="size-5 group-hover:text-accent-500/80" />
             </QuickTooltip>
           </button>
         {/if}
         {#if showThree.current}
           <button class="group" onclick={() => resetRequest()}>
             <QuickTooltip tooltip="Reset Session">
-              <IconRefresh class="group-hover:text-accent-500/80 size-4.5" />
+              <IconRefresh class="size-4.5 group-hover:text-accent-500/80" />
             </QuickTooltip>
           </button>
         {/if}
@@ -123,9 +123,9 @@
           >
             <QuickTooltip tooltip={misc.paused ? "Resume Session" : "Pause Session"}>
               {#if misc.paused}
-                <IconPlay class="group-hover:text-accent-500/80 text-accent-500/80 size-5 animate-pulse" />
+                <IconPlay class="size-5 animate-pulse text-accent-500/80 group-hover:text-accent-500/80" />
               {:else}
-                <IconPause class="group-hover:text-accent-500/80 size-5 opacity-80" />
+                <IconPause class="size-5 opacity-80 group-hover:text-accent-500/80" />
               {/if}
             </QuickTooltip>
           </button>
@@ -137,8 +137,8 @@
         <!-- dropdown menu trigger -->
         <button use:melt={$trigger} class="">
           <IconChevronDown
-            class="hover:text-accent-500/80 size-5 transform transition-all duration-300 {$open
-              ? 'text-accent-500/80 -rotate-180'
+            class="size-5 transform transition-all duration-300 hover:text-accent-500/80 {$open
+              ? '-rotate-180 text-accent-500/80'
               : ''}"
           />
         </button>
@@ -146,7 +146,7 @@
         <!-- minimize window -->
         <button class="group" onclick={() => appWindow.hide()}>
           <QuickTooltip tooltip="Minimize">
-            <IconMinus class="group-hover:text-accent-500/80 size-5" />
+            <IconMinus class="size-5 group-hover:text-accent-500/80" />
           </QuickTooltip>
         </button>
       </div>
@@ -170,7 +170,7 @@
         onclick={() => openMostRecentEncounter()}
       >
         <p class="group-hover:text-accent-500/80">Recent</p>
-        <IconUndo class="group-hover:text-accent-500/80 size-5" />
+        <IconUndo class="size-5 group-hover:text-accent-500/80" />
       </button>
     {/if}
     {#if !showTwo.current}
@@ -180,13 +180,13 @@
         onclick={() => takeScreenshot(screenshotDiv)}
       >
         <p class="group-hover:text-accent-500/80">Screenshot</p>
-        <IconCamera class="group-hover:text-accent-500/80 size-5" />
+        <IconCamera class="size-5 group-hover:text-accent-500/80" />
       </button>
     {/if}
     {#if !showThree.current}
       <button use:melt={$item} class="group flex items-center justify-between gap-2" onclick={() => resetRequest()}>
         <p class="group-hover:text-accent-500/80">Reset</p>
-        <IconRefresh class="group-hover:text-accent-500/80 size-5" />
+        <IconRefresh class="size-5 group-hover:text-accent-500/80" />
       </button>
     {/if}
     {#if !showFour.current}
@@ -200,9 +200,9 @@
       >
         <p class="group-hover:text-accent-500/80">{misc.paused ? "Resume" : "Pause"}</p>
         {#if misc.paused}
-          <IconPlay class="group-hover:text-accent-500/80 text-accent-500/80 size-5 animate-pulse" />
+          <IconPlay class="size-5 animate-pulse text-accent-500/80 group-hover:text-accent-500/80" />
         {:else}
-          <IconPause class="group-hover:text-accent-500/80 size-5 opacity-80" />
+          <IconPause class="size-5 opacity-80 group-hover:text-accent-500/80" />
         {/if}
       </button>
     {/if}
@@ -216,7 +216,7 @@
       }}
     >
       <p class="group-hover:text-accent-500/80">Save</p>
-      <IconSave class="group-hover:text-accent-500/80 size-5" />
+      <IconSave class="size-5 group-hover:text-accent-500/80" />
     </button>
     <QuickTooltip tooltip="click icon in system tray to disable" delay={300}>
       <button
@@ -225,12 +225,12 @@
         onclick={() => appWindow.setIgnoreCursorEvents(true)}
       >
         <p class="group-hover:text-accent-500/80">Clickthrough</p>
-        <IconPointer class="group-hover:text-accent-500/80 size-5" />
+        <IconPointer class="size-5 group-hover:text-accent-500/80" />
       </button>
     </QuickTooltip>
     <button use:melt={$item} class="group flex items-center justify-between gap-2" onclick={() => openUrl("settings")}>
       <p class="group-hover:text-accent-500/80">Settings</p>
-      <IconSettings class="group-hover:text-accent-500/80 size-5" />
+      <IconSettings class="size-5 group-hover:text-accent-500/80" />
     </button>
     <div use:melt={$arrow}></div>
   </div>
