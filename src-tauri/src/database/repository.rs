@@ -665,11 +665,14 @@ struct RaidProgressionRow {
     class_id: i32,
     class_name: String,
     spec: Option<String>,
+    player_damage_dealt: i64,
     dps: i64,
     rdps: Option<i64>,
     ndps: Option<i64>,
     player_damage_taken: i64,
     death_events: Vec<i64>,
+    rdps_damage_given: i64,
+    party_info: Option<HashMap<i32, Vec<String>>>,
     support_ap: Option<f32>,
     support_brand: Option<f32>,
     support_identity: Option<f32>,
@@ -708,6 +711,7 @@ struct RaidProgressionPlayerAggregate {
     damage_taken_values: Vec<i64>,
     total_deaths: i32,
     support_ap_values: Vec<f32>,
+    support_contribution_values: Vec<f32>,
     support_brand_values: Vec<f32>,
     support_identity_values: Vec<f32>,
     support_hyper_values: Vec<f32>,
@@ -873,6 +877,7 @@ fn build_raid_progression_query(criteria: RaidProgressionCriteria) -> (Vec<Strin
             p.rdps,
             p.ndps,
             p.damage_stats,
+            p.rdps_damage_given,
             p.support_ap,
             p.support_brand,
             p.support_identity,
@@ -1039,11 +1044,14 @@ fn map_raid_progression_row(row: &rusqlite::Row) -> rusqlite::Result<RaidProgres
         class_id: row.get("class_id").unwrap_or_default(),
         class_name: row.get("class_name").unwrap_or_default(),
         spec: row.get("spec").unwrap_or_default(),
+        player_damage_dealt: damage_stats.damage_dealt,
         dps: row.get("player_dps").unwrap_or_default(),
         rdps: row.get("rdps").unwrap_or_default(),
         ndps: row.get("ndps").unwrap_or_default(),
         player_damage_taken: damage_stats.damage_taken,
         death_events: death_events_from_stats(&damage_stats),
+        rdps_damage_given: row.get("rdps_damage_given").unwrap_or_default(),
+        party_info: misc.party_info,
         support_ap: row.get("support_ap").unwrap_or_default(),
         support_brand: row.get("support_brand").unwrap_or_default(),
         support_identity: row.get("support_identity").unwrap_or_default(),
@@ -1103,10 +1111,13 @@ fn build_raid_progression_statistics(
                 .get(&row.player_name)
                 .copied()
                 .unwrap_or_default();
+            let support_contribution = progression_support_contribution(row, rows);
             players_by_name
                 .entry(row.player_name.clone())
-                .and_modify(|player| update_progression_player(player, row, deaths))
-                .or_insert_with(|| new_progression_player(row, deaths));
+                .and_modify(|player| {
+                    update_progression_player(player, row, deaths, support_contribution)
+                })
+                .or_insert_with(|| new_progression_player(row, deaths, support_contribution));
         }
     }
 
@@ -1518,7 +1529,11 @@ fn normalize_death_elapsed(row: &RaidProgressionRow, death_time: i64) -> Option<
     })
 }
 
-fn new_progression_player(row: &RaidProgressionRow, deaths: i32) -> RaidProgressionPlayerAggregate {
+fn new_progression_player(
+    row: &RaidProgressionRow,
+    deaths: i32,
+    support_contribution: Option<f32>,
+) -> RaidProgressionPlayerAggregate {
     let mut player = RaidProgressionPlayerAggregate {
         name: row.player_name.clone(),
         class_id: row.class_id,
@@ -1532,12 +1547,13 @@ fn new_progression_player(row: &RaidProgressionRow, deaths: i32) -> RaidProgress
         damage_taken_values: Vec::new(),
         total_deaths: 0,
         support_ap_values: Vec::new(),
+        support_contribution_values: Vec::new(),
         support_brand_values: Vec::new(),
         support_identity_values: Vec::new(),
         support_hyper_values: Vec::new(),
         last_seen: 0,
     };
-    update_progression_player(&mut player, row, deaths);
+    update_progression_player(&mut player, row, deaths, support_contribution);
     player
 }
 
@@ -1545,6 +1561,7 @@ fn update_progression_player(
     player: &mut RaidProgressionPlayerAggregate,
     row: &RaidProgressionRow,
     deaths: i32,
+    support_contribution: Option<f32>,
 ) {
     player.pulls += 1;
     if row.cleared {
@@ -1564,6 +1581,11 @@ fn update_progression_player(
     }
     if let Some(support_ap) = positive_f32(row.support_ap) {
         player.support_ap_values.push(support_ap);
+    }
+    if let Some(support_contribution) = positive_f32(support_contribution) {
+        player
+            .support_contribution_values
+            .push(support_contribution);
     }
     if let Some(support_brand) = positive_f32(row.support_brand) {
         player.support_brand_values.push(support_brand);
@@ -1606,11 +1628,45 @@ fn build_progression_player(player: RaidProgressionPlayerAggregate) -> RaidProgr
             player.total_deaths as f32 / player.pulls as f32
         },
         average_support_ap: average_f32(player.support_ap_values.into_iter()),
+        average_support_contribution: average_f32(player.support_contribution_values.into_iter()),
         average_support_brand: average_f32(player.support_brand_values.into_iter()),
         average_support_identity: average_f32(player.support_identity_values.into_iter()),
         average_support_hyper: average_f32(player.support_hyper_values.into_iter()),
         last_seen: player.last_seen,
     }
+}
+
+fn progression_support_contribution(
+    row: &RaidProgressionRow,
+    rows: &[RaidProgressionRow],
+) -> Option<f32> {
+    if row.rdps_damage_given <= 0 {
+        return None;
+    }
+
+    let support_party_damage = progression_support_party_damage(row, rows);
+    if support_party_damage <= 0 {
+        return None;
+    }
+
+    Some(row.rdps_damage_given as f32 / support_party_damage as f32)
+}
+
+fn progression_support_party_damage(row: &RaidProgressionRow, rows: &[RaidProgressionRow]) -> i64 {
+    let party = row.party_info.as_ref().and_then(|parties| {
+        parties
+            .values()
+            .find(|party| party.iter().any(|name| name == &row.player_name))
+    });
+
+    rows.iter()
+        .filter(|player| {
+            player.player_damage_dealt > 0
+                && !player.spec.as_deref().is_some_and(is_support_spec)
+                && party.is_none_or(|party| party.iter().any(|name| name == &player.player_name))
+        })
+        .map(|player| player.player_damage_dealt)
+        .sum()
 }
 
 fn populate_support_contribution_denominators(
@@ -2382,6 +2438,57 @@ mod tests {
     }
 
     #[test]
+    fn progression_support_contribution_uses_support_party_damage() {
+        let party_info = HashMap::from([
+            (
+                0,
+                vec![
+                    "Support".to_string(),
+                    "DpsA".to_string(),
+                    "DpsB".to_string(),
+                ],
+            ),
+            (1, vec!["OtherDps".to_string()]),
+        ]);
+        let mut support = progression_row("Support", vec![], true);
+        support.class_id = 204;
+        support.spec = Some("Blessed Aura".to_string());
+        support.player_damage_dealt = 10;
+        support.rdps_damage_given = 100;
+        support.party_info = Some(party_info.clone());
+
+        let mut dps_a = progression_row("DpsA", vec![], true);
+        dps_a.spec = Some("Mayhem".to_string());
+        dps_a.player_damage_dealt = 400;
+        dps_a.party_info = Some(party_info.clone());
+
+        let mut dps_b = progression_row("DpsB", vec![], true);
+        dps_b.spec = Some("Esoteric Flurry".to_string());
+        dps_b.player_damage_dealt = 600;
+        dps_b.party_info = Some(party_info.clone());
+
+        let mut other_party_dps = progression_row("OtherDps", vec![], true);
+        other_party_dps.spec = Some("Barrage Enhancement".to_string());
+        other_party_dps.player_damage_dealt = 1_000;
+        other_party_dps.party_info = Some(party_info);
+
+        let statistics = build_raid_progression_statistics(
+            vec![support, dps_a, dps_b, other_party_dps],
+            &HashMap::new(),
+            &HashMap::new(),
+            &[],
+        );
+        let support = statistics
+            .players
+            .iter()
+            .find(|player| player.name == "Support")
+            .unwrap();
+
+        assert!(support.is_support);
+        assert_eq!(support.average_support_contribution, Some(0.1));
+    }
+
+    #[test]
     fn progression_deaths_count_until_final_wipe_reset() {
         let rows = vec![
             progression_row("EarlyDeath", vec![50_000], false),
@@ -2539,11 +2646,14 @@ mod tests {
             class_id: 102,
             class_name: "Class".to_string(),
             spec: Some("Spec".to_string()),
+            player_damage_dealt: 1,
             dps: 1,
             rdps: None,
             ndps: None,
             player_damage_taken: 0,
             death_events,
+            rdps_damage_given: 0,
+            party_info: None,
             support_ap: None,
             support_brand: None,
             support_identity: None,

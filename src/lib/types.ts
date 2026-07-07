@@ -237,6 +237,7 @@ export interface RaidProgressionPlayer {
   totalDeaths: number;
   deathsPerPull: number;
   averageSupportAp?: number;
+  averageSupportContribution?: number | null;
   averageSupportBrand?: number;
   averageSupportIdentity?: number;
   averageSupportHyper?: number;

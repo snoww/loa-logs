@@ -267,6 +267,7 @@ pub struct RaidProgressionPlayer {
     pub total_deaths: i32,
     pub deaths_per_pull: f32,
     pub average_support_ap: Option<f32>,
+    pub average_support_contribution: Option<f32>,
     pub average_support_brand: Option<f32>,
     pub average_support_identity: Option<f32>,
     pub average_support_hyper: Option<f32>,

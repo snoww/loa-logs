@@ -5,7 +5,7 @@
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import { difficultyColor } from "$lib/components/Snippets.svelte";
   import { difficultyMap, encounterMap } from "$lib/constants/encounters";
-  import { IconRotateCcw } from "$lib/icons";
+  import { IconArrowUp, IconRotateCcw } from "$lib/icons";
   import type { RaidProgressionPlayer, RaidProgressionPull, RaidProgressionStatistics } from "$lib/types";
   import { getClassIcon } from "$lib/utils";
   import { onMount } from "svelte";
@@ -14,7 +14,6 @@
     dateToEndTime,
     dateToStartTime,
     formatDateTime,
-    formatDecimal,
     formatDps,
     formatDuration,
     formatNumber,
@@ -53,6 +52,45 @@
     error: string;
   };
 
+  type ProgressionPlayerSortKey =
+    | "averageDps"
+    | "averageNdps"
+    | "averageRdps"
+    | "averageDamageTaken"
+    | "deathsPerPull"
+    | "totalDeaths"
+    | "averageSupportAp"
+    | "averageSupportBrand"
+    | "averageSupportIdentity"
+    | "averageSupportHyper";
+
+  type ProgressionPlayerTable = "dps" | "support";
+  type SortDirection = "asc" | "desc";
+
+  type PlayerSortState = {
+    key: ProgressionPlayerSortKey;
+    direction: SortDirection;
+  } | null;
+
+  type DeathRateSummary = {
+    names: string[];
+    rate: number;
+  } | null;
+
+  const sortAccessors: Record<ProgressionPlayerSortKey, (player: RaidProgressionPlayer) => number | null | undefined> =
+    {
+      averageDps: (player) => player.averageDps,
+      averageNdps: (player) => player.averageNdps,
+      averageRdps: (player) => player.averageRdps,
+      averageDamageTaken: (player) => player.averageDamageTaken,
+      deathsPerPull: (player) => player.deathsPerPull,
+      totalDeaths: (player) => player.totalDeaths,
+      averageSupportAp: (player) => player.averageSupportAp,
+      averageSupportBrand: (player) => player.averageSupportBrand,
+      averageSupportIdentity: (player) => player.averageSupportIdentity,
+      averageSupportHyper: (player) => player.averageSupportHyper
+    };
+
   const gateOptionGroups = Object.entries(encounterMap)
     .reverse()
     .map(([raid, gates]) => ({
@@ -84,6 +122,8 @@
   let hasLoaded = $state(false);
   let error = $state("");
   let initialized = $state(false);
+  let dpsSort = $state<PlayerSortState>(null);
+  let supportSort = $state<PlayerSortState>(null);
   let requestId = 0;
   let rangeRequestId = 0;
   let keepAppliedDates = false;
@@ -115,6 +155,15 @@
   );
   let dpsPlayers = $derived((statistics?.players ?? []).filter((player) => !player.isSupport));
   let supportPlayers = $derived((statistics?.players ?? []).filter((player) => player.isSupport));
+  let sortedDpsPlayers = $derived(sortPlayers(dpsPlayers, dpsSort));
+  let sortedSupportPlayers = $derived(sortPlayers(supportPlayers, supportSort));
+  let showSupportContribution = $derived(
+    supportPlayers.some(
+      (player) => player.averageSupportContribution !== undefined && player.averageSupportContribution !== null
+    )
+  );
+  let leastDeathsPerPull = $derived(deathRateSummary(statistics?.players ?? [], "least"));
+  let mostDeathsPerPull = $derived(deathRateSummary(statistics?.players ?? [], "most"));
   let pullRows = $derived(statistics?.pulls ?? []);
 
   onMount(() => {
@@ -365,7 +414,6 @@
 
   function resetFilters() {
     cancelPendingStatisticsLoad();
-    selectedGateId = defaultGateId;
     selectedDifficulty = "";
     startDate = "";
     endDate = "";
@@ -404,7 +452,108 @@
     if (value === undefined || value === null) return 0;
     return Math.max(0, Math.min(100, 100 - value));
   }
+
+  function sortPlayers(players: RaidProgressionPlayer[], sort: PlayerSortState) {
+    if (sort === null) return players;
+
+    const direction = sort.direction === "asc" ? 1 : -1;
+    const accessor = sortAccessors[sort.key];
+    return players.toSorted((a, b) => {
+      const aValue = accessor(a) ?? undefined;
+      const bValue = accessor(b) ?? undefined;
+      if (aValue === undefined && bValue === undefined) return a.name.localeCompare(b.name);
+      if (aValue === undefined) return 1;
+      if (bValue === undefined) return -1;
+      return (aValue - bValue) * direction || a.name.localeCompare(b.name);
+    });
+  }
+
+  function updatePlayerSort(table: ProgressionPlayerTable, key: ProgressionPlayerSortKey) {
+    const currentSort = table === "dps" ? dpsSort : supportSort;
+    let nextSort: PlayerSortState = { key, direction: "desc" };
+
+    if (currentSort?.key === key) {
+      nextSort = currentSort.direction === "desc" ? { key, direction: "asc" } : null;
+    }
+
+    if (table === "dps") {
+      dpsSort = nextSort;
+    } else {
+      supportSort = nextSort;
+    }
+  }
+
+  function playerSort(table: ProgressionPlayerTable) {
+    return table === "dps" ? dpsSort : supportSort;
+  }
+
+  function sortAria(
+    table: ProgressionPlayerTable,
+    key: ProgressionPlayerSortKey
+  ): "ascending" | "descending" | undefined {
+    const sort = playerSort(table);
+    if (sort?.key !== key) return undefined;
+    return sort.direction === "asc" ? "ascending" : "descending";
+  }
+
+  function isActiveSort(table: ProgressionPlayerTable, key: ProgressionPlayerSortKey) {
+    return playerSort(table)?.key === key;
+  }
+
+  function deathRateSummary(players: RaidProgressionPlayer[], mode: "least" | "most"): DeathRateSummary {
+    const candidates = players.filter((player) => player.pulls > 0);
+    if (candidates.length === 0) return null;
+
+    const rate = candidates
+      .filter((players) => players.pulls > 1)
+      .reduce((selectedRate, player) => {
+        if (mode === "least") return Math.min(selectedRate, player.deathsPerPull);
+        return Math.max(selectedRate, player.deathsPerPull);
+      }, candidates[0]!.deathsPerPull);
+
+    return {
+      rate,
+      names: candidates
+        .filter((player) => player.deathsPerPull === rate)
+        .map((player) => player.name)
+        .sort((a, b) => a.localeCompare(b))
+    };
+  }
+
+  function formatDeathRate(summary: DeathRateSummary) {
+    if (summary === null) return "-";
+    return summary.rate.toFixed(2);
+  }
+
+  function deathRateNamesLabel(summary: DeathRateSummary) {
+    if (summary === null) return "-";
+    if (summary.names.length === 1) return summary.names[0];
+    if (summary.names.length <= 3) return summary.names.join(", ");
+    return `${summary.names.length} players`;
+  }
+
+  function deathRateTooltip(summary: DeathRateSummary) {
+    if (summary === null) return "";
+    return `${summary.rate.toFixed(2)} deaths/pull: ${summary.names.join(", ")}`;
+  }
 </script>
+
+{#snippet sortablePlayerHeader(label: string, table: ProgressionPlayerTable, key: ProgressionPlayerSortKey)}
+  <th class="px-3 py-2 font-medium" aria-sort={sortAria(table, key)}>
+    <button
+      type="button"
+      class="flex items-center gap-1 font-medium hover:text-neutral-100"
+      onclick={() => updatePlayerSort(table, key)}
+    >
+      <span>{label}</span>
+      <IconArrowUp
+        class={`size-3 transition-opacity ${
+          isActiveSort(table, key) ? "opacity-100" : "opacity-0"
+        } ${playerSort(table)?.direction === "desc" ? "rotate-180" : ""}`}
+      />
+    </button>
+  </th>
+{/snippet}
 
 <div
   class="mx-auto flex w-full max-w-[180rem] flex-col gap-3 px-6 pt-3 pb-8 transition-opacity"
@@ -518,9 +667,20 @@
       </div>
 
       <div class="h-24 rounded-md border border-neutral-700/70 bg-neutral-800/80 p-3">
-        <div class="text-xs text-neutral-400">Avg Damage Taken</div>
-        <div class="text-2xl font-semibold">{formatNumber(statistics.summary.averageDamageTaken)}</div>
-        <div class="text-xs text-neutral-500">{formatDecimal(statistics.summary.averageDeaths)} deaths per pull</div>
+        <div class="flex items-center justify-between gap-2">
+          <div class="text-xs text-neutral-400">Least Deaths/Pull</div>
+        </div>
+        <div class="flex min-w-0 items-baseline gap-2">
+          <div class="text-2xl leading-tight font-semibold">{formatDeathRate(leastDeathsPerPull)}</div>
+          <QuickTooltip tooltip={deathRateTooltip(leastDeathsPerPull)} class="min-w-0">
+            <div class="truncate text-sm text-neutral-300">{deathRateNamesLabel(leastDeathsPerPull)}</div>
+          </QuickTooltip>
+        </div>
+        <div class="w-min truncate text-xs text-neutral-500">
+          <QuickTooltip tooltip={deathRateTooltip(mostDeathsPerPull)}>
+            Most: {formatDeathRate(mostDeathsPerPull)} - {deathRateNamesLabel(mostDeathsPerPull)}
+          </QuickTooltip>
+        </div>
       </div>
 
       <div class="h-24 rounded-md border border-neutral-700/70 bg-neutral-800/80 p-3">
@@ -548,16 +708,16 @@
                   <th class="px-3 py-2 font-medium">Spec</th>
                   <th class="px-3 py-2 font-medium">Pulls</th>
                   <th class="px-3 py-2 font-medium">Clears</th>
-                  <th class="px-3 py-2 font-medium">Avg DPS</th>
-                  <th class="px-3 py-2 font-medium">Avg nDPS</th>
-                  <th class="px-3 py-2 font-medium">Avg rDPS</th>
-                  <th class="px-3 py-2 font-medium">Avg Dmg Taken</th>
-                  <th class="px-3 py-2 font-medium">Deaths/Pull</th>
-                  <th class="px-3 py-2 font-medium">Deaths</th>
+                  {@render sortablePlayerHeader("Avg DPS", "dps", "averageDps")}
+                  {@render sortablePlayerHeader("Avg nDPS", "dps", "averageNdps")}
+                  {@render sortablePlayerHeader("Avg rDPS", "dps", "averageRdps")}
+                  {@render sortablePlayerHeader("Avg Dmg Taken", "dps", "averageDamageTaken")}
+                  {@render sortablePlayerHeader("Deaths/Pull", "dps", "deathsPerPull")}
+                  {@render sortablePlayerHeader("Deaths", "dps", "totalDeaths")}
                 </tr>
               </thead>
               <tbody>
-                {#each dpsPlayers as player (player.name)}
+                {#each sortedDpsPlayers as player (player.name)}
                   <tr class="border-t border-neutral-700/70 hover:bg-neutral-700/30">
                     <td class="px-3 py-2">
                       <div class="flex min-w-0 items-center gap-2">
@@ -595,24 +755,27 @@
         </div>
         {#if supportPlayers.length > 0}
           <div class="max-h-[26rem] overflow-auto">
-            <table class="w-full min-w-[58rem] text-left text-xs">
+            <table class={`w-full ${showSupportContribution ? "min-w-[62rem]" : "min-w-[58rem]"} text-left text-xs`}>
               <thead class="sticky top-0 z-10 bg-neutral-900/95 text-neutral-400">
                 <tr>
                   <th class="px-3 py-2 font-medium">Name</th>
                   <th class="px-3 py-2 font-medium">Spec</th>
                   <th class="px-3 py-2 font-medium">Pulls</th>
                   <th class="px-3 py-2 font-medium">Clears</th>
-                  <th class="px-3 py-2 font-medium">AP</th>
-                  <th class="px-3 py-2 font-medium">Brand</th>
-                  <th class="px-3 py-2 font-medium">Identity</th>
-                  <th class="px-3 py-2 font-medium">T</th>
-                  <th class="px-3 py-2 font-medium">Avg Dmg Taken</th>
-                  <th class="px-3 py-2 font-medium">Deaths/Pull</th>
-                  <th class="px-3 py-2 font-medium">Deaths</th>
+                  {#if showSupportContribution}
+                    <th class="px-3 py-2 font-medium">Contrib</th>
+                  {/if}
+                  {@render sortablePlayerHeader("AP", "support", "averageSupportAp")}
+                  {@render sortablePlayerHeader("Brand", "support", "averageSupportBrand")}
+                  {@render sortablePlayerHeader("Identity", "support", "averageSupportIdentity")}
+                  {@render sortablePlayerHeader("T", "support", "averageSupportHyper")}
+                  {@render sortablePlayerHeader("Avg Dmg Taken", "support", "averageDamageTaken")}
+                  {@render sortablePlayerHeader("Deaths/Pull", "support", "deathsPerPull")}
+                  {@render sortablePlayerHeader("Deaths", "support", "totalDeaths")}
                 </tr>
               </thead>
               <tbody>
-                {#each supportPlayers as player (player.name)}
+                {#each sortedSupportPlayers as player (player.name)}
                   <tr class="border-t border-neutral-700/70 hover:bg-neutral-700/30">
                     <td class="px-3 py-2">
                       <div class="flex min-w-0 items-center gap-2">
@@ -625,6 +788,9 @@
                     <td class="px-3 py-2 text-neutral-300">{player.spec ?? player.class}</td>
                     <td class="px-3 py-2">{player.pulls}</td>
                     <td class="px-3 py-2">{player.clears}</td>
+                    {#if showSupportContribution}
+                      <td class="px-3 py-2">{formatRatioPercent(player.averageSupportContribution)}</td>
+                    {/if}
                     <td class="px-3 py-2">{formatRatioPercent(player.averageSupportAp)}</td>
                     <td class="px-3 py-2">{formatRatioPercent(player.averageSupportBrand)}</td>
                     <td class="px-3 py-2">{formatRatioPercent(player.averageSupportIdentity)}</td>
