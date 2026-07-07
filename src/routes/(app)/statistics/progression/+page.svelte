@@ -31,6 +31,19 @@
     bosses: string[];
   };
 
+  type ProgressionPageCache = {
+    url: string;
+    selectedGateId: string;
+    selectedDifficulty: string;
+    startDate: string;
+    endDate: string;
+    defaultStartDate: string;
+    defaultEndDate: string;
+    statistics: RaidProgressionStatistics | null;
+    hasLoaded: boolean;
+    error: string;
+  };
+
   const gateOptionGroups = Object.entries(encounterMap)
     .reverse()
     .map(([raid, gates]) => ({
@@ -46,6 +59,8 @@
     }));
   const gateOptions = gateOptionGroups.flatMap((group) => group.gates);
   const defaultGateId = gateOptions[0]?.id ?? "";
+  const cacheStorageKey = "loa-logs:raid-progression-state";
+  let cachedProgressionState: ProgressionPageCache | null = null;
 
   let selectedGateId = $state(defaultGateId);
   let selectedDifficulty = $state("");
@@ -83,6 +98,11 @@
   let pullRows = $derived(statistics?.pulls ?? []);
 
   onMount(() => {
+    if (restoreCachedProgressionState()) {
+      initialized = true;
+      return;
+    }
+
     applyUrlState();
     initialized = true;
     const preserveDates = keepAppliedDates;
@@ -97,8 +117,14 @@
     selectedDifficulty;
     startDate;
     endDate;
+    defaultStartDate;
+    defaultEndDate;
+    statistics;
+    hasLoaded;
+    error;
 
     updateUrlState();
+    cacheProgressionState();
   });
 
   async function loadDefaultRange(preserveExistingDates = false) {
@@ -211,6 +237,72 @@
     const nextUrl = `${window.location.pathname}${query ? `?${query}` : ""}`;
     if (nextUrl !== `${window.location.pathname}${window.location.search}`) {
       window.history.replaceState(window.history.state, "", nextUrl);
+    }
+  }
+
+  function currentUrlKey() {
+    return `${window.location.pathname}${window.location.search}`;
+  }
+
+  function cacheProgressionState() {
+    const state = {
+      url: currentUrlKey(),
+      selectedGateId,
+      selectedDifficulty,
+      startDate,
+      endDate,
+      defaultStartDate,
+      defaultEndDate,
+      statistics,
+      hasLoaded,
+      error
+    };
+    cachedProgressionState = state;
+
+    try {
+      sessionStorage.setItem(cacheStorageKey, JSON.stringify(state));
+    } catch (err) {
+      console.warn("failed to cache raid progression state", err);
+    }
+  }
+
+  function restoreCachedProgressionState() {
+    const cache = cachedProgressionState ?? readStoredProgressionState();
+    if (
+      cache === null ||
+      cache.url !== currentUrlKey() ||
+      !gateOptions.some((gate) => gate.id === cache.selectedGateId)
+    ) {
+      return false;
+    }
+
+    cachedProgressionState = cache;
+    selectedGateId = cache.selectedGateId;
+    selectedDifficulty = cache.selectedDifficulty;
+    startDate = cache.startDate;
+    endDate = cache.endDate;
+    defaultStartDate = cache.defaultStartDate;
+    defaultEndDate = cache.defaultEndDate;
+    statistics = cache.statistics;
+    hasLoaded = cache.hasLoaded;
+    error = cache.error;
+    loading = false;
+    rangeLoading = false;
+    keepAppliedDates = false;
+    ++requestId;
+    ++rangeRequestId;
+    return true;
+  }
+
+  function readStoredProgressionState() {
+    try {
+      const stored = sessionStorage.getItem(cacheStorageKey);
+      if (!stored) return null;
+      return JSON.parse(stored) as ProgressionPageCache;
+    } catch (err) {
+      console.warn("failed to restore raid progression state", err);
+      sessionStorage.removeItem(cacheStorageKey);
+      return null;
     }
   }
 
