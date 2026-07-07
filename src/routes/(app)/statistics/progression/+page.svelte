@@ -1,6 +1,7 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
   import { getRaidProgressionRange, getRaidProgressionStatistics } from "$lib/api";
+  import DateRangePicker from "$lib/components/DateRangePicker.svelte";
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import { difficultyColor } from "$lib/components/Snippets.svelte";
   import { difficultyMap, encounterMap } from "$lib/constants/encounters";
@@ -438,20 +439,12 @@
       {/each}
     </select>
 
-    <input
-      type="date"
-      class="h-9 rounded-md border border-neutral-700 bg-neutral-800 px-2 text-sm text-neutral-200 focus:border-accent-500 focus:ring-0"
-      value={startDate}
-      onchange={(event) => updateStartDate(event.currentTarget.value)}
-      aria-label="Start date"
-    />
-
-    <input
-      type="date"
-      class="h-9 rounded-md border border-neutral-700 bg-neutral-800 px-2 text-sm text-neutral-200 focus:border-accent-500 focus:ring-0"
-      value={endDate}
-      onchange={(event) => updateEndDate(event.currentTarget.value)}
-      aria-label="End date"
+    <DateRangePicker
+      {startDate}
+      {endDate}
+      onStartDateChange={updateStartDate}
+      onEndDateChange={updateEndDate}
+      label="Progression date range"
     />
 
     <button
