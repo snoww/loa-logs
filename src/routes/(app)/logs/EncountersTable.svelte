@@ -3,8 +3,8 @@
   import { difficultyColor } from "$lib/components/Snippets.svelte";
   import { raidGates } from "$lib/constants/encounters";
   import { IconStar } from "$lib/icons";
+  import { encounterFilter, type sortColumns } from "$lib/stores.svelte";
   import type { EncounterPreview, EncountersOverview } from "$lib/types";
-  import type { SvelteSet } from "svelte/reactivity";
   import {
     abbreviateNumber,
     formatTimestamp,
@@ -12,7 +12,7 @@
     isSupportSpec,
     timestampToMinutesAndSeconds
   } from "$lib/utils";
-  import { encounterFilter, type sortColumns } from "$lib/stores.svelte";
+  import type { SvelteSet } from "svelte/reactivity";
 
   let {
     overview,

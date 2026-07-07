@@ -4,6 +4,7 @@
   import { EntityState } from "$lib/entity.svelte.js";
   import { EntityType } from "$lib/types";
   import { abbreviateNumber, abbreviateNumberSplit, customRound } from "$lib/utils";
+
   import { badTooltip, damageValue, fadTooltip, percentValue } from "./Snippets.svelte";
 
   export { unbuffedDamageTooltip, unbuffedDpsTooltip };

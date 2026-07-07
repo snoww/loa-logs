@@ -1,10 +1,10 @@
 <script lang="ts">
+  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
+  import { middot } from "$lib/components/Snippets.svelte";
   import type { EncounterState } from "$lib/encounter.svelte.js";
   import { screenshot, settings } from "$lib/stores.svelte.js";
-  import { onMount } from "svelte";
   import { abbreviateNumber, timestampToMinutesAndSeconds } from "$lib/utils";
-  import { middot } from "$lib/components/Snippets.svelte";
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
+  import { onMount } from "svelte";
 
   let { enc }: { enc: EncounterState } = $props();
 

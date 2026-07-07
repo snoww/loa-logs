@@ -3,6 +3,7 @@
   import { screenshot, settings } from "$lib/stores.svelte.js";
   import { EntityType } from "$lib/types";
   import { flip } from "svelte/animate";
+
   import DamageMeterHeader from "./DamageMeterHeader.svelte";
   import PlayerRow from "./PlayerRow.svelte";
 

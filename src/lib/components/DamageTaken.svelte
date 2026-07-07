@@ -3,6 +3,7 @@
   import type { EncounterState } from "$lib/encounter.svelte.js";
   import { settings } from "$lib/stores.svelte.js";
   import { flip } from "svelte/animate";
+
   import DamageTakenRow from "./DamageTakenRow.svelte";
 
   interface Props {

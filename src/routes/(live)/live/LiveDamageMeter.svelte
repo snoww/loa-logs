@@ -1,8 +1,4 @@
 <script lang="ts">
-  import type { EncounterState } from "$lib/encounter.svelte.js";
-  import { misc, nineveh, screenshot, settings } from "$lib/stores.svelte.js";
-  import { MeterState, MeterTab } from "$lib/types";
-  import { missingInfo } from "$lib/utils/toasts";
   import BossBreakdown from "$lib/components/BossBreakdown.svelte";
   import BossTable from "$lib/components/BossTable.svelte";
   import Buffs from "$lib/components/Buffs.svelte";
@@ -10,11 +6,18 @@
   import DamageTaken from "$lib/components/DamageTaken.svelte";
   import PlayerBreakdown from "$lib/components/PlayerBreakdown.svelte";
   import { addToast } from "$lib/components/Toaster.svelte";
+  import type { EncounterState } from "$lib/encounter.svelte.js";
+  import { misc, nineveh, screenshot, settings } from "$lib/stores.svelte.js";
+  import { MeterState, MeterTab } from "$lib/types";
+  import { isNameValid } from "$lib/utils";
+  import { missingInfo } from "$lib/utils/toasts";
+  import { untrack } from "svelte";
+
   import LiveBossInfo from "./LiveBossInfo.svelte";
+  import LiveDetails from "./LiveDetails.svelte";
   import LiveEncounterInfo from "./LiveEncounterInfo.svelte";
   import LiveFooter from "./LiveFooter.svelte";
-  import { isNameValid } from "$lib/utils";
-  import LiveDetails from "./LiveDetails.svelte";
+  import LiveTest from "./LiveTest.svelte";
 
   let { enc }: { enc: EncounterState } = $props();
 

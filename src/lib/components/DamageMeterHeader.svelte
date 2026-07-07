@@ -1,6 +1,7 @@
 <script lang="ts">
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import type { EncounterState, PlayerSort } from "$lib/encounter.svelte.js";
+
   import { logColumns } from "./DamageMeterColumns.svelte";
 
   let { enc, sortable = true }: { enc: EncounterState; sortable?: boolean } = $props();

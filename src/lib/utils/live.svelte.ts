@@ -1,7 +1,8 @@
-import { writable } from "svelte/store";
-import { Peer, type DataConnection } from "peerjs";
-import { misc } from "$lib/stores.svelte";
 import { addToast } from "$lib/components/Toaster.svelte";
+import { misc } from "$lib/stores.svelte";
+import { Peer, type DataConnection } from "peerjs";
+import { writable } from "svelte/store";
+
 import { liveServerListening } from "./toasts";
 
 // If true, a server is set up to listen for incoming connections.

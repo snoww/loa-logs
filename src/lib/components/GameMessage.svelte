@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { statType } from "$lib/constants/stat-type";
   import {
     type FormattedString,
     type FormattedStringPart,
@@ -7,6 +6,7 @@
     FormattedStringPartType,
     type FormulaNode
   } from "$lib/constants/formatted";
+  import { statType } from "$lib/constants/stat-type";
 
   type ScaleMode = "min" | "max" | "range" | "each";
 

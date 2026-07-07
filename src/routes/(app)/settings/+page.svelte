@@ -16,6 +16,7 @@
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
   import { fade } from "svelte/transition";
+
   import Header from "../Header.svelte";
   import ClassColors from "./ClassColors.svelte";
   import DatabaseInfo from "./DatabaseInfo.svelte";

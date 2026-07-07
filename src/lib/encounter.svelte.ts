@@ -1,4 +1,5 @@
 import { type ContributionSplit, type Encounter, type Entity, EntityType } from "$lib/types";
+
 import { classNameToClassId } from "./constants/classes";
 import { sumUdpsContributed } from "./skill.svelte";
 import { settings } from "./stores.svelte";

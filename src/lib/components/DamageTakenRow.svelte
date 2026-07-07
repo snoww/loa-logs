@@ -2,11 +2,12 @@
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import type { EncounterState } from "$lib/encounter.svelte.js";
   import { EntityState } from "$lib/entity.svelte.js";
+  import { settings } from "$lib/stores.svelte.js";
   import type { Entity } from "$lib/types";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
+
   import ClassTooltip from "./tooltips/ClassTooltip.svelte";
-  import { settings } from "$lib/stores.svelte.js";
 
   interface Props {
     enc: EncounterState;

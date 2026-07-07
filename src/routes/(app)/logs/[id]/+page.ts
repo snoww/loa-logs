@@ -1,5 +1,6 @@
-import type { PageLoad } from "./$types";
 import { loadEncounter } from "$lib/api";
+
+import type { PageLoad } from "./$types";
 
 export const prerender: boolean = false;
 

@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { EncounterState } from "$lib/encounter.svelte";
   import { flip } from "svelte/animate";
+
   import MiniPlayer from "./MiniPlayer.svelte";
 
   let { enc }: { enc: EncounterState } = $props();

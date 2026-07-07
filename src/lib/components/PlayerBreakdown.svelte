@@ -15,6 +15,7 @@
   } from "$lib/utils";
   import { openUrl } from "@tauri-apps/plugin-opener";
   import { flip } from "svelte/animate";
+
   import { unbuffedDamageTooltip, unbuffedDpsTooltip } from "./DamageMeterColumns.svelte";
   import PlayerBreakdownHeader from "./PlayerBreakdownHeader.svelte";
   import PlayerBreakdownRow from "./PlayerBreakdownRow.svelte";

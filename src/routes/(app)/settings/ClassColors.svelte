@@ -1,7 +1,6 @@
 <script lang="ts">
   import { classNameToClassId } from "$lib/constants/classes";
   import { defaultClassColors, settings } from "$lib/stores.svelte";
-
   import { getClassIcon } from "$lib/utils";
 </script>
 

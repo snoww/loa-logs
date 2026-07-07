@@ -1,3 +1,5 @@
+import { customRound } from "$lib/utils";
+
 import type { EncounterState } from "./encounter.svelte";
 import {
   Buff,
@@ -11,8 +13,6 @@ import {
   type StatusEffect
 } from "./types";
 import { addBardBubbles, filterStatusEffects, supportSkills } from "./utils/buffs";
-
-import { customRound } from "$lib/utils";
 
 export class BuffState {
   enc: EncounterState = $state()!;

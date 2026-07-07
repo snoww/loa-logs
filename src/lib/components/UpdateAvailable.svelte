@@ -1,9 +1,10 @@
 <script lang="ts">
+  import { checkLoaRunning, checkNinevehRunning, installBetaUpdate, relaunchApp } from "$lib/api";
   import { settings, updateInfo } from "$lib/stores.svelte.js";
   import { createDialog, melt } from "@melt-ui/svelte";
   import { fade } from "svelte/transition";
+
   import { markdown } from "./Markdown.svelte";
-  import { checkLoaRunning, checkNinevehRunning, installBetaUpdate, relaunchApp } from "$lib/api";
 
   const {
     elements: { portalled, overlay, content, title, description },

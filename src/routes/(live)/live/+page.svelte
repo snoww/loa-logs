@@ -1,23 +1,4 @@
 <script lang="ts">
-  import LiveDamageMeter from "./LiveDamageMeter.svelte";
-  import { addToast, removeToast } from "$lib/components/Toaster.svelte";
-  import { EncounterState } from "$lib/encounter.svelte";
-  import { misc, nineveh, settings } from "$lib/stores.svelte";
-  import { uploadLog } from "$lib/utils/sync";
-  import {
-    adminAlert,
-    bannedEvent,
-    bossDead,
-    manualSave,
-    pausing,
-    raidClear,
-    raidWipe,
-    resetting,
-    resuming,
-    zoneChange
-  } from "$lib/utils/toasts";
-  import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
-  import { onMount } from "svelte";
   import {
     loadEncounter,
     onEncounterUpdate,
@@ -35,7 +16,27 @@
     onNinevehUpdate,
     ninevehStateRequest
   } from "$lib/api";
+  import { addToast, removeToast } from "$lib/components/Toaster.svelte";
+  import { EncounterState } from "$lib/encounter.svelte";
+  import { misc, nineveh, settings } from "$lib/stores.svelte";
+  import { uploadLog } from "$lib/utils/sync";
+  import {
+    adminAlert,
+    bannedEvent,
+    bossDead,
+    manualSave,
+    pausing,
+    raidClear,
+    raidWipe,
+    resetting,
+    resuming,
+    zoneChange
+  } from "$lib/utils/toasts";
   import type { UnlistenFn } from "@tauri-apps/api/event";
+  import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
+  import { onMount } from "svelte";
+
+  import LiveDamageMeter from "./LiveDamageMeter.svelte";
 
   let enc = new EncounterState(undefined, true);
   let time = $state(+Date.now());

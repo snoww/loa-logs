@@ -3,9 +3,8 @@
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import { IconChevronRight } from "$lib/icons";
   import type { Skill } from "$lib/types";
-  import { getOpenerSkills } from "$lib/utils/dpsCharts";
-
   import { getSkillIcon } from "$lib/utils";
+  import { getOpenerSkills } from "$lib/utils/dpsCharts";
 
   interface Props {
     skills: Record<number, Skill>;

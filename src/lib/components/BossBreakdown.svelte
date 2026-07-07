@@ -4,9 +4,10 @@
   import { settings } from "$lib/stores.svelte.js";
   import type { Entity } from "$lib/types";
   import { flip } from "svelte/animate";
-  import QuickTooltip from "./QuickTooltip.svelte";
+
   import Back from "./Back.svelte";
   import BossBreakdownRow from "./BossBreakdownRow.svelte";
+  import QuickTooltip from "./QuickTooltip.svelte";
 
   interface Props {
     enc: EncounterState;

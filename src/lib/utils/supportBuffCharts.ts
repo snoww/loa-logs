@@ -2,6 +2,8 @@
 import { bossHpMap } from "$lib/constants/encounters";
 import type { EncounterState } from "$lib/encounter.svelte";
 import { type SkillHit, type StatusEffect } from "$lib/types";
+import { abbreviateNumber, customRound, getSkillIcon, timestampToMinutesAndSeconds } from "$lib/utils";
+
 import { defaultOptions } from "../charts";
 import {
   addBardBubbles,
@@ -12,7 +14,6 @@ import {
   makeSupportBuffKey,
   supportSkills
 } from "./buffs";
-import { abbreviateNumber, customRound, getSkillIcon, timestampToMinutesAndSeconds } from "$lib/utils";
 
 const partyRegex = /^Party (\d)$/;
 const partyColors = ["#54AD56", "#C3B1E1", "#A7C7E7", "#FDFD96"];

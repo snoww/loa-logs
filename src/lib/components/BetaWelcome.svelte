@@ -1,9 +1,9 @@
 <script lang="ts">
+  import { browser } from "$app/environment";
+  import { BETA_MODAL_KEY } from "$lib/api";
   import { settings } from "$lib/stores.svelte.js";
   import { createDialog, melt } from "@melt-ui/svelte";
   import { fade } from "svelte/transition";
-  import { browser } from "$app/environment";
-  import { BETA_MODAL_KEY } from "$lib/api";
 
   const {
     elements: { portalled, overlay, content, title, description, close },

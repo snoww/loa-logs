@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
-  import { settings } from "$lib/stores.svelte";
   import type { FontScale } from "$lib/settings";
+  import { settings } from "$lib/stores.svelte";
+  import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 
   const currentWindow = getCurrentWebviewWindow();
   const scaleMap: Record<FontScale, string> = {

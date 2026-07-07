@@ -1,13 +1,14 @@
 <script lang="ts">
   import type { EncounterState } from "$lib/encounter.svelte.js";
   import { EntityState } from "$lib/entity.svelte.js";
+  import { settings } from "$lib/stores.svelte.js";
   import type { BuffDetails, Entity } from "$lib/types";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
+
   import QuickTooltip from "./QuickTooltip.svelte";
   import BuffDetailTooltip from "./tooltips/BuffDetailTooltip.svelte";
   import ClassTooltip from "./tooltips/ClassTooltip.svelte";
-  import { settings } from "$lib/stores.svelte.js";
 
   interface Props {
     player: Entity;

@@ -1,9 +1,10 @@
 <script lang="ts">
-  import { melt, type Toast, type ToastsElements } from "@melt-ui/svelte";
-  import type { ToastData } from "./Toaster.svelte";
-  import { fly } from "svelte/transition";
-  import { IconX } from "$lib/icons";
   import { page } from "$app/state";
+  import { IconX } from "$lib/icons";
+  import { melt, type Toast, type ToastsElements } from "@melt-ui/svelte";
+  import { fly } from "svelte/transition";
+
+  import type { ToastData } from "./Toaster.svelte";
 
   let {
     elements,

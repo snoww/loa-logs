@@ -1,4 +1,5 @@
 import { abbreviateNumberSplit, customRound } from "$lib/utils";
+
 import type { EntityState } from "./entity.svelte";
 import { settings } from "./stores.svelte";
 import type { Skill } from "./types";

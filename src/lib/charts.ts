@@ -1,7 +1,4 @@
-import * as echarts from "echarts/core";
-
 import { LineChart, ScatterChart, PieChart } from "echarts/charts";
-import { LabelLayout } from "echarts/features";
 import {
   DatasetComponent,
   DataZoomComponent,
@@ -13,7 +10,8 @@ import {
   ToolboxComponent,
   TooltipComponent
 } from "echarts/components";
-
+import * as echarts from "echarts/core";
+import { LabelLayout } from "echarts/features";
 import { SVGRenderer } from "echarts/renderers";
 
 echarts.use([

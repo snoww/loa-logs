@@ -1,7 +1,7 @@
 <script lang="ts">
-  import LogDamageMeter from "./LogDamageMeter.svelte";
   import type { PageData } from "./$types";
   import Header from "./Header.svelte";
+  import LogDamageMeter from "./LogDamageMeter.svelte";
 
   interface Props {
     data: PageData;

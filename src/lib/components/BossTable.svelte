@@ -2,8 +2,9 @@
   import type { EncounterState } from "$lib/encounter.svelte.js";
   import { settings } from "$lib/stores.svelte.js";
   import { flip } from "svelte/animate";
-  import QuickTooltip from "./QuickTooltip.svelte";
+
   import BossRow from "./BossRow.svelte";
+  import QuickTooltip from "./QuickTooltip.svelte";
 
   interface Props {
     enc: EncounterState;

@@ -26,15 +26,16 @@
   } from "$lib/utils/dpsCharts";
   import { getSupportSynergiesOverTime, getSupportSynergiesOverTimeChart } from "$lib/utils/supportBuffCharts";
   import { onDestroy } from "svelte";
+
+  import LegacyLogRDPSBreakdown from "./LegacyLogRDPSBreakdown.svelte";
   import LogEncounterInfo from "./LogEncounterInfo.svelte";
   import LogQuickControls from "./LogQuickControls.svelte";
   import LogQuickSettings from "./LogQuickSettings.svelte";
-  import LogScreenshotInfo from "./LogScreenshotInfo.svelte";
-  import LegacyLogRDPSBreakdown from "./LegacyLogRDPSBreakdown.svelte";
   import LogRDPSBreakdown from "./LogRDPSBreakdown.svelte";
   import LogRDPSConversionUtilization from "./LogRDPSConversionUtilization.svelte";
   import LogRDPSCritLuck from "./LogRDPSCritLuck.svelte";
   import LogRDPSStatUpgrades from "./LogRDPSStatUpgrades.svelte";
+  import LogScreenshotInfo from "./LogScreenshotInfo.svelte";
   import LogShields from "./LogShields.svelte";
   import LogSkillDetails from "./LogSkillDetails.svelte";
   import OpenerSkills from "./OpenerSkills.svelte";

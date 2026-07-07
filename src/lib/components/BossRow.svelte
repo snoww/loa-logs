@@ -3,12 +3,13 @@
   import { EntityState } from "$lib/entity.svelte.js";
   import { settings } from "$lib/stores.svelte.js";
   import type { Entity } from "$lib/types";
+  import { rgbLinearShadeAdjust } from "$lib/utils";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
+
   import QuickTooltip from "./QuickTooltip.svelte";
-  import ArkPassiveTooltip from "./tooltips/ArkPassiveTooltip.svelte";
-  import { rgbLinearShadeAdjust } from "$lib/utils";
   import { damageValue } from "./Snippets.svelte";
+  import ArkPassiveTooltip from "./tooltips/ArkPassiveTooltip.svelte";
 
   interface Props {
     enc: EncounterState;

@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { StatusEffect } from "$lib/types";
+
   import BuffTooltip from "./tooltips/BuffTooltip.svelte";
 
   interface Props {

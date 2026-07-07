@@ -4,6 +4,7 @@
   import { settings } from "$lib/stores.svelte.js";
   import { EntityType, MeterTab, type Entity } from "$lib/types";
   import { flip } from "svelte/animate";
+
   import Back from "./Back.svelte";
   import BuffHeader from "./BuffHeader.svelte";
   import BuffRow from "./BuffRow.svelte";

@@ -5,8 +5,9 @@ import { time } from "echarts/core";
 import MarkdownIt from "markdown-it";
 import { SvelteSet } from "svelte/reactivity";
 import { readable } from "svelte/store";
-import type { AppSettings } from "./settings";
+
 import { saveSettings } from "./api";
+import type { AppSettings } from "./settings";
 import type { NinevehConnectionInfo } from "./types";
 
 /**

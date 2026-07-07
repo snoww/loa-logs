@@ -6,6 +6,7 @@
   import { getSynergyPercentageDetailsSum } from "$lib/utils/buffs";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
+
   import QuickTooltip from "./QuickTooltip.svelte";
   import BuffDetailTooltip from "./tooltips/BuffDetailTooltip.svelte";
   import ClassTooltip from "./tooltips/ClassTooltip.svelte";

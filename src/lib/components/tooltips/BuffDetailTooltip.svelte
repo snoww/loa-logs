@@ -1,7 +1,6 @@
 <script lang="ts">
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import type { BuffDetails } from "$lib/types";
-
   import { getSkillIcon } from "$lib/utils";
 
   interface Props {

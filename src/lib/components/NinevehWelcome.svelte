@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { settings } from "$lib/stores.svelte.js";
-  import { createDialog, melt } from "@melt-ui/svelte";
-  import { fade } from "svelte/transition";
   import { browser } from "$app/environment";
   import { getLastEncounterVersion, NINEVEH_MIGRATION_MODAL_KEY } from "$lib/api";
+  import { settings } from "$lib/stores.svelte.js";
+  import { createDialog, melt } from "@melt-ui/svelte";
   import { onMount } from "svelte";
+  import { fade } from "svelte/transition";
 
   const {
     elements: { portalled, overlay, content, title, description, close },

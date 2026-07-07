@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { openMostRecentEncounter, openUrl, pauseRequest, resetRequest, saveRequest } from "$lib/api";
+  import LiveShareButton from "$lib/components/LiveShareButton.svelte";
+  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import type { EncounterState } from "$lib/encounter.svelte.js";
   import {
     IconCamera,
@@ -19,9 +22,6 @@
   import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
   import { MediaQuery } from "svelte/reactivity";
   import { fly } from "svelte/transition";
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import LiveShareButton from "$lib/components/LiveShareButton.svelte";
-  import { openMostRecentEncounter, openUrl, pauseRequest, resetRequest, saveRequest } from "$lib/api";
 
   let { enc, screenshotDiv }: { enc: EncounterState; screenshotDiv?: HTMLElement } = $props();
 

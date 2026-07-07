@@ -6,6 +6,7 @@
   import { abbreviateNumberSplit, customRound, getSkillIcon, rgbLinearShadeAdjust } from "$lib/utils";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
+
   import QuickTooltip from "./QuickTooltip.svelte";
   import { damageValue, percentValue, skillTooltip } from "./Snippets.svelte";
 

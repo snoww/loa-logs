@@ -11,6 +11,7 @@
   import { tick } from "svelte";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
+
   import { logColumns } from "./DamageMeterColumns.svelte";
   import ArkPassiveTooltip from "./tooltips/ArkPassiveTooltip.svelte";
   import ClassTooltip from "./tooltips/ClassTooltip.svelte";

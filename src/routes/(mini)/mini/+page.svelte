@@ -1,12 +1,4 @@
 <script lang="ts">
-  import { EncounterState } from "$lib/encounter.svelte";
-  import { misc, nineveh, settings } from "$lib/stores.svelte";
-  import type { EncounterEvent } from "$lib/types";
-  import type { UnlistenFn } from "@tauri-apps/api/event";
-  import { onMount } from "svelte";
-  import MiniEncounterInfo from "./MiniEncounterInfo.svelte";
-  import MiniPlayers from "./MiniPlayers.svelte";
-  import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
   import {
     ninevehStateRequest,
     onEncounterUpdate,
@@ -15,7 +7,16 @@
     onRaidStart,
     onZoneChange
   } from "$lib/api";
+  import { EncounterState } from "$lib/encounter.svelte";
+  import { misc, nineveh, settings } from "$lib/stores.svelte";
+  import type { EncounterEvent } from "$lib/types";
   import { zoneChange } from "$lib/utils/toasts";
+  import type { UnlistenFn } from "@tauri-apps/api/event";
+  import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
+  import { onMount } from "svelte";
+
+  import MiniEncounterInfo from "./MiniEncounterInfo.svelte";
+  import MiniPlayers from "./MiniPlayers.svelte";
 
   let enc = $derived(new EncounterState(undefined, true));
   let time = $state(+Date.now());

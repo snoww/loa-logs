@@ -5,6 +5,7 @@
   import { settings } from "$lib/stores.svelte.js";
   import { abbreviateNumber, abbreviateNumberSplit, customRound, isSupportSpec } from "$lib/utils";
   import { hyperAwakeningIds } from "$lib/utils/buffs";
+
   import { damageValue, percentValue } from "./Snippets.svelte";
 
   export function getSortedBreakdownColumns(isSupport: boolean): LogColumn<EntityState, SkillState>[] {

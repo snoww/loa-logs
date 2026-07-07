@@ -1,10 +1,10 @@
 <script lang="ts">
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
+  import ClassTooltip from "$lib/components/tooltips/ClassTooltip.svelte";
+  import ShieldDetailTooltip from "$lib/components/tooltips/ShieldDetailTooltip.svelte";
   import type { EncounterState } from "$lib/encounter.svelte.js";
   import { EntityState } from "$lib/entity.svelte.js";
   import type { Entity, ShieldDetails } from "$lib/types";
-  import ClassTooltip from "$lib/components/tooltips/ClassTooltip.svelte";
-  import ShieldDetailTooltip from "$lib/components/tooltips/ShieldDetailTooltip.svelte";
   import { abbreviateNumberSplit } from "$lib/utils";
 
   interface Props {

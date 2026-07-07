@@ -1,10 +1,11 @@
-import { fetch } from "@tauri-apps/plugin-http";
+import { sync, writeLog } from "$lib/api";
 import { addToast } from "$lib/components/Toaster.svelte";
 import { settings } from "$lib/stores.svelte";
 import { type Encounter, EntityType } from "$lib/types";
+import { fetch } from "@tauri-apps/plugin-http";
 import pako from "pako";
+
 import { uploadError, uploadTokenError } from "./toasts";
-import { sync, writeLog } from "$lib/api";
 
 export const API_URL = "https://api.snow.xyz";
 // export const API_URL = "http://localhost:5180";
