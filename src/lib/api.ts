@@ -2,8 +2,11 @@ import { getVersion } from "@tauri-apps/api/app";
 import { invoke } from "@tauri-apps/api/core";
 import { emit, listen } from "@tauri-apps/api/event";
 import { relaunch } from "@tauri-apps/plugin-process";
+
+import type { AppSettings } from "./settings";
 import type {
   Encounter,
+  CharacterStatistics,
   EncounterDbInfo,
   EncounterEvent,
   EncountersOverview,
@@ -12,7 +15,6 @@ import type {
   PartyEvent,
   ZoneChangeEvent
 } from "./types";
-import type { AppSettings } from "./settings";
 
 export const BETA_MODAL_KEY = "betaPopupShown";
 
@@ -105,9 +107,29 @@ export interface CharacterInfo {
   name: string;
   classId: number;
   maxGearScore: number;
+  spec?: string;
 }
 
 export const getLocalCharacters = (): Promise<CharacterInfo[]> => invoke("get_local_characters");
+
+export interface CharacterStatisticsCriteria {
+  character: string;
+  range: "current_week" | "previous_week" | "last4_weeks" | "last8_weeks" | "all";
+  mode: "damage" | "support";
+  damageType?: "dps" | "ndps" | "rdps";
+  bossToRaid?: Record<string, string>;
+  startTime?: number;
+  endTime?: number;
+  bosses?: string[];
+  excludedBosses?: string[];
+  includedSpecs?: string[];
+  excludedSpecs?: string[];
+  difficulty?: string;
+  minDuration?: number;
+}
+
+export const getCharacterStatistics = (criteria: CharacterStatisticsCriteria): Promise<CharacterStatistics> =>
+  invoke("get_character_statistics", { criteria });
 
 export interface SyncArgs {
   encounter: number;

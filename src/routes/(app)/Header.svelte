@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
+  import { checkLoaRunning, startLoaProcess } from "$lib/api";
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import { addToast } from "$lib/components/Toaster.svelte";
   import { IconArrowUp, IconDiscord, IconExternalLink, IconMenu, IconRefresh, IconX } from "$lib/icons";
@@ -10,7 +11,6 @@
   import { getVersion } from "@tauri-apps/api/app";
   import { onMount, type Snippet } from "svelte";
   import { fade, fly } from "svelte/transition";
-  import { checkLoaRunning, startLoaProcess } from "$lib/api";
 
   const { title, children }: { title: string; children?: Snippet } = $props();
 
@@ -92,6 +92,7 @@
       <div class="mx-4 mb-2 h-px bg-neutral-700"></div>
       <div class="grid gap-1 px-2">
         {@render route("Past Encounters", "/logs")}
+        {@render route("Stats", "/statistics")}
         {@render route("Uploading", "/upload")}
         {@render route("Changelog", "/changelog")}
         {@render route("Settings", "/settings")}

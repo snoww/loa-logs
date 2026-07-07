@@ -65,7 +65,96 @@ export interface EncounterPreview {
   supportIdentity?: number;
   supportHyper?: number;
   udps?: number;
+  myRdps?: number;
   myNdps?: number;
+}
+
+export interface CharacterStatistics {
+  character: StatisticsCharacter;
+  summary: CharacterStatisticsSummary;
+  trends: CharacterStatisticsTrend[];
+  raids: RaidStatisticsRow[];
+  recentBests: RecentBestEncounter[];
+  unavailable: CharacterStatisticsUnavailable;
+}
+
+export interface StatisticsCharacter {
+  name: string;
+  classId: number;
+  maxGearScore: number;
+  spec?: string;
+}
+
+export interface CharacterStatisticsSummary {
+  attempts: number;
+  clears: number;
+  wipes: number;
+  clearRate: number;
+  bestDps?: number;
+  bestRdps?: number;
+  bestNdps?: number;
+  medianDps?: number;
+  p75Dps?: number;
+  p75Rdps?: number;
+  p75Ndps?: number;
+  medianRdps?: number;
+  medianNdps?: number;
+  medianUdps?: number;
+  medianDuration?: number;
+  support?: SupportStatisticsSummary;
+}
+
+export interface SupportStatisticsSummary {
+  logs: number;
+  ap?: number;
+  brand?: number;
+  identity?: number;
+  hyper?: number;
+  medianContribution?: number;
+  bestContribution?: number;
+}
+
+export interface CharacterStatisticsTrend {
+  startTime: number;
+  attempts: number;
+  clears: number;
+  medianDps?: number;
+  bestDps?: number;
+  support?: SupportStatisticsSummary;
+}
+
+export interface RaidStatisticsRow {
+  bossName: string;
+  difficulty?: string;
+  attempts: number;
+  clears: number;
+  clearRate: number;
+  medianDps?: number;
+  bestDps?: number;
+  medianRdps?: number;
+  bestRdps?: number;
+  medianNdps?: number;
+  bestNdps?: number;
+  medianDuration?: number;
+  lastClear?: number;
+  support?: SupportStatisticsSummary;
+}
+
+export interface RecentBestEncounter {
+  id: number;
+  fightStart: number;
+  bossName: string;
+  duration: number;
+  difficulty?: string;
+  myDps: number;
+  myRdps?: number;
+  myNdps?: number;
+  supportContribution?: number;
+}
+
+export interface CharacterStatisticsUnavailable {
+  rdpsLogs: number;
+  supportLogs: number;
 }
 
 export interface EncounterDamageStats {

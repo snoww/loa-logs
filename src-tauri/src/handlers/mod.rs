@@ -60,6 +60,7 @@ pub fn generate_handlers() -> Box<dyn Fn(Invoke) -> bool + Send + Sync> {
         install_beta_update,
         install_stable_update,
         get_local_characters,
+        get_character_statistics,
     ])
 }
 
@@ -87,6 +88,15 @@ pub fn load_encounters_preview(
 pub fn get_local_characters(repository: State<Repository>) -> Result<Vec<CharacterInfo>> {
     let characters = repository.get_local_characters()?;
     Ok(characters)
+}
+
+#[command]
+pub fn get_character_statistics(
+    repository: State<Repository>,
+    criteria: CharacterStatisticsCriteria,
+) -> Result<CharacterStatistics> {
+    let statistics = repository.get_character_statistics(criteria)?;
+    Ok(statistics)
 }
 
 #[command]

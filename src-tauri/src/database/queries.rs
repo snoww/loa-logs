@@ -58,7 +58,17 @@ pub const SELECT_LOCAL_PLAYERS: &str = r"
 SELECT
     e.local_player,
     le.class_id,
-    MAX(le.gear_score) as max_gs
+    MAX(le.gear_score) as max_gs,
+    (
+        SELECT le2.spec
+        FROM encounter_preview e2
+        LEFT JOIN entity le2 ON le2.encounter_id = e2.id AND le2.name = e2.local_player
+        WHERE e2.local_player = e.local_player
+          AND le2.spec IS NOT NULL
+          AND le2.spec != ''
+        ORDER BY e2.fight_start DESC
+        LIMIT 1
+    ) as spec
 FROM encounter_preview e
 LEFT JOIN entity le ON le.encounter_id = e.id AND le.name = e.local_player
 WHERE le.gear_score > 0

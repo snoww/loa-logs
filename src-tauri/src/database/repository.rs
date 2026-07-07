@@ -1,10 +1,12 @@
 use anyhow::{Ok, Result};
+use chrono::Utc;
 use hashbrown::HashMap;
 use log::*;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::{OptionalExtension, Transaction, params, params_from_iter};
 use serde_json::json;
 use std::cmp::{Reverse, max};
+use std::collections::BTreeMap;
 
 use crate::{
     constants::DB_VERSION,
@@ -163,6 +165,7 @@ impl Repository {
                 name: row.get(0)?,
                 class_id: row.get::<_, Option<i32>>(1)?.unwrap_or(0),
                 max_gear_score: row.get::<_, Option<f32>>(2)?.unwrap_or(0.0),
+                spec: row.get(3)?,
             })
         })?;
 
@@ -172,6 +175,47 @@ impl Repository {
             .filter(|c| c.name.len() >= 2 && !c.name.chars().any(|ch| ch.is_ascii_digit()))
             .collect();
         Ok(characters)
+    }
+
+    pub fn get_character_statistics(
+        &self,
+        criteria: CharacterStatisticsCriteria,
+    ) -> Result<CharacterStatistics> {
+        let connection = self.0.get()?;
+        let characters = self.get_local_characters()?;
+        let character = characters
+            .iter()
+            .find(|c| c.name == criteria.character)
+            .cloned()
+            .unwrap_or_else(|| CharacterInfo {
+                name: criteria.character.clone(),
+                ..Default::default()
+            });
+
+        let mode = criteria.mode.clone();
+        let damage_type = criteria.damage_type.clone();
+        let character_name = criteria.character.clone();
+        let boss_to_raid = criteria.boss_to_raid.clone();
+        let (params, query) = build_character_statistics_query(criteria);
+        let mut rows = connection
+            .prepare_cached(&query)?
+            .query_map(params_from_iter(params), map_character_statistics_row)?
+            .collect::<Result<Vec<_>, _>>()?;
+
+        if mode == "support" {
+            populate_support_contribution_denominators(&connection, &mut rows, &character_name);
+        }
+
+        for row in rows.iter_mut() {
+            row.raid_name = boss_to_raid.get(&row.boss_name).cloned();
+        }
+
+        Ok(build_character_statistics(
+            character,
+            rows,
+            mode.as_str(),
+            damage_type.as_str(),
+        ))
     }
 
     pub fn delete_all_uncleared_encounters(&self, keep_favorites: bool) -> Result<()> {
@@ -539,6 +583,594 @@ impl Repository {
     }
 }
 
+#[derive(Clone)]
+struct CharacterStatisticsRow {
+    id: i32,
+    fight_start: i64,
+    boss_name: String,
+    raid_name: Option<String>,
+    duration: i64,
+    difficulty: Option<String>,
+    cleared: bool,
+    my_dps: i64,
+    my_rdps: Option<i64>,
+    my_ndps: Option<i64>,
+    udps: Option<i64>,
+    rdps_damage_given: i64,
+    support_party_damage: i64,
+    support_ap: Option<f32>,
+    support_brand: Option<f32>,
+    support_identity: Option<f32>,
+    support_hyper: Option<f32>,
+}
+
+fn build_character_statistics_query(
+    criteria: CharacterStatisticsCriteria,
+) -> (Vec<String>, String) {
+    let mut params = vec![criteria.character];
+    let min_duration = if criteria.min_duration > 0 {
+        criteria.min_duration
+    } else {
+        10
+    };
+    params.push((min_duration * 1000).to_string());
+
+    let mut filters = vec![
+        "e.local_player = ?".to_string(),
+        "e.duration > ?".to_string(),
+        "e.difficulty IS NOT NULL AND e.difficulty != ''".to_string(),
+    ];
+
+    let (range_start, range_end) = reset_window_for_range(criteria.range.as_str());
+    if let Some(start) = criteria.start_time.or(range_start) {
+        filters.push("e.fight_start >= ?".to_string());
+        params.push(start.to_string());
+    }
+
+    if let Some(end) = criteria.end_time.or(range_end) {
+        filters.push("e.fight_start <= ?".to_string());
+        params.push(end.to_string());
+    }
+
+    if !criteria.difficulty.is_empty() {
+        filters.push("e.difficulty = ?".to_string());
+        params.push(criteria.difficulty);
+    }
+
+    if !criteria.bosses.is_empty() {
+        let placeholders = "?,".repeat(criteria.bosses.len());
+        let placeholders = placeholders.trim_end_matches(',');
+        filters.push(format!("e.current_boss IN ({})", placeholders));
+        params.extend(criteria.bosses);
+    }
+
+    if !criteria.excluded_bosses.is_empty() {
+        let placeholders = "?,".repeat(criteria.excluded_bosses.len());
+        let placeholders = placeholders.trim_end_matches(',');
+        filters.push(format!("e.current_boss NOT IN ({})", placeholders));
+        params.extend(criteria.excluded_bosses);
+    }
+
+    if !criteria.included_specs.is_empty() {
+        let placeholders = "?,".repeat(criteria.included_specs.len());
+        let placeholders = placeholders.trim_end_matches(',');
+        filters.push(format!("le.spec IN ({})", placeholders));
+        params.extend(criteria.included_specs);
+    }
+
+    if !criteria.excluded_specs.is_empty() {
+        let placeholders = "?,".repeat(criteria.excluded_specs.len());
+        let placeholders = placeholders.trim_end_matches(',');
+        filters.push(format!(
+            "(le.spec IS NULL OR le.spec NOT IN ({}))",
+            placeholders
+        ));
+        params.extend(criteria.excluded_specs);
+    }
+
+    let query = format!(
+        "SELECT
+            e.id,
+            e.fight_start,
+            e.current_boss,
+            e.duration,
+            e.difficulty,
+            e.cleared,
+            e.my_dps,
+            e.my_rdps,
+            e.my_ndps,
+            le.unbuffed_dps,
+            le.rdps_damage_given,
+            enc.total_damage_dealt,
+            le.support_ap,
+            le.support_brand,
+            le.support_identity,
+            le.support_hyper
+        FROM encounter_preview e
+        LEFT JOIN encounter enc ON enc.id = e.id
+        LEFT JOIN entity le ON le.encounter_id = e.id AND le.name = e.local_player
+        WHERE {}
+        ORDER BY e.fight_start DESC",
+        filters.join(" AND ")
+    );
+
+    (params, query)
+}
+
+fn reset_window_for_range(range: &str) -> (Option<i64>, Option<i64>) {
+    const WEEK_MS: i64 = 7 * 24 * 60 * 60 * 1000;
+    const RESET_ANCHOR_MS: i64 = 6 * 24 * 60 * 60 * 1000 + 10 * 60 * 60 * 1000;
+
+    let now = Utc::now().timestamp_millis();
+    let current_reset = now - (now - RESET_ANCHOR_MS).rem_euclid(WEEK_MS);
+
+    match range {
+        "all" => (None, None),
+        "previous_week" => (Some(current_reset - WEEK_MS), Some(current_reset - 1)),
+        "last4_weeks" => (Some(current_reset - 3 * WEEK_MS), None),
+        "last8_weeks" => (Some(current_reset - 7 * WEEK_MS), None),
+        "" | "current_week" => (Some(current_reset), None),
+        _ => (Some(current_reset), None),
+    }
+}
+
+fn map_character_statistics_row(row: &rusqlite::Row) -> rusqlite::Result<CharacterStatisticsRow> {
+    std::result::Result::Ok(CharacterStatisticsRow {
+        id: row.get("id")?,
+        fight_start: row.get("fight_start")?,
+        boss_name: row.get("current_boss")?,
+        raid_name: None,
+        duration: row.get("duration")?,
+        difficulty: row.get("difficulty")?,
+        cleared: row.get("cleared")?,
+        my_dps: row.get("my_dps").unwrap_or_default(),
+        my_rdps: row.get("my_rdps").unwrap_or_default(),
+        my_ndps: row.get("my_ndps").unwrap_or_default(),
+        udps: row.get("unbuffed_dps").unwrap_or_default(),
+        rdps_damage_given: row.get("rdps_damage_given").unwrap_or_default(),
+        support_party_damage: row.get("total_damage_dealt").unwrap_or_default(),
+        support_ap: row.get("support_ap").unwrap_or_default(),
+        support_brand: row.get("support_brand").unwrap_or_default(),
+        support_identity: row.get("support_identity").unwrap_or_default(),
+        support_hyper: row.get("support_hyper").unwrap_or_default(),
+    })
+}
+
+fn populate_support_contribution_denominators(
+    connection: &rusqlite::Connection,
+    rows: &mut [CharacterStatisticsRow],
+    support_name: &str,
+) {
+    for row in rows.iter_mut().filter(|row| row.rdps_damage_given > 0) {
+        match support_contribution_denominator(connection, row.id, support_name) {
+            std::result::Result::Ok(damage) if damage > 0 => row.support_party_damage = damage,
+            std::result::Result::Ok(_) => {}
+            Err(err) => warn!(
+                "failed to calculate support party damage for encounter {}: {:?}",
+                row.id, err
+            ),
+        }
+    }
+}
+
+fn support_contribution_denominator(
+    connection: &rusqlite::Connection,
+    encounter_id: i32,
+    support_name: &str,
+) -> Result<i64> {
+    let misc = connection
+        .query_row(
+            "SELECT misc FROM encounter WHERE id = ?",
+            params![encounter_id],
+            |row| row.get::<_, String>("misc"),
+        )
+        .optional()?
+        .and_then(|misc| serde_json::from_str::<EncounterMisc>(misc.as_str()).ok())
+        .unwrap_or_default();
+    let version = misc
+        .version
+        .as_ref()
+        .and_then(|version| semver::Version::parse(version).ok())
+        .unwrap_or_else(|| semver::Version::new(0, 0, 0));
+
+    let entities = connection
+        .prepare_cached(SELECT_ENTITIES_BY_ENCOUNTER)?
+        .query_map(params![encounter_id], |row| map_entity(row, &version))?
+        .collect::<std::result::Result<Vec<_>, _>>()?;
+    Ok(support_contribution_denominator_from_entities(
+        &entities,
+        misc.party_info.as_ref(),
+        support_name,
+    ))
+}
+
+fn support_contribution_denominator_from_entities(
+    entities: &[EncounterEntity],
+    party_info: Option<&HashMap<i32, Vec<String>>>,
+    support_name: &str,
+) -> i64 {
+    let party = party_info.and_then(|parties| {
+        parties
+            .values()
+            .find(|party| party.iter().any(|name| name == support_name))
+    });
+
+    entities
+        .iter()
+        .filter(|entity| {
+            entity.entity_type == EntityType::Player
+                && entity.class_id != 0
+                && entity.damage_stats.damage_dealt > 0
+                && !is_support(entity)
+                && party.is_none_or(|party| party.iter().any(|name| name == &entity.name))
+        })
+        .map(|entity| entity.damage_stats.damage_dealt)
+        .sum()
+}
+
+fn build_character_statistics(
+    character: CharacterInfo,
+    rows: Vec<CharacterStatisticsRow>,
+    mode: &str,
+    damage_type: &str,
+) -> CharacterStatistics {
+    let metric_damage_type = if mode == "support" {
+        "dps"
+    } else {
+        damage_type
+    };
+    let attempts = rows.len() as i32;
+    let performance_rows: Vec<_> = rows
+        .iter()
+        .filter(|row| {
+            row.cleared
+                && if mode == "support" {
+                    row.my_dps > 0
+                } else {
+                    damage_value(row, metric_damage_type).is_some()
+                }
+        })
+        .cloned()
+        .collect();
+    let clears = rows.iter().filter(|row| row.cleared).count() as i32;
+    let wipes = attempts - clears;
+    let support = support_summary(&performance_rows);
+
+    let summary = CharacterStatisticsSummary {
+        attempts,
+        clears,
+        wipes,
+        clear_rate: percent(clears, attempts),
+        best_dps: performance_rows
+            .iter()
+            .filter_map(|row| damage_value(row, "dps"))
+            .max(),
+        best_rdps: performance_rows
+            .iter()
+            .filter_map(|row| damage_value(row, "rdps"))
+            .max(),
+        best_ndps: performance_rows
+            .iter()
+            .filter_map(|row| damage_value(row, "ndps"))
+            .max(),
+        median_dps: median_i64(
+            performance_rows
+                .iter()
+                .filter_map(|row| damage_value(row, "dps")),
+        ),
+        p75_dps: percentile_i64(
+            performance_rows
+                .iter()
+                .filter_map(|row| damage_value(row, "dps")),
+            0.75,
+        ),
+        p75_rdps: percentile_i64(
+            performance_rows
+                .iter()
+                .filter_map(|row| damage_value(row, "rdps")),
+            0.75,
+        ),
+        p75_ndps: percentile_i64(
+            performance_rows
+                .iter()
+                .filter_map(|row| damage_value(row, "ndps")),
+            0.75,
+        ),
+        median_rdps: median_i64(
+            performance_rows
+                .iter()
+                .filter_map(|row| positive(row.my_rdps)),
+        ),
+        median_ndps: median_i64(
+            performance_rows
+                .iter()
+                .filter_map(|row| positive(row.my_ndps)),
+        ),
+        median_udps: median_i64(performance_rows.iter().filter_map(|row| positive(row.udps))),
+        median_duration: median_i64(performance_rows.iter().map(|row| row.duration)),
+        support: support.clone(),
+    };
+
+    let recent_bests = performance_rows
+        .clone()
+        .into_iter()
+        .map(|row| {
+            let support_contribution = support_contribution(&row);
+            RecentBestEncounter {
+                id: row.id,
+                fight_start: row.fight_start,
+                boss_name: row.boss_name,
+                duration: row.duration,
+                difficulty: row.difficulty,
+                my_dps: row.my_dps,
+                my_rdps: row.my_rdps,
+                my_ndps: row.my_ndps,
+                support_contribution,
+            }
+        })
+        .collect();
+
+    let trends = build_trends(&rows);
+    let raids = build_raid_rows(&rows);
+    let unavailable = CharacterStatisticsUnavailable {
+        rdps_logs: performance_rows
+            .iter()
+            .filter(|row| positive(row.my_rdps).is_some())
+            .count() as i32,
+        support_logs: support.as_ref().map(|s| s.logs).unwrap_or_default(),
+    };
+
+    CharacterStatistics {
+        character,
+        summary,
+        trends,
+        raids,
+        recent_bests,
+        unavailable,
+    }
+}
+
+fn build_trends(rows: &[CharacterStatisticsRow]) -> Vec<CharacterStatisticsTrend> {
+    const WEEK_MS: i64 = 7 * 24 * 60 * 60 * 1000;
+    let mut buckets: BTreeMap<i64, Vec<CharacterStatisticsRow>> = BTreeMap::new();
+    for row in rows {
+        let bucket = row.fight_start - row.fight_start.rem_euclid(WEEK_MS);
+        buckets.entry(bucket).or_default().push(row.clone());
+    }
+
+    buckets
+        .into_iter()
+        .map(|(start_time, bucket_rows)| {
+            let attempts = bucket_rows.len() as i32;
+            let cleared_rows: Vec<_> = bucket_rows
+                .iter()
+                .filter(|row| row.cleared && row.my_dps > 0)
+                .cloned()
+                .collect();
+            let clears = bucket_rows.iter().filter(|row| row.cleared).count() as i32;
+            CharacterStatisticsTrend {
+                start_time,
+                attempts,
+                clears,
+                median_dps: median_i64(cleared_rows.iter().map(|row| row.my_dps)),
+                best_dps: cleared_rows.iter().map(|row| row.my_dps).max(),
+                support: support_summary(&cleared_rows),
+            }
+        })
+        .collect()
+}
+
+fn build_raid_rows(rows: &[CharacterStatisticsRow]) -> Vec<RaidStatisticsRow> {
+    let mut grouped: BTreeMap<(String, Option<String>), Vec<CharacterStatisticsRow>> =
+        BTreeMap::new();
+    for row in rows {
+        grouped
+            .entry((
+                row.raid_name
+                    .clone()
+                    .unwrap_or_else(|| row.boss_name.clone()),
+                row.difficulty.clone(),
+            ))
+            .or_default()
+            .push(row.clone());
+    }
+
+    let mut raids: Vec<_> = grouped
+        .into_iter()
+        .map(|((boss_name, difficulty), rows)| {
+            let attempts = rows.len() as i32;
+            let cleared_rows: Vec<_> = rows
+                .iter()
+                .filter(|row| row.cleared && row.my_dps > 0)
+                .cloned()
+                .collect();
+            let clears = rows.iter().filter(|row| row.cleared).count() as i32;
+            RaidStatisticsRow {
+                boss_name,
+                difficulty,
+                attempts,
+                clears,
+                clear_rate: percent(clears, attempts),
+                median_dps: median_i64(
+                    cleared_rows
+                        .iter()
+                        .filter_map(|row| damage_value(row, "dps")),
+                ),
+                best_dps: cleared_rows
+                    .iter()
+                    .filter_map(|row| damage_value(row, "dps"))
+                    .max(),
+                median_rdps: median_i64(
+                    cleared_rows
+                        .iter()
+                        .filter_map(|row| damage_value(row, "rdps")),
+                ),
+                best_rdps: cleared_rows
+                    .iter()
+                    .filter_map(|row| damage_value(row, "rdps"))
+                    .max(),
+                median_ndps: median_i64(
+                    cleared_rows
+                        .iter()
+                        .filter_map(|row| damage_value(row, "ndps")),
+                ),
+                best_ndps: cleared_rows
+                    .iter()
+                    .filter_map(|row| damage_value(row, "ndps"))
+                    .max(),
+                median_duration: median_i64(cleared_rows.iter().map(|row| row.duration)),
+                last_clear: rows
+                    .iter()
+                    .filter(|row| row.cleared)
+                    .map(|row| row.fight_start)
+                    .max(),
+                support: support_summary(&cleared_rows),
+            }
+        })
+        .collect();
+
+    raids.sort_by_key(|row| {
+        (
+            Reverse(row.last_clear.unwrap_or_default()),
+            row.boss_name.clone(),
+        )
+    });
+    raids
+}
+
+fn damage_value(row: &CharacterStatisticsRow, damage_type: &str) -> Option<i64> {
+    match damage_type {
+        "rdps" => positive(row.my_rdps),
+        "ndps" => positive(row.my_ndps),
+        _ => positive(Some(row.my_dps)),
+    }
+}
+
+fn support_summary(rows: &[CharacterStatisticsRow]) -> Option<SupportStatisticsSummary> {
+    let support_rows: Vec<_> = rows
+        .iter()
+        .filter(|row| {
+            positive_f32(row.support_ap).is_some()
+                || positive_f32(row.support_brand).is_some()
+                || positive_f32(row.support_identity).is_some()
+                || positive_f32(row.support_hyper).is_some()
+        })
+        .collect();
+
+    if support_rows.is_empty() {
+        return None;
+    }
+
+    Some(SupportStatisticsSummary {
+        logs: support_rows.len() as i32,
+        ap: average_f32(
+            support_rows
+                .iter()
+                .filter_map(|row| positive_f32(row.support_ap)),
+        ),
+        brand: average_f32(
+            support_rows
+                .iter()
+                .filter_map(|row| positive_f32(row.support_brand)),
+        ),
+        identity: average_f32(
+            support_rows
+                .iter()
+                .filter_map(|row| positive_f32(row.support_identity)),
+        ),
+        hyper: average_f32(
+            support_rows
+                .iter()
+                .filter_map(|row| positive_f32(row.support_hyper)),
+        ),
+        median_contribution: median_f32(
+            support_rows
+                .iter()
+                .filter_map(|row| support_contribution(row)),
+        ),
+        best_contribution: support_rows
+            .iter()
+            .filter_map(|row| support_contribution(row))
+            .reduce(f32::max),
+    })
+}
+
+fn support_contribution(row: &CharacterStatisticsRow) -> Option<f32> {
+    if row.rdps_damage_given <= 0 || row.support_party_damage <= 0 {
+        return None;
+    }
+
+    Some(row.rdps_damage_given as f32 / row.support_party_damage as f32)
+}
+
+fn percent(numerator: i32, denominator: i32) -> f32 {
+    if denominator == 0 {
+        return 0.0;
+    }
+
+    numerator as f32 / denominator as f32 * 100.0
+}
+
+fn positive(value: Option<i64>) -> Option<i64> {
+    value.filter(|v| *v > 0)
+}
+
+fn positive_f32(value: Option<f32>) -> Option<f32> {
+    value.filter(|v| *v > 0.0)
+}
+
+fn average_f32(values: impl Iterator<Item = f32>) -> Option<f32> {
+    let mut count = 0;
+    let mut total = 0.0;
+    for value in values {
+        count += 1;
+        total += value;
+    }
+
+    (count > 0).then_some(total / count as f32)
+}
+
+fn median_f32(values: impl Iterator<Item = f32>) -> Option<f32> {
+    let mut values: Vec<f32> = values.collect();
+    if values.is_empty() {
+        return None;
+    }
+
+    values.sort_by(|a, b| a.total_cmp(b));
+    let middle = values.len() / 2;
+    if values.len().is_multiple_of(2) {
+        Some((values[middle - 1] + values[middle]) / 2.0)
+    } else {
+        values.get(middle).copied()
+    }
+}
+
+fn median_i64(values: impl Iterator<Item = i64>) -> Option<i64> {
+    let mut values: Vec<i64> = values.collect();
+    if values.is_empty() {
+        return None;
+    }
+
+    values.sort_unstable();
+    let middle = values.len() / 2;
+    if values.len().is_multiple_of(2) {
+        Some((values[middle - 1] + values[middle]) / 2)
+    } else {
+        values.get(middle).copied()
+    }
+}
+
+fn percentile_i64(values: impl Iterator<Item = i64>, percentile: f32) -> Option<i64> {
+    let mut values: Vec<i64> = values.collect();
+    if values.is_empty() {
+        return None;
+    }
+
+    values.sort_unstable();
+    let index = ((values.len() - 1) as f32 * percentile).round() as usize;
+    values.get(index).copied()
+}
+
 pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
     let InsertEncounterArgs {
         encounter,
@@ -695,6 +1327,223 @@ mod tests {
     use rand::{Rng, rngs::ThreadRng, seq::IndexedRandom};
 
     use super::*;
+
+    #[test]
+    fn statistics_counts_wipes_without_skewing_performance() {
+        let character = CharacterInfo {
+            name: "Localplayer".to_string(),
+            class_id: 102,
+            max_gear_score: 1700.0,
+            spec: Some("Mayhem".to_string()),
+        };
+        let rows = vec![
+            CharacterStatisticsRow {
+                id: 1,
+                fight_start: 1_000,
+                boss_name: "Boss".to_string(),
+                raid_name: None,
+                duration: 300_000,
+                difficulty: Some("Hard".to_string()),
+                cleared: true,
+                my_dps: 100,
+                my_rdps: Some(110),
+                my_ndps: Some(90),
+                udps: Some(80),
+                rdps_damage_given: 0,
+                support_party_damage: 1_000,
+                support_ap: None,
+                support_brand: None,
+                support_identity: None,
+                support_hyper: None,
+            },
+            CharacterStatisticsRow {
+                id: 2,
+                fight_start: 2_000,
+                boss_name: "Boss".to_string(),
+                raid_name: None,
+                duration: 240_000,
+                difficulty: Some("Hard".to_string()),
+                cleared: true,
+                my_dps: 300,
+                my_rdps: Some(330),
+                my_ndps: Some(270),
+                udps: Some(240),
+                rdps_damage_given: 0,
+                support_party_damage: 1_000,
+                support_ap: None,
+                support_brand: None,
+                support_identity: None,
+                support_hyper: None,
+            },
+            CharacterStatisticsRow {
+                id: 3,
+                fight_start: 3_000,
+                boss_name: "Boss".to_string(),
+                raid_name: None,
+                duration: 30_000,
+                difficulty: Some("Hard".to_string()),
+                cleared: false,
+                my_dps: 10,
+                my_rdps: Some(0),
+                my_ndps: Some(0),
+                udps: Some(0),
+                rdps_damage_given: 0,
+                support_party_damage: 1_000,
+                support_ap: None,
+                support_brand: None,
+                support_identity: None,
+                support_hyper: None,
+            },
+        ];
+
+        let statistics = build_character_statistics(character, rows, "damage", "dps");
+
+        assert_eq!(statistics.summary.attempts, 3);
+        assert_eq!(statistics.summary.clears, 2);
+        assert_eq!(statistics.summary.wipes, 1);
+        assert!((statistics.summary.clear_rate - 66.666).abs() < 0.1);
+        assert_eq!(statistics.summary.median_dps, Some(200));
+        assert_eq!(statistics.summary.best_dps, Some(300));
+        assert_eq!(statistics.summary.median_duration, Some(270_000));
+        assert_eq!(statistics.recent_bests.len(), 2);
+        assert!(statistics.recent_bests.iter().all(|row| row.id != 3));
+    }
+
+    #[test]
+    fn support_contribution_uses_support_party_damage() {
+        let support = stats_test_entity("Support", 204, Some("Blessed Aura"), 10, true);
+        let dps_a = stats_test_entity("DpsA", 102, Some("Mayhem"), 400, false);
+        let dps_b = stats_test_entity("DpsB", 103, Some("Esoteric Flurry"), 600, false);
+        let other_party_dps =
+            stats_test_entity("OtherDps", 104, Some("Barrage Enhancement"), 1_000, false);
+        let entities = vec![support, dps_a, dps_b, other_party_dps];
+        let party_info = HashMap::from([
+            (
+                0,
+                vec![
+                    "Support".to_string(),
+                    "DpsA".to_string(),
+                    "DpsB".to_string(),
+                ],
+            ),
+            (1, vec!["OtherDps".to_string()]),
+        ]);
+        let party_damage =
+            support_contribution_denominator_from_entities(&entities, Some(&party_info), "Support");
+        let row = CharacterStatisticsRow {
+            id: 1,
+            fight_start: 1_000,
+            boss_name: "Boss".to_string(),
+            raid_name: None,
+            duration: 300_000,
+            difficulty: Some("Hard".to_string()),
+            cleared: true,
+            my_dps: 10,
+            my_rdps: Some(0),
+            my_ndps: Some(0),
+            udps: Some(0),
+            rdps_damage_given: 100,
+            support_party_damage: party_damage,
+            support_ap: Some(0.9),
+            support_brand: None,
+            support_identity: None,
+            support_hyper: None,
+        };
+        let statistics = build_character_statistics(
+            CharacterInfo {
+                name: "Support".to_string(),
+                class_id: 204,
+                max_gear_score: 1700.0,
+                spec: Some("Blessed Aura".to_string()),
+            },
+            vec![row],
+            "support",
+            "dps",
+        );
+
+        assert_eq!(party_damage, 1_000);
+        assert_eq!(
+            statistics
+                .summary
+                .support
+                .and_then(|support| support.median_contribution),
+            Some(0.1)
+        );
+    }
+
+    #[test]
+    fn raid_rows_group_bosses_by_raid_name() {
+        let rows = vec![
+            CharacterStatisticsRow {
+                id: 1,
+                fight_start: 1_000,
+                boss_name: "Dark Mountain Predator".to_string(),
+                raid_name: Some("Valtan G1".to_string()),
+                duration: 120_000,
+                difficulty: Some("Hard".to_string()),
+                cleared: false,
+                my_dps: 100,
+                my_rdps: Some(110),
+                my_ndps: Some(90),
+                udps: Some(80),
+                rdps_damage_given: 0,
+                support_party_damage: 1_000,
+                support_ap: None,
+                support_brand: None,
+                support_identity: None,
+                support_hyper: None,
+            },
+            CharacterStatisticsRow {
+                id: 2,
+                fight_start: 2_000,
+                boss_name: "Leader Lugaru".to_string(),
+                raid_name: Some("Valtan G1".to_string()),
+                duration: 180_000,
+                difficulty: Some("Hard".to_string()),
+                cleared: true,
+                my_dps: 200,
+                my_rdps: Some(220),
+                my_ndps: Some(180),
+                udps: Some(160),
+                rdps_damage_given: 0,
+                support_party_damage: 1_000,
+                support_ap: None,
+                support_brand: None,
+                support_identity: None,
+                support_hyper: None,
+            },
+        ];
+        let raids = build_raid_rows(&rows);
+
+        assert_eq!(raids.len(), 1);
+        assert_eq!(raids[0].boss_name, "Valtan G1");
+        assert_eq!(raids[0].attempts, 2);
+        assert_eq!(raids[0].clears, 1);
+        assert_eq!(raids[0].median_dps, Some(200));
+        assert_eq!(raids[0].median_rdps, Some(220));
+        assert_eq!(raids[0].median_ndps, Some(180));
+    }
+
+    fn stats_test_entity(
+        name: &str,
+        class_id: u32,
+        spec: Option<&str>,
+        damage_dealt: i64,
+        support_contribution: bool,
+    ) -> EncounterEntity {
+        EncounterEntity {
+            name: name.to_string(),
+            entity_type: EntityType::Player,
+            class_id,
+            spec: spec.map(|spec| spec.to_string()),
+            damage_stats: DamageStats {
+                damage_dealt,
+                rdps_damage_given: if support_contribution { 100 } else { 0 },
+                ..Default::default()
+            },
+            ..Default::default()
+        }
+    }
 
     #[test]
     fn should_insert_encounter() {

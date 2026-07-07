@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::settings::Settings;
+use hashbrown::HashMap;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct LoadResult {
@@ -38,6 +39,119 @@ pub struct EncountersOverview {
     pub total_encounters: i32,
 }
 
+#[derive(Debug, Default, Deserialize, Clone)]
+#[serde(rename_all = "camelCase", default)]
+pub struct CharacterStatisticsCriteria {
+    pub character: String,
+    pub range: String,
+    pub mode: String,
+    pub damage_type: String,
+    pub boss_to_raid: HashMap<String, String>,
+    pub start_time: Option<i64>,
+    pub end_time: Option<i64>,
+    pub bosses: Vec<String>,
+    pub excluded_bosses: Vec<String>,
+    pub included_specs: Vec<String>,
+    pub excluded_specs: Vec<String>,
+    pub difficulty: String,
+    pub min_duration: i32,
+}
+
+#[derive(Debug, Default, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct CharacterStatistics {
+    pub character: CharacterInfo,
+    pub summary: CharacterStatisticsSummary,
+    pub trends: Vec<CharacterStatisticsTrend>,
+    pub raids: Vec<RaidStatisticsRow>,
+    pub recent_bests: Vec<RecentBestEncounter>,
+    pub unavailable: CharacterStatisticsUnavailable,
+}
+
+#[derive(Debug, Default, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct CharacterStatisticsSummary {
+    pub attempts: i32,
+    pub clears: i32,
+    pub wipes: i32,
+    pub clear_rate: f32,
+    pub best_dps: Option<i64>,
+    pub best_rdps: Option<i64>,
+    pub best_ndps: Option<i64>,
+    pub median_dps: Option<i64>,
+    pub p75_dps: Option<i64>,
+    pub p75_rdps: Option<i64>,
+    pub p75_ndps: Option<i64>,
+    pub median_rdps: Option<i64>,
+    pub median_ndps: Option<i64>,
+    pub median_udps: Option<i64>,
+    pub median_duration: Option<i64>,
+    pub support: Option<SupportStatisticsSummary>,
+}
+
+#[derive(Debug, Default, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct SupportStatisticsSummary {
+    pub logs: i32,
+    pub ap: Option<f32>,
+    pub brand: Option<f32>,
+    pub identity: Option<f32>,
+    pub hyper: Option<f32>,
+    pub median_contribution: Option<f32>,
+    pub best_contribution: Option<f32>,
+}
+
+#[derive(Debug, Default, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct CharacterStatisticsTrend {
+    pub start_time: i64,
+    pub attempts: i32,
+    pub clears: i32,
+    pub median_dps: Option<i64>,
+    pub best_dps: Option<i64>,
+    pub support: Option<SupportStatisticsSummary>,
+}
+
+#[derive(Debug, Default, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct RaidStatisticsRow {
+    pub boss_name: String,
+    pub difficulty: Option<String>,
+    pub attempts: i32,
+    pub clears: i32,
+    pub clear_rate: f32,
+    pub median_dps: Option<i64>,
+    pub best_dps: Option<i64>,
+    pub median_rdps: Option<i64>,
+    pub best_rdps: Option<i64>,
+    pub median_ndps: Option<i64>,
+    pub best_ndps: Option<i64>,
+    pub median_duration: Option<i64>,
+    pub last_clear: Option<i64>,
+    pub support: Option<SupportStatisticsSummary>,
+}
+
+#[derive(Debug, Default, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct RecentBestEncounter {
+    pub id: i32,
+    pub fight_start: i64,
+    pub boss_name: String,
+    pub duration: i64,
+    pub difficulty: Option<String>,
+    pub my_dps: i64,
+    pub my_rdps: Option<i64>,
+    pub my_ndps: Option<i64>,
+    pub support_contribution: Option<f32>,
+}
+
+#[derive(Debug, Default, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct CharacterStatisticsUnavailable {
+    pub rdps_logs: i32,
+    pub support_logs: i32,
+}
+
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", default)]
 pub struct SearchFilter {
@@ -60,6 +174,7 @@ pub struct CharacterInfo {
     pub name: String,
     pub class_id: i32,
     pub max_gear_score: f32,
+    pub spec: Option<String>,
 }
 
 #[derive(Default, Debug, Serialize)]

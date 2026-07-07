@@ -5,6 +5,7 @@ import { writeImage } from "@tauri-apps/plugin-clipboard-manager";
 import { check as checkUpdate } from "@tauri-apps/plugin-updater";
 import { snapdom } from "@zumer/snapdom";
 import { tick } from "svelte";
+
 import { checkBetaUpdate, writeLog } from "./api";
 import { addToast } from "./components/Toaster.svelte";
 import { screenshot, settings, updateInfo } from "./stores.svelte";
@@ -381,8 +382,13 @@ export const normalize = (val: number, min: number, max: number): number => {
   return (val - min) / (max - min);
 };
 
-export const isSupportSpec = (spec?: string): boolean =>
-  spec === "Desperate Salvation" || spec === "Full Bloom" || spec === "Blessed Aura" || spec === "Liberator";
+export const SUPPORT_SPECS = ["Desperate Salvation", "Full Bloom", "Blessed Aura", "Liberator"];
+
+export const isSupportSpec = (spec?: string): boolean => !!spec && SUPPORT_SPECS.includes(spec);
+
+export const SUPPORT_CLASS_IDS = [105, 113, 204, 602];
+
+export const isSupportClassId = (classId?: number): boolean => !!classId && SUPPORT_CLASS_IDS.includes(classId);
 
 export const percentDifference = (a: number, b: number): number => {
   if (a === 0 && b === 0) return 0;
