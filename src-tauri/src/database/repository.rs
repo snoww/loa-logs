@@ -657,6 +657,7 @@ struct RaidProgressionRow {
     damage_taken: i64,
     local_player: String,
     boss_hp_bars: Option<i32>,
+    boss_hp_bars_by_name: HashMap<String, i32>,
     boss_current_hp: Option<i64>,
     boss_max_hp: Option<i64>,
     boss_hp_log: HashMap<String, Vec<BossHpLog>>,
@@ -853,6 +854,13 @@ fn build_raid_progression_query(criteria: RaidProgressionCriteria) -> (Vec<Strin
             enc.total_damage_taken,
             e.local_player,
             boss.hp_bars,
+            (
+                SELECT json_group_object(boss_entity.name, boss_entity.hp_bars)
+                FROM entity boss_entity
+                WHERE boss_entity.encounter_id = e.id
+                    AND boss_entity.entity_type = 'BOSS'
+                    AND boss_entity.hp_bars IS NOT NULL
+            ) AS boss_hp_bars_by_name,
             boss.current_hp AS boss_current_hp,
             boss.max_hp AS boss_max_hp,
             enc.boss_hp_log,
@@ -1004,6 +1012,12 @@ fn map_raid_progression_row(row: &rusqlite::Row) -> rusqlite::Result<RaidProgres
     }
 
     let boss_name: String = row.get("current_boss")?;
+    let boss_hp_bars_by_name = row
+        .get::<_, Option<String>>("boss_hp_bars_by_name")
+        .ok()
+        .flatten()
+        .and_then(|value| serde_json::from_str::<HashMap<String, i32>>(&value).ok())
+        .unwrap_or_default();
 
     std::result::Result::Ok(RaidProgressionRow {
         id: row.get("id")?,
@@ -1017,6 +1031,7 @@ fn map_raid_progression_row(row: &rusqlite::Row) -> rusqlite::Result<RaidProgres
         damage_taken: row.get("total_damage_taken").unwrap_or_default(),
         local_player: row.get("local_player").unwrap_or_default(),
         boss_hp_bars: row.get("hp_bars").unwrap_or_default(),
+        boss_hp_bars_by_name,
         boss_current_hp: row.get("boss_current_hp").unwrap_or_default(),
         boss_max_hp: row.get("boss_max_hp").unwrap_or_default(),
         boss_hp_log,
@@ -1128,43 +1143,26 @@ fn build_progression_pull(
     boss_order: &HashMap<String, i32>,
     death_counts: &BTreeMap<String, i32>,
 ) -> RaidProgressionPullAggregate {
-    let (progress_bars, progress_percent) = if row.cleared {
-        (Some(0), Some(0.0))
+    let progress = if row.cleared {
+        Some(ProgressionBossProgress {
+            boss_name: row.boss_name.clone(),
+            bars: Some(0),
+            percent: 0.0,
+            rank: boss_order.get(&row.boss_name).copied().unwrap_or_default(),
+            last_seen: i32::MAX,
+        })
     } else {
-        let percent = match (row.boss_current_hp, row.boss_max_hp) {
-            (Some(current_hp), Some(max_hp)) if max_hp > 0 => {
-                let current_hp = current_hp.clamp(0, max_hp);
-                Some(((current_hp as f32 / max_hp as f32) * 100.0).clamp(0.0, 100.0))
-            }
-            _ => row
-                .boss_hp_log
-                .get(&row.boss_name)
-                .and_then(|log| log.last())
-                .map(|entry| {
-                    let percent = if entry.p <= 1.0 {
-                        entry.p * 100.0
-                    } else {
-                        entry.p
-                    };
-                    percent.clamp(0.0, 100.0)
-                }),
-        };
-        let bars = percent.and_then(|percent| {
-            row.boss_hp_bars.map(|boss_hp_bars| {
-                if percent <= 0.0 {
-                    0
-                } else {
-                    ((boss_hp_bars as f32 * percent) / 100.0).ceil() as i32
-                }
-            })
-        });
-        (bars, percent)
+        progression_boss_progress(row, boss_order)
     };
+    let boss_name = progress
+        .as_ref()
+        .map(|progress| progress.boss_name.clone())
+        .unwrap_or_else(|| row.boss_name.clone());
 
     RaidProgressionPullAggregate {
         id: row.id,
         fight_start: row.fight_start,
-        boss_name: row.boss_name.clone(),
+        boss_name,
         gate: row.gate.clone(),
         duration: row.duration,
         difficulty: row.difficulty.clone(),
@@ -1172,12 +1170,132 @@ fn build_progression_pull(
         team_dps: row.team_dps,
         damage_taken: row.damage_taken,
         deaths: death_counts.values().sum(),
-        progress_bars,
-        progress_percent,
-        progress_rank: boss_order.get(&row.boss_name).copied().unwrap_or_default(),
+        progress_bars: progress.as_ref().and_then(|progress| progress.bars),
+        progress_percent: progress.as_ref().map(|progress| progress.percent),
+        progress_rank: progress
+            .as_ref()
+            .map(|progress| progress.rank)
+            .unwrap_or_else(|| boss_order.get(&row.boss_name).copied().unwrap_or_default()),
         local_player: row.local_player.clone(),
         player_count: rows.len() as i32,
     }
+}
+
+#[derive(Clone)]
+struct ProgressionBossProgress {
+    boss_name: String,
+    bars: Option<i32>,
+    percent: f32,
+    rank: i32,
+    last_seen: i32,
+}
+
+fn progression_boss_progress(
+    row: &RaidProgressionRow,
+    boss_order: &HashMap<String, i32>,
+) -> Option<ProgressionBossProgress> {
+    // Multi-boss gates can save a dead sub-boss as current_boss. Prefer the latest
+    // non-zero HP-log candidate so best pull reflects the boss the group actually reached.
+    let candidates = row
+        .boss_hp_log
+        .iter()
+        .filter_map(|(boss_name, log)| {
+            if !boss_order.is_empty() && !boss_order.contains_key(boss_name) {
+                return None;
+            }
+
+            let last = log.last()?;
+            let percent = if boss_name == &row.boss_name {
+                current_boss_percent(row).unwrap_or_else(|| normalized_boss_hp_percent(last.p))
+            } else {
+                normalized_boss_hp_percent(last.p)
+            };
+            Some(ProgressionBossProgress {
+                boss_name: boss_name.clone(),
+                bars: row
+                    .boss_hp_bars_by_name
+                    .get(boss_name)
+                    .copied()
+                    .or_else(|| {
+                        (boss_name == &row.boss_name)
+                            .then_some(row.boss_hp_bars)
+                            .flatten()
+                    })
+                    .and_then(|bars| progress_bars(percent, bars)),
+                percent,
+                rank: boss_order.get(boss_name).copied().unwrap_or_default(),
+                last_seen: last.time,
+            })
+        })
+        .collect::<Vec<_>>();
+
+    if candidates.is_empty() {
+        let percent = current_boss_percent(row)?;
+        return Some(ProgressionBossProgress {
+            boss_name: row.boss_name.clone(),
+            bars: row
+                .boss_hp_bars
+                .and_then(|bars| progress_bars(percent, bars)),
+            percent,
+            rank: boss_order.get(&row.boss_name).copied().unwrap_or_default(),
+            last_seen: i32::MAX,
+        });
+    }
+
+    candidates
+        .iter()
+        .filter(|candidate| candidate.percent > 0.0)
+        .max_by(|a, b| compare_progress_candidate(a, b))
+        .cloned()
+        .or_else(|| {
+            candidates
+                .into_iter()
+                .max_by(|a, b| compare_progress_candidate(a, b))
+        })
+}
+
+fn current_boss_percent(row: &RaidProgressionRow) -> Option<f32> {
+    match (row.boss_current_hp, row.boss_max_hp) {
+        (Some(current_hp), Some(max_hp)) if max_hp > 0 => {
+            let current_hp = current_hp.clamp(0, max_hp);
+            Some(((current_hp as f32 / max_hp as f32) * 100.0).clamp(0.0, 100.0))
+        }
+        _ => None,
+    }
+}
+
+fn compare_progress_candidate(
+    a: &ProgressionBossProgress,
+    b: &ProgressionBossProgress,
+) -> Ordering {
+    // Within one pull, later boss HP logs represent deeper gate progression; rank and HP
+    // only break ties when logs were updated at the same second.
+    a.last_seen.cmp(&b.last_seen).then_with(|| {
+        a.rank
+            .cmp(&b.rank)
+            .then_with(|| b.percent.total_cmp(&a.percent))
+    })
+}
+
+fn normalized_boss_hp_percent(percent: f32) -> f32 {
+    let percent = if percent <= 1.0 {
+        percent * 100.0
+    } else {
+        percent
+    };
+    percent.clamp(0.0, 100.0)
+}
+
+fn progress_bars(percent: f32, boss_hp_bars: i32) -> Option<i32> {
+    if boss_hp_bars <= 0 {
+        return None;
+    }
+
+    Some(if percent <= 0.0 {
+        0
+    } else {
+        ((boss_hp_bars as f32 * percent) / 100.0).ceil() as i32
+    })
 }
 
 fn build_progression_pull_row(pull: RaidProgressionPullAggregate) -> RaidProgressionPull {
@@ -1236,12 +1354,9 @@ fn build_progression_summary(
 }
 
 fn build_progression_gates(pulls: &[RaidProgressionPullAggregate]) -> Vec<RaidProgressionGate> {
-    let mut grouped: BTreeMap<String, Vec<RaidProgressionPullAggregate>> = BTreeMap::new();
+    let mut grouped: BTreeMap<String, Vec<&RaidProgressionPullAggregate>> = BTreeMap::new();
     for pull in pulls {
-        grouped
-            .entry(pull.gate.clone())
-            .or_default()
-            .push(pull.clone());
+        grouped.entry(pull.gate.clone()).or_default().push(pull);
     }
 
     grouped
@@ -1249,8 +1364,12 @@ fn build_progression_gates(pulls: &[RaidProgressionPullAggregate]) -> Vec<RaidPr
         .map(|(gate, rows)| {
             let attempts = rows.len() as i32;
             let clears = rows.iter().filter(|pull| pull.cleared).count() as i32;
-            let clear_rows = rows.iter().filter(|pull| pull.cleared).collect::<Vec<_>>();
-            let best_progress_pull = best_progress_pull(rows.iter());
+            let clear_rows = rows
+                .iter()
+                .copied()
+                .filter(|pull| pull.cleared)
+                .collect::<Vec<_>>();
+            let best_progress_pull = best_progress_pull(rows.iter().copied());
 
             RaidProgressionGate {
                 gate,
@@ -1288,6 +1407,8 @@ fn compare_progress(
     a: &RaidProgressionPullAggregate,
     b: &RaidProgressionPullAggregate,
 ) -> Ordering {
+    // Across pulls, later bosses beat lower HP on earlier bosses. For the same boss,
+    // lower remaining HP is better progression.
     a.progress_rank.cmp(&b.progress_rank).then_with(|| {
         let a_percent = a.progress_percent.unwrap_or(100.0);
         let b_percent = b.progress_percent.unwrap_or(100.0);
@@ -1326,6 +1447,8 @@ fn progression_death_counts(rows: &[RaidProgressionRow]) -> BTreeMap<String, i32
         return BTreeMap::new();
     };
 
+    // A wipe usually records everyone as dead near the reset. Count deaths before
+    // that final reset cluster, plus the first death in the cluster as the wipe cause.
     let cleared = rows.first().is_some_and(|row| row.cleared);
     let first_wipe_event_index = if cleared {
         events.len()
@@ -1378,6 +1501,8 @@ fn final_death_cluster_is_reset(
         .saturating_sub(dead_before_cluster.len())
         .max(1);
 
+    // If the final cluster covers everyone who was still alive, treat it as the
+    // encounter reset instead of independent player deaths.
     cluster_players.len() >= alive_before_cluster
 }
 
@@ -2291,6 +2416,35 @@ mod tests {
     }
 
     #[test]
+    fn progression_pull_uses_later_boss_hp_log_when_current_boss_is_dead() {
+        let mut row = progression_row("Player", vec![], false);
+        row.boss_name = "First Boss".to_string();
+        row.boss_current_hp = Some(0);
+        row.boss_max_hp = Some(1_000);
+        row.boss_hp_bars = Some(100);
+        row.boss_hp_bars_by_name
+            .insert("First Boss".to_string(), 100);
+        row.boss_hp_bars_by_name
+            .insert("Second Boss".to_string(), 80);
+        row.boss_hp_log
+            .insert("First Boss".to_string(), vec![BossHpLog::new(120, 0, 0.0)]);
+        row.boss_hp_log.insert(
+            "Second Boss".to_string(),
+            vec![BossHpLog::new(180, 400, 0.4)],
+        );
+        let mut boss_order = HashMap::new();
+        boss_order.insert("First Boss".to_string(), 0);
+        boss_order.insert("Second Boss".to_string(), 1);
+        let rows = vec![row.clone()];
+
+        let pull = build_progression_pull(&row, &rows, &boss_order, &BTreeMap::new());
+
+        assert_eq!(pull.boss_name, "Second Boss");
+        assert_eq!(pull.progress_bars, Some(32));
+        assert_eq!(pull.progress_percent, Some(40.0));
+    }
+
+    #[test]
     fn raid_rows_group_bosses_by_raid_name() {
         let rows = vec![
             CharacterStatisticsRow {
@@ -2377,6 +2531,7 @@ mod tests {
             damage_taken: 0,
             local_player: "Local".to_string(),
             boss_hp_bars: None,
+            boss_hp_bars_by_name: HashMap::new(),
             boss_current_hp: None,
             boss_max_hp: None,
             boss_hp_log: HashMap::new(),

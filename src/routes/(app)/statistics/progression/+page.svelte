@@ -454,7 +454,7 @@
         <div class="text-xs text-neutral-400">Pulls</div>
         <div class="text-2xl font-semibold">{statistics.summary.attempts}</div>
         <div class="text-xs text-neutral-500">
-          {statistics.summary.clears} clear{statistics.summary.clears > 1 ? "s" : ""}, {statistics.summary.wipes} wipes
+          {statistics.summary.clears} clear{statistics.summary.clears === 1 ? "" : "s"}, {statistics.summary.wipes} wipes
         </div>
       </div>
 
@@ -482,7 +482,9 @@
       <div class="h-24 rounded-md border border-neutral-700/70 bg-neutral-800/80 p-3">
         <div class="text-xs text-neutral-400">Avg Team DPS</div>
         <div class="text-2xl font-semibold">{formatDps(statistics.summary.averageTeamDps)}</div>
-        <div class="text-xs text-neutral-500">avg duration {formatDuration(statistics.summary.averageDuration)}</div>
+        <div class="text-xs text-neutral-500">
+          avg pull duration {formatDuration(statistics.summary.averageDuration)}
+        </div>
       </div>
 
       <div class="h-24 rounded-md border border-neutral-700/70 bg-neutral-800/80 p-3">
@@ -516,7 +518,7 @@
                   <th class="px-3 py-2 font-medium">Avg DPS</th>
                   <th class="px-3 py-2 font-medium">Avg nDPS</th>
                   <th class="px-3 py-2 font-medium">Avg rDPS</th>
-                  <th class="px-3 py-2 font-medium">Dmg Taken</th>
+                  <th class="px-3 py-2 font-medium">Avg Dmg Taken</th>
                   <th class="px-3 py-2 font-medium">Deaths/Pull</th>
                   <th class="px-3 py-2 font-medium">Deaths</th>
                 </tr>
@@ -569,7 +571,7 @@
                   <th class="px-3 py-2 font-medium">Brand</th>
                   <th class="px-3 py-2 font-medium">Identity</th>
                   <th class="px-3 py-2 font-medium">T</th>
-                  <th class="px-3 py-2 font-medium">Dmg Taken</th>
+                  <th class="px-3 py-2 font-medium">Avg Dmg Taken</th>
                   <th class="px-3 py-2 font-medium">Deaths/Pull</th>
                   <th class="px-3 py-2 font-medium">Deaths</th>
                 </tr>
@@ -631,7 +633,7 @@
               {#each pullRows as pull (pull.id)}
                 <tr class="border-t border-neutral-700/70 hover:bg-neutral-700/30">
                   <td class="px-3 py-2">
-                    <a href={resolve(`/logs/${pull.id}`)} class="text-sky-300 hover:text-sky-200">{pull.id}</a>
+                    <a href={resolve(`/logs/${pull.id}`)} class="text-accent-500 hover:text-accent-400">{pull.id}</a>
                   </td>
                   <td class="max-w-56 truncate px-3 py-2" title={pull.bossName}>{pull.bossName}</td>
                   <td class="px-3 py-2">

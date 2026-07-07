@@ -15,7 +15,7 @@
 </script>
 
 <div class="flex h-screen flex-col overflow-hidden">
-  <Header title="Stats"></Header>
+  <Header title="Statistics"></Header>
 
   <div class="border-b border-neutral-800 bg-neutral-900/80">
     <nav class="mx-auto flex h-12 max-w-[180rem] items-center gap-1 px-6" aria-label="Statistics sections">
