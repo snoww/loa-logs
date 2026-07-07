@@ -31,6 +31,13 @@
     bosses: string[];
   };
 
+  type ProgressionFilters = {
+    selectedGateId: string;
+    selectedDifficulty: string;
+    startDate: string;
+    endDate: string;
+  };
+
   type ProgressionPageCache = {
     url: string;
     selectedGateId: string;
@@ -41,6 +48,7 @@
     defaultEndDate: string;
     statistics: RaidProgressionStatistics | null;
     hasLoaded: boolean;
+    appliedFilters?: ProgressionFilters | null;
     error: string;
   };
 
@@ -69,6 +77,7 @@
   let defaultStartDate = $state("");
   let defaultEndDate = $state("");
   let statistics = $state<RaidProgressionStatistics | null>(null);
+  let appliedFilters = $state<ProgressionFilters | null>(null);
   let loading = $state(false);
   let rangeLoading = $state(false);
   let hasLoaded = $state(false);
@@ -89,9 +98,19 @@
     selectedGateId !== defaultGateId ||
       selectedDifficulty !== "" ||
       startDate !== defaultStartDate ||
-      endDate !== defaultEndDate ||
-      statistics !== null ||
-      hasLoaded
+      endDate !== defaultEndDate
+  );
+  let currentFilters = $derived({
+    selectedGateId,
+    selectedDifficulty,
+    startDate,
+    endDate
+  });
+  let hasUnappliedFilters = $derived(
+    appliedFilters === null || !sameProgressionFilters(currentFilters, appliedFilters)
+  );
+  let canLoadStatistics = $derived(
+    Boolean(selectedGateOption) && !loading && !rangeLoading && (!hasLoaded || hasUnappliedFilters || Boolean(error))
   );
   let dpsPlayers = $derived((statistics?.players ?? []).filter((player) => !player.isSupport));
   let supportPlayers = $derived((statistics?.players ?? []).filter((player) => player.isSupport));
@@ -121,6 +140,7 @@
     defaultEndDate;
     statistics;
     hasLoaded;
+    appliedFilters;
     error;
 
     updateUrlState();
@@ -192,12 +212,12 @@
 
       if (currentRequest === requestId) {
         statistics = result;
+        appliedFilters = currentFilters;
         hasLoaded = true;
       }
     } catch (err) {
       console.error(err);
       if (currentRequest === requestId) {
-        statistics = null;
         hasLoaded = true;
         error = "Could not load progression statistics.";
       }
@@ -255,6 +275,7 @@
       defaultEndDate,
       statistics,
       hasLoaded,
+      appliedFilters,
       error
     };
     cachedProgressionState = state;
@@ -285,6 +306,7 @@
     defaultEndDate = cache.defaultEndDate;
     statistics = cache.statistics;
     hasLoaded = cache.hasLoaded;
+    appliedFilters = cache.appliedFilters ?? (cache.hasLoaded ? currentFilters : null);
     error = cache.error;
     loading = false;
     rangeLoading = false;
@@ -306,49 +328,56 @@
     }
   }
 
-  function clearLoadedStatistics() {
+  function cancelPendingStatisticsLoad() {
     ++requestId;
     loading = false;
-    statistics = null;
-    hasLoaded = false;
   }
 
   function updateGate(value: string) {
     if (selectedGateId === value) return;
     selectedGateId = value;
     selectedDifficulty = "";
-    clearLoadedStatistics();
+    cancelPendingStatisticsLoad();
     loadDefaultRange();
   }
 
   function updateDifficulty(value: string) {
     if (selectedDifficulty === value) return;
     selectedDifficulty = value;
-    clearLoadedStatistics();
+    cancelPendingStatisticsLoad();
     loadDefaultRange();
   }
 
   function updateStartDate(value: string) {
     ++rangeRequestId;
     rangeLoading = false;
-    clearLoadedStatistics();
+    cancelPendingStatisticsLoad();
     startDate = value;
   }
 
   function updateEndDate(value: string) {
     ++rangeRequestId;
     rangeLoading = false;
-    clearLoadedStatistics();
+    cancelPendingStatisticsLoad();
     endDate = value;
   }
 
   function resetFilters() {
-    clearLoadedStatistics();
+    cancelPendingStatisticsLoad();
     selectedGateId = defaultGateId;
     selectedDifficulty = "";
     startDate = "";
     endDate = "";
     loadDefaultRange();
+  }
+
+  function sameProgressionFilters(a: ProgressionFilters, b: ProgressionFilters) {
+    return (
+      a.selectedGateId === b.selectedGateId &&
+      a.selectedDifficulty === b.selectedDifficulty &&
+      a.startDate === b.startDate &&
+      a.endDate === b.endDate
+    );
   }
 
   function progressLabel(source: { bestProgressBars?: number | null; bestProgressPercent?: number | null }) {
@@ -427,8 +456,12 @@
 
     <button
       type="button"
-      class="h-9 rounded-md bg-accent-600 px-3 text-sm font-medium text-white hover:bg-accent-500 disabled:cursor-default disabled:opacity-50 disabled:hover:bg-accent-600"
-      disabled={loading || rangeLoading || !selectedGateOption}
+      class={`h-9 rounded-md px-3 text-sm font-medium transition-colors disabled:cursor-default disabled:opacity-60 ${
+        canLoadStatistics || loading
+          ? "bg-accent-600 text-white hover:bg-accent-500 disabled:hover:bg-accent-600"
+          : "border border-neutral-700 bg-neutral-800 text-neutral-400 hover:bg-neutral-800"
+      }`}
+      disabled={!canLoadStatistics}
       onclick={loadStatistics}
     >
       {loading ? "Loading" : "Load"}
@@ -449,7 +482,9 @@
 
   {#if error}
     <div class="rounded-md border border-red-500/40 bg-red-500/10 p-3 text-red-200">{error}</div>
-  {:else if statistics}
+  {/if}
+
+  {#if statistics}
     <!-- summary cards -->
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-6">
       <div class="h-24 rounded-md border border-neutral-700/70 bg-neutral-800/80 p-3">
