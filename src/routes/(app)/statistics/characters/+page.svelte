@@ -256,6 +256,7 @@
   class:opacity-60={loading}
   aria-busy={loading}
 >
+  <!--  filter options  -->
   <div class="flex flex-wrap items-center gap-2">
     <select
       class="h-9 min-w-72 rounded-md border border-neutral-700 bg-neutral-800 px-2 text-sm text-neutral-200 focus:border-accent-500 focus:ring-0"
@@ -270,6 +271,7 @@
       {/each}
     </select>
 
+    <!--  support classes can select dps spec  -->
     {#if canSelectSupportMode}
       <select
         class="h-9 min-w-32 rounded-md border border-neutral-700 bg-neutral-800 px-2 text-sm text-neutral-200 focus:border-accent-500 focus:ring-0"
@@ -340,6 +342,8 @@
   {:else if characters.length === 0 && !loading}
     <div class="rounded-md border border-neutral-700 bg-neutral-800/80 p-3 text-neutral-300">No characters found.</div>
   {:else if statistics}
+    <!-- summary stats -->
+
     <div class="grid grid-cols-1 gap-3 lg:grid-cols-4">
       <div class="h-24 rounded-md border border-neutral-700/70 bg-neutral-800/80 p-3">
         <div class="flex h-full items-center gap-3 text-center">
@@ -419,6 +423,8 @@
         </div>
       {/if}
     </div>
+
+    <!-- raid stats -->
 
     <div class="grid grid-cols-1 gap-3 xl:grid-cols-3">
       <div class="overflow-hidden rounded-md border border-neutral-700/70 bg-neutral-800/80 xl:col-span-2">
@@ -503,6 +509,8 @@
           <div class="py-12 text-center text-neutral-400">No raid data in this range.</div>
         {/if}
       </div>
+
+      <!-- list of recent encounters -->
 
       <div class="grid content-start gap-3">
         <div class="overflow-hidden rounded-md border border-neutral-700/70 bg-neutral-800/80">

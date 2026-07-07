@@ -93,7 +93,7 @@
       statistics !== null ||
       hasLoaded
   );
-  let damagePlayers = $derived((statistics?.players ?? []).filter((player) => !player.isSupport));
+  let dpsPlayers = $derived((statistics?.players ?? []).filter((player) => !player.isSupport));
   let supportPlayers = $derived((statistics?.players ?? []).filter((player) => player.isSupport));
   let pullRows = $derived(statistics?.pulls ?? []);
 
@@ -381,6 +381,7 @@
   class:opacity-60={loading}
   aria-busy={loading || rangeLoading}
 >
+  <!-- filter options, defaults to first clear of selected raid at any difficulty -->
   <div class="flex flex-wrap items-center gap-2">
     <select
       class="h-9 min-w-64 rounded-md border border-neutral-700 bg-neutral-800 px-2 text-sm text-neutral-200 focus:border-accent-500 focus:ring-0"
@@ -449,6 +450,7 @@
   {#if error}
     <div class="rounded-md border border-red-500/40 bg-red-500/10 p-3 text-red-200">{error}</div>
   {:else if statistics}
+    <!-- summary cards -->
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-6">
       <div class="h-24 rounded-md border border-neutral-700/70 bg-neutral-800/80 p-3">
         <div class="text-xs text-neutral-400">Pulls</div>
@@ -500,13 +502,16 @@
       </div>
     </div>
 
+    <!--  dps/support player total pulls breakdown  -->
+
     <div class="grid grid-cols-1 gap-3 xl:grid-cols-2">
       <div class="overflow-hidden rounded-md border border-neutral-700/70 bg-neutral-800/80">
+        <!-- dps section -->
         <div class="flex items-center justify-between border-b border-neutral-700/70 px-3 py-2">
-          <h2 class="font-medium">Damage Players</h2>
-          <span class="text-xs text-neutral-500">{damagePlayers.length} players</span>
+          <h2 class="font-medium">DPS</h2>
+          <span class="text-xs text-neutral-500">{dpsPlayers.length} players</span>
         </div>
-        {#if damagePlayers.length > 0}
+        {#if dpsPlayers.length > 0}
           <div class="max-h-[26rem] overflow-auto">
             <table class="w-full min-w-[60rem] text-left text-xs">
               <thead class="sticky top-0 z-10 bg-neutral-900/95 text-neutral-400">
@@ -524,7 +529,7 @@
                 </tr>
               </thead>
               <tbody>
-                {#each damagePlayers as player (player.name)}
+                {#each dpsPlayers as player (player.name)}
                   <tr class="border-t border-neutral-700/70 hover:bg-neutral-700/30">
                     <td class="px-3 py-2">
                       <div class="flex min-w-0 items-center gap-2">
@@ -549,9 +554,11 @@
             </table>
           </div>
         {:else}
-          <div class="py-12 text-center text-neutral-400">No damage players in this range.</div>
+          <div class="py-12 text-center text-neutral-400">No dps players in this range.</div>
         {/if}
       </div>
+
+      <!-- support section -->
 
       <div class="overflow-hidden rounded-md border border-neutral-700/70 bg-neutral-800/80">
         <div class="flex items-center justify-between border-b border-neutral-700/70 px-3 py-2">
@@ -607,6 +614,8 @@
         {/if}
       </div>
     </div>
+
+    <!-- full list of pulls -->
 
     <div class="overflow-hidden rounded-md border border-neutral-700/70 bg-neutral-800/80">
       <div class="flex items-center justify-between border-b border-neutral-700/70 px-3 py-2">
