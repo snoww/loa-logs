@@ -5,11 +5,12 @@ use log::*;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::{OptionalExtension, Transaction, params, params_from_iter};
 use serde_json::json;
-use std::cmp::{Reverse, max};
-use std::collections::BTreeMap;
+use std::cmp::{Ordering, Reverse, max};
+use std::collections::{BTreeMap, BTreeSet};
 
 use crate::{
     constants::DB_VERSION,
+    database::sql_types::{CompressedJson, JsonColumn},
     database::{models::*, queries::*, utils::*},
     models::*,
     utils::*,
@@ -216,6 +217,45 @@ impl Repository {
             mode.as_str(),
             damage_type.as_str(),
         ))
+    }
+
+    pub fn get_raid_progression_statistics(
+        &self,
+        criteria: RaidProgressionCriteria,
+    ) -> Result<RaidProgressionStatistics> {
+        let connection = self.0.get()?;
+        let boss_to_raid = criteria.boss_to_raid.clone();
+        let boss_order = criteria.boss_order.clone();
+        let last_gate_bosses = criteria.last_gate_bosses.clone();
+        let (params, query) = build_raid_progression_query(criteria);
+        let rows = connection
+            .prepare_cached(&query)?
+            .query_map(params_from_iter(params), map_raid_progression_row)?
+            .collect::<Result<Vec<_>, _>>()?;
+
+        Ok(build_raid_progression_statistics(
+            rows,
+            &boss_to_raid,
+            &boss_order,
+            &last_gate_bosses,
+        ))
+    }
+
+    pub fn get_raid_progression_range(
+        &self,
+        criteria: RaidProgressionRangeCriteria,
+    ) -> Result<RaidProgressionRange> {
+        let connection = self.0.get()?;
+        let (params, query) = build_raid_progression_range_query(criteria);
+
+        let range = connection.query_row(&query, params_from_iter(params), |row| {
+            std::result::Result::Ok(RaidProgressionRange {
+                first_pull: row.get("first_pull")?,
+                first_clear: row.get("first_clear")?,
+            })
+        })?;
+
+        Ok(range)
     }
 
     pub fn delete_all_uncleared_encounters(&self, keep_favorites: bool) -> Result<()> {
@@ -604,6 +644,75 @@ struct CharacterStatisticsRow {
     support_hyper: Option<f32>,
 }
 
+#[derive(Clone)]
+struct RaidProgressionRow {
+    id: i32,
+    fight_start: i64,
+    boss_name: String,
+    gate: String,
+    duration: i64,
+    difficulty: Option<String>,
+    cleared: bool,
+    team_dps: i64,
+    damage_taken: i64,
+    local_player: String,
+    boss_hp_bars: Option<i32>,
+    boss_current_hp: Option<i64>,
+    boss_max_hp: Option<i64>,
+    boss_hp_log: HashMap<String, Vec<BossHpLog>>,
+    player_name: String,
+    class_id: i32,
+    class_name: String,
+    spec: Option<String>,
+    dps: i64,
+    rdps: Option<i64>,
+    ndps: Option<i64>,
+    player_damage_taken: i64,
+    death_events: Vec<i64>,
+    support_ap: Option<f32>,
+    support_brand: Option<f32>,
+    support_identity: Option<f32>,
+    support_hyper: Option<f32>,
+}
+
+#[derive(Clone)]
+struct RaidProgressionPullAggregate {
+    id: i32,
+    fight_start: i64,
+    boss_name: String,
+    gate: String,
+    duration: i64,
+    difficulty: Option<String>,
+    cleared: bool,
+    team_dps: i64,
+    damage_taken: i64,
+    deaths: i32,
+    progress_bars: Option<i32>,
+    progress_percent: Option<f32>,
+    progress_rank: i32,
+    local_player: String,
+    player_count: i32,
+}
+
+struct RaidProgressionPlayerAggregate {
+    name: String,
+    class_id: i32,
+    class_name: String,
+    spec: Option<String>,
+    pulls: i32,
+    clears: i32,
+    dps_values: Vec<i64>,
+    rdps_values: Vec<i64>,
+    ndps_values: Vec<i64>,
+    damage_taken_values: Vec<i64>,
+    total_deaths: i32,
+    support_ap_values: Vec<f32>,
+    support_brand_values: Vec<f32>,
+    support_identity_values: Vec<f32>,
+    support_hyper_values: Vec<f32>,
+    last_seen: i64,
+}
+
 fn build_character_statistics_query(
     criteria: CharacterStatisticsCriteria,
 ) -> (Vec<String>, String) {
@@ -697,6 +806,139 @@ fn build_character_statistics_query(
     (params, query)
 }
 
+fn build_raid_progression_query(criteria: RaidProgressionCriteria) -> (Vec<String>, String) {
+    let min_duration = if criteria.min_duration > 0 {
+        criteria.min_duration
+    } else {
+        10
+    };
+    let mut params = vec![(min_duration * 1000).to_string()];
+    let mut filters = vec![
+        "e.duration > ?".to_string(),
+        "e.difficulty IS NOT NULL AND e.difficulty != ''".to_string(),
+    ];
+
+    let (range_start, range_end) = reset_window_for_range(criteria.range.as_str());
+    if let Some(start) = criteria.start_time.or(range_start) {
+        filters.push("e.fight_start >= ?".to_string());
+        params.push(start.to_string());
+    }
+
+    if let Some(end) = criteria.end_time.or(range_end) {
+        filters.push("e.fight_start <= ?".to_string());
+        params.push(end.to_string());
+    }
+
+    if !criteria.difficulty.is_empty() {
+        filters.push("e.difficulty = ?".to_string());
+        params.push(criteria.difficulty);
+    }
+
+    if !criteria.bosses.is_empty() {
+        let placeholders = "?,".repeat(criteria.bosses.len());
+        let placeholders = placeholders.trim_end_matches(',');
+        filters.push(format!("e.current_boss IN ({})", placeholders));
+        params.extend(criteria.bosses);
+    }
+
+    let query = format!(
+        "SELECT
+            e.id,
+            e.fight_start,
+            e.current_boss,
+            e.duration,
+            e.difficulty,
+            e.cleared,
+            enc.dps,
+            enc.total_damage_taken,
+            e.local_player,
+            boss.hp_bars,
+            boss.current_hp AS boss_current_hp,
+            boss.max_hp AS boss_max_hp,
+            enc.boss_hp_log,
+            enc.misc,
+            p.name AS player_name,
+            p.class_id,
+            p.class AS class_name,
+            p.spec,
+            p.dps AS player_dps,
+            p.rdps,
+            p.ndps,
+            p.damage_stats,
+            p.support_ap,
+            p.support_brand,
+            p.support_identity,
+            p.support_hyper
+        FROM encounter_preview e
+        JOIN encounter enc ON enc.id = e.id
+        JOIN entity p ON p.encounter_id = e.id
+            AND p.entity_type = 'PLAYER'
+            AND p.class_id > 0
+            AND p.dps > 0
+        LEFT JOIN entity boss ON boss.encounter_id = e.id AND boss.name = e.current_boss
+        WHERE {}
+        ORDER BY e.fight_start ASC, p.dps DESC",
+        filters.join(" AND ")
+    );
+
+    (params, query)
+}
+
+fn build_raid_progression_range_query(
+    criteria: RaidProgressionRangeCriteria,
+) -> (Vec<String>, String) {
+    let min_duration = if criteria.min_duration > 0 {
+        criteria.min_duration
+    } else {
+        10
+    };
+    let mut select_params = Vec::new();
+    let mut where_params = vec![(min_duration * 1000).to_string()];
+    let mut filters = vec![
+        "e.duration > ?".to_string(),
+        "e.difficulty IS NOT NULL AND e.difficulty != ''".to_string(),
+    ];
+
+    if !criteria.difficulty.is_empty() {
+        filters.push("e.difficulty = ?".to_string());
+        where_params.push(criteria.difficulty);
+    }
+
+    if !criteria.bosses.is_empty() {
+        let placeholders = "?,".repeat(criteria.bosses.len());
+        let placeholders = placeholders.trim_end_matches(',');
+        filters.push(format!("e.current_boss IN ({})", placeholders));
+        where_params.extend(criteria.bosses);
+    }
+
+    let first_clear = if criteria.last_gate_bosses.is_empty() {
+        "MIN(CASE WHEN e.cleared THEN e.fight_start END) AS first_clear".to_string()
+    } else {
+        let placeholders = "?,".repeat(criteria.last_gate_bosses.len());
+        let placeholders = placeholders.trim_end_matches(',');
+        select_params.extend(criteria.last_gate_bosses);
+        format!(
+            "MIN(CASE WHEN e.cleared AND e.current_boss IN ({}) THEN e.fight_start END) AS first_clear",
+            placeholders
+        )
+    };
+
+    let query = format!(
+        "SELECT
+            MIN(e.fight_start) AS first_pull,
+            {}
+        FROM encounter_preview e
+        WHERE {}",
+        first_clear,
+        filters.join(" AND ")
+    );
+
+    let mut params = select_params;
+    params.extend(where_params);
+
+    (params, query)
+}
+
 fn reset_window_for_range(range: &str) -> (Option<i64>, Option<i64>) {
     const WEEK_MS: i64 = 7 * 24 * 60 * 60 * 1000;
     const RESET_ANCHOR_MS: i64 = 6 * 24 * 60 * 60 * 1000 + 10 * 60 * 60 * 1000;
@@ -734,6 +976,516 @@ fn map_character_statistics_row(row: &rusqlite::Row) -> rusqlite::Result<Charact
         support_identity: row.get("support_identity").unwrap_or_default(),
         support_hyper: row.get("support_hyper").unwrap_or_default(),
     })
+}
+
+fn map_raid_progression_row(row: &rusqlite::Row) -> rusqlite::Result<RaidProgressionRow> {
+    let misc_str: String = row.get("misc").unwrap_or_default();
+    let misc = serde_json::from_str::<EncounterMisc>(misc_str.as_str())
+        .ok()
+        .unwrap_or_default();
+    let version = misc
+        .version
+        .as_ref()
+        .and_then(|version| semver::Version::parse(version).ok())
+        .unwrap_or_else(|| semver::Version::new(0, 0, 0));
+
+    let damage_stats = if version >= VERSION_1_13_5 {
+        let CompressedJson(damage_stats): CompressedJson<DamageStats> = row.get("damage_stats")?;
+        damage_stats
+    } else {
+        let JsonColumn(damage_stats): JsonColumn<DamageStats> = row.get("damage_stats")?;
+        damage_stats
+    };
+
+    let CompressedJson(mut boss_hp_log): CompressedJson<HashMap<String, Vec<BossHpLog>>> =
+        row.get("boss_hp_log")?;
+    if boss_hp_log.is_empty() {
+        boss_hp_log = misc.boss_hp_log.unwrap_or_default();
+    }
+
+    let boss_name: String = row.get("current_boss")?;
+
+    std::result::Result::Ok(RaidProgressionRow {
+        id: row.get("id")?,
+        fight_start: row.get("fight_start")?,
+        boss_name: boss_name.clone(),
+        gate: boss_name,
+        duration: row.get("duration")?,
+        difficulty: row.get("difficulty")?,
+        cleared: row.get("cleared")?,
+        team_dps: row.get("dps").unwrap_or_default(),
+        damage_taken: row.get("total_damage_taken").unwrap_or_default(),
+        local_player: row.get("local_player").unwrap_or_default(),
+        boss_hp_bars: row.get("hp_bars").unwrap_or_default(),
+        boss_current_hp: row.get("boss_current_hp").unwrap_or_default(),
+        boss_max_hp: row.get("boss_max_hp").unwrap_or_default(),
+        boss_hp_log,
+        player_name: row.get("player_name")?,
+        class_id: row.get("class_id").unwrap_or_default(),
+        class_name: row.get("class_name").unwrap_or_default(),
+        spec: row.get("spec").unwrap_or_default(),
+        dps: row.get("player_dps").unwrap_or_default(),
+        rdps: row.get("rdps").unwrap_or_default(),
+        ndps: row.get("ndps").unwrap_or_default(),
+        player_damage_taken: damage_stats.damage_taken,
+        death_events: death_events_from_stats(&damage_stats),
+        support_ap: row.get("support_ap").unwrap_or_default(),
+        support_brand: row.get("support_brand").unwrap_or_default(),
+        support_identity: row.get("support_identity").unwrap_or_default(),
+        support_hyper: row.get("support_hyper").unwrap_or_default(),
+    })
+}
+
+fn death_events_from_stats(stats: &DamageStats) -> Vec<i64> {
+    let mut death_events = stats
+        .death_info
+        .as_ref()
+        .map(|deaths| {
+            deaths
+                .iter()
+                .filter_map(|death| positive(Some(death.death_time)))
+                .collect::<Vec<_>>()
+        })
+        .unwrap_or_default();
+
+    if death_events.is_empty() && stats.deaths > 0 {
+        for _ in 0..stats.deaths {
+            death_events.push(stats.death_time);
+        }
+    }
+
+    death_events.sort_unstable();
+    death_events
+}
+
+fn build_raid_progression_statistics(
+    rows: Vec<RaidProgressionRow>,
+    boss_to_raid: &HashMap<String, String>,
+    boss_order: &HashMap<String, i32>,
+    last_gate_bosses: &[String],
+) -> RaidProgressionStatistics {
+    let mut pulls_by_id: BTreeMap<i32, Vec<RaidProgressionRow>> = BTreeMap::new();
+    let mut players_by_name: BTreeMap<String, RaidProgressionPlayerAggregate> = BTreeMap::new();
+
+    for mut row in rows {
+        row.gate = boss_to_raid
+            .get(&row.boss_name)
+            .cloned()
+            .unwrap_or_else(|| row.boss_name.clone());
+        pulls_by_id.entry(row.id).or_default().push(row);
+    }
+
+    let mut pulls = Vec::new();
+    for rows in pulls_by_id.values() {
+        let death_counts = progression_death_counts(rows);
+
+        if let Some(row) = rows.first() {
+            pulls.push(build_progression_pull(row, rows, boss_order, &death_counts));
+        }
+
+        for row in rows {
+            let deaths = death_counts
+                .get(&row.player_name)
+                .copied()
+                .unwrap_or_default();
+            players_by_name
+                .entry(row.player_name.clone())
+                .and_modify(|player| update_progression_player(player, row, deaths))
+                .or_insert_with(|| new_progression_player(row, deaths));
+        }
+    }
+
+    let summary = build_progression_summary(&pulls, last_gate_bosses);
+    let gates = build_progression_gates(&pulls);
+    let mut players = players_by_name
+        .into_values()
+        .map(build_progression_player)
+        .collect::<Vec<_>>();
+
+    players.sort_by_key(|player| {
+        (
+            Reverse(player.pulls),
+            !player.is_support,
+            player.name.to_lowercase(),
+        )
+    });
+
+    RaidProgressionStatistics {
+        summary,
+        gates,
+        pulls: pulls
+            .into_iter()
+            .rev()
+            .map(build_progression_pull_row)
+            .collect(),
+        players,
+    }
+}
+
+fn build_progression_pull(
+    row: &RaidProgressionRow,
+    rows: &[RaidProgressionRow],
+    boss_order: &HashMap<String, i32>,
+    death_counts: &BTreeMap<String, i32>,
+) -> RaidProgressionPullAggregate {
+    let (progress_bars, progress_percent) = if row.cleared {
+        (Some(0), Some(0.0))
+    } else {
+        let percent = match (row.boss_current_hp, row.boss_max_hp) {
+            (Some(current_hp), Some(max_hp)) if max_hp > 0 => {
+                let current_hp = current_hp.clamp(0, max_hp);
+                Some(((current_hp as f32 / max_hp as f32) * 100.0).clamp(0.0, 100.0))
+            }
+            _ => row
+                .boss_hp_log
+                .get(&row.boss_name)
+                .and_then(|log| log.last())
+                .map(|entry| {
+                    let percent = if entry.p <= 1.0 {
+                        entry.p * 100.0
+                    } else {
+                        entry.p
+                    };
+                    percent.clamp(0.0, 100.0)
+                }),
+        };
+        let bars = percent.and_then(|percent| {
+            row.boss_hp_bars.map(|boss_hp_bars| {
+                if percent <= 0.0 {
+                    0
+                } else {
+                    ((boss_hp_bars as f32 * percent) / 100.0).ceil() as i32
+                }
+            })
+        });
+        (bars, percent)
+    };
+
+    RaidProgressionPullAggregate {
+        id: row.id,
+        fight_start: row.fight_start,
+        boss_name: row.boss_name.clone(),
+        gate: row.gate.clone(),
+        duration: row.duration,
+        difficulty: row.difficulty.clone(),
+        cleared: row.cleared,
+        team_dps: row.team_dps,
+        damage_taken: row.damage_taken,
+        deaths: death_counts.values().sum(),
+        progress_bars,
+        progress_percent,
+        progress_rank: boss_order.get(&row.boss_name).copied().unwrap_or_default(),
+        local_player: row.local_player.clone(),
+        player_count: rows.len() as i32,
+    }
+}
+
+fn build_progression_pull_row(pull: RaidProgressionPullAggregate) -> RaidProgressionPull {
+    RaidProgressionPull {
+        id: pull.id,
+        fight_start: pull.fight_start,
+        gate: pull.gate,
+        boss_name: pull.boss_name,
+        difficulty: pull.difficulty,
+        duration: pull.duration,
+        cleared: pull.cleared,
+        team_dps: pull.team_dps,
+        damage_taken: pull.damage_taken,
+        deaths: pull.deaths,
+        progress_bars: pull.progress_bars,
+        progress_percent: pull.progress_percent,
+        local_player: pull.local_player,
+        player_count: pull.player_count,
+    }
+}
+
+fn build_progression_summary(
+    pulls: &[RaidProgressionPullAggregate],
+    last_gate_bosses: &[String],
+) -> RaidProgressionSummary {
+    let attempts = pulls.len() as i32;
+    let clears = pulls
+        .iter()
+        .filter(|pull| is_raid_clear(pull, last_gate_bosses))
+        .count() as i32;
+    let wipes = attempts - clears;
+    let first_clear_pull = pulls
+        .iter()
+        .filter(|pull| is_raid_clear(pull, last_gate_bosses))
+        .min_by_key(|pull| pull.fight_start);
+    let best_progress_pull = best_progress_pull(pulls.iter());
+
+    RaidProgressionSummary {
+        attempts,
+        clears,
+        wipes,
+        clear_rate: percent(clears, attempts),
+        first_pull: pulls.iter().map(|pull| pull.fight_start).min(),
+        last_pull: pulls.iter().map(|pull| pull.fight_start).max(),
+        first_clear: first_clear_pull.map(|pull| pull.fight_start),
+        first_clear_duration: first_clear_pull.map(|pull| pull.duration),
+        total_duration: pulls.iter().map(|pull| pull.duration).sum(),
+        average_duration: average_i64(pulls.iter().map(|pull| pull.duration)),
+        average_team_dps: average_i64(pulls.iter().map(|pull| pull.team_dps)),
+        average_damage_taken: average_i64(pulls.iter().map(|pull| pull.damage_taken)),
+        average_deaths: average_i32(pulls.iter().map(|pull| pull.deaths)),
+        best_progress_bars: best_progress_pull.and_then(|pull| pull.progress_bars),
+        best_progress_percent: best_progress_pull.and_then(|pull| pull.progress_percent),
+        best_progress_boss_name: best_progress_pull.map(|pull| pull.boss_name.clone()),
+    }
+}
+
+fn build_progression_gates(pulls: &[RaidProgressionPullAggregate]) -> Vec<RaidProgressionGate> {
+    let mut grouped: BTreeMap<String, Vec<RaidProgressionPullAggregate>> = BTreeMap::new();
+    for pull in pulls {
+        grouped
+            .entry(pull.gate.clone())
+            .or_default()
+            .push(pull.clone());
+    }
+
+    grouped
+        .into_iter()
+        .map(|(gate, rows)| {
+            let attempts = rows.len() as i32;
+            let clears = rows.iter().filter(|pull| pull.cleared).count() as i32;
+            let clear_rows = rows.iter().filter(|pull| pull.cleared).collect::<Vec<_>>();
+            let best_progress_pull = best_progress_pull(rows.iter());
+
+            RaidProgressionGate {
+                gate,
+                attempts,
+                clears,
+                clear_rate: percent(clears, attempts),
+                best_progress_bars: best_progress_pull.and_then(|pull| pull.progress_bars),
+                best_progress_percent: best_progress_pull.and_then(|pull| pull.progress_percent),
+                best_progress_boss_name: best_progress_pull.map(|pull| pull.boss_name.clone()),
+                median_duration: median_i64(clear_rows.iter().map(|pull| pull.duration)),
+                fastest_clear: clear_rows.iter().map(|pull| pull.duration).min(),
+                first_clear: clear_rows.iter().map(|pull| pull.fight_start).min(),
+                average_team_dps: average_i64(rows.iter().map(|pull| pull.team_dps)),
+                average_deaths: average_i32(rows.iter().map(|pull| pull.deaths)),
+            }
+        })
+        .collect()
+}
+
+fn is_raid_clear(pull: &RaidProgressionPullAggregate, last_gate_bosses: &[String]) -> bool {
+    if !pull.cleared {
+        return false;
+    }
+
+    last_gate_bosses.is_empty() || last_gate_bosses.iter().any(|boss| boss == &pull.boss_name)
+}
+
+fn best_progress_pull<'a>(
+    pulls: impl Iterator<Item = &'a RaidProgressionPullAggregate>,
+) -> Option<&'a RaidProgressionPullAggregate> {
+    pulls.max_by(|a, b| compare_progress(a, b))
+}
+
+fn compare_progress(
+    a: &RaidProgressionPullAggregate,
+    b: &RaidProgressionPullAggregate,
+) -> Ordering {
+    a.progress_rank.cmp(&b.progress_rank).then_with(|| {
+        let a_percent = a.progress_percent.unwrap_or(100.0);
+        let b_percent = b.progress_percent.unwrap_or(100.0);
+        b_percent.total_cmp(&a_percent)
+    })
+}
+
+#[derive(Clone)]
+struct ProgressionDeathEvent {
+    player_name: String,
+    elapsed: i64,
+}
+
+fn progression_death_counts(rows: &[RaidProgressionRow]) -> BTreeMap<String, i32> {
+    const WIPE_DEATH_CLUSTER_MS: i64 = 5_000;
+
+    let mut events = rows
+        .iter()
+        .flat_map(|row| {
+            row.death_events.iter().filter_map(|death_time| {
+                normalize_death_elapsed(row, *death_time).map(|elapsed| ProgressionDeathEvent {
+                    player_name: row.player_name.clone(),
+                    elapsed,
+                })
+            })
+        })
+        .collect::<Vec<_>>();
+
+    events.sort_by(|a, b| {
+        a.elapsed
+            .cmp(&b.elapsed)
+            .then_with(|| a.player_name.cmp(&b.player_name))
+    });
+
+    let Some(last_event) = events.last() else {
+        return BTreeMap::new();
+    };
+
+    let cleared = rows.first().is_some_and(|row| row.cleared);
+    let first_wipe_event_index = if cleared {
+        events.len()
+    } else {
+        let wipe_cluster_start = (last_event.elapsed - WIPE_DEATH_CLUSTER_MS).max(0);
+        events
+            .iter()
+            .position(|event| event.elapsed >= wipe_cluster_start)
+            .unwrap_or(events.len())
+    };
+    let wipe_cluster_is_reset =
+        !cleared && final_death_cluster_is_reset(rows, &events, first_wipe_event_index);
+
+    let mut counts = BTreeMap::new();
+    for (index, event) in events.iter().enumerate() {
+        if index < first_wipe_event_index
+            || !wipe_cluster_is_reset
+            || index == first_wipe_event_index
+        {
+            *counts.entry(event.player_name.clone()).or_insert(0) += 1;
+        }
+    }
+
+    counts
+}
+
+fn final_death_cluster_is_reset(
+    rows: &[RaidProgressionRow],
+    events: &[ProgressionDeathEvent],
+    cluster_start_index: usize,
+) -> bool {
+    if cluster_start_index >= events.len() {
+        return false;
+    }
+
+    let active_players = rows
+        .iter()
+        .map(|row| row.player_name.as_str())
+        .collect::<BTreeSet<_>>();
+    let dead_before_cluster = events[..cluster_start_index]
+        .iter()
+        .map(|event| event.player_name.as_str())
+        .collect::<BTreeSet<_>>();
+    let cluster_players = events[cluster_start_index..]
+        .iter()
+        .map(|event| event.player_name.as_str())
+        .collect::<BTreeSet<_>>();
+    let alive_before_cluster = active_players
+        .len()
+        .saturating_sub(dead_before_cluster.len())
+        .max(1);
+
+    cluster_players.len() >= alive_before_cluster
+}
+
+fn normalize_death_elapsed(row: &RaidProgressionRow, death_time: i64) -> Option<i64> {
+    if death_time <= 0 {
+        return None;
+    }
+
+    Some(if death_time >= row.fight_start {
+        (death_time - row.fight_start).max(0)
+    } else {
+        death_time
+    })
+}
+
+fn new_progression_player(row: &RaidProgressionRow, deaths: i32) -> RaidProgressionPlayerAggregate {
+    let mut player = RaidProgressionPlayerAggregate {
+        name: row.player_name.clone(),
+        class_id: row.class_id,
+        class_name: row.class_name.clone(),
+        spec: row.spec.clone(),
+        pulls: 0,
+        clears: 0,
+        dps_values: Vec::new(),
+        rdps_values: Vec::new(),
+        ndps_values: Vec::new(),
+        damage_taken_values: Vec::new(),
+        total_deaths: 0,
+        support_ap_values: Vec::new(),
+        support_brand_values: Vec::new(),
+        support_identity_values: Vec::new(),
+        support_hyper_values: Vec::new(),
+        last_seen: 0,
+    };
+    update_progression_player(&mut player, row, deaths);
+    player
+}
+
+fn update_progression_player(
+    player: &mut RaidProgressionPlayerAggregate,
+    row: &RaidProgressionRow,
+    deaths: i32,
+) {
+    player.pulls += 1;
+    if row.cleared {
+        player.clears += 1;
+    }
+    if row.dps > 0 {
+        player.dps_values.push(row.dps);
+    }
+    if let Some(rdps) = positive(row.rdps) {
+        player.rdps_values.push(rdps);
+    }
+    if let Some(ndps) = positive(row.ndps) {
+        player.ndps_values.push(ndps);
+    }
+    if row.player_damage_taken > 0 {
+        player.damage_taken_values.push(row.player_damage_taken);
+    }
+    if let Some(support_ap) = positive_f32(row.support_ap) {
+        player.support_ap_values.push(support_ap);
+    }
+    if let Some(support_brand) = positive_f32(row.support_brand) {
+        player.support_brand_values.push(support_brand);
+    }
+    if let Some(support_identity) = positive_f32(row.support_identity) {
+        player.support_identity_values.push(support_identity);
+    }
+    if let Some(support_hyper) = positive_f32(row.support_hyper) {
+        player.support_hyper_values.push(support_hyper);
+    }
+    player.total_deaths += deaths;
+    player.last_seen = player.last_seen.max(row.fight_start);
+    if player.spec.is_none() {
+        player.spec = row.spec.clone();
+    }
+}
+
+fn build_progression_player(player: RaidProgressionPlayerAggregate) -> RaidProgressionPlayer {
+    let is_support = player.spec.as_deref().is_some_and(is_support_spec);
+    let best_dps = player.dps_values.iter().copied().max();
+
+    RaidProgressionPlayer {
+        name: player.name,
+        class_id: player.class_id,
+        class: player.class_name,
+        spec: player.spec,
+        is_support,
+        pulls: player.pulls,
+        clears: player.clears,
+        clear_rate: percent(player.clears, player.pulls),
+        average_dps: average_i64(player.dps_values.into_iter()),
+        best_dps,
+        average_rdps: average_i64(player.rdps_values.into_iter()),
+        average_ndps: average_i64(player.ndps_values.into_iter()),
+        average_damage_taken: average_i64(player.damage_taken_values.into_iter()),
+        total_deaths: player.total_deaths,
+        deaths_per_pull: if player.pulls == 0 {
+            0.0
+        } else {
+            player.total_deaths as f32 / player.pulls as f32
+        },
+        average_support_ap: average_f32(player.support_ap_values.into_iter()),
+        average_support_brand: average_f32(player.support_brand_values.into_iter()),
+        average_support_identity: average_f32(player.support_identity_values.into_iter()),
+        average_support_hyper: average_f32(player.support_hyper_values.into_iter()),
+        last_seen: player.last_seen,
+    }
 }
 
 fn populate_support_contribution_denominators(
@@ -1127,7 +1879,40 @@ fn average_f32(values: impl Iterator<Item = f32>) -> Option<f32> {
         total += value;
     }
 
-    (count > 0).then_some(total / count as f32)
+    if count > 0 {
+        Some(total / count as f32)
+    } else {
+        None
+    }
+}
+
+fn average_i64(values: impl Iterator<Item = i64>) -> Option<i64> {
+    let mut count = 0;
+    let mut total = 0;
+    for value in values {
+        if value <= 0 {
+            continue;
+        }
+        count += 1;
+        total += value;
+    }
+
+    if count > 0 { Some(total / count) } else { None }
+}
+
+fn average_i32(values: impl Iterator<Item = i32>) -> Option<f32> {
+    let mut count = 0;
+    let mut total = 0;
+    for value in values {
+        count += 1;
+        total += value;
+    }
+
+    if count > 0 {
+        Some(total as f32 / count as f32)
+    } else {
+        None
+    }
 }
 
 fn median_f32(values: impl Iterator<Item = f32>) -> Option<f32> {
@@ -1472,6 +2257,40 @@ mod tests {
     }
 
     #[test]
+    fn progression_deaths_count_until_final_wipe_reset() {
+        let rows = vec![
+            progression_row("EarlyDeath", vec![50_000], false),
+            progression_row("SecondDeath", vec![120_000], false),
+            progression_row("WipeCause", vec![295_000], false),
+            progression_row("WipeReset", vec![296_000], false),
+        ];
+
+        let deaths = progression_death_counts(&rows);
+
+        assert_eq!(deaths.get("EarlyDeath"), Some(&1));
+        assert_eq!(deaths.get("SecondDeath"), Some(&1));
+        assert_eq!(deaths.get("WipeCause"), Some(&1));
+        assert_eq!(deaths.get("WipeReset"), None);
+        assert_eq!(deaths.values().sum::<i32>(), 3);
+    }
+
+    #[test]
+    fn progression_deaths_keep_late_deaths_when_they_are_not_a_full_reset() {
+        let rows = vec![
+            progression_row("LateDeathA", vec![295_000], false),
+            progression_row("LateDeathB", vec![296_000], false),
+            progression_row("AliveA", vec![], false),
+            progression_row("AliveB", vec![], false),
+        ];
+
+        let deaths = progression_death_counts(&rows);
+
+        assert_eq!(deaths.get("LateDeathA"), Some(&1));
+        assert_eq!(deaths.get("LateDeathB"), Some(&1));
+        assert_eq!(deaths.values().sum::<i32>(), 2);
+    }
+
+    #[test]
     fn raid_rows_group_bosses_by_raid_name() {
         let rows = vec![
             CharacterStatisticsRow {
@@ -1542,6 +2361,38 @@ mod tests {
                 ..Default::default()
             },
             ..Default::default()
+        }
+    }
+
+    fn progression_row(name: &str, death_events: Vec<i64>, cleared: bool) -> RaidProgressionRow {
+        RaidProgressionRow {
+            id: 1,
+            fight_start: 1_000,
+            boss_name: "Boss".to_string(),
+            gate: "Gate".to_string(),
+            duration: 300_000,
+            difficulty: Some("Hard".to_string()),
+            cleared,
+            team_dps: 1,
+            damage_taken: 0,
+            local_player: "Local".to_string(),
+            boss_hp_bars: None,
+            boss_current_hp: None,
+            boss_max_hp: None,
+            boss_hp_log: HashMap::new(),
+            player_name: name.to_string(),
+            class_id: 102,
+            class_name: "Class".to_string(),
+            spec: Some("Spec".to_string()),
+            dps: 1,
+            rdps: None,
+            ndps: None,
+            player_damage_taken: 0,
+            death_events,
+            support_ap: None,
+            support_brand: None,
+            support_identity: None,
+            support_hyper: None,
         }
     }
 

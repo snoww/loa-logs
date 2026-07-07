@@ -157,6 +157,92 @@ export interface CharacterStatisticsUnavailable {
   supportLogs: number;
 }
 
+export interface RaidProgressionStatistics {
+  summary: RaidProgressionSummary;
+  gates: RaidProgressionGate[];
+  pulls: RaidProgressionPull[];
+  players: RaidProgressionPlayer[];
+}
+
+export interface RaidProgressionRange {
+  firstPull?: number;
+  firstClear?: number;
+}
+
+export interface RaidProgressionSummary {
+  attempts: number;
+  clears: number;
+  wipes: number;
+  clearRate: number;
+  firstPull?: number;
+  lastPull?: number;
+  firstClear?: number;
+  firstClearDuration?: number;
+  totalDuration: number;
+  averageDuration?: number;
+  averageTeamDps?: number;
+  averageDamageTaken?: number;
+  averageDeaths?: number;
+  bestProgressBars?: number;
+  bestProgressPercent?: number;
+  bestProgressBossName?: string;
+}
+
+export interface RaidProgressionGate {
+  gate: string;
+  attempts: number;
+  clears: number;
+  clearRate: number;
+  bestProgressBars?: number;
+  bestProgressPercent?: number;
+  bestProgressBossName?: string;
+  medianDuration?: number;
+  fastestClear?: number;
+  firstClear?: number;
+  averageTeamDps?: number;
+  averageDeaths?: number;
+}
+
+export interface RaidProgressionPull {
+  id: number;
+  fightStart: number;
+  gate: string;
+  bossName: string;
+  difficulty?: string;
+  duration: number;
+  cleared: boolean;
+  teamDps: number;
+  damageTaken: number;
+  deaths: number;
+  progressBars?: number;
+  progressPercent?: number;
+  localPlayer: string;
+  playerCount: number;
+}
+
+export interface RaidProgressionPlayer {
+  name: string;
+  classId: number;
+  class: string;
+  spec?: string;
+  isSupport: boolean;
+  pulls: number;
+  clears: number;
+  clearRate: number;
+  averageDps?: number;
+  bestDps?: number;
+  averageRdps?: number;
+  averageNdps?: number;
+  averageDamageTaken?: number;
+  totalDeaths: number;
+  deathsPerPull: number;
+  averageSupportAp?: number;
+  averageSupportBrand?: number;
+  averageSupportIdentity?: number;
+  averageSupportHyper?: number;
+  lastSeen: number;
+}
+
 export interface EncounterDamageStats {
   totalDamageDealt: number;
   topDamageDealt: number;

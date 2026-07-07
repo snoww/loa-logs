@@ -11,15 +11,16 @@
   import { difficultyMap, encounterMap, raidGates } from "$lib/constants/encounters";
   import { IconRotateCcw } from "$lib/icons";
   import type { CharacterStatistics, RaidStatisticsRow, RecentBestEncounter } from "$lib/types";
-  import {
-    abbreviateNumber,
-    getClassIcon,
-    isSupportClassId,
-    isSupportSpec,
-    SUPPORT_SPECS,
-    timestampToMinutesAndSeconds
-  } from "$lib/utils";
+  import { getClassIcon, isSupportClassId, isSupportSpec, SUPPORT_SPECS } from "$lib/utils";
   import { onMount } from "svelte";
+
+  import {
+    formatDps,
+    formatDuration,
+    formatLongDate as formatDate,
+    formatPercent,
+    formatRatioPercent
+  } from "../format";
 
   type Range = CharacterStatisticsCriteria["range"];
   type Mode = CharacterStatisticsCriteria["mode"];
@@ -162,31 +163,6 @@
         loading = false;
       }
     }
-  }
-
-  function formatDps(value?: number | null) {
-    if (value === undefined || value === null || value <= 0) return "-";
-    return abbreviateNumber(value).replace(/[kmbt]$/, (suffix) => suffix.toUpperCase());
-  }
-
-  function formatPercent(value?: number | null) {
-    if (value === undefined || value === null) return "-";
-    return `${value.toFixed(1)}%`;
-  }
-
-  function formatRatioPercent(value?: number | null) {
-    if (value === undefined || value === null) return "-";
-    return `${(value * 100).toFixed(1)}%`;
-  }
-
-  function formatDuration(value?: number | null) {
-    if (value === undefined || value === null || value <= 0) return "-";
-    return timestampToMinutesAndSeconds(value);
-  }
-
-  function formatDate(value?: number | null) {
-    if (value === undefined || value === null || value <= 0) return "-";
-    return new Intl.DateTimeFormat(undefined, { month: "long", day: "numeric" }).format(new Date(value));
   }
 
   function gateLabel(row: RaidStatisticsRow) {
@@ -464,7 +440,7 @@
                     <th class="px-3 py-2 font-medium">AP</th>
                     <th class="px-3 py-2 font-medium">Brand</th>
                     <th class="px-3 py-2 font-medium">Identity</th>
-                    <th class="px-3 py-2 font-medium">Hyper</th>
+                    <th class="px-3 py-2 font-medium">T</th>
                   {:else}
                     <th class="px-3 py-2 font-medium">Median {selectedDamageTypeInfo.label}</th>
                     <th class="px-3 py-2 font-medium">Best {selectedDamageTypeInfo.label}</th>
@@ -508,7 +484,7 @@
                         </QuickTooltip>
                       </td>
                       <td class="px-3 py-2">
-                        <QuickTooltip tooltip="Average hyper awakening buff uptime on cleared pulls" class="w-fit">
+                        <QuickTooltip tooltip="Average T skill buff uptime on cleared pulls" class="w-fit">
                           {formatRatioPercent(row.support?.hyper)}
                         </QuickTooltip>
                       </td>

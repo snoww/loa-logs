@@ -12,6 +12,8 @@ import type {
   EncountersOverview,
   IdentityEvent,
   NinevehEvent,
+  RaidProgressionRange,
+  RaidProgressionStatistics,
   PartyEvent,
   ZoneChangeEvent
 } from "./types";
@@ -130,6 +132,31 @@ export interface CharacterStatisticsCriteria {
 
 export const getCharacterStatistics = (criteria: CharacterStatisticsCriteria): Promise<CharacterStatistics> =>
   invoke("get_character_statistics", { criteria });
+
+export interface RaidProgressionCriteria {
+  range: CharacterStatisticsCriteria["range"];
+  bossToRaid?: Record<string, string>;
+  bossOrder?: Record<string, number>;
+  startTime?: number;
+  endTime?: number;
+  bosses?: string[];
+  lastGateBosses?: string[];
+  difficulty?: string;
+  minDuration?: number;
+}
+
+export interface RaidProgressionRangeCriteria {
+  bosses?: string[];
+  lastGateBosses?: string[];
+  difficulty?: string;
+  minDuration?: number;
+}
+
+export const getRaidProgressionRange = (criteria: RaidProgressionRangeCriteria): Promise<RaidProgressionRange> =>
+  invoke("get_raid_progression_range", { criteria });
+
+export const getRaidProgressionStatistics = (criteria: RaidProgressionCriteria): Promise<RaidProgressionStatistics> =>
+  invoke("get_raid_progression_statistics", { criteria });
 
 export interface SyncArgs {
   encounter: number;

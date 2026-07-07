@@ -152,6 +152,127 @@ pub struct CharacterStatisticsUnavailable {
     pub support_logs: i32,
 }
 
+#[derive(Debug, Default, Deserialize, Clone)]
+#[serde(rename_all = "camelCase", default)]
+pub struct RaidProgressionCriteria {
+    pub range: String,
+    pub boss_to_raid: HashMap<String, String>,
+    pub boss_order: HashMap<String, i32>,
+    pub bosses: Vec<String>,
+    pub last_gate_bosses: Vec<String>,
+    pub difficulty: String,
+    pub start_time: Option<i64>,
+    pub end_time: Option<i64>,
+    pub min_duration: i32,
+}
+
+#[derive(Debug, Default, Deserialize, Clone)]
+#[serde(rename_all = "camelCase", default)]
+pub struct RaidProgressionRangeCriteria {
+    pub bosses: Vec<String>,
+    pub last_gate_bosses: Vec<String>,
+    pub difficulty: String,
+    pub min_duration: i32,
+}
+
+#[derive(Debug, Default, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct RaidProgressionRange {
+    pub first_pull: Option<i64>,
+    pub first_clear: Option<i64>,
+}
+
+#[derive(Debug, Default, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct RaidProgressionStatistics {
+    pub summary: RaidProgressionSummary,
+    pub gates: Vec<RaidProgressionGate>,
+    pub pulls: Vec<RaidProgressionPull>,
+    pub players: Vec<RaidProgressionPlayer>,
+}
+
+#[derive(Debug, Default, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct RaidProgressionSummary {
+    pub attempts: i32,
+    pub clears: i32,
+    pub wipes: i32,
+    pub clear_rate: f32,
+    pub first_pull: Option<i64>,
+    pub last_pull: Option<i64>,
+    pub first_clear: Option<i64>,
+    pub first_clear_duration: Option<i64>,
+    pub total_duration: i64,
+    pub average_duration: Option<i64>,
+    pub average_team_dps: Option<i64>,
+    pub average_damage_taken: Option<i64>,
+    pub average_deaths: Option<f32>,
+    pub best_progress_bars: Option<i32>,
+    pub best_progress_percent: Option<f32>,
+    pub best_progress_boss_name: Option<String>,
+}
+
+#[derive(Debug, Default, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct RaidProgressionGate {
+    pub gate: String,
+    pub attempts: i32,
+    pub clears: i32,
+    pub clear_rate: f32,
+    pub best_progress_bars: Option<i32>,
+    pub best_progress_percent: Option<f32>,
+    pub best_progress_boss_name: Option<String>,
+    pub median_duration: Option<i64>,
+    pub fastest_clear: Option<i64>,
+    pub first_clear: Option<i64>,
+    pub average_team_dps: Option<i64>,
+    pub average_deaths: Option<f32>,
+}
+
+#[derive(Debug, Default, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct RaidProgressionPull {
+    pub id: i32,
+    pub fight_start: i64,
+    pub gate: String,
+    pub boss_name: String,
+    pub difficulty: Option<String>,
+    pub duration: i64,
+    pub cleared: bool,
+    pub team_dps: i64,
+    pub damage_taken: i64,
+    pub deaths: i32,
+    pub progress_bars: Option<i32>,
+    pub progress_percent: Option<f32>,
+    pub local_player: String,
+    pub player_count: i32,
+}
+
+#[derive(Debug, Default, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct RaidProgressionPlayer {
+    pub name: String,
+    pub class_id: i32,
+    pub class: String,
+    pub spec: Option<String>,
+    pub is_support: bool,
+    pub pulls: i32,
+    pub clears: i32,
+    pub clear_rate: f32,
+    pub average_dps: Option<i64>,
+    pub best_dps: Option<i64>,
+    pub average_rdps: Option<i64>,
+    pub average_ndps: Option<i64>,
+    pub average_damage_taken: Option<i64>,
+    pub total_deaths: i32,
+    pub deaths_per_pull: f32,
+    pub average_support_ap: Option<f32>,
+    pub average_support_brand: Option<f32>,
+    pub average_support_identity: Option<f32>,
+    pub average_support_hyper: Option<f32>,
+    pub last_seen: i64,
+}
+
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", default)]
 pub struct SearchFilter {

@@ -61,6 +61,8 @@ pub fn generate_handlers() -> Box<dyn Fn(Invoke) -> bool + Send + Sync> {
         install_stable_update,
         get_local_characters,
         get_character_statistics,
+        get_raid_progression_range,
+        get_raid_progression_statistics,
     ])
 }
 
@@ -97,6 +99,24 @@ pub fn get_character_statistics(
 ) -> Result<CharacterStatistics> {
     let statistics = repository.get_character_statistics(criteria)?;
     Ok(statistics)
+}
+
+#[command]
+pub fn get_raid_progression_statistics(
+    repository: State<Repository>,
+    criteria: RaidProgressionCriteria,
+) -> Result<RaidProgressionStatistics> {
+    let statistics = repository.get_raid_progression_statistics(criteria)?;
+    Ok(statistics)
+}
+
+#[command]
+pub fn get_raid_progression_range(
+    repository: State<Repository>,
+    criteria: RaidProgressionRangeCriteria,
+) -> Result<RaidProgressionRange> {
+    let range = repository.get_raid_progression_range(criteria)?;
+    Ok(range)
 }
 
 #[command]
