@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { checkLoaRunning, checkNinevehRunning, installBetaUpdate, relaunchApp } from "$lib/api";
+  import { checkLoaRunning, checkNinevehRunning, installBetaUpdate, installStableUpdate, relaunchApp } from "$lib/api";
   import { settings, updateInfo } from "$lib/stores.svelte.js";
   import { createDialog, melt } from "@melt-ui/svelte";
   import { fade } from "svelte/transition";
@@ -24,6 +24,8 @@
     installing = true;
     if (updateInfo.isBeta) {
       await installBetaUpdate();
+    } else {
+      await installStableUpdate();
     }
     await relaunchApp();
   }
