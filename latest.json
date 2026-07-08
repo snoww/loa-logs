@@ -1,15 +1,15 @@
 {
   "version": "v1.47.1",
-  "notes": "### v1.47.1 - July 8th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n### Note: ExitLag users must check the ExitLag Compatibility setting\n\n#### read about rdps in depth [here](https://github.com/snoww/loa-logs/wiki/rDPS-and-nDPS-Explained)\n\n#### NEW FEATURES\n\n- new statistics section in logs (thanks to big c)\n  - character stats - some basic stats on your clears per character\n  - raid prog stats - some stats about your progression on raids, inspired from [raided.pro/prog](https://raided.pro/prog) (note that stats from older raids might be missing data)\n",
+  "notes": "### v1.47.1 - July 8th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n### Note: ExitLag users must check the ExitLag Compatibility setting\n\n#### read about rdps in depth [here](https://github.com/snoww/loa-logs/wiki/rDPS-and-nDPS-Explained)\n\n#### NEW FEATURES\n\n- new statistics section - top left > stats (thanks to big c)\n  - character stats - some basic stats on your clears per character\n  - raid prog stats - some stats about your progression on raids, inspired from [raided.pro/prog](https://raided.pro/prog) (note that stats from older raids might be missing data)\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed auto updater not updating\n",
   "pub_date": "2026-07-08T04:20:08.001Z",
   "platforms": {
     "windows-x86_64": {
       "url": "https://github.com/snoww/loa-logs/releases/download/v1.47.1/LOA.Logs_1.47.1_x64-setup.exe",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlY4YXJyWERHOHh5bklDQXI4Y2RmdFB2WlprTk1kS0E1SENMRC9RWHJEU1JSNjZicE90T3FWOWY2dGZXaHc1a3AvODFmSmh5bHl6bDBXbUEvYS9sY2djPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgzNDg0NjYwCWZpbGU6TE9BIExvZ3NfMS40Ny4xX3g2NC1zZXR1cC5leGUKc3BuWTNQdUFpdWxYdWhZQ2ZNcFgxNmlwRE1URmxjcW5kNWlLVzkrTEczNlpwZ2hjaU8vUkZDellzQW1BK3FMcStxRWpzTnZKSzVxUFpJczdlekl4QkE9PQo="
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlhoV1dKOHJUNE1HVGZtQmQrekpQYzlPU0NnYy80U0toczc3RkFpeHdEQW95YXZZODZ4MmprNkZ2cTRIOFJ6VHpOWnI2SDBFbXBEYmtTcGU3ZUxBb2dVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgzNDkxOTg3CWZpbGU6TE9BIExvZ3NfMS40Ny4xX3g2NC1zZXR1cC5leGUKKzBhZzBoUnFUMkk5NDM1TEplV0xIQXlyVU1xcGdLenAxU1c2VFRtZGF5YmV2WWxWTVBEdTJuWUFRa1Y1QncwNVkyUnJUVW5OS2NMUmh5MDNldkhRQkE9PQo="
     },
     "linux-x86_64": {
       "url": "https://github.com/snoww/loa-logs/releases/download/v1.47.1/LOA.Logs_1.47.1_amd64.AppImage",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlJhTmZKYjdtMlcrTmgyRUFOTGRKSWhPNlhkSDFYNFE0YndqNnZmK0dFRmdQam8yZWdPdVF0bkhSbGFJUSt4WTMyQnJCTEd2TzBsemhjNFQrUktHQ3d3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgzNDg0OTUwCWZpbGU6TE9BIExvZ3NfMS40Ny4xX2FtZDY0LkFwcEltYWdlCm94THlmQlh0YWpvQmhOK2J4OVdYdHlnd1hvZlpPN1U3QUt4Qm1COEdyU0grTmRzWjgrbWxONFJuenY1YTdpaGR0QzhjYUUzNHVyMkJsbWhYZGFqeENRPT0K"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmFMMkVtUUFGdEtMNUttRlA1SnNIWHdFOEVON2dTZThieTBMaGFFbVprMENQZmV0TnI2Qmk3MXRmcWV4YmxBVC9KZjlSNStqYXlUSHg2SDZrSkgwK0FjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgzNDkyMjE5CWZpbGU6TE9BIExvZ3NfMS40Ny4xX2FtZDY0LkFwcEltYWdlCm8rNGFOSVVMYlE3SU0yZmRmOFNad0tGdVJKbHp2bjNKYjJRTXNPaUVja0ZwOVdKbmt2WGg1dVBXU3N6RGlWMElDNDRPdFVXT2pzZVJxL2QvdURXd0JRPT0K"
     }
   }
 }

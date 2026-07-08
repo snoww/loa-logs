@@ -22,3 +22,7 @@
 - new statistics section - top left > stats (thanks to big c)
   - character stats - some basic stats on your clears per character
   - raid prog stats - some stats about your progression on raids, inspired from [raided.pro/prog](https://raided.pro/prog) (note that stats from older raids might be missing data)
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fixed auto updater not updating
