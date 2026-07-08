@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { LogColumn } from "$lib/column";
   import type { EntityState } from "$lib/entity.svelte.js";
   import { SkillState } from "$lib/skill.svelte.js";
   import { settings } from "$lib/stores.svelte.js";
@@ -6,10 +7,10 @@
   import { getSkillIcon, rgbLinearShadeAdjust } from "$lib/utils";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
+
   import { getSortedBreakdownColumns } from "./PlayerBreakdownColumns.svelte";
   import QuickTooltip from "./QuickTooltip.svelte";
   import { skillTooltip } from "./Snippets.svelte";
-  import type { LogColumn } from "$lib/column";
 
   interface Props {
     skill: Skill;

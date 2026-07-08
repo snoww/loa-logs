@@ -767,4 +767,3 @@ export interface PartyBuffs {
   partyPercentages: Array<number[]>;
   partyBuffs: Map<string, Map<string, Array<BuffDetails>>>;
 }
-

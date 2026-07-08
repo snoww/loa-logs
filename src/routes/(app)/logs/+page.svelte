@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { loadEncountersPreview } from "$lib/api";
   import { classNameToClassId } from "$lib/constants/classes";
   import { encounterMap } from "$lib/constants/encounters";
   import { encounterFilter, settings } from "$lib/stores.svelte";
@@ -6,11 +7,11 @@
   import { invoke } from "@tauri-apps/api/core";
   import { untrack } from "svelte";
   import { SvelteSet } from "svelte/reactivity";
+
   import Header from "../Header.svelte";
   import EncountersTable from "./EncountersTable.svelte";
   import Pages from "./Pages.svelte";
   import Search from "./Search.svelte";
-  import { loadEncountersPreview } from "$lib/api";
 
   let overview: EncountersOverview | null = $state(null);
   let container = $state<HTMLDivElement | null>(null);

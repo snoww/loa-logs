@@ -2,6 +2,7 @@
   import type { LogColumn } from "$lib/column";
   import type { EntityState } from "$lib/entity.svelte.js";
   import type { SkillState } from "$lib/skill.svelte.js";
+
   import Back from "./Back.svelte";
   import { getSortedBreakdownColumns } from "./PlayerBreakdownColumns.svelte";
   import QuickTooltip from "./QuickTooltip.svelte";

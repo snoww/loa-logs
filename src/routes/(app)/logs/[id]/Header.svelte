@@ -1,13 +1,13 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
+  import { toggleEncounterFavorite } from "$lib/api";
   import BossOnlyDamage from "$lib/components/BossOnlyDamage.svelte";
+  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import { difficultyColor } from "$lib/components/Snippets.svelte";
   import { raidGates } from "$lib/constants/encounters";
   import { IconArrowLeft, IconStar } from "$lib/icons";
   import type { Encounter } from "$lib/types";
   import { formatTimestamp, getBossHpBars } from "$lib/utils";
-  import { toggleEncounterFavorite } from "$lib/api";
 
   let { encounter }: { encounter: Encounter } = $props();
   let raidGate = $derived(raidGates[encounter.currentBossName]);

@@ -5,6 +5,7 @@
 <script lang="ts">
   import { EntityState } from "$lib/entity.svelte";
   import type { Skill } from "$lib/types";
+
   import SkillTooltip from "./tooltips/SkillTooltip.svelte";
 </script>
 

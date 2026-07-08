@@ -2,11 +2,11 @@
   import { bossHpBarColors } from "$lib/constants/encounters";
   import { settings } from "$lib/stores.svelte.js";
   import type { Entity } from "$lib/types";
+  import { abbreviateNumberSplit, getBossHpBars } from "$lib/utils";
   import { broadcastLiveMessage } from "$lib/utils/live.svelte.js";
   import { onDestroy } from "svelte";
   import { linear } from "svelte/easing";
   import { Tween } from "svelte/motion";
-  import { abbreviateNumberSplit, getBossHpBars } from "$lib/utils";
 
   let { boss }: { boss: Entity } = $props();
 

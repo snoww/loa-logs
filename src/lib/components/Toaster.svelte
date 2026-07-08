@@ -17,11 +17,12 @@
 </script>
 
 <script lang="ts">
+  import { page } from "$app/state";
+  import { settings } from "$lib/stores.svelte";
   import { createToaster } from "@melt-ui/svelte";
   import { flip } from "svelte/animate";
+
   import Toast from "./Toast.svelte";
-  import { settings } from "$lib/stores.svelte";
-  import { page } from "$app/state";
 
   const live = $derived(page.route.id === "/(live)/live");
 </script>

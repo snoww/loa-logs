@@ -1,9 +1,9 @@
 <script lang="ts">
+  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import { cardIds } from "$lib/constants/cards";
   import { settings } from "$lib/stores.svelte.js";
   import type { Entity } from "$lib/types";
   import { getSkillIcon, rgbLinearShadeAdjust } from "$lib/utils";
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
 
   interface Props {
     player: Entity;
