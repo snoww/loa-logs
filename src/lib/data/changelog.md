@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.47.0 - July 1st, 2026
+    v1.47.1 - July 8th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -19,4 +19,6 @@
 
 #### NEW FEATURES
 
-- updated meter for weekly patch
+- new statistics section - top left > stats (thanks to big c)
+  - character stats - some basic stats on your clears per character
+  - raid prog stats - some stats about your progression on raids, inspired from [raided.pro/prog](https://raided.pro/prog) (note that stats from older raids might be missing data)
