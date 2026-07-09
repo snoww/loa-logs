@@ -12,7 +12,6 @@ use tauri_plugin_updater::UpdaterExt;
 
 use crate::api::BanList;
 use crate::{
-    app,
     constants::{BETA_ENDPOINT, DEFAULT_PORT},
     context::AppContext,
     settings::*,

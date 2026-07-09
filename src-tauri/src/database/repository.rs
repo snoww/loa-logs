@@ -1261,7 +1261,7 @@ fn progression_boss_progress(
         .or_else(|| {
             candidates
                 .into_iter()
-                .max_by(|a, b| compare_progress_candidate(a, b))
+                .max_by(compare_progress_candidate)
         })
 }
 

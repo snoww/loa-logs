@@ -158,8 +158,8 @@ impl SkillTracker {
         }
 
         for skill_id in moved_skill_ids {
-            if let Some(timestamp) = self.skill_timestamp.get(&(old_entity_id, skill_id)) {
-                if self
+            if let Some(timestamp) = self.skill_timestamp.get(&(old_entity_id, skill_id))
+                && self
                     .skill_timestamp
                     .get(&(new_entity_id, skill_id))
                     .is_none()
@@ -167,7 +167,6 @@ impl SkillTracker {
                     self.skill_timestamp
                         .insert((new_entity_id, skill_id), timestamp);
                 }
-            }
             self.skill_timestamp.invalidate(&(old_entity_id, skill_id));
         }
     }

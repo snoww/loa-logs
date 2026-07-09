@@ -1921,17 +1921,14 @@ impl EntityTracker {
             .removed_player_entities_by_character_id
             .get(&character_id)
             .filter(|entity| entity.name == name)
-        {
-            if entity.entity_type == Player {
-                if !force_refresh
+            && entity.entity_type == Player
+                && !force_refresh
                     && !bootstrap_refresh_needed
                     && ((entity.inspect_snapshot.is_some() && !entity.inspect_stale)
                         || entity.inspect_ready_at_ms > now)
                 {
                     already_ready = true;
                 }
-            }
-        }
         if !already_ready {
             for entity in self
                 .removed_player_entities_by_name_class

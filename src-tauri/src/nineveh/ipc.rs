@@ -48,7 +48,7 @@ pub async fn connect_to_nineveh(
     )
     .await
     {
-        Ok(Ok(IPCServerToClientMessage::HandshakeAck {})) => {
+        Ok(Ok(IPCServerToClientMessage::HandshakeAck)) => {
             // Handshake successful
         }
         Ok(Ok(_)) => {

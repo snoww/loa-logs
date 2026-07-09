@@ -1114,14 +1114,14 @@ fn resolve_self_source_stats<'a>(
     source_player_stats.map(Arc::as_ref)
 }
 
-fn require_source_player_stats<'a>(
+fn require_source_player_stats(
     requirement: SourceStatsRequirement,
-    source_player_stats: Option<&'a PlayerStats>,
+    source_player_stats: Option<&PlayerStats>,
     source_entity_id: u64,
     source_skill_id: u32,
     status_effect_id: u32,
     is_required: bool,
-) -> Result<Option<&'a PlayerStats>, RdpsInvalidReason> {
+) -> Result<Option<&PlayerStats>, RdpsInvalidReason> {
     if let Some(source_player_stats) = source_player_stats {
         return Ok(Some(source_player_stats));
     }

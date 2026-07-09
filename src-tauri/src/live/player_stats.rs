@@ -47,7 +47,7 @@ thread_local! {
 fn damage_split_weight_cache() -> &'static Vec<Vec<f64>> {
     static CACHE: OnceLock<Vec<Vec<f64>>> = OnceLock::new();
     CACHE.get_or_init(|| {
-        let mut factorial = vec![1.0; DAMAGE_SPLIT_CACHED_MAX_FACTORS + 1];
+        let mut factorial = [1.0; DAMAGE_SPLIT_CACHED_MAX_FACTORS + 1];
         for index in 1..=DAMAGE_SPLIT_CACHED_MAX_FACTORS {
             factorial[index] = factorial[index - 1] * index as f64;
         }
@@ -1146,7 +1146,7 @@ impl PlayerStats {
             })
     }
 
-    fn sort_active_combat_effects(entries: &mut Vec<ActiveCombatEffect>) {
+    fn sort_active_combat_effects(entries: &mut [ActiveCombatEffect]) {
         entries.sort_by(|lhs, rhs| {
             lhs.owner_id
                 .cmp(&rhs.owner_id)
@@ -1156,7 +1156,7 @@ impl PlayerStats {
         });
     }
 
-    fn sort_active_addon_skill_features(entries: &mut Vec<ActiveAddonSkillFeature>) {
+    fn sort_active_addon_skill_features(entries: &mut [ActiveAddonSkillFeature]) {
         entries.sort_by(|lhs, rhs| {
             lhs.owner_id
                 .cmp(&rhs.owner_id)
@@ -1164,13 +1164,13 @@ impl PlayerStats {
         });
     }
 
-    fn sort_active_ability_features(entries: &mut Vec<AbilityFeatureState>) {
+    fn sort_active_ability_features(entries: &mut [AbilityFeatureState]) {
         entries.sort_by(|lhs, rhs| {
             lhs.owner_id
                 .cmp(&rhs.owner_id)
                 .then_with(|| {
                     normalize_feature_type(&lhs.feature_type)
-                        .cmp(&normalize_feature_type(&rhs.feature_type))
+                        .cmp(normalize_feature_type(&rhs.feature_type))
                 })
                 .then_with(|| lhs.level.cmp(&rhs.level))
         });
@@ -2830,25 +2830,22 @@ impl PlayerStats {
                 CompositeOwnership::PreserveSource => source_priority,
                 CompositeOwnership::ForceSelf => STAT_PRIORITY_DEFAULT,
             };
-            match target {
-                CompositeTarget::CriticalRateCapOverToEvolution => {
-                    this.evolution_damage.add_with_priority(
+            if let CompositeTarget::CriticalRateCapOverToEvolution = target {
+                this.evolution_damage.add_with_priority(
+                    added_value,
+                    this.owner_id,
+                    output_owner_id,
+                    source_label.clone(),
+                    output_priority,
+                );
+                this.evolution_damage_bonus_from_blunt_thorn
+                    .add_with_priority(
                         added_value,
                         this.owner_id,
                         output_owner_id,
-                        source_label.clone(),
+                        source_label,
                         output_priority,
                     );
-                    this.evolution_damage_bonus_from_blunt_thorn
-                        .add_with_priority(
-                            added_value,
-                            this.owner_id,
-                            output_owner_id,
-                            source_label,
-                            output_priority,
-                        );
-                }
-                _ => {}
             }
         };
 
