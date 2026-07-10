@@ -8,6 +8,8 @@
   import {
     abbreviateNumber,
     formatTimestamp,
+    formatTimestampDate,
+    formatTimestampTime,
     getClassIcon,
     isSupportSpec,
     timestampToMinutesAndSeconds
@@ -137,7 +139,13 @@
     </td>
     <!-- Date -->
     <td class="pr-2 text-right text-xs">
-      {formatTimestamp(encounter.fightStart)}
+      <QuickTooltip
+        tooltip="{formatTimestampDate(encounter.fightStart, true)} {formatTimestampTime(encounter.fightStart)}"
+      >
+        <div>
+          {formatTimestamp(encounter.fightStart)}
+        </div>
+      </QuickTooltip>
     </td>
   </tr>
 {/snippet}
