@@ -11,7 +11,6 @@ use serde_json::{Value, json};
 use std::cell::RefCell;
 use std::cmp::Ordering;
 use std::fmt;
-use std::sync::OnceLock;
 
 const DAMAGE_ATTR_SLOTS: usize = 8;
 const DEFAULT_CRITICAL_DAMAGE_RATE: f64 = 1.0;
@@ -26,44 +25,18 @@ const SKIN_MAIN_STAT_MULTIPLIER_CAP: f64 = 0.08;
 const PET_MAIN_STAT_MULTIPLIER: f64 = 0.011057;
 const PET_SKILL_DAMAGE_RATE: f64 = 0.01;
 const FIXED_STAT_DATA_COUNT: usize = 44;
-const DAMAGE_SPLIT_CACHED_MAX_FACTORS: usize = 20;
 pub const STAT_PRIORITY_SUPPORT: i32 = 0;
 pub const STAT_PRIORITY_DEFAULT: i32 = 100;
 
 #[derive(Default)]
 struct DamageSplitScratch {
-    compact_factors: Vec<f64>,
-    compact_indices: Vec<usize>,
-    subset_prod: Vec<f64>,
-    subset_size: Vec<usize>,
+    elementary_symmetric: Vec<f64>,
+    excluded_symmetric: Vec<f64>,
     weights: Vec<f64>,
-    factorial: Vec<f64>,
 }
 
 thread_local! {
     static DAMAGE_SPLIT_SCRATCH: RefCell<DamageSplitScratch> = RefCell::new(DamageSplitScratch::default());
-}
-
-fn damage_split_weight_cache() -> &'static Vec<Vec<f64>> {
-    static CACHE: OnceLock<Vec<Vec<f64>>> = OnceLock::new();
-    CACHE.get_or_init(|| {
-        let mut factorial = [1.0; DAMAGE_SPLIT_CACHED_MAX_FACTORS + 1];
-        for index in 1..=DAMAGE_SPLIT_CACHED_MAX_FACTORS {
-            factorial[index] = factorial[index - 1] * index as f64;
-        }
-
-        let mut cache = Vec::with_capacity(DAMAGE_SPLIT_CACHED_MAX_FACTORS + 1);
-        cache.push(Vec::new());
-        for count in 1..=DAMAGE_SPLIT_CACHED_MAX_FACTORS {
-            let mut weights = vec![0.0; count];
-            for subset_size in 0..count {
-                weights[subset_size] =
-                    factorial[subset_size] * factorial[count - subset_size - 1] / factorial[count];
-            }
-            cache.push(weights);
-        }
-        cache
-    })
 }
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -4373,94 +4346,137 @@ fn get_damage_splits(damage: f64, factors: &[f64]) -> Vec<f64> {
         return pieces;
     }
 
-    let compact_count = factors.iter().filter(|factor| **factor != 0.0).count();
-    if compact_count == 0 {
-        pieces[0] = damage;
-        return pieces;
-    }
-
     DAMAGE_SPLIT_SCRATCH.with(|scratch_cell| {
         let mut scratch = scratch_cell.borrow_mut();
         let DamageSplitScratch {
-            compact_factors: scratch_compact_factors,
-            compact_indices: scratch_compact_indices,
-            subset_prod,
-            subset_size,
-            weights: scratch_weights,
-            factorial: scratch_factorial,
+            elementary_symmetric,
+            excluded_symmetric,
+            weights,
         } = &mut *scratch;
 
-        let compact_factors: &[f64];
-        if compact_count == count {
-            compact_factors = factors;
-            scratch_compact_indices.clear();
-        } else {
-            scratch_compact_factors.clear();
-            scratch_compact_indices.clear();
-            scratch_compact_factors.reserve(compact_count);
-            scratch_compact_indices.reserve(compact_count);
-            for (index, factor) in factors.iter().copied().enumerate() {
-                if factor == 0.0 {
-                    continue;
-                }
-                scratch_compact_factors.push(factor);
-                scratch_compact_indices.push(index);
+        // Group the Shapley sum by subset size. The elementary symmetric
+        // coefficients contain the summed product for every subset of a given
+        // size, avoiding explicit enumeration of all 2^count subsets.
+        elementary_symmetric.resize(count + 1, 0.0);
+        elementary_symmetric.fill(0.0);
+        elementary_symmetric[0] = 1.0;
+        let mut total_factor = 1.0;
+        for (factor_index, factor) in factors.iter().copied().enumerate() {
+            let coalition_factor = 1.0 + factor;
+            total_factor *= coalition_factor;
+            for degree in (1..=factor_index + 1).rev() {
+                elementary_symmetric[degree] += coalition_factor * elementary_symmetric[degree - 1];
             }
-            compact_factors = scratch_compact_factors.as_slice();
         }
 
-        let max_mask = 1usize << compact_count;
-        subset_prod.resize(max_mask, 0.0);
-        subset_size.resize(max_mask, 0);
-        subset_prod[0] = 1.0;
-        subset_size[0] = 0;
-        for mask in 1..max_mask {
-            let prev_mask = mask & (mask - 1);
-            let bit_index = (mask ^ prev_mask).trailing_zeros() as usize;
-            subset_prod[mask] = subset_prod[prev_mask] * (1.0 + compact_factors[bit_index]);
-            subset_size[mask] = subset_size[prev_mask] + 1;
-        }
-
-        let base_damage = 1.0 / subset_prod[max_mask - 1];
+        let base_damage = 1.0 / total_factor;
         pieces[0] = base_damage * damage;
 
-        let cached_weights = damage_split_weight_cache();
-        let weights: &[f64] = if compact_count <= DAMAGE_SPLIT_CACHED_MAX_FACTORS {
-            &cached_weights[compact_count]
-        } else {
-            scratch_factorial.resize(compact_count + 1, 1.0);
-            scratch_factorial[0] = 1.0;
-            for index in 1..=compact_count {
-                scratch_factorial[index] = scratch_factorial[index - 1] * index as f64;
-            }
-            scratch_weights.resize(compact_count, 0.0);
-            for subset_size in 0..compact_count {
-                scratch_weights[subset_size] = scratch_factorial[subset_size]
-                    * scratch_factorial[compact_count - subset_size - 1]
-                    / scratch_factorial[compact_count];
-            }
-            &scratch_weights[..compact_count]
-        };
+        weights.resize(count, 0.0);
+        weights[0] = 1.0 / count as f64;
+        let mut binomial = 1.0;
+        for degree in 1..count {
+            binomial *= (count - degree) as f64 / degree as f64;
+            weights[degree] = 1.0 / (count as f64 * binomial);
+        }
 
-        for index in 0..compact_count {
-            let mut sum = 0.0;
-            let skip_bit = 1usize << index;
-            for mask in 0..max_mask {
-                if (mask & skip_bit) != 0 {
-                    continue;
-                }
-                sum += subset_prod[mask] * weights[subset_size[mask]];
+        excluded_symmetric.resize(count, 0.0);
+        for (index, factor) in factors.iter().copied().enumerate() {
+            let coalition_factor = 1.0 + factor;
+            excluded_symmetric[0] = 1.0;
+            let mut weighted_sum = weights[0];
+            for degree in 1..count {
+                // e[k] = q[k] + coalition_factor * q[k - 1], where q is the
+                // polynomial with this contributor excluded.
+                excluded_symmetric[degree] = elementary_symmetric[degree]
+                    - coalition_factor * excluded_symmetric[degree - 1];
+                weighted_sum += excluded_symmetric[degree] * weights[degree];
             }
-
-            let piece = base_damage * compact_factors[index] * sum * damage;
-            let output_index = if compact_count == count {
-                index + 1
-            } else {
-                scratch_compact_indices[index] + 1
-            };
-            pieces[output_index] = piece;
+            pieces[index + 1] = base_damage * factor * weighted_sum * damage;
         }
     });
 
     pieces
+}
+
+#[cfg(test)]
+mod damage_split_tests {
+    use super::get_damage_splits;
+
+    fn subset_reference(damage: f64, factors: &[f64]) -> Vec<f64> {
+        let mut pieces = vec![0.0; factors.len() + 1];
+        let active = factors
+            .iter()
+            .copied()
+            .enumerate()
+            .filter(|(_, factor)| *factor != 0.0)
+            .collect::<Vec<_>>();
+        let count = active.len();
+        if count == 0 {
+            pieces[0] = damage;
+            return pieces;
+        }
+
+        let mut factorial = vec![1.0; count + 1];
+        for index in 1..=count {
+            factorial[index] = factorial[index - 1] * index as f64;
+        }
+        let mut total_factor = 1.0;
+        for (_, factor) in &active {
+            total_factor *= 1.0 + factor;
+        }
+        let base_damage = 1.0 / total_factor;
+        pieces[0] = base_damage * damage;
+
+        for (active_index, (output_index, factor)) in active.iter().enumerate() {
+            let mut weighted_sum = 0.0;
+            for mask in 0..(1usize << count) {
+                if mask & (1 << active_index) != 0 {
+                    continue;
+                }
+                let mut product = 1.0;
+                let mut subset_size = 0;
+                for (factor_index, (_, subset_factor)) in active.iter().enumerate() {
+                    if mask & (1 << factor_index) != 0 {
+                        product *= 1.0 + subset_factor;
+                        subset_size += 1;
+                    }
+                }
+                weighted_sum +=
+                    product * factorial[subset_size] * factorial[count - subset_size - 1]
+                        / factorial[count];
+            }
+            pieces[output_index + 1] = base_damage * factor * weighted_sum * damage;
+        }
+        pieces
+    }
+
+    #[test]
+    fn quadratic_damage_splits_match_subset_reference() {
+        let cases = [
+            vec![],
+            vec![0.0],
+            vec![0.1],
+            vec![0.0, 0.1, 0.0, 0.2],
+            vec![-0.1, 0.2, 0.05],
+            (0..12)
+                .map(|index| 0.01 + (index % 7) as f64 * 0.013)
+                .collect(),
+        ];
+
+        for factors in cases {
+            let damage = 987_654_321.0;
+            let expected = subset_reference(damage, &factors);
+            let actual = get_damage_splits(damage, &factors);
+            for (expected_piece, actual_piece) in expected.iter().zip(&actual) {
+                let tolerance = expected_piece.abs().max(1.0) * 1e-10;
+                assert!(
+                    (expected_piece - actual_piece).abs() <= tolerance,
+                    "factors={factors:?}, expected={expected:?}, actual={actual:?}"
+                );
+            }
+            let total = actual.iter().sum::<f64>();
+            assert!((total - damage).abs() <= damage * 1e-10);
+        }
+    }
 }
