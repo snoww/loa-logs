@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { openMostRecentEncounter, openUrl, pauseRequest, resetRequest, saveRequest } from "$lib/api";
+  import { openMostRecentEncounter, openUrl, resetRequest, saveRequest, toggleMeterPause } from "$lib/api";
   import LiveShareButton from "$lib/components/LiveShareButton.svelte";
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import type { EncounterState } from "$lib/encounter.svelte.js";
@@ -114,13 +114,7 @@
           </button>
         {/if}
         {#if showFour.current}
-          <button
-            class="group"
-            onclick={() => {
-              misc.paused = !misc.paused;
-              pauseRequest();
-            }}
-          >
+          <button class="group" onclick={() => toggleMeterPause()}>
             <QuickTooltip tooltip={misc.paused ? "Resume Session" : "Pause Session"}>
               {#if misc.paused}
                 <IconPlay class="size-5 animate-pulse text-accent-500/80 group-hover:text-accent-500/80" />
@@ -190,14 +184,7 @@
       </button>
     {/if}
     {#if !showFour.current}
-      <button
-        use:melt={$item}
-        class="group flex items-center justify-between gap-2"
-        onclick={() => {
-          misc.paused = !misc.paused;
-          pauseRequest();
-        }}
-      >
+      <button use:melt={$item} class="group flex items-center justify-between gap-2" onclick={() => toggleMeterPause()}>
         <p class="group-hover:text-accent-500/80">{misc.paused ? "Resume" : "Pause"}</p>
         {#if misc.paused}
           <IconPlay class="size-5 animate-pulse text-accent-500/80 group-hover:text-accent-500/80" />

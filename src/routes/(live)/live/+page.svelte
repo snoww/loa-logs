@@ -7,8 +7,8 @@
     onZoneChange,
     onRaidStart,
     onResetEncounter,
-    onPauseEncounter,
     onSaveEncounter,
+    onToggleMeterPause,
     onPhaseTransition,
     onAdmin,
     onBannedEvent,
@@ -40,6 +40,8 @@
 
   let enc = new EncounterState(undefined, true);
   let time = $state(+Date.now());
+  let latestEncounter = enc.encounter;
+  let latestPartyInfo = enc.partyInfo;
   let unsubscribe: (() => void) | null = null;
   let pendingTimeouts: ReturnType<typeof setTimeout>[] = [];
   let bannedToastId: string | undefined;
@@ -77,14 +79,20 @@
 
     let handle = await onEncounterUpdate((event) => {
       if (!settings.app.general.mini) {
-        enc.encounter = event.payload;
+        latestEncounter = event.payload;
+        if (!misc.paused) {
+          enc.encounter = latestEncounter;
+        }
       }
     });
     handles.push(handle);
 
     handle = await onPartyUpdate((event) => {
       if (event.payload) {
-        enc.partyInfo = event.payload;
+        latestPartyInfo = event.payload;
+        if (!misc.paused) {
+          enc.partyInfo = latestPartyInfo;
+        }
       }
     });
     handles.push(handle);
@@ -123,10 +131,14 @@
     });
     handles.push(handle);
 
-    handle = await onPauseEncounter(() => {
+    handle = await onToggleMeterPause(() => {
+      misc.paused = !misc.paused;
       if (misc.paused) {
         addToast(pausing);
       } else {
+        enc.encounter = latestEncounter;
+        enc.partyInfo = latestPartyInfo;
+        time = misc.raidInProgress ? +Date.now() : (latestEncounter?.lastCombatPacket ?? time);
         addToast(resuming);
       }
     });

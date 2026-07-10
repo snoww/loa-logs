@@ -11,7 +11,6 @@ pub struct EventManager {
     subscriptions: Mutex<Vec<EventId>>,
     reset: AtomicBool,
     save: AtomicBool,
-    pause: AtomicBool,
     boss_only_damage: AtomicBool,
     emit_details: AtomicBool,
 }
@@ -19,7 +18,6 @@ pub struct EventManager {
 impl EventManager {
     pub fn new(app_handle: AppHandle) -> Arc<Self> {
         let reset = AtomicBool::new(false);
-        let pause = AtomicBool::new(false);
         let save = AtomicBool::new(false);
         let boss_only_damage = AtomicBool::new(true);
         let emit_details = AtomicBool::new(false);
@@ -29,7 +27,6 @@ impl EventManager {
             subscriptions: Mutex::new(vec![]),
             reset,
             save,
-            pause,
             boss_only_damage,
             emit_details,
         });
@@ -39,9 +36,6 @@ impl EventManager {
         subscriptions.push(id);
 
         let id = app_handle.listen_any("save-request", Self::on_save(listener.clone()));
-        subscriptions.push(id);
-
-        let id = app_handle.listen_any("pause-request", Self::on_pause(listener.clone()));
         subscriptions.push(id);
 
         let id = app_handle.listen_any(
@@ -74,20 +68,6 @@ impl EventManager {
             context.save.store(true, Ordering::Relaxed);
             info!("manual saving encounter");
             context.app_handle.emit("save-encounter", "").unwrap();
-        }
-    }
-
-    fn on_pause(context: Arc<EventManager>) -> impl Fn(Event) + Send + 'static {
-        move |_| {
-            let prev = context.pause.fetch_xor(true, Ordering::Relaxed);
-
-            if prev {
-                info!("unpausing meter");
-            } else {
-                info!("pausing meter");
-            }
-
-            context.app_handle.emit("pause-encounter", "").unwrap();
         }
     }
 
@@ -129,10 +109,6 @@ impl EventManager {
         }
 
         value
-    }
-
-    pub fn has_paused(&self) -> bool {
-        self.pause.load(Ordering::Relaxed)
     }
 
     pub fn has_saved(&self) -> bool {

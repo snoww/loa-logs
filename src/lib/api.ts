@@ -230,7 +230,7 @@ export const loadEncounter = (id: string): Promise<Encounter> => invoke("load_en
 
 export const getLastEncounterVersion = (): Promise<string | null> => invoke("get_last_encounter_version");
 
-export const pauseRequest = (): Promise<void> => emit("pause-request");
+export const toggleMeterPause = (): Promise<void> => emit("toggle-meter-pause");
 
 export const saveRequest = (): Promise<void> => emit("save-request");
 
@@ -266,7 +266,7 @@ export const onRaidStart = (handler: () => void) => listen("raid-start", handler
 
 export const onResetEncounter = (handler: () => void) => listen("reset-encounter", handler);
 
-export const onPauseEncounter = (handler: () => void) => listen("pause-encounter", handler);
+export const onToggleMeterPause = (handler: () => void) => listen("toggle-meter-pause", handler);
 
 export const onSaveEncounter = (handler: () => void) => listen("save-encounter", handler);
 

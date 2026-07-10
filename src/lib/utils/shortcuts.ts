@@ -1,9 +1,9 @@
 import {
   openMostRecentEncounter,
-  pauseRequest,
   resetRequest,
   saveRequest,
   setClickthrough,
+  toggleMeterPause,
   toggleWindow,
   Window
 } from "$lib/api";
@@ -33,7 +33,7 @@ export const shortcuts: Record<string, Shortcut> = {
   },
   pauseSession: {
     name: "Pause Session",
-    action: () => pauseRequest()
+    action: () => toggleMeterPause()
   },
   manualSave: {
     name: "Manual Save",

@@ -241,10 +241,6 @@ pub fn start(args: StartArgs) -> Result<()> {
             state.soft_reset(true);
         }
 
-        if manager.has_paused() {
-            continue;
-        }
-
         if last_inspect_queue_scan.elapsed() >= inspect_queue_scan_duration {
             last_inspect_queue_scan = Instant::now();
             queue_missing_party_inspects(
