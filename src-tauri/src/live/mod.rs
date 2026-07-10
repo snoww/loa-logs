@@ -17,7 +17,7 @@ use crate::database::utils::apply_player_info;
 use crate::live::encounter_state::EncounterState;
 use crate::live::entity_tracker::{EntityTracker, get_current_and_max_hp};
 use crate::live::id_tracker::IdTracker;
-use crate::live::manager::EventManager;
+use crate::live::manager::{Command, EventManager};
 use crate::live::party_tracker::PartyTracker;
 use crate::live::status_tracker::{
     StatusEffectDetails, StatusEffectTargetType, StatusEffectType, StatusTracker,
@@ -43,6 +43,8 @@ use std::rc::Rc;
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::time::{Duration, Instant};
 use tauri::{AppHandle, Emitter, Manager};
+use tokio::runtime::Handle;
+use tokio::sync::mpsc::UnboundedReceiver;
 
 use crate::context::AppContext;
 
@@ -64,6 +66,7 @@ fn set_compute_stat_damage_metrics(enabled: bool) {
 pub struct StartArgs {
     pub app: AppHandle,
     pub ipc: NinevehIPCPair,
+    pub runtime: Handle,
     pub settings: Option<Settings>,
     pub local_info: LocalInfo,
     pub local_player_repository: LocalPlayerRepository,
@@ -71,18 +74,39 @@ pub struct StartArgs {
     pub ban_list: BanList,
 }
 
+enum LiveEvent {
+    Command(Command),
+    Nineveh(IPCServerToClientMessage),
+}
+
+fn next_live_event(
+    runtime: &Handle,
+    command_rx: &mut UnboundedReceiver<Command>,
+    ipc_rx: &mut UnboundedReceiver<IPCServerToClientMessage>,
+) -> Option<LiveEvent> {
+    runtime.block_on(async {
+        tokio::select! {
+            biased;
+            Some(command) = command_rx.recv() => Some(LiveEvent::Command(command)),
+            event = ipc_rx.recv() => event.map(LiveEvent::Nineveh),
+        }
+    })
+}
+
 pub fn start(args: StartArgs) -> Result<()> {
     info!("live::start");
     let StartArgs {
         app,
         mut ipc,
+        runtime,
         settings,
         mut local_info,
         local_player_repository,
         mut heartbeat_api,
         mut ban_list,
     } = args;
-    let manager = EventManager::new(app.clone());
+    let (command_tx, mut command_rx) = tokio::sync::mpsc::unbounded_channel();
+    let manager = EventManager::new(app.clone(), command_tx);
     let id_tracker = Rc::new(RefCell::new(IdTracker::new()));
     let party_tracker = Rc::new(RefCell::new(PartyTracker::new(id_tracker.clone())));
     let status_tracker = Rc::new(RefCell::new(StatusTracker::new(party_tracker.clone())));
@@ -127,7 +151,37 @@ pub fn start(args: StartArgs) -> Result<()> {
     let mut ban_toast_sent = false;
     let mut connection_ids_by_port: HashMap<u16, ConnectionId> = HashMap::new();
 
-    while let Some(event) = ipc.1.blocking_recv() {
+    while let Some(live_event) = next_live_event(&runtime, &mut command_rx, &mut ipc.1) {
+        let event = match live_event {
+            LiveEvent::Command(Command::Reset) => {
+                state.soft_reset(true);
+                continue;
+            }
+            LiveEvent::Command(Command::Save) => {
+                state.party_info = update_party(&party_tracker, &entity_tracker);
+                let saved = if banned {
+                    false
+                } else {
+                    state.force_release_startup_barrier(&mut entity_tracker, "forced_save");
+                    info!("manual saving encounter");
+                    state.save_to_db(true);
+                    true
+                };
+
+                state.soft_reset(true);
+                state.resetting = false;
+                state.saved = false;
+                party_freeze = false;
+                party_cache = None;
+
+                if saved {
+                    app.emit("save-encounter", "")?;
+                }
+                continue;
+            }
+            LiveEvent::Nineveh(event) => event,
+        };
+
         let (connection_id, packet_id, direction, packet) = match event {
             IPCServerToClientMessage::Connected { connections } => {
                 connection_ids_by_port.clear();
@@ -237,10 +291,6 @@ pub fn start(args: StartArgs) -> Result<()> {
             continue;
         }
 
-        if manager.has_reset() {
-            state.soft_reset(true);
-        }
-
         if last_inspect_queue_scan.elapsed() >= inspect_queue_scan_duration {
             last_inspect_queue_scan = Instant::now();
             queue_missing_party_inspects(
@@ -250,16 +300,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                 &mut entity_tracker,
                 state.startup_barrier_active(),
             );
-        }
-
-        if manager.has_saved() {
-            state.party_info = update_party(&party_tracker, &entity_tracker);
-            if !banned {
-                state.force_release_startup_barrier(&mut entity_tracker, "forced_save");
-                state.save_to_db(true);
-                state.saved = true;
-            }
-            state.resetting = true;
         }
 
         if manager.has_toggled_boss_only_damage() {

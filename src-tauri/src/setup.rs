@@ -92,6 +92,7 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
         let args = StartArgs {
             app: app_handle,
             ipc,
+            runtime: tokio::runtime::Handle::current(),
             settings,
             local_info,
             local_player_repository,

@@ -5,28 +5,31 @@ use std::sync::{
 
 use log::*;
 use tauri::{AppHandle, Emitter, Event, EventId, Listener};
+use tokio::sync::mpsc::UnboundedSender;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(super) enum Command {
+    Reset,
+    Save,
+}
 
 pub struct EventManager {
     app_handle: AppHandle,
     subscriptions: Mutex<Vec<EventId>>,
-    reset: AtomicBool,
-    save: AtomicBool,
+    command_tx: UnboundedSender<Command>,
     boss_only_damage: AtomicBool,
     emit_details: AtomicBool,
 }
 
 impl EventManager {
-    pub fn new(app_handle: AppHandle) -> Arc<Self> {
-        let reset = AtomicBool::new(false);
-        let save = AtomicBool::new(false);
+    pub fn new(app_handle: AppHandle, command_tx: UnboundedSender<Command>) -> Arc<Self> {
         let boss_only_damage = AtomicBool::new(true);
         let emit_details = AtomicBool::new(false);
 
         let listener = Arc::new(Self {
             app_handle: app_handle.clone(),
             subscriptions: Mutex::new(vec![]),
-            reset,
-            save,
+            command_tx,
             boss_only_damage,
             emit_details,
         });
@@ -57,7 +60,10 @@ impl EventManager {
 
     fn on_reset(context: Arc<EventManager>) -> impl Fn(Event) + Send + 'static {
         move |_| {
-            context.reset.store(true, Ordering::Relaxed);
+            if context.command_tx.send(Command::Reset).is_err() {
+                warn!("could not queue meter reset");
+                return;
+            }
             info!("resetting meter");
             context.app_handle.emit("reset-encounter", "").unwrap();
         }
@@ -65,9 +71,9 @@ impl EventManager {
 
     fn on_save(context: Arc<EventManager>) -> impl Fn(Event) + Send + 'static {
         move |_| {
-            context.save.store(true, Ordering::Relaxed);
-            info!("manual saving encounter");
-            context.app_handle.emit("save-encounter", "").unwrap();
+            if context.command_tx.send(Command::Save).is_err() {
+                warn!("could not queue manual encounter save");
+            }
         }
     }
 
@@ -99,26 +105,6 @@ impl EventManager {
 
     pub fn set_boss_only_damage(&self) {
         self.boss_only_damage.store(true, Ordering::Relaxed);
-    }
-
-    pub fn has_reset(&self) -> bool {
-        let value = self.reset.load(Ordering::Relaxed);
-
-        if value {
-            self.reset.store(false, Ordering::Relaxed);
-        }
-
-        value
-    }
-
-    pub fn has_saved(&self) -> bool {
-        let value = self.save.load(Ordering::Relaxed);
-
-        if value {
-            self.save.store(false, Ordering::Relaxed);
-        }
-
-        value
     }
 
     pub fn can_emit_details(&self) -> bool {
