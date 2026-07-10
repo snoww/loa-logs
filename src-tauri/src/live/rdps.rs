@@ -642,8 +642,8 @@ pub fn analyze_hit_rdps(
             }),
         };
     };
-    let mut stats = PlayerStats::default();
-    stats.load_from_snapshot(
+    let mut stats = player_stats_from_inspect_snapshot(
+        attacker_context.entity,
         attacker_snapshot,
         attacker_context.entity_id,
         attacker_context.class_id,
@@ -986,6 +986,24 @@ pub fn snapshot_owner_player_stats_for_buffs(
     )
 }
 
+fn player_stats_from_inspect_snapshot(
+    owner_entity: &Entity,
+    snapshot: &InspectSnapshot,
+    owner_id: u64,
+    class_id: u32,
+) -> PlayerStats {
+    if let Some(cached) = &owner_entity.inspect_base_stats
+        && cached.owner_id == owner_id
+        && cached.class_id == class_id
+    {
+        return cached.stats.as_ref().clone();
+    }
+
+    let mut stats = PlayerStats::default();
+    stats.load_from_snapshot(snapshot, owner_id, class_id);
+    stats
+}
+
 fn snapshot_owner_player_stats_from_snapshot(
     owner_entity: &Entity,
     owner_snapshot: &InspectSnapshot,
@@ -994,8 +1012,12 @@ fn snapshot_owner_player_stats_from_snapshot(
     eval_tick_ms: i64,
     entity_tracker: &EntityTracker,
 ) -> Option<PlayerStats> {
-    let mut stats = PlayerStats::default();
-    stats.load_from_snapshot(owner_snapshot, owner_entity.id, owner_entity.class_id);
+    let mut stats = player_stats_from_inspect_snapshot(
+        owner_entity,
+        owner_snapshot,
+        owner_entity.id,
+        owner_entity.class_id,
+    );
 
     let mut runtime_state = owner_entity.runtime_state();
     runtime_state.identity_runtime_reliable =
@@ -3521,6 +3543,53 @@ fn load_player_stats_from_snapshot(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn cached_inspect_base_stats_match_fresh_rebuild() {
+        let snapshot = InspectSnapshot::default();
+        let owner_id = 123;
+        let class_id = 202;
+        let mut expected = PlayerStats::default();
+        expected.load_from_snapshot(&snapshot, owner_id, class_id);
+        let owner_entity = Entity {
+            id: owner_id,
+            class_id,
+            inspect_snapshot: Some(snapshot.clone()),
+            inspect_base_stats: Some(crate::live::entity_tracker::InspectBaseStats {
+                owner_id,
+                class_id,
+                stats: Arc::new(expected.clone()),
+            }),
+            ..Default::default()
+        };
+
+        let actual =
+            player_stats_from_inspect_snapshot(&owner_entity, &snapshot, owner_id, class_id);
+
+        assert_eq!(actual.debug_dump_value(), expected.debug_dump_value());
+    }
+
+    #[test]
+    fn stale_inspect_base_stats_are_not_reused() {
+        let snapshot = InspectSnapshot::default();
+        let mut stale = PlayerStats::default();
+        stale.skill_attack_power_multiplier.insert(42, 0.5);
+        let owner_entity = Entity {
+            id: 123,
+            class_id: 202,
+            inspect_snapshot: Some(snapshot.clone()),
+            inspect_base_stats: Some(crate::live::entity_tracker::InspectBaseStats {
+                owner_id: 999,
+                class_id: 202,
+                stats: Arc::new(stale),
+            }),
+            ..Default::default()
+        };
+
+        let actual = player_stats_from_inspect_snapshot(&owner_entity, &snapshot, 123, 202);
+
+        assert!(!actual.skill_attack_power_multiplier.contains_key(&42));
+    }
     use crate::live::id_tracker::IdTracker;
     use crate::live::party_tracker::PartyTracker;
     use crate::live::status_tracker::StatusTracker;

@@ -11,6 +11,7 @@ use serde_json::{Value, json};
 use std::cell::RefCell;
 use std::cmp::Ordering;
 use std::fmt;
+use std::sync::Arc;
 
 const DAMAGE_ATTR_SLOTS: usize = 8;
 const DEFAULT_CRITICAL_DAMAGE_RATE: f64 = 1.0;
@@ -829,7 +830,7 @@ pub struct AbilityFeatureState {
 #[derive(Debug, Clone)]
 pub struct ActiveCombatEffect {
     pub combat_effect_id: u32,
-    pub effect: crate::models::CombatEffectDetail,
+    pub effect: Arc<crate::models::CombatEffectDetail>,
     pub owner_id: u64,
     pub source: StatSource,
 }
@@ -1518,7 +1519,7 @@ impl PlayerStats {
             for effect in &combat_effect.effects {
                 self.active_combat_effects.push(ActiveCombatEffect {
                     combat_effect_id,
-                    effect: effect.clone(),
+                    effect: Arc::new(effect.clone()),
                     owner_id,
                     source: source.clone(),
                 });
@@ -1691,7 +1692,7 @@ impl PlayerStats {
                         for effect in &combat_effect.effects {
                             active_effects.push(ActiveCombatEffect {
                                 combat_effect_id: *effect_id,
-                                effect: effect.clone(),
+                                effect: Arc::new(effect.clone()),
                                 owner_id: self.owner_id,
                                 source: StatSource::SkillTripods,
                             });
@@ -1709,7 +1710,7 @@ impl PlayerStats {
                         if change.combat_effect_id != active.combat_effect_id {
                             continue;
                         }
-                        for action in &mut active.effect.actions {
+                        for action in &mut Arc::make_mut(&mut active.effect).actions {
                             let changed_count = usize::min(change.values.len(), action.args.len());
                             for index in 0..changed_count {
                                 if change.relative {
@@ -3617,7 +3618,7 @@ impl PlayerStats {
                     for effect in &combat_effect.effects {
                         self.active_combat_effects.push(ActiveCombatEffect {
                             combat_effect_id: addon.key_index,
-                            effect: effect.clone(),
+                            effect: Arc::new(effect.clone()),
                             owner_id,
                             source: source.clone(),
                         });
@@ -4401,7 +4402,30 @@ fn get_damage_splits(damage: f64, factors: &[f64]) -> Vec<f64> {
 
 #[cfg(test)]
 mod damage_split_tests {
-    use super::get_damage_splits;
+    use super::{ActiveCombatEffect, StatSource, get_damage_splits};
+    use crate::models::CombatEffectDetail;
+    use std::sync::Arc;
+
+    #[test]
+    fn cloned_active_combat_effects_share_details_until_mutated() {
+        let original = ActiveCombatEffect {
+            combat_effect_id: 123,
+            effect: Arc::new(CombatEffectDetail {
+                ratio: 100,
+                ..Default::default()
+            }),
+            owner_id: 456,
+            source: StatSource::Test,
+        };
+        let mut cloned = original.clone();
+
+        assert!(Arc::ptr_eq(&original.effect, &cloned.effect));
+        Arc::make_mut(&mut cloned.effect).ratio = 200;
+
+        assert_eq!(original.effect.ratio, 100);
+        assert_eq!(cloned.effect.ratio, 200);
+        assert!(!Arc::ptr_eq(&original.effect, &cloned.effect));
+    }
 
     fn subset_reference(damage: f64, factors: &[f64]) -> Vec<f64> {
         let mut pieces = vec![0.0; factors.len() + 1];

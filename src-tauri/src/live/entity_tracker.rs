@@ -2,7 +2,7 @@ use crate::data::*;
 use crate::live::id_tracker::IdTracker;
 use crate::live::inspect_stats::{InspectDerivedStats, derive_inspect_stats};
 use crate::live::party_tracker::PartyTracker;
-use crate::live::player_stats::RuntimeState;
+use crate::live::player_stats::{PlayerStats, RuntimeState};
 use crate::live::rdps::snapshot_owner_player_stats_for_buffs;
 use crate::live::status_tracker::{
     StatusEffectDetails, StatusEffectTargetType, StatusEffectType, StatusTracker,
@@ -22,7 +22,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use std::sync::Arc;
 
-const BOOTSTRAP_INSPECT_DELAY_MS: i64 = 500;
+const BOOTSTRAP_INSPECT_DELAY_MS: i64 = 250;
 const BOOTSTRAP_INSPECT_TIMEOUT_MS: i64 = 3_000;
 const DESTROYER_CLASS_ID: u32 = 103;
 const DESTROYER_VORTEX_GRAVITY_SKILL_ID: u32 = 18011;
@@ -707,6 +707,7 @@ impl EntityTracker {
                 );
                 local_player.entity_type = Player;
                 local_player.class_id = member.class_id as u32;
+                rebuild_inspect_base_stats(local_player);
                 local_player.gear_level = truncate_gear_level(member.gear_level);
                 local_player.name.clone_from(&member.name);
                 local_player.character_id = member.character_id;
@@ -756,7 +757,11 @@ impl EntityTracker {
                     entity.character_id = member.character_id;
                     entity.name.clone_from(&member.name);
                     entity.gear_level = truncate_gear_level(member.gear_level);
-                    entity.class_id = member.class_id as u32;
+                    let class_id = member.class_id as u32;
+                    if entity.class_id != class_id {
+                        entity.class_id = class_id;
+                        rebuild_inspect_base_stats(entity);
+                    }
                 }
 
                 self.id_tracker
@@ -1630,6 +1635,7 @@ impl EntityTracker {
         let class_id = get_skill_class_id(&skill_id);
         if class_id != 0 {
             entity.class_id = class_id;
+            rebuild_inspect_base_stats(entity);
             self.entities.insert(entity.id, entity.clone());
         }
     }
@@ -1922,13 +1928,13 @@ impl EntityTracker {
             .get(&character_id)
             .filter(|entity| entity.name == name)
             && entity.entity_type == Player
-                && !force_refresh
-                    && !bootstrap_refresh_needed
-                    && ((entity.inspect_snapshot.is_some() && !entity.inspect_stale)
-                        || entity.inspect_ready_at_ms > now)
-                {
-                    already_ready = true;
-                }
+            && !force_refresh
+            && !bootstrap_refresh_needed
+            && ((entity.inspect_snapshot.is_some() && !entity.inspect_stale)
+                || entity.inspect_ready_at_ms > now)
+        {
+            already_ready = true;
+        }
         if !already_ready {
             for entity in self
                 .removed_player_entities_by_name_class
@@ -2223,6 +2229,7 @@ fn apply_inspect_payload_to_entity(
     entity.inspect_ready_at_ms = 0;
     entity.inspect_stale = false;
     entity.inspect_snapshot = Some(snapshot.clone());
+    rebuild_inspect_base_stats(entity);
     entity.inspect_info = Some(info.clone());
     entity.inspect_result = Some(result);
 }
@@ -2238,7 +2245,15 @@ fn clear_player_inspect_state(entity: &mut Entity) {
     entity.inspect_info = None;
     entity.inspect_result = None;
     entity.inspect_snapshot = None;
+    entity.inspect_base_stats = None;
     entity.skill_runtime_data.clear();
+}
+
+#[derive(Debug, Clone)]
+pub struct InspectBaseStats {
+    pub owner_id: u64,
+    pub class_id: u32,
+    pub stats: Arc<PlayerStats>,
 }
 
 fn merge_player_identity_state(target: &mut Entity, previous: Entity) {
@@ -2248,6 +2263,7 @@ fn merge_player_identity_state(target: &mut Entity, previous: Entity) {
     target.inspect_info = previous.inspect_info;
     target.inspect_result = previous.inspect_result;
     target.inspect_snapshot = previous.inspect_snapshot;
+    rebuild_inspect_base_stats(target);
     target.skill_runtime_data = previous.skill_runtime_data;
     target.stance = previous.stance;
     target.identity_gauge1 = previous.identity_gauge1;
@@ -2282,6 +2298,7 @@ pub struct Entity {
     pub inspect_info: Option<InspectInfo>,
     pub inspect_result: Option<Arc<PKTPCInspectResult>>,
     pub inspect_snapshot: Option<InspectSnapshot>,
+    pub inspect_base_stats: Option<InspectBaseStats>,
     pub visibility_generation: u64,
     pub skill_runtime_data: HashMap<u32, SkillRuntimeData>,
     pub stance: u8,
@@ -2298,6 +2315,18 @@ pub struct Entity {
     pub grade: String,
     pub push_immune: bool,
     pub level: u16,
+}
+
+fn rebuild_inspect_base_stats(entity: &mut Entity) {
+    entity.inspect_base_stats = entity.inspect_snapshot.as_ref().map(|snapshot| {
+        let mut stats = PlayerStats::default();
+        stats.load_from_snapshot(snapshot, entity.id, entity.class_id);
+        InspectBaseStats {
+            owner_id: entity.id,
+            class_id: entity.class_id,
+            stats: Arc::new(stats),
+        }
+    });
 }
 
 pub(crate) fn entity_owns_status_effect(

@@ -88,7 +88,7 @@ meter-core = ["dep:meter-defs", "dep:meter-decryption", "dep:nineveh-formats"]
 panic = "abort" # Strip expensive panic clean-up logic
 codegen-units = 1 # Compile crates one after another so the compiler can optimize better
 lto = true # Enables link to optimizations
-opt-level = 3 # Optimize CPU-heavy live damage and stat calculations
+opt-level = 2 # Optimize CPU-heavy live damage and stat calculations
 strip = true # Remove debug symbols
 
 [profile.dev.package."*"]
