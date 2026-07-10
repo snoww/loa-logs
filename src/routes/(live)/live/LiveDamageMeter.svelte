@@ -11,13 +11,11 @@
   import { MeterState, MeterTab } from "$lib/types";
   import { isNameValid } from "$lib/utils";
   import { missingInfo } from "$lib/utils/toasts";
-  import { untrack } from "svelte";
 
   import LiveBossInfo from "./LiveBossInfo.svelte";
   import LiveDetails from "./LiveDetails.svelte";
   import LiveEncounterInfo from "./LiveEncounterInfo.svelte";
   import LiveFooter from "./LiveFooter.svelte";
-  import LiveTest from "./LiveTest.svelte";
 
   let { enc }: { enc: EncounterState } = $props();
 
