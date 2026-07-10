@@ -35,6 +35,7 @@ pub fn generate_handlers() -> Box<dyn Fn(Invoke) -> bool + Send + Sync> {
         get_settings,
         open_db_path,
         delete_encounters_below_min_duration,
+        delete_encounters_before,
         get_db_info,
         disable_blur,
         enable_blur,
@@ -298,6 +299,19 @@ pub fn delete_encounters_below_min_duration(
 ) -> Result<()> {
     repository
         .delete_encounters_below_min_duration(min_duration, keep_favorites)
+        .context("could not delete encounters")?;
+
+    Ok(())
+}
+
+#[command]
+pub fn delete_encounters_before(
+    repository: State<Repository>,
+    before: i64,
+    keep_favorites: bool,
+) -> Result<()> {
+    repository
+        .delete_encounters_before(before, keep_favorites)
         .context("could not delete encounters")?;
 
     Ok(())

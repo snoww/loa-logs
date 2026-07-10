@@ -183,6 +183,11 @@ export type DeleteEncountersArgs =
       type: "duration";
       keepFavorites: boolean;
       minDuration: number;
+    }
+  | {
+      type: "before";
+      keepFavorites: boolean;
+      before: number;
     };
 
 export const deleteEncounters = (args: DeleteEncountersArgs): Promise<void> => {
@@ -195,6 +200,8 @@ export const deleteEncounters = (args: DeleteEncountersArgs): Promise<void> => {
       return invoke("delete_all_uncleared_encounters", args);
     case "duration":
       return invoke("delete_encounters_below_min_duration", args);
+    case "before":
+      return invoke("delete_encounters_before", args);
   }
 
   return Promise.resolve();

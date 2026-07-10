@@ -117,6 +117,21 @@ impl Repository {
         Ok(())
     }
 
+    pub fn delete_encounters_before(&self, before: i64, keep_favorites: bool) -> Result<()> {
+        let connection = self.0.get()?;
+        let params = params![before];
+
+        if keep_favorites {
+            connection.execute(DELETE_OLDER_NON_FAVORITE_ENCOUNTERS, params)?;
+        } else {
+            connection.execute(DELETE_OLDER_ENCOUNTERS, params)?;
+        }
+
+        connection.execute(VACUUM, params![])?;
+
+        Ok(())
+    }
+
     pub fn get_encounter_preview(
         &self,
         args: GetEncounterPreviewArgs,
@@ -1258,11 +1273,7 @@ fn progression_boss_progress(
         .filter(|candidate| candidate.percent > 0.0)
         .max_by(|a, b| compare_progress_candidate(a, b))
         .cloned()
-        .or_else(|| {
-            candidates
-                .into_iter()
-                .max_by(compare_progress_candidate)
-        })
+        .or_else(|| candidates.into_iter().max_by(compare_progress_candidate))
 }
 
 fn current_boss_percent(row: &RaidProgressionRow) -> Option<f32> {
@@ -2293,6 +2304,61 @@ mod tests {
     use rand::{Rng, rngs::ThreadRng, seq::IndexedRandom};
 
     use super::*;
+
+    #[test]
+    fn deletes_encounters_before_cutoff_and_can_keep_favorites() {
+        let database = Database::memory("1.14.0").unwrap();
+
+        {
+            let connection = database.get_connection();
+            for (id, fight_start, favorite) in [
+                (1, 1_000, false),
+                (2, 2_000, false),
+                (3, 1_500, true),
+                (4, 4_000, false),
+            ] {
+                connection
+                    .execute(
+                        "INSERT INTO encounter (id, version) VALUES (?, ?)",
+                        params![id, 1],
+                    )
+                    .unwrap();
+                connection
+                    .execute(
+                        "INSERT INTO encounter_preview (id, fight_start, favorite) VALUES (?, ?, ?)",
+                        params![id, fight_start, favorite],
+                    )
+                    .unwrap();
+            }
+        }
+
+        let repository = database.create_repository();
+        repository.delete_encounters_before(2_000, true).unwrap();
+
+        {
+            let connection = database.get_connection();
+            let remaining = connection
+                .prepare("SELECT id FROM encounter ORDER BY id")
+                .unwrap()
+                .query_map([], |row| row.get::<_, i32>(0))
+                .unwrap()
+                .collect::<rusqlite::Result<Vec<_>>>()
+                .unwrap();
+            assert_eq!(remaining, vec![2, 3, 4]);
+        }
+
+        repository.delete_encounters_before(3_500, false).unwrap();
+
+        let connection = database.get_connection();
+        let remaining = connection
+            .prepare("SELECT id FROM encounter ORDER BY id")
+            .unwrap()
+            .query_map([], |row| row.get::<_, i32>(0))
+            .unwrap()
+            .collect::<rusqlite::Result<Vec<_>>>()
+            .unwrap();
+        assert_eq!(remaining, vec![4]);
+    }
 
     #[test]
     fn statistics_counts_wipes_without_skewing_performance() {

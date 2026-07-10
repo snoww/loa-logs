@@ -237,6 +237,24 @@ WHERE id IN (
 );
 ";
 
+pub const DELETE_OLDER_NON_FAVORITE_ENCOUNTERS: &str = r"
+DELETE FROM encounter
+WHERE id IN (
+    SELECT id
+    FROM encounter_preview
+    WHERE fight_start < ? AND favorite = 0
+);
+";
+
+pub const DELETE_OLDER_ENCOUNTERS: &str = r"
+DELETE FROM encounter
+WHERE id IN (
+    SELECT id
+    FROM encounter_preview
+    WHERE fight_start < ?
+);
+";
+
 pub const SELECT_MOST_RECENT_ENCOUNTER_MISC: &str = r"
 SELECT misc
 FROM encounter
