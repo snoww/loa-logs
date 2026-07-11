@@ -78,7 +78,7 @@ export const resetting: AddToastProps<ToastData> = {
 export const pausing: AddToastProps<ToastData> = {
   data: {
     title: "",
-    description: "pausing session, packets will be dropped",
+    description: "pausing session",
     color: ""
   }
 };
