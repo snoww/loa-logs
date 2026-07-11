@@ -693,8 +693,10 @@ pub fn get_engravings(engraving_ids: &Option<Vec<u32>>) -> Option<Vec<String>> {
     let mut engravings: Vec<String> = Vec::new();
 
     for engraving_id in ids.iter() {
-        if let Some(engraving_data) = ENGRAVING_DATA.get(engraving_id) {
-            engravings.push(engraving_data.name.clone().unwrap_or("Unknown".to_string()));
+        if let Some(engraving_data) = ENGRAVING_DATA.get(engraving_id)
+            && engraving_data.name.as_ref().is_some_and(|n| !n.is_empty())
+        {
+            engravings.push(engraving_data.name.clone()?);
         }
     }
 
