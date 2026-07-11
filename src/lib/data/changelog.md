@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.47.1 - July 8th, 2026
+    v1.47.2 - July 11th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -19,10 +19,11 @@
 
 #### NEW FEATURES
 
-- new statistics section - top left > stats (thanks to big c)
-  - character stats - some basic stats on your clears per character
-  - raid prog stats - some stats about your progression on raids, inspired from [raided.pro/prog](https://raided.pro/prog) (note that stats from older raids might be missing data)
+- added ark grid core choices to player tooltips (new logs)
+- added more delete options in database settings
 
 #### BUG FIXES AND IMPROVEMENTS
 
-- fixed auto updater not updating
+- improved rdps calculation performance
+- pausing meter no longer drops packets
+- improved manual save and reset behavior
