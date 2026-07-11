@@ -5,6 +5,7 @@
   import type { EntityState } from "$lib/entity.svelte";
   import type { ArkPassiveNode } from "$lib/types";
   import { isSupportSpec, LOA_BIBLE_URL, normalizeIlvl } from "$lib/utils";
+  import { getArkGridOrderNames } from "$lib/utils/arkGrid";
   import { openUrl } from "@tauri-apps/plugin-opener";
 
   const { state }: { state: EntityState } = $props();
@@ -17,6 +18,17 @@
         return specName;
       }
     }
+  });
+
+  let arkGridOrderRows = $derived.by(() => {
+    const order = state.entity.arkPassiveData?.arkGridOrder;
+    const names = getArkGridOrderNames(state.entity.arkPassiveData?.enlightenment);
+    const row = (index: number | undefined, coreType: 0 | 1 | 2) => ({
+      index,
+      name: index ? names?.[coreType][index - 1] : undefined
+    });
+
+    return [row(order?.sun, 0), row(order?.moon, 1), row(order?.star, 2)];
   });
 
   function getSpecFromArkPassive(node: ArkPassiveNode): string {
@@ -164,7 +176,11 @@
 {/snippet}
 
 {#snippet renderArkGridIndex(index?: number)}
-  <span class="flex size-4 items-center justify-center rounded-sm text-white {index ? INDEX_COLORS[index - 1] : ''}">
+  <span
+    class="flex size-4 items-center justify-center rounded-sm font-mono text-white {index
+      ? INDEX_COLORS[index - 1]
+      : 'bg-neutral-700/80'}"
+  >
     {index}
   </span>
 {/snippet}
@@ -195,10 +211,15 @@
       {#if state.entity.arkPassiveData?.arkGridOrder}
         <div class="mb-1">
           <div class="text-purple-400">[Ark Grid]</div>
-          <div class="flex gap-1 font-mono text-xs">
-            {@render renderArkGridIndex(state.entity.arkPassiveData.arkGridOrder.sun)}
-            {@render renderArkGridIndex(state.entity.arkPassiveData.arkGridOrder.moon)}
-            {@render renderArkGridIndex(state.entity.arkPassiveData.arkGridOrder.star)}
+          <div class="flex flex-col gap-0.5 text-xs">
+            {#each arkGridOrderRows as row}
+              <div class="flex h-4 items-center gap-1">
+                {@render renderArkGridIndex(row.index)}
+                {#if row.name}
+                  <span class="text-neutral-200">{row.name}</span>
+                {/if}
+              </div>
+            {/each}
           </div>
         </div>
       {/if}
