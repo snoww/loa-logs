@@ -11,8 +11,8 @@ use crate::live::status_tracker::{
 use crate::local::{LocalInfo, LocalPlayer};
 use crate::models::EntityType::*;
 use crate::models::{
-    ArkPassiveData, ArkPassiveNode, CombatPower, EncounterEntity, EntityType, Esther, InspectInfo,
-    TripodIndex, TripodLevel,
+    ArkGridOrder, ArkPassiveData, ArkPassiveNode, CombatPower, EncounterEntity, EntityType, Esther,
+    InspectInfo, TripodIndex, TripodLevel,
 };
 use chrono::{DateTime, Utc};
 use hashbrown::{HashMap, HashSet};
@@ -2684,7 +2684,7 @@ fn inspect_snapshot_from_result(result: &PKTPCInspectResult) -> InspectSnapshot 
                     .collect(),
             })
             .collect(),
-        ark_passive_data: ark_passive_data_from_result(&result.ark_passive_tree_data_inspect),
+        ark_passive_data: ark_passive_data_from_result(result),
     }
 }
 
@@ -2709,7 +2709,7 @@ fn inspect_item_snapshot_from_item_data(item_data: &ItemData) -> InspectItemSnap
 }
 
 fn inspect_info_from_result(result: &PKTPCInspectResult) -> InspectInfo {
-    let ark_passive_data = ark_passive_data_from_result(&result.ark_passive_tree_data_inspect);
+    let ark_passive_data = ark_passive_data_from_result(result);
     let engravings = (!result.engraving_datas.is_empty()).then(|| {
         result
             .engraving_datas
@@ -2731,7 +2731,8 @@ fn inspect_info_from_result(result: &PKTPCInspectResult) -> InspectInfo {
     }
 }
 
-fn ark_passive_data_from_result(tree: &ArkPassiveTreeDataInspect) -> Option<ArkPassiveData> {
+fn ark_passive_data_from_result(result: &PKTPCInspectResult) -> Option<ArkPassiveData> {
+    let tree = &result.ark_passive_tree_data_inspect;
     if tree.ark_passive_node_datas.is_empty() {
         return None;
     }
@@ -2761,5 +2762,30 @@ fn ark_passive_data_from_result(tree: &ArkPassiveTreeDataInspect) -> Option<ArkP
         evolution: non_empty(0),
         enlightenment: non_empty(1),
         leap: non_empty(2),
+        ark_grid_order: ark_grid_order_from_result(result),
     })
+}
+
+fn ark_grid_order_from_result(result: &PKTPCInspectResult) -> Option<ArkGridOrder> {
+    let mut ark_grid = ArkGridOrder::default();
+    let entry_count = usize::min(
+        usize::from(result.ark_grid_cores.num),
+        result.ark_grid_cores.core_ids.len(),
+    );
+
+    for &core_id in result.ark_grid_cores.core_ids.iter().take(entry_count) {
+        let Some(core) = EXTERNAL_ARK_GRID_CORE_CHOICES.get(&core_id) else {
+            continue;
+        };
+        let slot = match core.core_type {
+            0 => &mut ark_grid.sun,
+            1 => &mut ark_grid.moon,
+            2 => &mut ark_grid.star,
+            _ => continue,
+        };
+        *slot = Some(core.choice);
+    }
+
+    (ark_grid.sun.is_some() || ark_grid.moon.is_some() || ark_grid.star.is_some())
+        .then_some(ark_grid)
 }

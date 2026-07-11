@@ -351,7 +351,21 @@ pub struct ExternalArkGridCoreOptionSlot {
 #[serde(rename_all = "camelCase")]
 pub struct ExternalArkGridCoreData {
     #[serde(default, deserialize_with = "null_or_default")]
+    pub attr: u8,
+    #[serde(default, deserialize_with = "null_or_default")]
+    pub core_type: u8,
+    #[serde(default, deserialize_with = "null_or_default")]
+    pub group_id: u32,
+    #[serde(default, deserialize_with = "null_or_default")]
+    pub pc_class: u32,
+    #[serde(default, deserialize_with = "null_or_default")]
     pub options: Vec<ExternalArkGridCoreOptionSlot>,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct ExternalArkGridCoreChoice {
+    pub core_type: u8,
+    pub choice: u8,
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]

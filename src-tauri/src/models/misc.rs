@@ -330,6 +330,19 @@ pub struct ArkPassiveData {
     pub evolution: Option<Vec<ArkPassiveNode>>,
     pub enlightenment: Option<Vec<ArkPassiveNode>>,
     pub leap: Option<Vec<ArkPassiveNode>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub ark_grid_order: Option<ArkGridOrder>,
+}
+
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", default)]
+pub struct ArkGridOrder {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub sun: Option<u8>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub moon: Option<u8>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub star: Option<u8>,
 }
 
 #[derive(Debug, Default, Clone, Serialize, Deserialize)]

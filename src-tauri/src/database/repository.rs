@@ -2933,6 +2933,7 @@ mod tests {
                     evolution: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
                     enlightenment: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
                     leap: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
+                    ark_grid_order: None,
                 }),
                 engravings: Some(vec![1118, 1299]),
                 gems: Some(vec![
@@ -2987,6 +2988,7 @@ mod tests {
                     evolution: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
                     enlightenment: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
                     leap: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
+                    ark_grid_order: None,
                 }),
                 engravings: Some(vec![1118, 1299]),
                 gems: Some(vec![
@@ -3059,6 +3061,7 @@ mod tests {
                     evolution: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
                     enlightenment: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
                     leap: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
+                    ark_grid_order: None,
                 }),
                 engravings: Some(vec![1118, 1299]),
                 gems: Some(vec![
@@ -3131,6 +3134,7 @@ mod tests {
                     evolution: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
                     enlightenment: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
                     leap: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
+                    ark_grid_order: None,
                 }),
                 engravings: Some(vec![1255, 1251, 1134, 1167, 77300001]),
                 gems: Some(vec![
@@ -3192,6 +3196,7 @@ mod tests {
                     evolution: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
                     enlightenment: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
                     leap: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
+                    ark_grid_order: None,
                 }),
                 engravings: Some(vec![1118, 1299]),
                 gems: Some(vec![
@@ -3264,6 +3269,7 @@ mod tests {
                     evolution: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
                     enlightenment: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
                     leap: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
+                    ark_grid_order: None,
                 }),
                 engravings: Some(vec![1118, 1299]),
                 gems: Some(vec![
@@ -3336,6 +3342,7 @@ mod tests {
                     evolution: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
                     enlightenment: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
                     leap: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
+                    ark_grid_order: None,
                 }),
                 engravings: Some(vec![1118, 1299]),
                 gems: Some(vec![
@@ -3408,6 +3415,7 @@ mod tests {
                     evolution: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
                     enlightenment: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
                     leap: Some(vec![ArkPassiveNode { id: 1, lv: 1 }]),
+                    ark_grid_order: None,
                 }),
                 engravings: Some(vec![1255, 1251, 1134, 1167, 77300001]),
                 gems: Some(vec![

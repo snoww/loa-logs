@@ -49,6 +49,9 @@ pub static EXTERNAL_ARK_PASSIVE_KARMA_DATA: OnceLockWrapper<
 pub static EXTERNAL_CARD_BOOK_DATA: OnceLockWrapper<HashMap<u32, ExternalCardBookData>> =
     OnceLockWrapper::new();
 pub static EXTERNAL_ARK_GRID_DATA: OnceLockWrapper<ExternalArkGridData> = OnceLockWrapper::new();
+pub static EXTERNAL_ARK_GRID_CORE_CHOICES: OnceLockWrapper<
+    HashMap<u32, ExternalArkGridCoreChoice>,
+> = OnceLockWrapper::new();
 pub static EXTERNAL_ARK_GRID_GEM_LEVELS_BY_OPTION_ID: OnceLockWrapper<
     HashMap<u32, Vec<ExternalArkGridGemLevel>>,
 > = OnceLockWrapper::new();
@@ -354,6 +357,7 @@ impl AssetPreloader {
             "ArkGrid.json",
             "ArkGrid_EnumStrings.json",
         )?)?;
+        EXTERNAL_ARK_GRID_CORE_CHOICES.set(build_ark_grid_core_choices(&EXTERNAL_ARK_GRID_DATA))?;
         EXTERNAL_ADDON_SKILL_FEATURE_DATA.set(load_extra_meter_data(
             resource_dir,
             "AddonSkillFeature.json",
@@ -387,6 +391,42 @@ impl AssetPreloader {
     }
 }
 
+fn build_ark_grid_core_choices(
+    data: &ExternalArkGridData,
+) -> HashMap<u32, ExternalArkGridCoreChoice> {
+    let mut group_ids_by_family: HashMap<(u8, u8, u32), Vec<u32>> = HashMap::new();
+    for core in data.cores.values().filter(|core| core.attr == 0) {
+        group_ids_by_family
+            .entry((core.attr, core.core_type, core.pc_class))
+            .or_default()
+            .push(core.group_id);
+    }
+    for group_ids in group_ids_by_family.values_mut() {
+        group_ids.sort_unstable();
+        group_ids.dedup();
+    }
+
+    data.cores
+        .iter()
+        .filter_map(|(&core_id, core)| {
+            if core.attr != 0 {
+                return None;
+            }
+            let group_ids = group_ids_by_family.get(&(core.attr, core.core_type, core.pc_class))?;
+            let position = group_ids
+                .iter()
+                .position(|&group_id| group_id == core.group_id)?;
+            Some((
+                core_id,
+                ExternalArkGridCoreChoice {
+                    core_type: core.core_type,
+                    choice: (position % 3 + 1) as u8,
+                },
+            ))
+        })
+        .collect()
+}
+
 #[derive(Debug, serde::Deserialize)]
 struct AwsIpRanges {
     prefixes: Vec<AwsPrefix>,
@@ -414,4 +454,54 @@ pub fn get_region_from_ip(ip: Ipv4Addr) -> Option<String> {
         }
     }
     None
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn ark_grid_choice_indices_repeat_for_each_set_of_three_groups() {
+        let mut data = ExternalArkGridData::default();
+        for (core_id, group_id) in [
+            (10, 100),
+            (11, 100),
+            (20, 200),
+            (30, 300),
+            (40, 400),
+            (50, 500),
+            (60, 600),
+        ] {
+            data.cores.insert(
+                core_id,
+                ExternalArkGridCoreData {
+                    attr: 0,
+                    core_type: 0,
+                    group_id,
+                    pc_class: 102,
+                    ..Default::default()
+                },
+            );
+        }
+        data.cores.insert(
+            70,
+            ExternalArkGridCoreData {
+                attr: 1,
+                core_type: 0,
+                group_id: 700,
+                pc_class: 0,
+                ..Default::default()
+            },
+        );
+
+        let choices = build_ark_grid_core_choices(&data);
+        assert_eq!(choices[&10].choice, 1);
+        assert_eq!(choices[&11].choice, 1);
+        assert_eq!(choices[&20].choice, 2);
+        assert_eq!(choices[&30].choice, 3);
+        assert_eq!(choices[&40].choice, 1);
+        assert_eq!(choices[&50].choice, 2);
+        assert_eq!(choices[&60].choice, 3);
+        assert!(!choices.contains_key(&70));
+    }
 }

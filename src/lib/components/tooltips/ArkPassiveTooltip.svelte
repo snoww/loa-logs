@@ -141,6 +141,8 @@
         return "Unknown";
     }
   }
+
+  const INDEX_COLORS = ["bg-sky-500/80", "bg-green-600/80", "bg-amber-600/80"];
 </script>
 
 {#snippet renderTree(name: string, tree?: ArkPassiveNode[])}
@@ -159,6 +161,12 @@
       {/each}
     </div>
   {/if}
+{/snippet}
+
+{#snippet renderArkGridIndex(index?: number)}
+  <span class="flex size-4 items-center justify-center rounded-sm text-white {index ? INDEX_COLORS[index - 1] : ''}">
+    {index}
+  </span>
 {/snippet}
 
 {#snippet tooltip()}
@@ -184,6 +192,16 @@
       </p>
     {/if}
     <div class="text-xs">
+      {#if state.entity.arkPassiveData?.arkGridOrder}
+        <div class="mb-1">
+          <div class="text-purple-400">[Ark Grid]</div>
+          <div class="flex gap-1 font-mono text-xs">
+            {@render renderArkGridIndex(state.entity.arkPassiveData.arkGridOrder.sun)}
+            {@render renderArkGridIndex(state.entity.arkPassiveData.arkGridOrder.moon)}
+            {@render renderArkGridIndex(state.entity.arkPassiveData.arkGridOrder.star)}
+          </div>
+        </div>
+      {/if}
       {#if state.entity.arkPassiveData && state.entity.spec && !state.encounter.live}
         {#if arkPassiveSpec === state.entity.spec}
           {@render renderTree("evolution", state.entity.arkPassiveData.evolution)}

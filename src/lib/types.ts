@@ -365,6 +365,13 @@ export interface ArkPassiveData {
   evolution?: Array<ArkPassiveNode>;
   enlightenment?: Array<ArkPassiveNode>;
   leap?: Array<ArkPassiveNode>;
+  arkGridOrder?: ArkGridOrder;
+}
+
+export interface ArkGridOrder {
+  sun?: number;
+  moon?: number;
+  star?: number;
 }
 
 export interface ArkPassiveNode {
@@ -473,6 +480,7 @@ export interface DamageStats {
   stagger: number;
   unbuffedDamage: number;
   unbuffedDps: number;
+
   [key: string]: any;
 }
 
