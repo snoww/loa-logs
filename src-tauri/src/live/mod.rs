@@ -1643,7 +1643,7 @@ fn raid_difficulty_from_zone(zone_id: u32, zone_level: u32) -> Option<(&'static 
         2 => Some(("Nightmare", 2)),
         3 => Some(("Challenge", 3)),
         4 => match zone_id {
-            37551 => Some(("Matchmaking", 4)),
+            37551 => Some(("Matching", 4)),
             _ => Some(("Solo", 4)),
         },
         5 => Some(("Extreme", 5)),

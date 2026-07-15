@@ -68,7 +68,7 @@ export async function uploadLog(
   if (
     !encounter.cleared ||
     !encounter.difficulty ||
-    ["Solo", "Matchmaking"].includes(encounter.difficulty) ||
+    ["Solo", "Matching"].includes(encounter.difficulty) ||
     Object.values(encounter.entities).filter((e) => e.entityType === EntityType.PLAYER).length > 8
   ) {
     if (showToast && !bulk) {

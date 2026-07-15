@@ -190,7 +190,7 @@ export const difficultyMap: Array<string> = [
   "Level 2",
   "Level 3",
   "Solo",
-  "Matchmaking",
+  "Matching",
   "Extreme",
   "The First",
   "Inferno",
