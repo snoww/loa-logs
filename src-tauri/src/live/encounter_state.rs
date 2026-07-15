@@ -1401,6 +1401,14 @@ impl EncounterState {
             } else {
                 self.encounter.current_boss_name.clone()
             };
+
+            if let Some(difficulty) = adjusted_extreme_aegir_difficulty(
+                &self.encounter.current_boss_name,
+                &self.raid_difficulty,
+                npc.max_hp,
+            ) {
+                self.raid_difficulty = difficulty.to_string();
+            }
         }
     }
 
@@ -4790,4 +4798,56 @@ fn timestamp_ms_to_lal_datetime(timestamp_ms: i64) -> String {
 fn status_effect_is_infinite(status_effect: &StatusEffectDetails) -> bool {
     // infinite if duration is (sub-)zero or longer than an hour
     status_effect.expiration_delay <= 0.0 || status_effect.expiration_delay > 3600.0
+}
+
+fn adjusted_extreme_aegir_difficulty(
+    boss_name: &str,
+    difficulty: &str,
+    max_hp: i64,
+) -> Option<&'static str> {
+    if boss_name != "Aegir, the Oppressor" || difficulty != "Extreme" {
+        return None;
+    }
+
+    if max_hp > 4_500_000_000_000 {
+        Some("Extreme Nightmare")
+    } else if max_hp > 2_500_000_000_000 {
+        Some("Extreme Hard")
+    } else {
+        Some("Extreme Normal")
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::adjusted_extreme_aegir_difficulty;
+
+    #[test]
+    fn adjusts_extreme_aegir_difficulty_from_boss_hp() {
+        let cases = [
+            (4_500_000_000_001, "Extreme Nightmare"),
+            (4_500_000_000_000, "Extreme Hard"),
+            (2_500_000_000_001, "Extreme Hard"),
+            (2_500_000_000_000, "Extreme Normal"),
+        ];
+
+        for (max_hp, expected) in cases {
+            assert_eq!(
+                adjusted_extreme_aegir_difficulty("Aegir, the Oppressor", "Extreme", max_hp),
+                Some(expected)
+            );
+        }
+    }
+
+    #[test]
+    fn does_not_adjust_other_bosses_or_difficulties() {
+        assert_eq!(
+            adjusted_extreme_aegir_difficulty(
+                "Aegir, the Oppressor",
+                "Extreme Hard",
+                5_000_000_000_000
+            ),
+            None
+        );
+    }
 }
