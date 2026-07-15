@@ -88,35 +88,53 @@ pub fn load_encounters_preview(
 }
 
 #[command]
-pub fn get_local_characters(repository: State<Repository>) -> Result<Vec<CharacterInfo>> {
-    let characters = repository.get_local_characters()?;
+pub async fn get_local_characters(repository: State<'_, Repository>) -> Result<Vec<CharacterInfo>> {
+    let repository = repository.inner().clone();
+    let characters =
+        tauri::async_runtime::spawn_blocking(move || repository.get_local_characters())
+            .await
+            .context("local character query task failed")??;
     Ok(characters)
 }
 
 #[command]
-pub fn get_character_statistics(
-    repository: State<Repository>,
+pub async fn get_character_statistics(
+    repository: State<'_, Repository>,
     criteria: CharacterStatisticsCriteria,
 ) -> Result<CharacterStatistics> {
-    let statistics = repository.get_character_statistics(criteria)?;
+    let repository = repository.inner().clone();
+    let statistics =
+        tauri::async_runtime::spawn_blocking(move || repository.get_character_statistics(criteria))
+            .await
+            .context("character statistics query task failed")??;
     Ok(statistics)
 }
 
 #[command]
-pub fn get_raid_progression_statistics(
-    repository: State<Repository>,
+pub async fn get_raid_progression_statistics(
+    repository: State<'_, Repository>,
     criteria: RaidProgressionCriteria,
 ) -> Result<RaidProgressionStatistics> {
-    let statistics = repository.get_raid_progression_statistics(criteria)?;
+    let repository = repository.inner().clone();
+    let statistics = tauri::async_runtime::spawn_blocking(move || {
+        repository.get_raid_progression_statistics(criteria)
+    })
+    .await
+    .context("raid progression statistics query task failed")??;
     Ok(statistics)
 }
 
 #[command]
-pub fn get_raid_progression_range(
-    repository: State<Repository>,
+pub async fn get_raid_progression_range(
+    repository: State<'_, Repository>,
     criteria: RaidProgressionRangeCriteria,
 ) -> Result<RaidProgressionRange> {
-    let range = repository.get_raid_progression_range(criteria)?;
+    let repository = repository.inner().clone();
+    let range = tauri::async_runtime::spawn_blocking(move || {
+        repository.get_raid_progression_range(criteria)
+    })
+    .await
+    .context("raid progression range query task failed")??;
     Ok(range)
 }
 

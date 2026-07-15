@@ -15,6 +15,7 @@ use crate::{
     models::*,
     utils::*,
 };
+#[derive(Clone)]
 pub struct Repository(r2d2::Pool<SqliteConnectionManager>);
 
 impl Repository {
@@ -198,19 +199,11 @@ impl Repository {
         criteria: CharacterStatisticsCriteria,
     ) -> Result<CharacterStatistics> {
         let connection = self.0.get()?;
-        let characters = self.get_local_characters()?;
-        let character = characters
-            .iter()
-            .find(|c| c.name == criteria.character)
-            .cloned()
-            .unwrap_or_else(|| CharacterInfo {
-                name: criteria.character.clone(),
-                ..Default::default()
-            });
+        let character = criteria.character.clone();
 
         let mode = criteria.mode.clone();
         let damage_type = criteria.damage_type.clone();
-        let character_name = criteria.character.clone();
+        let character_name = criteria.character.name.clone();
         let boss_to_raid = criteria.boss_to_raid.clone();
         let (params, query) = build_character_statistics_query(criteria);
         let mut rows = connection
@@ -736,7 +729,7 @@ struct RaidProgressionPlayerAggregate {
 fn build_character_statistics_query(
     criteria: CharacterStatisticsCriteria,
 ) -> (Vec<String>, String) {
-    let mut params = vec![criteria.character];
+    let mut params = vec![criteria.character.name];
     let min_duration = if criteria.min_duration > 0 {
         criteria.min_duration
     } else {
@@ -2439,6 +2432,28 @@ mod tests {
         assert_eq!(statistics.summary.median_duration, Some(270_000));
         assert_eq!(statistics.recent_bests.len(), 2);
         assert!(statistics.recent_bests.iter().all(|row| row.id != 3));
+    }
+
+    #[test]
+    fn character_statistics_reuses_selected_character_metadata() {
+        let database = Database::memory("1.14.0").unwrap();
+        let repository = database.create_repository();
+        let criteria = CharacterStatisticsCriteria {
+            character: CharacterInfo {
+                name: "SelectedCharacter".to_string(),
+                class_id: 205,
+                max_gear_score: 1700.0,
+                spec: Some("Igniter".to_string()),
+            },
+            ..Default::default()
+        };
+
+        let statistics = repository.get_character_statistics(criteria).unwrap();
+
+        assert_eq!(statistics.character.name, "SelectedCharacter");
+        assert_eq!(statistics.character.class_id, 205);
+        assert_eq!(statistics.character.max_gear_score, 1700.0);
+        assert_eq!(statistics.character.spec.as_deref(), Some("Igniter"));
     }
 
     #[test]

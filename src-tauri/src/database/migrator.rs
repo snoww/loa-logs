@@ -52,6 +52,8 @@ impl<'a> Migrator<'a> {
 
         migration_rdps(&tx)?;
 
+        migration_statistics_indexes(&tx)?;
+
         stmt.finalize()?;
         info!("finished setting up database");
 
@@ -351,6 +353,20 @@ pub fn migration_rdps(tx: &Transaction) -> Result<(), rusqlite::Error> {
         )?;
     }
     stmt.finalize()
+}
+
+pub fn migration_statistics_indexes(tx: &Transaction) -> Result<(), rusqlite::Error> {
+    let mut stmt = tx.prepare("SELECT 1 FROM sqlite_master WHERE type=? AND name=?")?;
+    if !stmt.exists(["index", "encounter_preview_local_player_fight_start_index"])? {
+        info!("adding statistics indexes");
+        tx.execute(
+            "CREATE INDEX encounter_preview_local_player_fight_start_index
+             ON encounter_preview (local_player, fight_start DESC)",
+            [],
+        )?;
+    }
+    stmt.finalize()?;
+    Ok(())
 }
 
 pub fn migration_boss_hp(tx: &Transaction) -> Result<(), rusqlite::Error> {

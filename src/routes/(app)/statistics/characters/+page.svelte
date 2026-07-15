@@ -3,6 +3,7 @@
   import {
     getCharacterStatistics,
     getLocalCharacters,
+    writeLog,
     type CharacterInfo,
     type CharacterStatisticsCriteria
   } from "$lib/api";
@@ -25,6 +26,7 @@
   type Range = CharacterStatisticsCriteria["range"];
   type Mode = CharacterStatisticsCriteria["mode"];
   type DamageType = NonNullable<CharacterStatisticsCriteria["damageType"]>;
+  type LoadingPhase = "characters" | "statistics" | null;
 
   const ranges: { value: Range; label: string }[] = [
     { value: "current_week", label: "Current week" },
@@ -48,11 +50,12 @@
   let selectedCharacter = $state("");
   let selectedRange = $state<Range>("current_week");
   let selectedMode = $state<Mode>("damage");
+  let statisticsMode = $state<Mode>("damage");
   let selectedDamageType = $state<DamageType>("dps");
   let selectedRaid = $state("");
   let selectedDifficulty = $state("");
   let statistics = $state<CharacterStatistics | null>(null);
-  let loading = $state(false);
+  let loadingPhase = $state<LoadingPhase>("characters");
   let error = $state("");
   let initialized = $state(false);
   let requestId = 0;
@@ -68,7 +71,8 @@
   let includedBosses = $derived(selectedRaid ? selectedBosses : raidBosses);
   let selectedCharacterInfo = $derived(characters.find((entry) => entry.name === selectedCharacter));
   let canSelectSupportMode = $derived(isSupportClassId(selectedCharacterInfo?.classId));
-  let isSupportMode = $derived(selectedMode === "support");
+  let isSelectedSupportMode = $derived(selectedMode === "support");
+  let isDisplayedSupportMode = $derived((statistics ? statisticsMode : selectedMode) === "support");
   let selectedDamageTypeInfo = $derived(
     damageTypes.find((damageType) => damageType.value === selectedDamageType) ?? damageTypes[0]
   );
@@ -84,17 +88,24 @@
   let recentBestRows = $derived<RecentBestEncounter[]>(
     [...(statistics?.recentBests ?? [])]
       .sort((a, b) => {
-        const aValue = isSupportMode ? (a.supportContribution ?? 0) : (metricValue(a, "recent") ?? 0);
-        const bValue = isSupportMode ? (b.supportContribution ?? 0) : (metricValue(b, "recent") ?? 0);
+        const aValue = isDisplayedSupportMode ? (a.supportContribution ?? 0) : (metricValue(a, "recent") ?? 0);
+        const bValue = isDisplayedSupportMode ? (b.supportContribution ?? 0) : (metricValue(b, "recent") ?? 0);
         return bValue - aValue;
       })
       .slice(0, 5)
   );
 
   onMount(async () => {
-    characters = await getLocalCharacters();
-    applyUrlState();
-    initialized = true;
+    try {
+      characters = await getLocalCharacters();
+      applyUrlState();
+      initialized = true;
+    } catch (err) {
+      error = "Could not load characters.";
+      await writeLog(`failed to load characters: ${String(err)}`);
+    } finally {
+      if (loadingPhase === "characters") loadingPhase = null;
+    }
   });
 
   $effect(() => {
@@ -133,34 +144,43 @@
   });
 
   async function loadStatistics() {
-    const requestCharacter = selectedCharacter;
+    const requestCharacterInfo = selectedCharacterInfo;
+    if (!requestCharacterInfo) {
+      statistics = null;
+      loadingPhase = null;
+      return;
+    }
+
+    const requestCharacter = requestCharacterInfo.name;
+    const requestMode = selectedMode;
     const currentRequest = ++requestId;
-    loading = true;
+    loadingPhase = "statistics";
     error = "";
 
     try {
       const result = await getCharacterStatistics({
-        character: requestCharacter,
+        character: requestCharacterInfo,
         range: selectedRange,
-        mode: selectedMode,
+        mode: requestMode,
         damageType: "dps",
         bossToRaid: raidGates,
         bosses: includedBosses,
-        includedSpecs: canSelectSupportMode && selectedMode === "support" ? SUPPORT_SPECS : [],
-        excludedSpecs: canSelectSupportMode && selectedMode === "damage" ? SUPPORT_SPECS : [],
+        includedSpecs: canSelectSupportMode && requestMode === "support" ? SUPPORT_SPECS : [],
+        excludedSpecs: canSelectSupportMode && requestMode === "damage" ? SUPPORT_SPECS : [],
         difficulty: selectedDifficulty,
         minDuration: 10
       });
 
       if (requestCharacter === selectedCharacter && currentRequest === requestId) {
+        statisticsMode = requestMode;
         statistics = result;
       }
     } catch (err) {
-      console.error(err);
       error = "Could not load statistics.";
+      await writeLog(`failed to load character statistics: ${String(err)}`);
     } finally {
       if (requestCharacter === selectedCharacter && currentRequest === requestId) {
-        loading = false;
+        loadingPhase = null;
       }
     }
   }
@@ -253,8 +273,8 @@
 
 <div
   class="mx-auto flex h-full min-h-0 max-w-[180rem] flex-col gap-3 overflow-y-auto px-6 py-3 transition-opacity"
-  class:opacity-60={loading}
-  aria-busy={loading}
+  class:opacity-60={loadingPhase !== null}
+  aria-busy={loadingPhase !== null}
 >
   <!--  filter options  -->
   <div class="flex flex-wrap items-center gap-2">
@@ -262,7 +282,7 @@
       class="h-9 min-w-72 rounded-md border border-neutral-700 bg-neutral-800 px-2 text-sm text-neutral-200 focus:border-accent-500 focus:ring-0"
       value={selectedCharacter}
       onchange={(event) => selectCharacter(event.currentTarget.value)}
-      disabled={characters.length === 0}
+      disabled={loadingPhase === "characters" || characters.length === 0}
     >
       {#each characters as character (character.name)}
         <option value={character.name}>
@@ -282,7 +302,7 @@
       </select>
     {/if}
 
-    {#if !isSupportMode}
+    {#if !isSelectedSupportMode}
       <QuickTooltip tooltip={selectedDamageTypeInfo.tooltip} class="block">
         <select
           class="h-9 min-w-28 rounded-md border border-neutral-700 bg-neutral-800 px-2 text-sm text-neutral-200 focus:border-accent-500 focus:ring-0"
@@ -339,7 +359,9 @@
 
   {#if error}
     <div class="rounded-md border border-red-500/40 bg-red-500/10 p-3 text-red-200">{error}</div>
-  {:else if characters.length === 0 && !loading}
+  {:else if loadingPhase === "characters"}
+    <div class="rounded-md border border-neutral-700 bg-neutral-800/80 p-3 text-neutral-300">Loading characters...</div>
+  {:else if characters.length === 0}
     <div class="rounded-md border border-neutral-700 bg-neutral-800/80 p-3 text-neutral-300">No characters found.</div>
   {:else if statistics}
     <!-- summary stats -->
@@ -369,7 +391,7 @@
         </div>
       </div>
 
-      {#if isSupportMode}
+      {#if isDisplayedSupportMode}
         <QuickTooltip tooltip="Median rDPS contribution from cleared support logs" class="block">
           <div class="h-24 rounded-md border border-neutral-700/70 bg-neutral-800/80 p-3">
             <div class="text-xs text-neutral-400">Median Contribution</div>
@@ -441,7 +463,7 @@
                   <th class="px-3 py-2 font-medium">Difficulty</th>
                   <th class="px-3 py-2 font-medium">Clears</th>
                   <th class="px-3 py-2 font-medium">Rate</th>
-                  {#if isSupportMode}
+                  {#if isDisplayedSupportMode}
                     <th class="px-3 py-2 font-medium">Contribution</th>
                     <th class="px-3 py-2 font-medium">AP</th>
                     <th class="px-3 py-2 font-medium">Brand</th>
@@ -468,7 +490,7 @@
                     </td>
                     <td class="px-3 py-2">{row.clears}/{row.attempts}</td>
                     <td class="px-3 py-2">{formatPercent(row.clearRate)}</td>
-                    {#if isSupportMode}
+                    {#if isDisplayedSupportMode}
                       <td class="px-3 py-2">
                         <QuickTooltip tooltip="Median rDPS contribution on cleared pulls" class="w-fit">
                           {formatRatioPercent(row.support?.medianContribution)}
@@ -517,7 +539,7 @@
           <div class="flex items-center justify-between border-b border-neutral-700/70 px-3 py-2">
             <h2 class="font-medium">Recent Bests</h2>
             <span class="text-xs text-neutral-500">
-              {isSupportMode ? "support logs" : selectedDamageTypeInfo.label}
+              {isDisplayedSupportMode ? "support logs" : selectedDamageTypeInfo.label}
             </span>
           </div>
           {#if recentBestRows.length > 0}
@@ -527,10 +549,10 @@
                   <div class="flex items-center justify-between gap-2">
                     <span class="truncate">{raidGates[best.bossName] ?? best.bossName}</span>
                     <QuickTooltip
-                      tooltip={isSupportMode ? "rDPS contribution" : selectedDamageTypeInfo.label}
+                      tooltip={isDisplayedSupportMode ? "rDPS contribution" : selectedDamageTypeInfo.label}
                       class="shrink-0 font-medium"
                     >
-                      {isSupportMode
+                      {isDisplayedSupportMode
                         ? formatRatioPercent(best.supportContribution)
                         : formatDps(metricValue(best, "recent"))}
                     </QuickTooltip>
@@ -556,7 +578,7 @@
     </div>
   {:else}
     <div class="rounded-md border border-neutral-700 bg-neutral-800/80 p-3 text-neutral-300">
-      {loading ? "Loading statistics..." : "Select a character."}
+      {loadingPhase === "statistics" ? "Loading statistics..." : "Select a character."}
     </div>
   {/if}
 </div>

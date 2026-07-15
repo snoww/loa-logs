@@ -115,7 +115,7 @@ export interface CharacterInfo {
 export const getLocalCharacters = (): Promise<CharacterInfo[]> => invoke("get_local_characters");
 
 export interface CharacterStatisticsCriteria {
-  character: string;
+  character: CharacterInfo;
   range: "current_week" | "previous_week" | "last4_weeks" | "last8_weeks" | "all";
   mode: "damage" | "support";
   damageType?: "dps" | "ndps" | "rdps";

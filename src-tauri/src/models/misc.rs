@@ -42,7 +42,7 @@ pub struct EncountersOverview {
 #[derive(Debug, Default, Deserialize, Clone)]
 #[serde(rename_all = "camelCase", default)]
 pub struct CharacterStatisticsCriteria {
-    pub character: String,
+    pub character: CharacterInfo,
     pub range: String,
     pub mode: String,
     pub damage_type: String,
@@ -290,7 +290,7 @@ pub struct SearchFilter {
     pub local_player: String,
 }
 
-#[derive(Debug, Default, Serialize, Clone)]
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct CharacterInfo {
     pub name: String,
