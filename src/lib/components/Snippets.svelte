@@ -29,11 +29,11 @@
 
 {#snippet difficultyColor(difficulty: string)}
   <span
-    class:text-yellow-300={difficulty === "Hard" || difficulty === "Level 2"}
+    class:text-yellow-300={difficulty === "Hard" || difficulty === "Extreme Hard" || difficulty === "Level 2"}
     class:text-amber-600={difficulty === "Inferno" || difficulty === "Challenge" || difficulty === "Trial"}
     class:text-cyan-400={difficulty === "Matchmaking" || difficulty === "Solo"}
-    class:text-violet-400={difficulty === "Nightmare"}
-    class:text-purple-500={difficulty.includes("Extreme") || difficulty === "The First"}
+    class:text-violet-400={difficulty === "Nightmare" || difficulty === "Extreme Nightmare"}
+    class:text-purple-500={difficulty === "Extreme" || difficulty === "The First"}
     class:text-rose-300={difficulty === "Level 3"}
   >
     {difficulty}
