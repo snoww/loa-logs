@@ -185,17 +185,17 @@ export const bossHpMap: Record<string, number> = {
 export const difficultyMap: Array<string> = [
   "Normal",
   "Hard",
-  "Inferno",
-  "Challenge",
-  "Solo",
-  "Matchmaking",
-  "Trial",
-  "Extreme",
-  "The First",
   "Nightmare",
   "Level 1",
   "Level 2",
-  "Level 3"
+  "Level 3",
+  "Solo",
+  "Matchmaking",
+  "Extreme",
+  "The First",
+  "Inferno",
+  "Trial",
+  "Challenge"
 ];
 
 export const raidGates: Record<string, string> = Object.fromEntries(
