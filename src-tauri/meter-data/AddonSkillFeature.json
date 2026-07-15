@@ -87436,5 +87436,6671 @@
       0,
       80
     ]
+  },
+  "7004100": {
+    "id": 7004100,
+    "name": "",
+    "desc": "",
+    "skillId": 70041,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": []
+  },
+  "7004101": {
+    "id": 7004101,
+    "name": "",
+    "desc": "",
+    "skillId": 70041,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      10
+    ]
+  },
+  "7004102": {
+    "id": 7004102,
+    "name": "",
+    "desc": "",
+    "skillId": 70041,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      20
+    ]
+  },
+  "7004103": {
+    "id": 7004103,
+    "name": "",
+    "desc": "",
+    "skillId": 70041,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      30
+    ]
+  },
+  "7004104": {
+    "id": 7004104,
+    "name": "",
+    "desc": "",
+    "skillId": 70041,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      40
+    ]
+  },
+  "7004110": {
+    "id": 7004110,
+    "name": "",
+    "desc": "",
+    "skillId": 70041,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      40
+    ]
+  },
+  "7004111": {
+    "id": 7004111,
+    "name": "",
+    "desc": "",
+    "skillId": 70041,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      55
+    ]
+  },
+  "7004112": {
+    "id": 7004112,
+    "name": "",
+    "desc": "",
+    "skillId": 70041,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      70
+    ]
+  },
+  "7004113": {
+    "id": 7004113,
+    "name": "",
+    "desc": "",
+    "skillId": 70041,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      85
+    ]
+  },
+  "7004114": {
+    "id": 7004114,
+    "name": "",
+    "desc": "",
+    "skillId": 70041,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      100
+    ]
+  },
+  "7004120": {
+    "id": 7004120,
+    "name": "",
+    "desc": "",
+    "skillId": 70041,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      100
+    ]
+  },
+  "7004121": {
+    "id": 7004121,
+    "name": "",
+    "desc": "",
+    "skillId": 70041,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      125
+    ]
+  },
+  "7004122": {
+    "id": 7004122,
+    "name": "",
+    "desc": "",
+    "skillId": 70041,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      150
+    ]
+  },
+  "7004123": {
+    "id": 7004123,
+    "name": "",
+    "desc": "",
+    "skillId": 70041,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      175
+    ]
+  },
+  "7004124": {
+    "id": 7004124,
+    "name": "",
+    "desc": "",
+    "skillId": 70041,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      200
+    ]
+  },
+  "7014100": {
+    "id": 7014100,
+    "name": "",
+    "desc": "",
+    "skillId": 70141,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      200
+    ]
+  },
+  "7014101": {
+    "id": 7014101,
+    "name": "",
+    "desc": "",
+    "skillId": 70141,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      230
+    ]
+  },
+  "7014102": {
+    "id": 7014102,
+    "name": "",
+    "desc": "",
+    "skillId": 70141,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      260
+    ]
+  },
+  "7014103": {
+    "id": 7014103,
+    "name": "",
+    "desc": "",
+    "skillId": 70141,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      290
+    ]
+  },
+  "7014104": {
+    "id": 7014104,
+    "name": "",
+    "desc": "",
+    "skillId": 70141,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      320
+    ]
+  },
+  "7014110": {
+    "id": 7014110,
+    "name": "",
+    "desc": "",
+    "skillId": 70141,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      320
+    ]
+  },
+  "7014111": {
+    "id": 7014111,
+    "name": "",
+    "desc": "",
+    "skillId": 70141,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      365
+    ]
+  },
+  "7014112": {
+    "id": 7014112,
+    "name": "",
+    "desc": "",
+    "skillId": 70141,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      410
+    ]
+  },
+  "7014113": {
+    "id": 7014113,
+    "name": "",
+    "desc": "",
+    "skillId": 70141,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      455
+    ]
+  },
+  "7014114": {
+    "id": 7014114,
+    "name": "",
+    "desc": "",
+    "skillId": 70141,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      500
+    ]
+  },
+  "7014120": {
+    "id": 7014120,
+    "name": "",
+    "desc": "",
+    "skillId": 70141,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      500
+    ]
+  },
+  "7014121": {
+    "id": 7014121,
+    "name": "",
+    "desc": "",
+    "skillId": 70141,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      575
+    ]
+  },
+  "7014122": {
+    "id": 7014122,
+    "name": "",
+    "desc": "",
+    "skillId": 70141,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      650
+    ]
+  },
+  "7014123": {
+    "id": 7014123,
+    "name": "",
+    "desc": "",
+    "skillId": 70141,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      725
+    ]
+  },
+  "7014124": {
+    "id": 7014124,
+    "name": "",
+    "desc": "",
+    "skillId": 70141,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      800
+    ]
+  },
+  "7024100": {
+    "id": 7024100,
+    "name": "",
+    "desc": "",
+    "skillId": 70241,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": []
+  },
+  "7024101": {
+    "id": 7024101,
+    "name": "",
+    "desc": "",
+    "skillId": 70241,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      6
+    ]
+  },
+  "7024102": {
+    "id": 7024102,
+    "name": "",
+    "desc": "",
+    "skillId": 70241,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      12
+    ]
+  },
+  "7024103": {
+    "id": 7024103,
+    "name": "",
+    "desc": "",
+    "skillId": 70241,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      18
+    ]
+  },
+  "7024104": {
+    "id": 7024104,
+    "name": "",
+    "desc": "",
+    "skillId": 70241,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      24
+    ]
+  },
+  "7024110": {
+    "id": 7024110,
+    "name": "",
+    "desc": "",
+    "skillId": 70241,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      25
+    ]
+  },
+  "7024111": {
+    "id": 7024111,
+    "name": "",
+    "desc": "",
+    "skillId": 70241,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      33
+    ]
+  },
+  "7024112": {
+    "id": 7024112,
+    "name": "",
+    "desc": "",
+    "skillId": 70241,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      40
+    ]
+  },
+  "7024113": {
+    "id": 7024113,
+    "name": "",
+    "desc": "",
+    "skillId": 70241,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      48
+    ]
+  },
+  "7024114": {
+    "id": 7024114,
+    "name": "",
+    "desc": "",
+    "skillId": 70241,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      55
+    ]
+  },
+  "7024120": {
+    "id": 7024120,
+    "name": "",
+    "desc": "",
+    "skillId": 70241,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      57
+    ]
+  },
+  "7024121": {
+    "id": 7024121,
+    "name": "",
+    "desc": "",
+    "skillId": 70241,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      67
+    ]
+  },
+  "7024122": {
+    "id": 7024122,
+    "name": "",
+    "desc": "",
+    "skillId": 70241,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      77
+    ]
+  },
+  "7024123": {
+    "id": 7024123,
+    "name": "",
+    "desc": "",
+    "skillId": 70241,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      87
+    ]
+  },
+  "7024124": {
+    "id": 7024124,
+    "name": "",
+    "desc": "",
+    "skillId": 70241,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      97
+    ]
+  },
+  "7034100": {
+    "id": 7034100,
+    "name": "",
+    "desc": "",
+    "skillId": 70341,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      100
+    ]
+  },
+  "7034101": {
+    "id": 7034101,
+    "name": "",
+    "desc": "",
+    "skillId": 70341,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      112
+    ]
+  },
+  "7034102": {
+    "id": 7034102,
+    "name": "",
+    "desc": "",
+    "skillId": 70341,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      124
+    ]
+  },
+  "7034103": {
+    "id": 7034103,
+    "name": "",
+    "desc": "",
+    "skillId": 70341,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      136
+    ]
+  },
+  "7034104": {
+    "id": 7034104,
+    "name": "",
+    "desc": "",
+    "skillId": 70341,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      148
+    ]
+  },
+  "7034110": {
+    "id": 7034110,
+    "name": "",
+    "desc": "",
+    "skillId": 70341,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      150
+    ]
+  },
+  "7034111": {
+    "id": 7034111,
+    "name": "",
+    "desc": "",
+    "skillId": 70341,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      165
+    ]
+  },
+  "7034112": {
+    "id": 7034112,
+    "name": "",
+    "desc": "",
+    "skillId": 70341,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      180
+    ]
+  },
+  "7034113": {
+    "id": 7034113,
+    "name": "",
+    "desc": "",
+    "skillId": 70341,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      195
+    ]
+  },
+  "7034114": {
+    "id": 7034114,
+    "name": "",
+    "desc": "",
+    "skillId": 70341,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      210
+    ]
+  },
+  "7034120": {
+    "id": 7034120,
+    "name": "",
+    "desc": "",
+    "skillId": 70341,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      213
+    ]
+  },
+  "7034121": {
+    "id": 7034121,
+    "name": "",
+    "desc": "",
+    "skillId": 70341,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      233
+    ]
+  },
+  "7034122": {
+    "id": 7034122,
+    "name": "",
+    "desc": "",
+    "skillId": 70341,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      253
+    ]
+  },
+  "7034123": {
+    "id": 7034123,
+    "name": "",
+    "desc": "",
+    "skillId": 70341,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      273
+    ]
+  },
+  "7034124": {
+    "id": 7034124,
+    "name": "",
+    "desc": "",
+    "skillId": 70341,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      293
+    ]
+  },
+  "7044100": {
+    "id": 7044100,
+    "name": "",
+    "desc": "",
+    "skillId": 70441,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": []
+  },
+  "7044101": {
+    "id": 7044101,
+    "name": "",
+    "desc": "",
+    "skillId": 70441,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      4
+    ]
+  },
+  "7044102": {
+    "id": 7044102,
+    "name": "",
+    "desc": "",
+    "skillId": 70441,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      8
+    ]
+  },
+  "7044103": {
+    "id": 7044103,
+    "name": "",
+    "desc": "",
+    "skillId": 70441,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      12
+    ]
+  },
+  "7044104": {
+    "id": 7044104,
+    "name": "",
+    "desc": "",
+    "skillId": 70441,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      16
+    ]
+  },
+  "7044110": {
+    "id": 7044110,
+    "name": "",
+    "desc": "",
+    "skillId": 70441,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      16
+    ]
+  },
+  "7044111": {
+    "id": 7044111,
+    "name": "",
+    "desc": "",
+    "skillId": 70441,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      20
+    ]
+  },
+  "7044112": {
+    "id": 7044112,
+    "name": "",
+    "desc": "",
+    "skillId": 70441,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      24
+    ]
+  },
+  "7044113": {
+    "id": 7044113,
+    "name": "",
+    "desc": "",
+    "skillId": 70441,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      28
+    ]
+  },
+  "7044114": {
+    "id": 7044114,
+    "name": "",
+    "desc": "",
+    "skillId": 70441,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      32
+    ]
+  },
+  "7044120": {
+    "id": 7044120,
+    "name": "",
+    "desc": "",
+    "skillId": 70441,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      32
+    ]
+  },
+  "7044121": {
+    "id": 7044121,
+    "name": "",
+    "desc": "",
+    "skillId": 70441,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      36
+    ]
+  },
+  "7044122": {
+    "id": 7044122,
+    "name": "",
+    "desc": "",
+    "skillId": 70441,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      40
+    ]
+  },
+  "7044123": {
+    "id": 7044123,
+    "name": "",
+    "desc": "",
+    "skillId": 70441,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      44
+    ]
+  },
+  "7044124": {
+    "id": 7044124,
+    "name": "",
+    "desc": "",
+    "skillId": 70441,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      48
+    ]
+  },
+  "7054100": {
+    "id": 7054100,
+    "name": "",
+    "desc": "",
+    "skillId": 70541,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      50
+    ]
+  },
+  "7054101": {
+    "id": 7054101,
+    "name": "",
+    "desc": "",
+    "skillId": 70541,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      58
+    ]
+  },
+  "7054102": {
+    "id": 7054102,
+    "name": "",
+    "desc": "",
+    "skillId": 70541,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      65
+    ]
+  },
+  "7054103": {
+    "id": 7054103,
+    "name": "",
+    "desc": "",
+    "skillId": 70541,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      73
+    ]
+  },
+  "7054104": {
+    "id": 7054104,
+    "name": "",
+    "desc": "",
+    "skillId": 70541,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      80
+    ]
+  },
+  "7004200": {
+    "id": 7004200,
+    "name": "",
+    "desc": "",
+    "skillId": 70042,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": []
+  },
+  "7004201": {
+    "id": 7004201,
+    "name": "",
+    "desc": "",
+    "skillId": 70042,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      10
+    ]
+  },
+  "7004202": {
+    "id": 7004202,
+    "name": "",
+    "desc": "",
+    "skillId": 70042,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      20
+    ]
+  },
+  "7004203": {
+    "id": 7004203,
+    "name": "",
+    "desc": "",
+    "skillId": 70042,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      30
+    ]
+  },
+  "7004204": {
+    "id": 7004204,
+    "name": "",
+    "desc": "",
+    "skillId": 70042,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      40
+    ]
+  },
+  "7004210": {
+    "id": 7004210,
+    "name": "",
+    "desc": "",
+    "skillId": 70042,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      40
+    ]
+  },
+  "7004211": {
+    "id": 7004211,
+    "name": "",
+    "desc": "",
+    "skillId": 70042,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      55
+    ]
+  },
+  "7004212": {
+    "id": 7004212,
+    "name": "",
+    "desc": "",
+    "skillId": 70042,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      70
+    ]
+  },
+  "7004213": {
+    "id": 7004213,
+    "name": "",
+    "desc": "",
+    "skillId": 70042,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      85
+    ]
+  },
+  "7004214": {
+    "id": 7004214,
+    "name": "",
+    "desc": "",
+    "skillId": 70042,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      100
+    ]
+  },
+  "7004220": {
+    "id": 7004220,
+    "name": "",
+    "desc": "",
+    "skillId": 70042,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      100
+    ]
+  },
+  "7004221": {
+    "id": 7004221,
+    "name": "",
+    "desc": "",
+    "skillId": 70042,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      125
+    ]
+  },
+  "7004222": {
+    "id": 7004222,
+    "name": "",
+    "desc": "",
+    "skillId": 70042,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      150
+    ]
+  },
+  "7004223": {
+    "id": 7004223,
+    "name": "",
+    "desc": "",
+    "skillId": 70042,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      175
+    ]
+  },
+  "7004224": {
+    "id": 7004224,
+    "name": "",
+    "desc": "",
+    "skillId": 70042,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      200
+    ]
+  },
+  "7014200": {
+    "id": 7014200,
+    "name": "",
+    "desc": "",
+    "skillId": 70142,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      200
+    ]
+  },
+  "7014201": {
+    "id": 7014201,
+    "name": "",
+    "desc": "",
+    "skillId": 70142,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      230
+    ]
+  },
+  "7014202": {
+    "id": 7014202,
+    "name": "",
+    "desc": "",
+    "skillId": 70142,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      260
+    ]
+  },
+  "7014203": {
+    "id": 7014203,
+    "name": "",
+    "desc": "",
+    "skillId": 70142,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      290
+    ]
+  },
+  "7014204": {
+    "id": 7014204,
+    "name": "",
+    "desc": "",
+    "skillId": 70142,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      320
+    ]
+  },
+  "7014210": {
+    "id": 7014210,
+    "name": "",
+    "desc": "",
+    "skillId": 70142,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      320
+    ]
+  },
+  "7014211": {
+    "id": 7014211,
+    "name": "",
+    "desc": "",
+    "skillId": 70142,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      365
+    ]
+  },
+  "7014212": {
+    "id": 7014212,
+    "name": "",
+    "desc": "",
+    "skillId": 70142,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      410
+    ]
+  },
+  "7014213": {
+    "id": 7014213,
+    "name": "",
+    "desc": "",
+    "skillId": 70142,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      455
+    ]
+  },
+  "7014214": {
+    "id": 7014214,
+    "name": "",
+    "desc": "",
+    "skillId": 70142,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      500
+    ]
+  },
+  "7014220": {
+    "id": 7014220,
+    "name": "",
+    "desc": "",
+    "skillId": 70142,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      500
+    ]
+  },
+  "7014221": {
+    "id": 7014221,
+    "name": "",
+    "desc": "",
+    "skillId": 70142,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      575
+    ]
+  },
+  "7014222": {
+    "id": 7014222,
+    "name": "",
+    "desc": "",
+    "skillId": 70142,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      650
+    ]
+  },
+  "7014223": {
+    "id": 7014223,
+    "name": "",
+    "desc": "",
+    "skillId": 70142,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      725
+    ]
+  },
+  "7014224": {
+    "id": 7014224,
+    "name": "",
+    "desc": "",
+    "skillId": 70142,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      800
+    ]
+  },
+  "7024200": {
+    "id": 7024200,
+    "name": "",
+    "desc": "",
+    "skillId": 70242,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": []
+  },
+  "7024201": {
+    "id": 7024201,
+    "name": "",
+    "desc": "",
+    "skillId": 70242,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      6
+    ]
+  },
+  "7024202": {
+    "id": 7024202,
+    "name": "",
+    "desc": "",
+    "skillId": 70242,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      12
+    ]
+  },
+  "7024203": {
+    "id": 7024203,
+    "name": "",
+    "desc": "",
+    "skillId": 70242,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      18
+    ]
+  },
+  "7024204": {
+    "id": 7024204,
+    "name": "",
+    "desc": "",
+    "skillId": 70242,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      24
+    ]
+  },
+  "7024210": {
+    "id": 7024210,
+    "name": "",
+    "desc": "",
+    "skillId": 70242,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      25
+    ]
+  },
+  "7024211": {
+    "id": 7024211,
+    "name": "",
+    "desc": "",
+    "skillId": 70242,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      33
+    ]
+  },
+  "7024212": {
+    "id": 7024212,
+    "name": "",
+    "desc": "",
+    "skillId": 70242,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      40
+    ]
+  },
+  "7024213": {
+    "id": 7024213,
+    "name": "",
+    "desc": "",
+    "skillId": 70242,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      48
+    ]
+  },
+  "7024214": {
+    "id": 7024214,
+    "name": "",
+    "desc": "",
+    "skillId": 70242,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      55
+    ]
+  },
+  "7024220": {
+    "id": 7024220,
+    "name": "",
+    "desc": "",
+    "skillId": 70242,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      57
+    ]
+  },
+  "7024221": {
+    "id": 7024221,
+    "name": "",
+    "desc": "",
+    "skillId": 70242,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      67
+    ]
+  },
+  "7024222": {
+    "id": 7024222,
+    "name": "",
+    "desc": "",
+    "skillId": 70242,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      77
+    ]
+  },
+  "7024223": {
+    "id": 7024223,
+    "name": "",
+    "desc": "",
+    "skillId": 70242,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      87
+    ]
+  },
+  "7024224": {
+    "id": 7024224,
+    "name": "",
+    "desc": "",
+    "skillId": 70242,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      97
+    ]
+  },
+  "7034200": {
+    "id": 7034200,
+    "name": "",
+    "desc": "",
+    "skillId": 70342,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      100
+    ]
+  },
+  "7034201": {
+    "id": 7034201,
+    "name": "",
+    "desc": "",
+    "skillId": 70342,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      112
+    ]
+  },
+  "7034202": {
+    "id": 7034202,
+    "name": "",
+    "desc": "",
+    "skillId": 70342,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      124
+    ]
+  },
+  "7034203": {
+    "id": 7034203,
+    "name": "",
+    "desc": "",
+    "skillId": 70342,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      136
+    ]
+  },
+  "7034204": {
+    "id": 7034204,
+    "name": "",
+    "desc": "",
+    "skillId": 70342,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      148
+    ]
+  },
+  "7034210": {
+    "id": 7034210,
+    "name": "",
+    "desc": "",
+    "skillId": 70342,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      150
+    ]
+  },
+  "7034211": {
+    "id": 7034211,
+    "name": "",
+    "desc": "",
+    "skillId": 70342,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      165
+    ]
+  },
+  "7034212": {
+    "id": 7034212,
+    "name": "",
+    "desc": "",
+    "skillId": 70342,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      180
+    ]
+  },
+  "7034213": {
+    "id": 7034213,
+    "name": "",
+    "desc": "",
+    "skillId": 70342,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      195
+    ]
+  },
+  "7034214": {
+    "id": 7034214,
+    "name": "",
+    "desc": "",
+    "skillId": 70342,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      210
+    ]
+  },
+  "7034220": {
+    "id": 7034220,
+    "name": "",
+    "desc": "",
+    "skillId": 70342,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      213
+    ]
+  },
+  "7034221": {
+    "id": 7034221,
+    "name": "",
+    "desc": "",
+    "skillId": 70342,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      233
+    ]
+  },
+  "7034222": {
+    "id": 7034222,
+    "name": "",
+    "desc": "",
+    "skillId": 70342,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      253
+    ]
+  },
+  "7034223": {
+    "id": 7034223,
+    "name": "",
+    "desc": "",
+    "skillId": 70342,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      273
+    ]
+  },
+  "7034224": {
+    "id": 7034224,
+    "name": "",
+    "desc": "",
+    "skillId": 70342,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      293
+    ]
+  },
+  "7044200": {
+    "id": 7044200,
+    "name": "",
+    "desc": "",
+    "skillId": 70442,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": []
+  },
+  "7044201": {
+    "id": 7044201,
+    "name": "",
+    "desc": "",
+    "skillId": 70442,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      4
+    ]
+  },
+  "7044202": {
+    "id": 7044202,
+    "name": "",
+    "desc": "",
+    "skillId": 70442,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      8
+    ]
+  },
+  "7044203": {
+    "id": 7044203,
+    "name": "",
+    "desc": "",
+    "skillId": 70442,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      12
+    ]
+  },
+  "7044204": {
+    "id": 7044204,
+    "name": "",
+    "desc": "",
+    "skillId": 70442,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      16
+    ]
+  },
+  "7044210": {
+    "id": 7044210,
+    "name": "",
+    "desc": "",
+    "skillId": 70442,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      16
+    ]
+  },
+  "7044211": {
+    "id": 7044211,
+    "name": "",
+    "desc": "",
+    "skillId": 70442,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      20
+    ]
+  },
+  "7044212": {
+    "id": 7044212,
+    "name": "",
+    "desc": "",
+    "skillId": 70442,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      24
+    ]
+  },
+  "7044213": {
+    "id": 7044213,
+    "name": "",
+    "desc": "",
+    "skillId": 70442,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      28
+    ]
+  },
+  "7044214": {
+    "id": 7044214,
+    "name": "",
+    "desc": "",
+    "skillId": 70442,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      32
+    ]
+  },
+  "7044220": {
+    "id": 7044220,
+    "name": "",
+    "desc": "",
+    "skillId": 70442,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      32
+    ]
+  },
+  "7044221": {
+    "id": 7044221,
+    "name": "",
+    "desc": "",
+    "skillId": 70442,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      36
+    ]
+  },
+  "7044222": {
+    "id": 7044222,
+    "name": "",
+    "desc": "",
+    "skillId": 70442,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      40
+    ]
+  },
+  "7044223": {
+    "id": 7044223,
+    "name": "",
+    "desc": "",
+    "skillId": 70442,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      44
+    ]
+  },
+  "7044224": {
+    "id": 7044224,
+    "name": "",
+    "desc": "",
+    "skillId": 70442,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      48
+    ]
+  },
+  "7054200": {
+    "id": 7054200,
+    "name": "",
+    "desc": "",
+    "skillId": 70542,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      50
+    ]
+  },
+  "7054201": {
+    "id": 7054201,
+    "name": "",
+    "desc": "",
+    "skillId": 70542,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      58
+    ]
+  },
+  "7054202": {
+    "id": 7054202,
+    "name": "",
+    "desc": "",
+    "skillId": 70542,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      65
+    ]
+  },
+  "7054203": {
+    "id": 7054203,
+    "name": "",
+    "desc": "",
+    "skillId": 70542,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      73
+    ]
+  },
+  "7054204": {
+    "id": 7054204,
+    "name": "",
+    "desc": "",
+    "skillId": 70542,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      80
+    ]
+  },
+  "7004300": {
+    "id": 7004300,
+    "name": "",
+    "desc": "",
+    "skillId": 70043,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": []
+  },
+  "7004301": {
+    "id": 7004301,
+    "name": "",
+    "desc": "",
+    "skillId": 70043,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      10
+    ]
+  },
+  "7004302": {
+    "id": 7004302,
+    "name": "",
+    "desc": "",
+    "skillId": 70043,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      20
+    ]
+  },
+  "7004303": {
+    "id": 7004303,
+    "name": "",
+    "desc": "",
+    "skillId": 70043,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      30
+    ]
+  },
+  "7004304": {
+    "id": 7004304,
+    "name": "",
+    "desc": "",
+    "skillId": 70043,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      40
+    ]
+  },
+  "7004310": {
+    "id": 7004310,
+    "name": "",
+    "desc": "",
+    "skillId": 70043,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      40
+    ]
+  },
+  "7004311": {
+    "id": 7004311,
+    "name": "",
+    "desc": "",
+    "skillId": 70043,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      55
+    ]
+  },
+  "7004312": {
+    "id": 7004312,
+    "name": "",
+    "desc": "",
+    "skillId": 70043,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      70
+    ]
+  },
+  "7004313": {
+    "id": 7004313,
+    "name": "",
+    "desc": "",
+    "skillId": 70043,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      85
+    ]
+  },
+  "7004314": {
+    "id": 7004314,
+    "name": "",
+    "desc": "",
+    "skillId": 70043,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      100
+    ]
+  },
+  "7004320": {
+    "id": 7004320,
+    "name": "",
+    "desc": "",
+    "skillId": 70043,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      100
+    ]
+  },
+  "7004321": {
+    "id": 7004321,
+    "name": "",
+    "desc": "",
+    "skillId": 70043,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      125
+    ]
+  },
+  "7004322": {
+    "id": 7004322,
+    "name": "",
+    "desc": "",
+    "skillId": 70043,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      150
+    ]
+  },
+  "7004323": {
+    "id": 7004323,
+    "name": "",
+    "desc": "",
+    "skillId": 70043,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      175
+    ]
+  },
+  "7004324": {
+    "id": 7004324,
+    "name": "",
+    "desc": "",
+    "skillId": 70043,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      200
+    ]
+  },
+  "7014300": {
+    "id": 7014300,
+    "name": "",
+    "desc": "",
+    "skillId": 70143,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      200
+    ]
+  },
+  "7014301": {
+    "id": 7014301,
+    "name": "",
+    "desc": "",
+    "skillId": 70143,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      230
+    ]
+  },
+  "7014302": {
+    "id": 7014302,
+    "name": "",
+    "desc": "",
+    "skillId": 70143,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      260
+    ]
+  },
+  "7014303": {
+    "id": 7014303,
+    "name": "",
+    "desc": "",
+    "skillId": 70143,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      290
+    ]
+  },
+  "7014304": {
+    "id": 7014304,
+    "name": "",
+    "desc": "",
+    "skillId": 70143,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      320
+    ]
+  },
+  "7014310": {
+    "id": 7014310,
+    "name": "",
+    "desc": "",
+    "skillId": 70143,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      320
+    ]
+  },
+  "7014311": {
+    "id": 7014311,
+    "name": "",
+    "desc": "",
+    "skillId": 70143,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      365
+    ]
+  },
+  "7014312": {
+    "id": 7014312,
+    "name": "",
+    "desc": "",
+    "skillId": 70143,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      410
+    ]
+  },
+  "7014313": {
+    "id": 7014313,
+    "name": "",
+    "desc": "",
+    "skillId": 70143,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      455
+    ]
+  },
+  "7014314": {
+    "id": 7014314,
+    "name": "",
+    "desc": "",
+    "skillId": 70143,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      500
+    ]
+  },
+  "7014320": {
+    "id": 7014320,
+    "name": "",
+    "desc": "",
+    "skillId": 70143,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      500
+    ]
+  },
+  "7014321": {
+    "id": 7014321,
+    "name": "",
+    "desc": "",
+    "skillId": 70143,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      575
+    ]
+  },
+  "7014322": {
+    "id": 7014322,
+    "name": "",
+    "desc": "",
+    "skillId": 70143,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      650
+    ]
+  },
+  "7014323": {
+    "id": 7014323,
+    "name": "",
+    "desc": "",
+    "skillId": 70143,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      725
+    ]
+  },
+  "7014324": {
+    "id": 7014324,
+    "name": "",
+    "desc": "",
+    "skillId": 70143,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      800
+    ]
+  },
+  "7024300": {
+    "id": 7024300,
+    "name": "",
+    "desc": "",
+    "skillId": 70243,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": []
+  },
+  "7024301": {
+    "id": 7024301,
+    "name": "",
+    "desc": "",
+    "skillId": 70243,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      6
+    ]
+  },
+  "7024302": {
+    "id": 7024302,
+    "name": "",
+    "desc": "",
+    "skillId": 70243,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      12
+    ]
+  },
+  "7024303": {
+    "id": 7024303,
+    "name": "",
+    "desc": "",
+    "skillId": 70243,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      18
+    ]
+  },
+  "7024304": {
+    "id": 7024304,
+    "name": "",
+    "desc": "",
+    "skillId": 70243,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      24
+    ]
+  },
+  "7024310": {
+    "id": 7024310,
+    "name": "",
+    "desc": "",
+    "skillId": 70243,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      25
+    ]
+  },
+  "7024311": {
+    "id": 7024311,
+    "name": "",
+    "desc": "",
+    "skillId": 70243,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      33
+    ]
+  },
+  "7024312": {
+    "id": 7024312,
+    "name": "",
+    "desc": "",
+    "skillId": 70243,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      40
+    ]
+  },
+  "7024313": {
+    "id": 7024313,
+    "name": "",
+    "desc": "",
+    "skillId": 70243,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      48
+    ]
+  },
+  "7024314": {
+    "id": 7024314,
+    "name": "",
+    "desc": "",
+    "skillId": 70243,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      55
+    ]
+  },
+  "7024320": {
+    "id": 7024320,
+    "name": "",
+    "desc": "",
+    "skillId": 70243,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      57
+    ]
+  },
+  "7024321": {
+    "id": 7024321,
+    "name": "",
+    "desc": "",
+    "skillId": 70243,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      67
+    ]
+  },
+  "7024322": {
+    "id": 7024322,
+    "name": "",
+    "desc": "",
+    "skillId": 70243,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      77
+    ]
+  },
+  "7024323": {
+    "id": 7024323,
+    "name": "",
+    "desc": "",
+    "skillId": 70243,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      87
+    ]
+  },
+  "7024324": {
+    "id": 7024324,
+    "name": "",
+    "desc": "",
+    "skillId": 70243,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      97
+    ]
+  },
+  "7034300": {
+    "id": 7034300,
+    "name": "",
+    "desc": "",
+    "skillId": 70343,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      100
+    ]
+  },
+  "7034301": {
+    "id": 7034301,
+    "name": "",
+    "desc": "",
+    "skillId": 70343,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      112
+    ]
+  },
+  "7034302": {
+    "id": 7034302,
+    "name": "",
+    "desc": "",
+    "skillId": 70343,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      124
+    ]
+  },
+  "7034303": {
+    "id": 7034303,
+    "name": "",
+    "desc": "",
+    "skillId": 70343,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      136
+    ]
+  },
+  "7034304": {
+    "id": 7034304,
+    "name": "",
+    "desc": "",
+    "skillId": 70343,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      148
+    ]
+  },
+  "7034310": {
+    "id": 7034310,
+    "name": "",
+    "desc": "",
+    "skillId": 70343,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      150
+    ]
+  },
+  "7034311": {
+    "id": 7034311,
+    "name": "",
+    "desc": "",
+    "skillId": 70343,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      165
+    ]
+  },
+  "7034312": {
+    "id": 7034312,
+    "name": "",
+    "desc": "",
+    "skillId": 70343,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      180
+    ]
+  },
+  "7034313": {
+    "id": 7034313,
+    "name": "",
+    "desc": "",
+    "skillId": 70343,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      195
+    ]
+  },
+  "7034314": {
+    "id": 7034314,
+    "name": "",
+    "desc": "",
+    "skillId": 70343,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      210
+    ]
+  },
+  "7034320": {
+    "id": 7034320,
+    "name": "",
+    "desc": "",
+    "skillId": 70343,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      213
+    ]
+  },
+  "7034321": {
+    "id": 7034321,
+    "name": "",
+    "desc": "",
+    "skillId": 70343,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      233
+    ]
+  },
+  "7034322": {
+    "id": 7034322,
+    "name": "",
+    "desc": "",
+    "skillId": 70343,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      253
+    ]
+  },
+  "7034323": {
+    "id": 7034323,
+    "name": "",
+    "desc": "",
+    "skillId": 70343,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      273
+    ]
+  },
+  "7034324": {
+    "id": 7034324,
+    "name": "",
+    "desc": "",
+    "skillId": 70343,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      293
+    ]
+  },
+  "7044300": {
+    "id": 7044300,
+    "name": "",
+    "desc": "",
+    "skillId": 70443,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": []
+  },
+  "7044301": {
+    "id": 7044301,
+    "name": "",
+    "desc": "",
+    "skillId": 70443,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      4
+    ]
+  },
+  "7044302": {
+    "id": 7044302,
+    "name": "",
+    "desc": "",
+    "skillId": 70443,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      8
+    ]
+  },
+  "7044303": {
+    "id": 7044303,
+    "name": "",
+    "desc": "",
+    "skillId": 70443,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      12
+    ]
+  },
+  "7044304": {
+    "id": 7044304,
+    "name": "",
+    "desc": "",
+    "skillId": 70443,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      16
+    ]
+  },
+  "7044310": {
+    "id": 7044310,
+    "name": "",
+    "desc": "",
+    "skillId": 70443,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      16
+    ]
+  },
+  "7044311": {
+    "id": 7044311,
+    "name": "",
+    "desc": "",
+    "skillId": 70443,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      20
+    ]
+  },
+  "7044312": {
+    "id": 7044312,
+    "name": "",
+    "desc": "",
+    "skillId": 70443,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      24
+    ]
+  },
+  "7044313": {
+    "id": 7044313,
+    "name": "",
+    "desc": "",
+    "skillId": 70443,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      28
+    ]
+  },
+  "7044314": {
+    "id": 7044314,
+    "name": "",
+    "desc": "",
+    "skillId": 70443,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      32
+    ]
+  },
+  "7044320": {
+    "id": 7044320,
+    "name": "",
+    "desc": "",
+    "skillId": 70443,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      32
+    ]
+  },
+  "7044321": {
+    "id": 7044321,
+    "name": "",
+    "desc": "",
+    "skillId": 70443,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      36
+    ]
+  },
+  "7044322": {
+    "id": 7044322,
+    "name": "",
+    "desc": "",
+    "skillId": 70443,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      40
+    ]
+  },
+  "7044323": {
+    "id": 7044323,
+    "name": "",
+    "desc": "",
+    "skillId": 70443,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      44
+    ]
+  },
+  "7044324": {
+    "id": 7044324,
+    "name": "",
+    "desc": "",
+    "skillId": 70443,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      48
+    ]
+  },
+  "7054300": {
+    "id": 7054300,
+    "name": "",
+    "desc": "",
+    "skillId": 70543,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      50
+    ]
+  },
+  "7054301": {
+    "id": 7054301,
+    "name": "",
+    "desc": "",
+    "skillId": 70543,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      58
+    ]
+  },
+  "7054302": {
+    "id": 7054302,
+    "name": "",
+    "desc": "",
+    "skillId": 70543,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      65
+    ]
+  },
+  "7054303": {
+    "id": 7054303,
+    "name": "",
+    "desc": "",
+    "skillId": 70543,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      73
+    ]
+  },
+  "7054304": {
+    "id": 7054304,
+    "name": "",
+    "desc": "",
+    "skillId": 70543,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      80
+    ]
+  },
+  "7004400": {
+    "id": 7004400,
+    "name": "",
+    "desc": "",
+    "skillId": 70044,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": []
+  },
+  "7004401": {
+    "id": 7004401,
+    "name": "",
+    "desc": "",
+    "skillId": 70044,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      10
+    ]
+  },
+  "7004402": {
+    "id": 7004402,
+    "name": "",
+    "desc": "",
+    "skillId": 70044,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      20
+    ]
+  },
+  "7004403": {
+    "id": 7004403,
+    "name": "",
+    "desc": "",
+    "skillId": 70044,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      30
+    ]
+  },
+  "7004404": {
+    "id": 7004404,
+    "name": "",
+    "desc": "",
+    "skillId": 70044,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      40
+    ]
+  },
+  "7004410": {
+    "id": 7004410,
+    "name": "",
+    "desc": "",
+    "skillId": 70044,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      40
+    ]
+  },
+  "7004411": {
+    "id": 7004411,
+    "name": "",
+    "desc": "",
+    "skillId": 70044,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      55
+    ]
+  },
+  "7004412": {
+    "id": 7004412,
+    "name": "",
+    "desc": "",
+    "skillId": 70044,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      70
+    ]
+  },
+  "7004413": {
+    "id": 7004413,
+    "name": "",
+    "desc": "",
+    "skillId": 70044,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      85
+    ]
+  },
+  "7004414": {
+    "id": 7004414,
+    "name": "",
+    "desc": "",
+    "skillId": 70044,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      100
+    ]
+  },
+  "7004420": {
+    "id": 7004420,
+    "name": "",
+    "desc": "",
+    "skillId": 70044,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      100
+    ]
+  },
+  "7004421": {
+    "id": 7004421,
+    "name": "",
+    "desc": "",
+    "skillId": 70044,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      125
+    ]
+  },
+  "7004422": {
+    "id": 7004422,
+    "name": "",
+    "desc": "",
+    "skillId": 70044,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      150
+    ]
+  },
+  "7004423": {
+    "id": 7004423,
+    "name": "",
+    "desc": "",
+    "skillId": 70044,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      175
+    ]
+  },
+  "7004424": {
+    "id": 7004424,
+    "name": "",
+    "desc": "",
+    "skillId": 70044,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      200
+    ]
+  },
+  "7014400": {
+    "id": 7014400,
+    "name": "",
+    "desc": "",
+    "skillId": 70144,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      200
+    ]
+  },
+  "7014401": {
+    "id": 7014401,
+    "name": "",
+    "desc": "",
+    "skillId": 70144,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      230
+    ]
+  },
+  "7014402": {
+    "id": 7014402,
+    "name": "",
+    "desc": "",
+    "skillId": 70144,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      260
+    ]
+  },
+  "7014403": {
+    "id": 7014403,
+    "name": "",
+    "desc": "",
+    "skillId": 70144,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      290
+    ]
+  },
+  "7014404": {
+    "id": 7014404,
+    "name": "",
+    "desc": "",
+    "skillId": 70144,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      320
+    ]
+  },
+  "7014410": {
+    "id": 7014410,
+    "name": "",
+    "desc": "",
+    "skillId": 70144,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      320
+    ]
+  },
+  "7014411": {
+    "id": 7014411,
+    "name": "",
+    "desc": "",
+    "skillId": 70144,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      365
+    ]
+  },
+  "7014412": {
+    "id": 7014412,
+    "name": "",
+    "desc": "",
+    "skillId": 70144,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      410
+    ]
+  },
+  "7014413": {
+    "id": 7014413,
+    "name": "",
+    "desc": "",
+    "skillId": 70144,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      455
+    ]
+  },
+  "7014414": {
+    "id": 7014414,
+    "name": "",
+    "desc": "",
+    "skillId": 70144,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      500
+    ]
+  },
+  "7014420": {
+    "id": 7014420,
+    "name": "",
+    "desc": "",
+    "skillId": 70144,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      500
+    ]
+  },
+  "7014421": {
+    "id": 7014421,
+    "name": "",
+    "desc": "",
+    "skillId": 70144,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      575
+    ]
+  },
+  "7014422": {
+    "id": 7014422,
+    "name": "",
+    "desc": "",
+    "skillId": 70144,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      650
+    ]
+  },
+  "7014423": {
+    "id": 7014423,
+    "name": "",
+    "desc": "",
+    "skillId": 70144,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      725
+    ]
+  },
+  "7014424": {
+    "id": 7014424,
+    "name": "",
+    "desc": "",
+    "skillId": 70144,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      800
+    ]
+  },
+  "7024400": {
+    "id": 7024400,
+    "name": "",
+    "desc": "",
+    "skillId": 70244,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": []
+  },
+  "7024401": {
+    "id": 7024401,
+    "name": "",
+    "desc": "",
+    "skillId": 70244,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      6
+    ]
+  },
+  "7024402": {
+    "id": 7024402,
+    "name": "",
+    "desc": "",
+    "skillId": 70244,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      12
+    ]
+  },
+  "7024403": {
+    "id": 7024403,
+    "name": "",
+    "desc": "",
+    "skillId": 70244,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      18
+    ]
+  },
+  "7024404": {
+    "id": 7024404,
+    "name": "",
+    "desc": "",
+    "skillId": 70244,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      24
+    ]
+  },
+  "7024410": {
+    "id": 7024410,
+    "name": "",
+    "desc": "",
+    "skillId": 70244,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      25
+    ]
+  },
+  "7024411": {
+    "id": 7024411,
+    "name": "",
+    "desc": "",
+    "skillId": 70244,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      33
+    ]
+  },
+  "7024412": {
+    "id": 7024412,
+    "name": "",
+    "desc": "",
+    "skillId": 70244,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      40
+    ]
+  },
+  "7024413": {
+    "id": 7024413,
+    "name": "",
+    "desc": "",
+    "skillId": 70244,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      48
+    ]
+  },
+  "7024414": {
+    "id": 7024414,
+    "name": "",
+    "desc": "",
+    "skillId": 70244,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      55
+    ]
+  },
+  "7024420": {
+    "id": 7024420,
+    "name": "",
+    "desc": "",
+    "skillId": 70244,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      57
+    ]
+  },
+  "7024421": {
+    "id": 7024421,
+    "name": "",
+    "desc": "",
+    "skillId": 70244,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      67
+    ]
+  },
+  "7024422": {
+    "id": 7024422,
+    "name": "",
+    "desc": "",
+    "skillId": 70244,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      77
+    ]
+  },
+  "7024423": {
+    "id": 7024423,
+    "name": "",
+    "desc": "",
+    "skillId": 70244,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      87
+    ]
+  },
+  "7024424": {
+    "id": 7024424,
+    "name": "",
+    "desc": "",
+    "skillId": 70244,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      97
+    ]
+  },
+  "7034400": {
+    "id": 7034400,
+    "name": "",
+    "desc": "",
+    "skillId": 70344,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      100
+    ]
+  },
+  "7034401": {
+    "id": 7034401,
+    "name": "",
+    "desc": "",
+    "skillId": 70344,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      112
+    ]
+  },
+  "7034402": {
+    "id": 7034402,
+    "name": "",
+    "desc": "",
+    "skillId": 70344,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      124
+    ]
+  },
+  "7034403": {
+    "id": 7034403,
+    "name": "",
+    "desc": "",
+    "skillId": 70344,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      136
+    ]
+  },
+  "7034404": {
+    "id": 7034404,
+    "name": "",
+    "desc": "",
+    "skillId": 70344,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      148
+    ]
+  },
+  "7034410": {
+    "id": 7034410,
+    "name": "",
+    "desc": "",
+    "skillId": 70344,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      150
+    ]
+  },
+  "7034411": {
+    "id": 7034411,
+    "name": "",
+    "desc": "",
+    "skillId": 70344,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      165
+    ]
+  },
+  "7034412": {
+    "id": 7034412,
+    "name": "",
+    "desc": "",
+    "skillId": 70344,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      180
+    ]
+  },
+  "7034413": {
+    "id": 7034413,
+    "name": "",
+    "desc": "",
+    "skillId": 70344,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      195
+    ]
+  },
+  "7034414": {
+    "id": 7034414,
+    "name": "",
+    "desc": "",
+    "skillId": 70344,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      210
+    ]
+  },
+  "7034420": {
+    "id": 7034420,
+    "name": "",
+    "desc": "",
+    "skillId": 70344,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      213
+    ]
+  },
+  "7034421": {
+    "id": 7034421,
+    "name": "",
+    "desc": "",
+    "skillId": 70344,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      233
+    ]
+  },
+  "7034422": {
+    "id": 7034422,
+    "name": "",
+    "desc": "",
+    "skillId": 70344,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      253
+    ]
+  },
+  "7034423": {
+    "id": 7034423,
+    "name": "",
+    "desc": "",
+    "skillId": 70344,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      273
+    ]
+  },
+  "7034424": {
+    "id": 7034424,
+    "name": "",
+    "desc": "",
+    "skillId": 70344,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      293
+    ]
+  },
+  "7044400": {
+    "id": 7044400,
+    "name": "",
+    "desc": "",
+    "skillId": 70444,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": []
+  },
+  "7044401": {
+    "id": 7044401,
+    "name": "",
+    "desc": "",
+    "skillId": 70444,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      4
+    ]
+  },
+  "7044402": {
+    "id": 7044402,
+    "name": "",
+    "desc": "",
+    "skillId": 70444,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      8
+    ]
+  },
+  "7044403": {
+    "id": 7044403,
+    "name": "",
+    "desc": "",
+    "skillId": 70444,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      12
+    ]
+  },
+  "7044404": {
+    "id": 7044404,
+    "name": "",
+    "desc": "",
+    "skillId": 70444,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      16
+    ]
+  },
+  "7044410": {
+    "id": 7044410,
+    "name": "",
+    "desc": "",
+    "skillId": 70444,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      16
+    ]
+  },
+  "7044411": {
+    "id": 7044411,
+    "name": "",
+    "desc": "",
+    "skillId": 70444,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      20
+    ]
+  },
+  "7044412": {
+    "id": 7044412,
+    "name": "",
+    "desc": "",
+    "skillId": 70444,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      24
+    ]
+  },
+  "7044413": {
+    "id": 7044413,
+    "name": "",
+    "desc": "",
+    "skillId": 70444,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      28
+    ]
+  },
+  "7044414": {
+    "id": 7044414,
+    "name": "",
+    "desc": "",
+    "skillId": 70444,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      32
+    ]
+  },
+  "7044420": {
+    "id": 7044420,
+    "name": "",
+    "desc": "",
+    "skillId": 70444,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      32
+    ]
+  },
+  "7044421": {
+    "id": 7044421,
+    "name": "",
+    "desc": "",
+    "skillId": 70444,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      36
+    ]
+  },
+  "7044422": {
+    "id": 7044422,
+    "name": "",
+    "desc": "",
+    "skillId": 70444,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      40
+    ]
+  },
+  "7044423": {
+    "id": 7044423,
+    "name": "",
+    "desc": "",
+    "skillId": 70444,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      44
+    ]
+  },
+  "7044424": {
+    "id": 7044424,
+    "name": "",
+    "desc": "",
+    "skillId": 70444,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      48
+    ]
+  },
+  "7054400": {
+    "id": 7054400,
+    "name": "",
+    "desc": "",
+    "skillId": 70544,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      50
+    ]
+  },
+  "7054401": {
+    "id": 7054401,
+    "name": "",
+    "desc": "",
+    "skillId": 70544,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      58
+    ]
+  },
+  "7054402": {
+    "id": 7054402,
+    "name": "",
+    "desc": "",
+    "skillId": 70544,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      65
+    ]
+  },
+  "7054403": {
+    "id": 7054403,
+    "name": "",
+    "desc": "",
+    "skillId": 70544,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      73
+    ]
+  },
+  "7054404": {
+    "id": 7054404,
+    "name": "",
+    "desc": "",
+    "skillId": 70544,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      80
+    ]
+  },
+  "7004500": {
+    "id": 7004500,
+    "name": "",
+    "desc": "",
+    "skillId": 70045,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": []
+  },
+  "7004501": {
+    "id": 7004501,
+    "name": "",
+    "desc": "",
+    "skillId": 70045,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      10
+    ]
+  },
+  "7004502": {
+    "id": 7004502,
+    "name": "",
+    "desc": "",
+    "skillId": 70045,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      20
+    ]
+  },
+  "7004503": {
+    "id": 7004503,
+    "name": "",
+    "desc": "",
+    "skillId": 70045,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      30
+    ]
+  },
+  "7004504": {
+    "id": 7004504,
+    "name": "",
+    "desc": "",
+    "skillId": 70045,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      40
+    ]
+  },
+  "7004510": {
+    "id": 7004510,
+    "name": "",
+    "desc": "",
+    "skillId": 70045,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      40
+    ]
+  },
+  "7004511": {
+    "id": 7004511,
+    "name": "",
+    "desc": "",
+    "skillId": 70045,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      55
+    ]
+  },
+  "7004512": {
+    "id": 7004512,
+    "name": "",
+    "desc": "",
+    "skillId": 70045,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      70
+    ]
+  },
+  "7004513": {
+    "id": 7004513,
+    "name": "",
+    "desc": "",
+    "skillId": 70045,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      85
+    ]
+  },
+  "7004514": {
+    "id": 7004514,
+    "name": "",
+    "desc": "",
+    "skillId": 70045,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      100
+    ]
+  },
+  "7004520": {
+    "id": 7004520,
+    "name": "",
+    "desc": "",
+    "skillId": 70045,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      100
+    ]
+  },
+  "7004521": {
+    "id": 7004521,
+    "name": "",
+    "desc": "",
+    "skillId": 70045,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      125
+    ]
+  },
+  "7004522": {
+    "id": 7004522,
+    "name": "",
+    "desc": "",
+    "skillId": 70045,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      150
+    ]
+  },
+  "7004523": {
+    "id": 7004523,
+    "name": "",
+    "desc": "",
+    "skillId": 70045,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      175
+    ]
+  },
+  "7004524": {
+    "id": 7004524,
+    "name": "",
+    "desc": "",
+    "skillId": 70045,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      200
+    ]
+  },
+  "7014500": {
+    "id": 7014500,
+    "name": "",
+    "desc": "",
+    "skillId": 70145,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      200
+    ]
+  },
+  "7014501": {
+    "id": 7014501,
+    "name": "",
+    "desc": "",
+    "skillId": 70145,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      230
+    ]
+  },
+  "7014502": {
+    "id": 7014502,
+    "name": "",
+    "desc": "",
+    "skillId": 70145,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      260
+    ]
+  },
+  "7014503": {
+    "id": 7014503,
+    "name": "",
+    "desc": "",
+    "skillId": 70145,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      290
+    ]
+  },
+  "7014504": {
+    "id": 7014504,
+    "name": "",
+    "desc": "",
+    "skillId": 70145,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      320
+    ]
+  },
+  "7014510": {
+    "id": 7014510,
+    "name": "",
+    "desc": "",
+    "skillId": 70145,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      320
+    ]
+  },
+  "7014511": {
+    "id": 7014511,
+    "name": "",
+    "desc": "",
+    "skillId": 70145,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      365
+    ]
+  },
+  "7014512": {
+    "id": 7014512,
+    "name": "",
+    "desc": "",
+    "skillId": 70145,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      410
+    ]
+  },
+  "7014513": {
+    "id": 7014513,
+    "name": "",
+    "desc": "",
+    "skillId": 70145,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      455
+    ]
+  },
+  "7014514": {
+    "id": 7014514,
+    "name": "",
+    "desc": "",
+    "skillId": 70145,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      500
+    ]
+  },
+  "7014520": {
+    "id": 7014520,
+    "name": "",
+    "desc": "",
+    "skillId": 70145,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      500
+    ]
+  },
+  "7014521": {
+    "id": 7014521,
+    "name": "",
+    "desc": "",
+    "skillId": 70145,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      575
+    ]
+  },
+  "7014522": {
+    "id": 7014522,
+    "name": "",
+    "desc": "",
+    "skillId": 70145,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      650
+    ]
+  },
+  "7014523": {
+    "id": 7014523,
+    "name": "",
+    "desc": "",
+    "skillId": 70145,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      725
+    ]
+  },
+  "7014524": {
+    "id": 7014524,
+    "name": "",
+    "desc": "",
+    "skillId": 70145,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      800
+    ]
+  },
+  "7024500": {
+    "id": 7024500,
+    "name": "",
+    "desc": "",
+    "skillId": 70245,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": []
+  },
+  "7024501": {
+    "id": 7024501,
+    "name": "",
+    "desc": "",
+    "skillId": 70245,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      6
+    ]
+  },
+  "7024502": {
+    "id": 7024502,
+    "name": "",
+    "desc": "",
+    "skillId": 70245,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      12
+    ]
+  },
+  "7024503": {
+    "id": 7024503,
+    "name": "",
+    "desc": "",
+    "skillId": 70245,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      18
+    ]
+  },
+  "7024504": {
+    "id": 7024504,
+    "name": "",
+    "desc": "",
+    "skillId": 70245,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      24
+    ]
+  },
+  "7024510": {
+    "id": 7024510,
+    "name": "",
+    "desc": "",
+    "skillId": 70245,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      25
+    ]
+  },
+  "7024511": {
+    "id": 7024511,
+    "name": "",
+    "desc": "",
+    "skillId": 70245,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      33
+    ]
+  },
+  "7024512": {
+    "id": 7024512,
+    "name": "",
+    "desc": "",
+    "skillId": 70245,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      40
+    ]
+  },
+  "7024513": {
+    "id": 7024513,
+    "name": "",
+    "desc": "",
+    "skillId": 70245,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      48
+    ]
+  },
+  "7024514": {
+    "id": 7024514,
+    "name": "",
+    "desc": "",
+    "skillId": 70245,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      55
+    ]
+  },
+  "7024520": {
+    "id": 7024520,
+    "name": "",
+    "desc": "",
+    "skillId": 70245,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      57
+    ]
+  },
+  "7024521": {
+    "id": 7024521,
+    "name": "",
+    "desc": "",
+    "skillId": 70245,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      67
+    ]
+  },
+  "7024522": {
+    "id": 7024522,
+    "name": "",
+    "desc": "",
+    "skillId": 70245,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      77
+    ]
+  },
+  "7024523": {
+    "id": 7024523,
+    "name": "",
+    "desc": "",
+    "skillId": 70245,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      87
+    ]
+  },
+  "7024524": {
+    "id": 7024524,
+    "name": "",
+    "desc": "",
+    "skillId": 70245,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      97
+    ]
+  },
+  "7034500": {
+    "id": 7034500,
+    "name": "",
+    "desc": "",
+    "skillId": 70345,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      100
+    ]
+  },
+  "7034501": {
+    "id": 7034501,
+    "name": "",
+    "desc": "",
+    "skillId": 70345,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      112
+    ]
+  },
+  "7034502": {
+    "id": 7034502,
+    "name": "",
+    "desc": "",
+    "skillId": 70345,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      124
+    ]
+  },
+  "7034503": {
+    "id": 7034503,
+    "name": "",
+    "desc": "",
+    "skillId": 70345,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      136
+    ]
+  },
+  "7034504": {
+    "id": 7034504,
+    "name": "",
+    "desc": "",
+    "skillId": 70345,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      148
+    ]
+  },
+  "7034510": {
+    "id": 7034510,
+    "name": "",
+    "desc": "",
+    "skillId": 70345,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      150
+    ]
+  },
+  "7034511": {
+    "id": 7034511,
+    "name": "",
+    "desc": "",
+    "skillId": 70345,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      165
+    ]
+  },
+  "7034512": {
+    "id": 7034512,
+    "name": "",
+    "desc": "",
+    "skillId": 70345,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      180
+    ]
+  },
+  "7034513": {
+    "id": 7034513,
+    "name": "",
+    "desc": "",
+    "skillId": 70345,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      195
+    ]
+  },
+  "7034514": {
+    "id": 7034514,
+    "name": "",
+    "desc": "",
+    "skillId": 70345,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      210
+    ]
+  },
+  "7034520": {
+    "id": 7034520,
+    "name": "",
+    "desc": "",
+    "skillId": 70345,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      213
+    ]
+  },
+  "7034521": {
+    "id": 7034521,
+    "name": "",
+    "desc": "",
+    "skillId": 70345,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      233
+    ]
+  },
+  "7034522": {
+    "id": 7034522,
+    "name": "",
+    "desc": "",
+    "skillId": 70345,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      253
+    ]
+  },
+  "7034523": {
+    "id": 7034523,
+    "name": "",
+    "desc": "",
+    "skillId": 70345,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      273
+    ]
+  },
+  "7034524": {
+    "id": 7034524,
+    "name": "",
+    "desc": "",
+    "skillId": 70345,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      293
+    ]
+  },
+  "7044500": {
+    "id": 7044500,
+    "name": "",
+    "desc": "",
+    "skillId": 70445,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": []
+  },
+  "7044501": {
+    "id": 7044501,
+    "name": "",
+    "desc": "",
+    "skillId": 70445,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      4
+    ]
+  },
+  "7044502": {
+    "id": 7044502,
+    "name": "",
+    "desc": "",
+    "skillId": 70445,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      8
+    ]
+  },
+  "7044503": {
+    "id": 7044503,
+    "name": "",
+    "desc": "",
+    "skillId": 70445,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      12
+    ]
+  },
+  "7044504": {
+    "id": 7044504,
+    "name": "",
+    "desc": "",
+    "skillId": 70445,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      16
+    ]
+  },
+  "7044510": {
+    "id": 7044510,
+    "name": "",
+    "desc": "",
+    "skillId": 70445,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      16
+    ]
+  },
+  "7044511": {
+    "id": 7044511,
+    "name": "",
+    "desc": "",
+    "skillId": 70445,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      20
+    ]
+  },
+  "7044512": {
+    "id": 7044512,
+    "name": "",
+    "desc": "",
+    "skillId": 70445,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      24
+    ]
+  },
+  "7044513": {
+    "id": 7044513,
+    "name": "",
+    "desc": "",
+    "skillId": 70445,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      28
+    ]
+  },
+  "7044514": {
+    "id": 7044514,
+    "name": "",
+    "desc": "",
+    "skillId": 70445,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      32
+    ]
+  },
+  "7044520": {
+    "id": 7044520,
+    "name": "",
+    "desc": "",
+    "skillId": 70445,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      32
+    ]
+  },
+  "7044521": {
+    "id": 7044521,
+    "name": "",
+    "desc": "",
+    "skillId": 70445,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      36
+    ]
+  },
+  "7044522": {
+    "id": 7044522,
+    "name": "",
+    "desc": "",
+    "skillId": 70445,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      40
+    ]
+  },
+  "7044523": {
+    "id": 7044523,
+    "name": "",
+    "desc": "",
+    "skillId": 70445,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      44
+    ]
+  },
+  "7044524": {
+    "id": 7044524,
+    "name": "",
+    "desc": "",
+    "skillId": 70445,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      48
+    ]
+  },
+  "7054500": {
+    "id": 7054500,
+    "name": "",
+    "desc": "",
+    "skillId": 70545,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      50
+    ]
+  },
+  "7054501": {
+    "id": 7054501,
+    "name": "",
+    "desc": "",
+    "skillId": 70545,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      58
+    ]
+  },
+  "7054502": {
+    "id": 7054502,
+    "name": "",
+    "desc": "",
+    "skillId": 70545,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      65
+    ]
+  },
+  "7054503": {
+    "id": 7054503,
+    "name": "",
+    "desc": "",
+    "skillId": 70545,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      73
+    ]
+  },
+  "7054504": {
+    "id": 7054504,
+    "name": "",
+    "desc": "",
+    "skillId": 70545,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      80
+    ]
+  },
+  "7004600": {
+    "id": 7004600,
+    "name": "",
+    "desc": "",
+    "skillId": 70046,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": []
+  },
+  "7004601": {
+    "id": 7004601,
+    "name": "",
+    "desc": "",
+    "skillId": 70046,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      10
+    ]
+  },
+  "7004602": {
+    "id": 7004602,
+    "name": "",
+    "desc": "",
+    "skillId": 70046,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      20
+    ]
+  },
+  "7004603": {
+    "id": 7004603,
+    "name": "",
+    "desc": "",
+    "skillId": 70046,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      30
+    ]
+  },
+  "7004604": {
+    "id": 7004604,
+    "name": "",
+    "desc": "",
+    "skillId": 70046,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      40
+    ]
+  },
+  "7004610": {
+    "id": 7004610,
+    "name": "",
+    "desc": "",
+    "skillId": 70046,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      40
+    ]
+  },
+  "7004611": {
+    "id": 7004611,
+    "name": "",
+    "desc": "",
+    "skillId": 70046,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      55
+    ]
+  },
+  "7004612": {
+    "id": 7004612,
+    "name": "",
+    "desc": "",
+    "skillId": 70046,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      70
+    ]
+  },
+  "7004613": {
+    "id": 7004613,
+    "name": "",
+    "desc": "",
+    "skillId": 70046,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      85
+    ]
+  },
+  "7004614": {
+    "id": 7004614,
+    "name": "",
+    "desc": "",
+    "skillId": 70046,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      100
+    ]
+  },
+  "7004620": {
+    "id": 7004620,
+    "name": "",
+    "desc": "",
+    "skillId": 70046,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      100
+    ]
+  },
+  "7004621": {
+    "id": 7004621,
+    "name": "",
+    "desc": "",
+    "skillId": 70046,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      125
+    ]
+  },
+  "7004622": {
+    "id": 7004622,
+    "name": "",
+    "desc": "",
+    "skillId": 70046,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      150
+    ]
+  },
+  "7004623": {
+    "id": 7004623,
+    "name": "",
+    "desc": "",
+    "skillId": 70046,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      175
+    ]
+  },
+  "7004624": {
+    "id": 7004624,
+    "name": "",
+    "desc": "",
+    "skillId": 70046,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      200
+    ]
+  },
+  "7014600": {
+    "id": 7014600,
+    "name": "",
+    "desc": "",
+    "skillId": 70146,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      200
+    ]
+  },
+  "7014601": {
+    "id": 7014601,
+    "name": "",
+    "desc": "",
+    "skillId": 70146,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      230
+    ]
+  },
+  "7014602": {
+    "id": 7014602,
+    "name": "",
+    "desc": "",
+    "skillId": 70146,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      260
+    ]
+  },
+  "7014603": {
+    "id": 7014603,
+    "name": "",
+    "desc": "",
+    "skillId": 70146,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      290
+    ]
+  },
+  "7014604": {
+    "id": 7014604,
+    "name": "",
+    "desc": "",
+    "skillId": 70146,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      320
+    ]
+  },
+  "7014610": {
+    "id": 7014610,
+    "name": "",
+    "desc": "",
+    "skillId": 70146,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      320
+    ]
+  },
+  "7014611": {
+    "id": 7014611,
+    "name": "",
+    "desc": "",
+    "skillId": 70146,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      365
+    ]
+  },
+  "7014612": {
+    "id": 7014612,
+    "name": "",
+    "desc": "",
+    "skillId": 70146,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      410
+    ]
+  },
+  "7014613": {
+    "id": 7014613,
+    "name": "",
+    "desc": "",
+    "skillId": 70146,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      455
+    ]
+  },
+  "7014614": {
+    "id": 7014614,
+    "name": "",
+    "desc": "",
+    "skillId": 70146,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      500
+    ]
+  },
+  "7014620": {
+    "id": 7014620,
+    "name": "",
+    "desc": "",
+    "skillId": 70146,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      500
+    ]
+  },
+  "7014621": {
+    "id": 7014621,
+    "name": "",
+    "desc": "",
+    "skillId": 70146,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      575
+    ]
+  },
+  "7014622": {
+    "id": 7014622,
+    "name": "",
+    "desc": "",
+    "skillId": 70146,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      650
+    ]
+  },
+  "7014623": {
+    "id": 7014623,
+    "name": "",
+    "desc": "",
+    "skillId": 70146,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      725
+    ]
+  },
+  "7014624": {
+    "id": 7014624,
+    "name": "",
+    "desc": "",
+    "skillId": 70146,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      800
+    ]
+  },
+  "7024600": {
+    "id": 7024600,
+    "name": "",
+    "desc": "",
+    "skillId": 70246,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": []
+  },
+  "7024601": {
+    "id": 7024601,
+    "name": "",
+    "desc": "",
+    "skillId": 70246,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      6
+    ]
+  },
+  "7024602": {
+    "id": 7024602,
+    "name": "",
+    "desc": "",
+    "skillId": 70246,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      12
+    ]
+  },
+  "7024603": {
+    "id": 7024603,
+    "name": "",
+    "desc": "",
+    "skillId": 70246,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      18
+    ]
+  },
+  "7024604": {
+    "id": 7024604,
+    "name": "",
+    "desc": "",
+    "skillId": 70246,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      24
+    ]
+  },
+  "7024610": {
+    "id": 7024610,
+    "name": "",
+    "desc": "",
+    "skillId": 70246,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      25
+    ]
+  },
+  "7024611": {
+    "id": 7024611,
+    "name": "",
+    "desc": "",
+    "skillId": 70246,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      33
+    ]
+  },
+  "7024612": {
+    "id": 7024612,
+    "name": "",
+    "desc": "",
+    "skillId": 70246,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      40
+    ]
+  },
+  "7024613": {
+    "id": 7024613,
+    "name": "",
+    "desc": "",
+    "skillId": 70246,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      48
+    ]
+  },
+  "7024614": {
+    "id": 7024614,
+    "name": "",
+    "desc": "",
+    "skillId": 70246,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      55
+    ]
+  },
+  "7024620": {
+    "id": 7024620,
+    "name": "",
+    "desc": "",
+    "skillId": 70246,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      57
+    ]
+  },
+  "7024621": {
+    "id": 7024621,
+    "name": "",
+    "desc": "",
+    "skillId": 70246,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      67
+    ]
+  },
+  "7024622": {
+    "id": 7024622,
+    "name": "",
+    "desc": "",
+    "skillId": 70246,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      77
+    ]
+  },
+  "7024623": {
+    "id": 7024623,
+    "name": "",
+    "desc": "",
+    "skillId": 70246,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      87
+    ]
+  },
+  "7024624": {
+    "id": 7024624,
+    "name": "",
+    "desc": "",
+    "skillId": 70246,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      97
+    ]
+  },
+  "7034600": {
+    "id": 7034600,
+    "name": "",
+    "desc": "",
+    "skillId": 70346,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      100
+    ]
+  },
+  "7034601": {
+    "id": 7034601,
+    "name": "",
+    "desc": "",
+    "skillId": 70346,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      112
+    ]
+  },
+  "7034602": {
+    "id": 7034602,
+    "name": "",
+    "desc": "",
+    "skillId": 70346,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      124
+    ]
+  },
+  "7034603": {
+    "id": 7034603,
+    "name": "",
+    "desc": "",
+    "skillId": 70346,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      136
+    ]
+  },
+  "7034604": {
+    "id": 7034604,
+    "name": "",
+    "desc": "",
+    "skillId": 70346,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      148
+    ]
+  },
+  "7034610": {
+    "id": 7034610,
+    "name": "",
+    "desc": "",
+    "skillId": 70346,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      150
+    ]
+  },
+  "7034611": {
+    "id": 7034611,
+    "name": "",
+    "desc": "",
+    "skillId": 70346,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      165
+    ]
+  },
+  "7034612": {
+    "id": 7034612,
+    "name": "",
+    "desc": "",
+    "skillId": 70346,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      180
+    ]
+  },
+  "7034613": {
+    "id": 7034613,
+    "name": "",
+    "desc": "",
+    "skillId": 70346,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      195
+    ]
+  },
+  "7034614": {
+    "id": 7034614,
+    "name": "",
+    "desc": "",
+    "skillId": 70346,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      210
+    ]
+  },
+  "7034620": {
+    "id": 7034620,
+    "name": "",
+    "desc": "",
+    "skillId": 70346,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      213
+    ]
+  },
+  "7034621": {
+    "id": 7034621,
+    "name": "",
+    "desc": "",
+    "skillId": 70346,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      233
+    ]
+  },
+  "7034622": {
+    "id": 7034622,
+    "name": "",
+    "desc": "",
+    "skillId": 70346,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      253
+    ]
+  },
+  "7034623": {
+    "id": 7034623,
+    "name": "",
+    "desc": "",
+    "skillId": 70346,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      273
+    ]
+  },
+  "7034624": {
+    "id": 7034624,
+    "name": "",
+    "desc": "",
+    "skillId": 70346,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      293
+    ]
+  },
+  "7044600": {
+    "id": 7044600,
+    "name": "",
+    "desc": "",
+    "skillId": 70446,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": []
+  },
+  "7044601": {
+    "id": 7044601,
+    "name": "",
+    "desc": "",
+    "skillId": 70446,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      4
+    ]
+  },
+  "7044602": {
+    "id": 7044602,
+    "name": "",
+    "desc": "",
+    "skillId": 70446,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      8
+    ]
+  },
+  "7044603": {
+    "id": 7044603,
+    "name": "",
+    "desc": "",
+    "skillId": 70446,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      12
+    ]
+  },
+  "7044604": {
+    "id": 7044604,
+    "name": "",
+    "desc": "",
+    "skillId": 70446,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      16
+    ]
+  },
+  "7044610": {
+    "id": 7044610,
+    "name": "",
+    "desc": "",
+    "skillId": 70446,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      16
+    ]
+  },
+  "7044611": {
+    "id": 7044611,
+    "name": "",
+    "desc": "",
+    "skillId": 70446,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      20
+    ]
+  },
+  "7044612": {
+    "id": 7044612,
+    "name": "",
+    "desc": "",
+    "skillId": 70446,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      24
+    ]
+  },
+  "7044613": {
+    "id": 7044613,
+    "name": "",
+    "desc": "",
+    "skillId": 70446,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      28
+    ]
+  },
+  "7044614": {
+    "id": 7044614,
+    "name": "",
+    "desc": "",
+    "skillId": 70446,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      32
+    ]
+  },
+  "7044620": {
+    "id": 7044620,
+    "name": "",
+    "desc": "",
+    "skillId": 70446,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      32
+    ]
+  },
+  "7044621": {
+    "id": 7044621,
+    "name": "",
+    "desc": "",
+    "skillId": 70446,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      36
+    ]
+  },
+  "7044622": {
+    "id": 7044622,
+    "name": "",
+    "desc": "",
+    "skillId": 70446,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      40
+    ]
+  },
+  "7044623": {
+    "id": 7044623,
+    "name": "",
+    "desc": "",
+    "skillId": 70446,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      44
+    ]
+  },
+  "7044624": {
+    "id": 7044624,
+    "name": "",
+    "desc": "",
+    "skillId": 70446,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      48
+    ]
+  },
+  "7054600": {
+    "id": 7054600,
+    "name": "",
+    "desc": "",
+    "skillId": 70546,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      50
+    ]
+  },
+  "7054601": {
+    "id": 7054601,
+    "name": "",
+    "desc": "",
+    "skillId": 70546,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      58
+    ]
+  },
+  "7054602": {
+    "id": 7054602,
+    "name": "",
+    "desc": "",
+    "skillId": 70546,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      65
+    ]
+  },
+  "7054603": {
+    "id": 7054603,
+    "name": "",
+    "desc": "",
+    "skillId": 70546,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      73
+    ]
+  },
+  "7054604": {
+    "id": 7054604,
+    "name": "",
+    "desc": "",
+    "skillId": 70546,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      80
+    ]
   }
 }

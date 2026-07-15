@@ -8218,6 +8218,46 @@
       }
     ]
   },
+  "77712": {
+    "id": 77712,
+    "weapon_power_": 0,
+    "physical_defense_": 0,
+    "magic_defense_": 0,
+    "strength_": 0,
+    "dexterity_": 0,
+    "intelligence_": 0,
+    "vitality_": 0,
+    "damageAttr": "none",
+    "damageAttrValue": 0,
+    "addons": [
+      {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 70012,
+        "keyValue": 0
+      }
+    ]
+  },
+  "77713": {
+    "id": 77713,
+    "weapon_power_": 0,
+    "physical_defense_": 0,
+    "magic_defense_": 0,
+    "strength_": 0,
+    "dexterity_": 0,
+    "intelligence_": 0,
+    "vitality_": 0,
+    "damageAttr": "none",
+    "damageAttrValue": 0,
+    "addons": [
+      {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 70013,
+        "keyValue": 0
+      }
+    ]
+  },
   "400000001": {
     "id": 400000001,
     "weapon_power_": 104,

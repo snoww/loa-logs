@@ -14207,6 +14207,99 @@
     "isEngrave": false,
     "isPenalty": false
   },
+  "17000000": {
+    "id": 17000000,
+    "name": null,
+    "icon": "ability_100.png",
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": null,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "attack_speed_rate",
+            "keyIndex": 0,
+            "keyValue": 900
+          },
+          {
+            "type": "stat",
+            "statType": "move_speed_rate",
+            "keyIndex": 0,
+            "keyValue": 900
+          }
+        ]
+      }
+    },
+    "featureType": "none",
+    "isEngrave": false,
+    "isPenalty": false
+  },
+  "17000001": {
+    "id": 17000001,
+    "name": null,
+    "icon": "ability_100.png",
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": null,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "attack_speed_rate",
+            "keyIndex": 0,
+            "keyValue": 900
+          },
+          {
+            "type": "stat",
+            "statType": "move_speed_rate",
+            "keyIndex": 0,
+            "keyValue": 900
+          },
+          {
+            "type": "combat_effect",
+            "statType": "none",
+            "keyIndex": 17000001,
+            "keyValue": 0
+          }
+        ]
+      }
+    },
+    "featureType": "none",
+    "isEngrave": false,
+    "isPenalty": false
+  },
+  "17000200": {
+    "id": 17000200,
+    "name": null,
+    "icon": "ability_100.png",
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": null,
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "resource_recovery_rate",
+            "keyIndex": 0,
+            "keyValue": 5000
+          },
+          {
+            "type": "stat",
+            "statType": "move_speed_rate",
+            "keyIndex": 0,
+            "keyValue": 2000
+          }
+        ]
+      }
+    },
+    "featureType": "none",
+    "isEngrave": false,
+    "isPenalty": false
+  },
   "608111000": {
     "id": 608111000,
     "name": null,

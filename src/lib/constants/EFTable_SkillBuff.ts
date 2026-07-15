@@ -12598,13 +12598,15 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
       [
         "Damage to foes +",
         [2, "#99ff99", ["20%"]],
-        ". Damage received -",
+        ". Incoming Damage -",
         [2, "#99ff99", ["40%"]],
+        ".\nStand Up Cooldown -",
+        [2, "#99ff99", ["50%"]],
         ".\nTaking lethal damage triggers Unbreakable Mind, making you Invincible for ",
-        [2, "#ffff99", ["3"]],
-        "s, instantly recover ",
+        [2, "#ffff99", ["3s"]],
+        ", instantly recover ",
         [2, "#99ff99", ["75%"]],
-        " of HP, and resets cooldowns for Stand Up and Movement Skill. (Cooldown 8 minutes)"
+        " of HP, and resets cooldowns for Stand Up and Movement Skill. (Cooldown 1 minute)"
       ]
     ],
     "buff_446"
@@ -12615,13 +12617,15 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
       [
         "Damage to foes +",
         [2, "#99ff99", ["15%"]],
-        ". Damage received -",
+        ". Incoming Damage -",
         [2, "#99ff99", ["30%"]],
+        ".\nStand Up Cooldown -",
+        [2, "#99ff99", ["50%"]],
         ".\nTaking lethal damage triggers Unbreakable Mind, making you Invincible for ",
-        [2, "#ffff99", ["3"]],
-        "s, instantly recover ",
+        [2, "#ffff99", ["3s"]],
+        ", instantly recover ",
         [2, "#99ff99", ["75%"]],
-        " of HP, and resets cooldowns for Stand Up and Movement Skill. (Cooldown 8 minutes)"
+        " of HP, and resets cooldowns for Stand Up and Movement Skill. (Cooldown 1 minute)"
       ]
     ],
     "buff_446"
@@ -13155,7 +13159,17 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   10000: ["Haal Legacy", [[[5, 78], " +", [2, "#99ff99", ["30%"]], ". Grants Push Immunity."]], "buff_138"],
   14000: [
     "Battle Support",
-    [["Atk./Move Speed +", [2, "#99ff99", ["9.0%"]], ". MP Recovery Speed +", [2, "#99ff99", ["30.0%"]], "."]],
+    [
+      [
+        "Damage to foes +",
+        [2, "#99ff99", ["10%"]],
+        ". Atk./Move Speed +",
+        [2, "#99ff99", ["9.0%"]],
+        ". MP Recovery Speed +",
+        [2, "#99ff99", ["30.0%"]],
+        "."
+      ]
+    ],
     "buff_763"
   ],
   14900: [
@@ -28627,7 +28641,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "townchef_9"
   ],
   100410441: [
-    "Feast: Freja Festival Set",
+    "Feast: New Journey Cake",
     [
       [
         "Max HP +",
@@ -28642,7 +28656,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "townchef_9"
   ],
   100410442: [
-    "Feast: Freja Festival Set",
+    "Feast: New Journey Cake",
     [["Max HP +", [2, "#99ff99", ["10000"]], ". Atk/Move Speed +", [2, "#99ff99", ["5%"]], "."]],
     "townchef_9"
   ],
@@ -33665,6 +33679,9 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   6297: ["Atk. Power Reduction", [["Atk. Power -", [2, "#ff9999", ["50%"]], "."]], "buff_28"],
   6298: ["Atk. Power Reduction", [["Atk. Power -", [2, "#ff9999", ["70%"]], "."]], "buff_28"],
   6480: ["Atk. Speed Increase", [["Decreases Atk. Speed."]], "buff_42"],
+  7300: ["Inner Spark", [["Atk. Power +", [2, "#99ff99", ["50%"]], "."]], "buff_313"],
+  7301: ["Inner Flame", [["Atk. Power +", [2, "#99ff99", ["100%"]], "."]], "buff_307"],
+  7302: ["Inner Hellfire", [["Atk. Power +", [2, "#99ff99", ["200%"]], "."]], "buff_310"],
   6500: [
     "Recovery",
     [
@@ -37180,6 +37197,11 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [["Corroded by distorted space.\nDeals damage after a certain number of stacks."]],
     "buff_176"
   ],
+  427383626: [
+    "Spatial Distortion",
+    [["Corroded by distorted space.\nDeals damage after a certain number of stacks."]],
+    "buff_176"
+  ],
   427510104: ["Bleed", [["Receive Phy. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_41"],
   427384711: [
     "Spatial Overload",
@@ -37209,6 +37231,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   427386503: ["Abyssal Shield", [["A force that resonates with the heart protects Aegir."]], "buff_18"],
   427386504: ["Abyssal Will", [["Atk./Move Speed +", [2, "#99ff99", ["10%"]], "."]], "buff_20"],
   427386505: ["Abyssal Focus", [["Crit Rate +", [2, "#99ff99", ["30%"]], "."]], "buff_9"],
+  427386508: ["Damage Reduction", [["Incoming Phy./Mag. Damage -", [2, "#99ff99", ["99.9%"]], "."]], "buff_19"],
   427386512: [
     "Heart Unity",
     [
@@ -37236,6 +37259,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   427384403: ["The Oppressor's Gaze", [["Aegir has his eye on you."]], "buff_58"],
   427387010: ["Stealth", [["Become Stealthed. Invisible to foes."]], "buff_148"],
   427387011: ["Damage Reduction", [["Incoming Phy./Mag. Damage -", [2, "#99ff99", ["6.6%"]], "."]], "buff_19"],
+  427387015: ["Damage Reduction", [["Incoming Phy./Mag. Damage -", [2, "#99ff99", ["4%"]], "."]], "buff_19"],
   427387020: [
     "Heart Destruction",
     [["The heart is destroyed and is temporarily incapacitated.\nBecome Staggered, but gain Damage Reduction."]],
@@ -37243,6 +37267,15 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   ],
   427382168: ["Aegir's Arm", [["Aegir has his eye on you."]], "buff_234"],
   427382169: ["Aegir's Arm", [["Aegir has his eye on you."]], "buff_234"],
+  429990215: ["Damage Reduction", [["Incoming Phy./Mag. Damage received -", [2, "#99ff99", ["30%"]], "."]], "buff_19"],
+  429990218: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
+  429990219: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
+  427385204: ["Incoming Damage Increase", [["Incoming Phy./Mag. Damage +", [2, "#ff9999", ["20%"]], "."]], "buff_27"],
+  427386572: [
+    "Hellfire Brand",
+    [["Burned by the fire that erupted when the heart was destroyed.\nTake very strong continuous fire damage."]],
+    "buff_56"
+  ],
   429991112: ["Burn", [["Becomes Burned and periodically receives Damage."]], "buff_56"],
   429991113: [
     "Hellfire Outburst",
@@ -37537,6 +37570,8 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   429921002: ["Pinpoint Focus", [["Temporarily increases Stagger Attack Power."]], "buff_96"],
   429921008: ["Weaken", [["Abyssal Energy weakens, increasing incoming Stagger Damage."]], "buff_337"],
   429921009: ["Pinpoint Focus", [["Temporarily increases Stagger Attack Power."]], "buff_96"],
+  429921031: ["Weaken", [["Abyssal Energy weakens, increasing incoming Stagger Damage."]], "buff_337"],
+  429921032: ["Pinpoint Focus", [["Temporarily increases Stagger Attack Power."]], "buff_96"],
   429902101: ["Abyssal Flame", [["Abyssal Flames blaze and gradually decreases Stagger Point."]], "buff_870"],
   429002000: ["Telekinesis", [["Actions are forcibly restricted by Kazeros."]], "buff_855"],
   429975381: ["Telekinesis", [["Actions are forcibly restricted by Kazeros."]], "buff_879"],
@@ -45415,6 +45450,40 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "Second Wind Breeze",
     [["Upon being hit while HP is below half, remove debuffs and recover 8% HP every 1s for 8s. Repeats 5 times."]],
     "buff_553"
+  ],
+  17000000: [
+    "Matching Mode Solo Support",
+    [
+      [
+        "Atk./Move Speed +",
+        [2, "#99ff99", ["9%"]],
+        ". MP Recovery Speed +",
+        [2, "#99ff99", ["30%"]],
+        ".\nAdditionally, Damage to foes +",
+        [2, "#99ff99", ["65%"]],
+        " for support classes and +",
+        [2, "#99ff99", ["10%"]],
+        " for all other classes."
+      ]
+    ],
+    "buff_763"
+  ],
+  17000001: [
+    "Matching Mode Party Support",
+    [
+      [
+        "Atk./Move Speed +",
+        [2, "#99ff99", ["9%"]],
+        ". MP Recovery Speed +",
+        [2, "#99ff99", ["30%"]],
+        ".\nDamage to foes +",
+        [2, "#99ff99", ["10%"]],
+        ". Damage from foes -",
+        [2, "#99ff99", ["40%"]],
+        "."
+      ]
+    ],
+    "buff_763"
   ],
   370010: ["Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
   370011: [

@@ -3771,6 +3771,185 @@
       }
     }
   },
+  "17000000": {
+    "id": 17000000,
+    "classOptions": {
+      "105": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000000,
+        "keyValue": 0
+      },
+      "204": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000000,
+        "keyValue": 0
+      },
+      "602": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000000,
+        "keyValue": 0
+      },
+      "113": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000000,
+        "keyValue": 0
+      },
+      "102": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      },
+      "112": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      },
+      "103": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      },
+      "104": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      },
+      "202": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      },
+      "203": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      },
+      "205": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      },
+      "302": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      },
+      "303": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      },
+      "313": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      },
+      "304": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      },
+      "305": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      },
+      "312": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      },
+      "402": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      },
+      "403": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      },
+      "404": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      },
+      "405": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      },
+      "502": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      },
+      "503": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      },
+      "504": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      },
+      "505": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      },
+      "512": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      },
+      "603": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      },
+      "604": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      },
+      "702": {
+        "type": "combat_effect",
+        "statType": "none",
+        "keyIndex": 17000100,
+        "keyValue": 0
+      }
+    }
+  },
   "9412100": {
     "id": 9412100,
     "classOptions": {

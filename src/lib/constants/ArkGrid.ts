@@ -35,7 +35,27 @@ export const ArkGridAstrogemKind: Record<number, ArkGridAstrogemKind> = {
   1002: [0, 10],
   1013: [1, 8],
   1014: [1, 9],
-  1015: [1, 10]
+  1015: [1, 10],
+  2000: [0, 8],
+  2001: [0, 9],
+  2002: [0, 10],
+  2013: [1, 8],
+  2014: [1, 9],
+  2015: [1, 10],
+  2100: [0, 8],
+  2101: [0, 9],
+  2102: [0, 10],
+  2113: [1, 8],
+  2114: [1, 9],
+  2115: [1, 10],
+  2200: [0, 8],
+  2213: [1, 8],
+  2300: [0, 8],
+  2313: [1, 8],
+  2400: [0, 8],
+  2413: [1, 8],
+  2500: [0, 8],
+  2513: [1, 8]
 };
 
 // [name or desc, addon type, addon stat, addon value]
@@ -16620,7 +16640,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         [2, "#99ff99", ["100%"]],
         ".\n",
         [2, "#bf9ef6", ["Destiny: Self Defense"]],
-        ": Move Speed +/100/>%. Absorbs Damage equal to ",
+        ": Absorbs Damage equal to ",
         [2, "#99ff99", ["10.0%"]],
         " of Max HP."
       ],
@@ -26028,7 +26048,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
       [
         "Casting Speed of Whisper of Judgment and Approach of Revelation +",
         [2, "#99ff99", ["20.0%"]],
-        ". MP Cost - />%-",
+        ". MP Cost -",
         [2, "#99ff99", ["70.0%"]],
         "."
       ]
