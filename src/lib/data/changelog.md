@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.47.2 - July 11th, 2026
+    v1.48.0 - July 15th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -15,15 +15,14 @@
 
 ### Note: ExitLag users must check the ExitLag Compatibility setting
 
-#### read about rdps in depth [here](https://github.com/snoww/loa-logs/wiki/rDPS-and-nDPS-Explained)
-
 #### NEW FEATURES
 
-- added ark grid core choices to player tooltips (new logs)
+- updated meter for extreme aegir patch
+
+#### PREVIOUS CHANGES
+
+- added ark grid loadout to player tooltips. ark grid and ark passive in this tooltip accurately reflects loadout at the end of the raid
+  - ![hover](https://i.imgur.com/EtwXWte.png)
+- added progression stats (try it out in your extreme aegir prog)
+  - ![prog](https://i.imgur.com/dDygDMN.png)
 - added more delete options in database settings
-
-#### BUG FIXES AND IMPROVEMENTS
-
-- improved rdps calculation performance
-- pausing meter no longer drops packets
-- improved manual save and reset behavior

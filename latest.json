@@ -1,15 +1,15 @@
 {
-  "version": "v1.47.2",
-  "notes": "### v1.47.2 - July 11th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n### Note: ExitLag users must check the ExitLag Compatibility setting\n\n#### read about rdps in depth [here](https://github.com/snoww/loa-logs/wiki/rDPS-and-nDPS-Explained)\n\n#### NEW FEATURES\n\n- added ark grid core choices to player tooltips\n- added more delete options in database settings\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- improved rdps calculation performance\n- pausing meter no longer drops packets\n- improved manual save and reset behavior \n",
-  "pub_date": "2026-07-11T04:20:08.001Z",
+  "version": "v1.48.0",
+  "notes": "### v1.48.0 - July 15th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n### Note: ExitLag users must check the ExitLag Compatibility setting\n\n#### NEW FEATURES\n\n- updated meter for extreme aegir patch\n\n#### PREVIOUS CHANGES\n\n- added ark grid loadout to player tooltips. ark grid and ark passive in this tooltip accurately reflects loadout at the end of the raid\n  - ![hover](https://i.imgur.com/EtwXWte.png)\n- added progression stats (try it out in your extreme aegir prog)\n  - ![prog](https://i.imgur.com/dDygDMN.png)\n- added more delete options in database settings\n",
+  "pub_date": "2026-07-15T04:20:08.001Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.47.2/LOA.Logs_1.47.2_x64-setup.exe",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlpDc05TVkcrRXZpMFg3eW80MjdiVm1iVGc5T0hHYUNjMHhjVzMrWEdvV204dXdpZTVDNHhUaVBTVWNianoxWjMrd1BIMVFkU2pQc0V5a3p6S1hoSWdrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgzODExODYzCWZpbGU6TE9BIExvZ3NfMS40Ny4yX3g2NC1zZXR1cC5leGUKdGp6K2x3VXRnWkxYU2JQaGl0RThaZ01raDhXeTVwOEhMbWt5TEcyVjdiUmNLamh2R1VWZzUyeWUzS3VzV2M4clJuUHZrZHBhQWVDcnNCV3JTS2JsQ0E9PQo="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.48.0/LOA.Logs_1.48.0_x64-setup.exe",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlRIUDJ5MExjNzlaenkzOSt1bGZnN2RUSTdiT29WUWE5eEZwTU9TSWYrbzB0ZnZ4czZFeENhaTF6c2RXSFhxVnBVQ2Zhd1pHL1MvOElRazgxK2hacVFvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0MTM3NDI0CWZpbGU6TE9BIExvZ3NfMS40OC4wX3g2NC1zZXR1cC5leGUKNC9DT1JveGI0WW4zOEQwd2JNOEVXMlA2cC90N3QzWmF4blhIbUtyTDRtVkp1aWZWSnUxdXJWVWJsK1gyK0JIUGNYOEdEbHA1M3RtRXFDMit3N091RFE9PQo="
     },
     "linux-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.47.2/LOA.Logs_1.47.2_amd64.AppImage",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlhRZkZQSnhiS1RHN0lpTmdEN2E2R0x2ejU2SkhEbGlCTFJJaUV0Myt3U2ErR3gwZ0RwNmE5UG1QeVVTUzhqdDlwNWlXM0lITXpkNGg2ZEFBdmUyWWdNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgzODExNTMwCWZpbGU6TE9BIExvZ3NfMS40Ny4yX2FtZDY0LkFwcEltYWdlCjVNamN2bExkbUREME1IZlBxSWVHM05yS0VMRFBUQm1NaEs5VW1rY3lhTEVwT2cvc0puSWFjajhVejJ4NEErdjRsZXJ1UDJCWTYwRlVCbHhpODM4UkNBPT0K"
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.48.0/LOA.Logs_1.48.0_amd64.AppImage",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlhrK1hvbGt1OXo2b2xQbEtJcERkYlJXcUthQ1o1dS9Dc1R1WlRZU2l1S1B3eC83MWFvRE1uWksrMXJwTXVZYmUyd0NwWnVCbFo5YTZIbVRDUUp5eEFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0MTM3MDk2CWZpbGU6TE9BIExvZ3NfMS40OC4wX2FtZDY0LkFwcEltYWdlCjZaL2d5M1dIZVpSM3JhL0JwVWFIODlvV0FqNmZPWnAzcGsrY1c3ZVoyb3BhSEw5ZHlpeHhZMFFIM0hTK0NxRXFRMDdhbnlhU1J3dFV6SGVBc3MwekN3PT0K"
     }
   }
 }
