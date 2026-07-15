@@ -4450,8 +4450,7 @@ impl EncounterState {
 
     // track battle items used in an encounter
     pub fn on_battle_item_use(&mut self, battle_item_id: &u32) {
-        if self.encounter.fight_start == 0 {
-        }
+        if self.encounter.fight_start == 0 {}
     }
 
     pub fn save_to_db(&mut self, manual: bool) {

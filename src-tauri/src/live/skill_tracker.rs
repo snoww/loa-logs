@@ -163,10 +163,10 @@ impl SkillTracker {
                     .skill_timestamp
                     .get(&(new_entity_id, skill_id))
                     .is_none()
-                {
-                    self.skill_timestamp
-                        .insert((new_entity_id, skill_id), timestamp);
-                }
+            {
+                self.skill_timestamp
+                    .insert((new_entity_id, skill_id), timestamp);
+            }
             self.skill_timestamp.invalidate(&(old_entity_id, skill_id));
         }
     }
