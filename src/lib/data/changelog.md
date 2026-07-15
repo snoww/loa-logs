@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.48.0 - July 15th, 2026
+    v1.48.1 - July 15th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -18,6 +18,10 @@
 #### NEW FEATURES
 
 - updated meter for extreme aegir patch
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fixed paladin identity issue and others
 
 #### PREVIOUS CHANGES
 
