@@ -842,10 +842,7 @@ fn build_raid_progression_query(criteria: RaidProgressionCriteria) -> (Vec<Strin
         params.push(end.to_string());
     }
 
-    if !criteria.difficulty.is_empty() {
-        filters.push("e.difficulty = ?".to_string());
-        params.push(criteria.difficulty);
-    }
+    add_raid_progression_difficulty_filter(criteria.difficulty, &mut filters, &mut params);
 
     if !criteria.bosses.is_empty() {
         let placeholders = "?,".repeat(criteria.bosses.len());
@@ -920,10 +917,7 @@ fn build_raid_progression_range_query(
         "e.difficulty IS NOT NULL AND e.difficulty != ''".to_string(),
     ];
 
-    if !criteria.difficulty.is_empty() {
-        filters.push("e.difficulty = ?".to_string());
-        where_params.push(criteria.difficulty);
-    }
+    add_raid_progression_difficulty_filter(criteria.difficulty, &mut filters, &mut where_params);
 
     if !criteria.bosses.is_empty() {
         let placeholders = "?,".repeat(criteria.bosses.len());
@@ -958,6 +952,23 @@ fn build_raid_progression_range_query(
     params.extend(where_params);
 
     (params, query)
+}
+
+fn add_raid_progression_difficulty_filter(
+    difficulty: String,
+    filters: &mut Vec<String>,
+    params: &mut Vec<String>,
+) {
+    if difficulty.is_empty() {
+        return;
+    }
+
+    if difficulty == "Extreme" {
+        filters.push("INSTR(e.difficulty, ?) > 0".to_string());
+    } else {
+        filters.push("e.difficulty = ?".to_string());
+    }
+    params.push(difficulty);
 }
 
 fn reset_window_for_range(range: &str) -> (Option<i64>, Option<i64>) {
@@ -1438,7 +1449,7 @@ struct ProgressionDeathEvent {
 }
 
 fn progression_death_counts(rows: &[RaidProgressionRow]) -> BTreeMap<String, i32> {
-    const WIPE_DEATH_CLUSTER_MS: i64 = 5_000;
+    const FULL_WIPE_DEATH_WINDOW_MS: i64 = 1_000;
 
     let mut events = rows
         .iter()
@@ -1458,67 +1469,44 @@ fn progression_death_counts(rows: &[RaidProgressionRow]) -> BTreeMap<String, i32
             .then_with(|| a.player_name.cmp(&b.player_name))
     });
 
-    let Some(last_event) = events.last() else {
+    let Some(first_event) = events.first() else {
         return BTreeMap::new();
     };
-
-    // A wipe usually records everyone as dead near the reset. Count deaths before
-    // that final reset cluster, plus the first death in the cluster as the wipe cause.
-    let cleared = rows.first().is_some_and(|row| row.cleared);
-    let first_wipe_event_index = if cleared {
-        events.len()
-    } else {
-        let wipe_cluster_start = (last_event.elapsed - WIPE_DEATH_CLUSTER_MS).max(0);
-        events
-            .iter()
-            .position(|event| event.elapsed >= wipe_cluster_start)
-            .unwrap_or(events.len())
-    };
-    let wipe_cluster_is_reset =
-        !cleared && final_death_cluster_is_reset(rows, &events, first_wipe_event_index);
+    let first_elapsed = first_event.elapsed;
+    let first_player_name = first_event.player_name.clone();
 
     let mut counts = BTreeMap::new();
-    for (index, event) in events.iter().enumerate() {
-        if index < first_wipe_event_index
-            || !wipe_cluster_is_reset
-            || index == first_wipe_event_index
-        {
+    if rows.first().is_some_and(|row| row.cleared) {
+        for event in events {
             *counts.entry(event.player_name.clone()).or_insert(0) += 1;
         }
+        return counts;
     }
 
-    counts
-}
-
-fn final_death_cluster_is_reset(
-    rows: &[RaidProgressionRow],
-    events: &[ProgressionDeathEvent],
-    cluster_start_index: usize,
-) -> bool {
-    if cluster_start_index >= events.len() {
-        return false;
-    }
-
+    // on a wipe, the first death gets counted and every later death
+    // belongs to the wipe. if everyone dies within a short window,
+    // everyone gets a death added.
     let active_players = rows
         .iter()
         .map(|row| row.player_name.as_str())
         .collect::<BTreeSet<_>>();
-    let dead_before_cluster = events[..cluster_start_index]
+    let simultaneous_players = events
         .iter()
+        .take_while(|event| {
+            event.elapsed.saturating_sub(first_elapsed) <= FULL_WIPE_DEATH_WINDOW_MS
+        })
         .map(|event| event.player_name.as_str())
         .collect::<BTreeSet<_>>();
-    let cluster_players = events[cluster_start_index..]
-        .iter()
-        .map(|event| event.player_name.as_str())
-        .collect::<BTreeSet<_>>();
-    let alive_before_cluster = active_players
-        .len()
-        .saturating_sub(dead_before_cluster.len())
-        .max(1);
 
-    // If the final cluster covers everyone who was still alive, treat it as the
-    // encounter reset instead of independent player deaths.
-    cluster_players.len() >= alive_before_cluster
+    if simultaneous_players == active_players {
+        for player_name in simultaneous_players {
+            counts.insert(player_name.to_string(), 1);
+        }
+    } else {
+        counts.insert(first_player_name, 1);
+    }
+
+    counts
 }
 
 fn normalize_death_elapsed(row: &RaidProgressionRow, death_time: i64) -> Option<i64> {
@@ -2299,6 +2287,64 @@ mod tests {
     use super::*;
 
     #[test]
+    fn progression_extreme_range_includes_specific_extreme_difficulties() {
+        let database = Database::memory("1.14.0").unwrap();
+
+        {
+            let connection = database.get_connection();
+            for (id, fight_start, difficulty, cleared) in [
+                (1, 500, "Hard", true),
+                (2, 1_000, "Extreme Hard", false),
+                (3, 2_000, "Extreme Nightmare", true),
+                (4, 3_000, "Extreme", true),
+            ] {
+                connection
+                    .execute(
+                        "INSERT INTO encounter (id, version) VALUES (?, ?)",
+                        params![id, 1],
+                    )
+                    .unwrap();
+                connection
+                    .execute(
+                        "INSERT INTO encounter_preview
+                            (id, fight_start, current_boss, duration, difficulty, cleared)
+                         VALUES (?, ?, ?, ?, ?, ?)",
+                        params![id, fight_start, "Boss", 20_000, difficulty, cleared],
+                    )
+                    .unwrap();
+            }
+        }
+
+        let range = database
+            .create_repository()
+            .get_raid_progression_range(RaidProgressionRangeCriteria {
+                bosses: vec!["Boss".to_string()],
+                last_gate_bosses: vec!["Boss".to_string()],
+                difficulty: "Extreme".to_string(),
+                min_duration: 10,
+            })
+            .unwrap();
+
+        assert_eq!(range.first_pull, Some(1_000));
+        assert_eq!(range.first_clear, Some(2_000));
+    }
+
+    #[test]
+    fn progression_without_selected_dates_searches_all_time() {
+        let (params, query) = build_raid_progression_query(RaidProgressionCriteria {
+            range: "all".to_string(),
+            difficulty: "Extreme".to_string(),
+            min_duration: 10,
+            ..Default::default()
+        });
+
+        assert!(!query.contains("e.fight_start >= ?"));
+        assert!(!query.contains("e.fight_start <= ?"));
+        assert!(query.contains("INSTR(e.difficulty, ?) > 0"));
+        assert_eq!(params, vec!["10000".to_string(), "Extreme".to_string()]);
+    }
+
+    #[test]
     fn deletes_encounters_before_cutoff_and_can_keep_favorites() {
         let database = Database::memory("1.14.0").unwrap();
 
@@ -2570,7 +2616,7 @@ mod tests {
     }
 
     #[test]
-    fn progression_deaths_count_until_final_wipe_reset() {
+    fn progression_deaths_only_count_the_first_death_before_a_wipe() {
         let rows = vec![
             progression_row("EarlyDeath", vec![50_000], false),
             progression_row("SecondDeath", vec![120_000], false),
@@ -2581,14 +2627,14 @@ mod tests {
         let deaths = progression_death_counts(&rows);
 
         assert_eq!(deaths.get("EarlyDeath"), Some(&1));
-        assert_eq!(deaths.get("SecondDeath"), Some(&1));
-        assert_eq!(deaths.get("WipeCause"), Some(&1));
+        assert_eq!(deaths.get("SecondDeath"), None);
+        assert_eq!(deaths.get("WipeCause"), None);
         assert_eq!(deaths.get("WipeReset"), None);
-        assert_eq!(deaths.values().sum::<i32>(), 3);
+        assert_eq!(deaths.values().sum::<i32>(), 1);
     }
 
     #[test]
-    fn progression_deaths_keep_late_deaths_when_they_are_not_a_full_reset() {
+    fn progression_deaths_only_count_one_of_multiple_non_simultaneous_deaths() {
         let rows = vec![
             progression_row("LateDeathA", vec![295_000], false),
             progression_row("LateDeathB", vec![296_000], false),
@@ -2599,7 +2645,83 @@ mod tests {
         let deaths = progression_death_counts(&rows);
 
         assert_eq!(deaths.get("LateDeathA"), Some(&1));
-        assert_eq!(deaths.get("LateDeathB"), Some(&1));
+        assert_eq!(deaths.get("LateDeathB"), None);
+        assert_eq!(deaths.values().sum::<i32>(), 1);
+    }
+
+    #[test]
+    fn progression_deaths_count_everyone_in_a_full_simultaneous_wipe() {
+        let rows = [295_000, 295_250, 295_800, 296_000]
+            .into_iter()
+            .enumerate()
+            .map(|(index, death_time)| {
+                progression_row(&format!("Player{}", index + 1), vec![death_time], false)
+            })
+            .collect::<Vec<_>>();
+
+        let deaths = progression_death_counts(&rows);
+
+        assert_eq!(deaths.len(), 4);
+        assert!(deaths.values().all(|deaths| *deaths == 1));
+    }
+
+    #[test]
+    fn progression_deaths_do_not_share_a_wipe_outside_the_one_second_window() {
+        let rows = [295_000, 295_250, 295_800, 296_001]
+            .into_iter()
+            .enumerate()
+            .map(|(index, death_time)| {
+                progression_row(&format!("Player{}", index + 1), vec![death_time], false)
+            })
+            .collect::<Vec<_>>();
+
+        let deaths = progression_death_counts(&rows);
+
+        assert_eq!(deaths, BTreeMap::from([("Player1".to_string(), 1)]));
+    }
+
+    #[test]
+    fn progression_deaths_attribute_an_early_death_before_a_manual_restart() {
+        let rows = [
+            ("Paladin", 649_379),
+            ("Arcanist", 660_679),
+            ("Gunslinger", 660_680),
+            ("Sorceress", 660_678),
+            ("Wardancer", 660_678),
+            ("Sharpshooter", 660_678),
+            ("Bard", 660_679),
+            ("SorceressTwo", 660_681),
+        ]
+        .into_iter()
+        .map(|(name, death_time)| progression_row(name, vec![death_time], false))
+        .collect::<Vec<_>>();
+
+        let statistics =
+            build_raid_progression_statistics(rows, &HashMap::new(), &HashMap::new(), &[]);
+        let paladin = statistics
+            .players
+            .iter()
+            .find(|player| player.name == "Paladin")
+            .unwrap();
+
+        assert_eq!(paladin.total_deaths, 1);
+        assert_eq!(paladin.deaths_per_pull, 1.0);
+        assert_eq!(statistics.summary.average_deaths, Some(1.0));
+    }
+
+    #[test]
+    fn progression_deaths_keep_all_deaths_on_a_clear() {
+        let rows = vec![
+            progression_row("FirstDeath", vec![50_000], true),
+            progression_row("SecondDeath", vec![120_000], true),
+            progression_row("NoDeath", vec![], true),
+        ];
+
+        let deaths = progression_death_counts(&rows);
+
+        assert_eq!(deaths.get("FirstDeath"), Some(&1));
+        assert_eq!(deaths.get("SecondDeath"), Some(&1));
+        assert_eq!(deaths.get("NoDeath"), None);
         assert_eq!(deaths.values().sum::<i32>(), 2);
     }
 

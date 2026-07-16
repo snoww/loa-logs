@@ -28,7 +28,7 @@
     value,
     fixedWeeks: true,
     numberOfMonths: 1,
-    weekStartsOn: 1,
+    weekStartsOn: 0,
     positioning: {
       placement: "bottom-start",
       fitViewport: true,
@@ -62,7 +62,7 @@
   });
 
   let displayLabel = $derived(
-    startDate || endDate ? `${startDate || "Any start"} - ${endDate || "Any end"}` : "Date range"
+    startDate || endDate ? `${startDate || "Any start"} - ${endDate || "Any end"}` : "All time"
   );
 
   function clearRange() {

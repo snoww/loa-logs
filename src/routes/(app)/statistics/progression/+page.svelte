@@ -147,12 +147,7 @@
     startDate,
     endDate
   });
-  let hasUnappliedFilters = $derived(
-    appliedFilters === null || !sameProgressionFilters(currentFilters, appliedFilters)
-  );
-  let canLoadStatistics = $derived(
-    Boolean(selectedGateOption) && !loading && !rangeLoading && (!hasLoaded || hasUnappliedFilters || Boolean(error))
-  );
+  let canLoadStatistics = $derived(Boolean(selectedGateOption) && !loading && !rangeLoading);
   let dpsPlayers = $derived((statistics?.players ?? []).filter((player) => !player.isSupport));
   let supportPlayers = $derived((statistics?.players ?? []).filter((player) => player.isSupport));
   let sortedDpsPlayers = $derived(sortPlayers(dpsPlayers, dpsSort));
@@ -169,6 +164,7 @@
   onMount(() => {
     if (restoreCachedProgressionState()) {
       initialized = true;
+      if (hasLoaded) loadStatistics();
       return;
     }
 
@@ -418,15 +414,6 @@
     startDate = "";
     endDate = "";
     loadDefaultRange();
-  }
-
-  function sameProgressionFilters(a: ProgressionFilters, b: ProgressionFilters) {
-    return (
-      a.selectedGateId === b.selectedGateId &&
-      a.selectedDifficulty === b.selectedDifficulty &&
-      a.startDate === b.startDate &&
-      a.endDate === b.endDate
-    );
   }
 
   function progressLabel(source: { bestProgressBars?: number | null; bestProgressPercent?: number | null }) {
