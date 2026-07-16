@@ -14,14 +14,23 @@ REPO="snoww/loa-logs"
 LOA_PID=""
 HELPER_PID=""
 EXIT_CODE=0
+CLEANED_UP=0
 
 log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "$LOG_FILE"
 }
 
-echo "===== LOA Logs launcher started at $(date) =====" > "$LOG_FILE"
+MAX_LOG_LINES=1000
+if [ -f "$LOG_FILE" ]; then
+    tail -n "$MAX_LOG_LINES" "$LOG_FILE" > "$LOG_FILE.tmp" && mv "$LOG_FILE.tmp" "$LOG_FILE"
+fi
+echo "===== LOA Logs launcher started at $(date) =====" >> "$LOG_FILE"
 
 cleanup() {
+    if [ "$CLEANED_UP" -eq 1 ]; then
+        return
+    fi
+    CLEANED_UP=1
     log "Shutting down..."
     if [ -n "$LOA_PID" ] && kill -0 "$LOA_PID" 2>/dev/null; then
         kill "$LOA_PID" 2>/dev/null
@@ -140,7 +149,9 @@ if [ ! -f "$APPIMAGE" ] || [ ! -f "$NINEVEH_BIN" ]; then
         EXIT_CODE=1; exit 1
     fi
 else
-    check_for_updates || true
+    if ! check_for_updates; then
+        log "WARNING: Update check failed, continuing with existing binaries."
+    fi
 fi
 
 log "Starting nineveh (requires authentication)..."

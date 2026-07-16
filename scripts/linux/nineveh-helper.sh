@@ -5,7 +5,7 @@
 NINEVEH_BIN="$1"
 STOP_FILE="$2"
 shift 2
-NINEVEH_ARGS="$@"
+NINEVEH_ARGS=("$@")
 NINEVEH_PID=""
 
 cleanup() {
@@ -25,7 +25,7 @@ if [ -n "$EXISTING" ]; then
     sleep 1
 fi
 
-$NINEVEH_BIN $NINEVEH_ARGS &
+"$NINEVEH_BIN" "${NINEVEH_ARGS[@]}" &
 NINEVEH_PID=$!
 
 while kill -0 "$NINEVEH_PID" 2>/dev/null; do
