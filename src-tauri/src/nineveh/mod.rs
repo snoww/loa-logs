@@ -258,6 +258,12 @@ pub async fn setup_nineveh(app: AppHandle, exitlag_compat: bool) -> Result<Ninev
         Ok(c) => c,
         Err(e) => {
             log::error!("Failed to start Nineveh process: {}", e);
+            if e.kind() == std::io::ErrorKind::NotFound {
+                error_and_exit(
+                    "Nineveh.exe Missing",
+                    "Nineveh.exe is missing from the LOA Logs install folder. Your antivirus or security software may have quarantined or deleted it. Restore the file from quarantine or reinstall LOA Logs, then allow the LOA Logs install folder in your antivirus software.",
+                );
+            }
             error_and_exit(
                 "Backend Failed to Start",
                 "The process that LOA Logs uses to monitor game traffic failed to start. Please ensure that your antivirus or security software is not blocking LOA Logs from running.",
