@@ -219,10 +219,8 @@
         const nextEndDate = timestampToInputDate(result.firstClear);
         defaultStartDate = nextStartDate;
         defaultEndDate = nextEndDate;
-        if (!preserveExistingDates || !startDate) {
+        if (!preserveExistingDates) {
           startDate = nextStartDate;
-        }
-        if (!preserveExistingDates || !endDate) {
           endDate = nextEndDate;
         }
       }
@@ -379,19 +377,24 @@
     loading = false;
   }
 
+  function hasCustomDateRange() {
+    return startDate !== defaultStartDate || endDate !== defaultEndDate;
+  }
+
   function updateGate(value: string) {
     if (selectedGateId === value) return;
+    const preserveDates = hasCustomDateRange();
     selectedGateId = value;
-    selectedDifficulty = "";
     cancelPendingStatisticsLoad();
-    loadDefaultRange();
+    loadDefaultRange(preserveDates);
   }
 
   function updateDifficulty(value: string) {
     if (selectedDifficulty === value) return;
+    const preserveDates = hasCustomDateRange();
     selectedDifficulty = value;
     cancelPendingStatisticsLoad();
-    loadDefaultRange();
+    loadDefaultRange(preserveDates);
   }
 
   function updateStartDate(value: string) {
