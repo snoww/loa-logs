@@ -27,7 +27,7 @@
     maxValue: untrack(() => dateFromString(maxDate)),
     fixedWeeks: true,
     numberOfMonths: 1,
-    weekStartsOn: 1,
+    weekStartsOn: 0,
     positioning: {
       placement: "bottom-start",
       fitViewport: true,

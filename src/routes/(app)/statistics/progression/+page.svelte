@@ -411,6 +411,12 @@
     endDate = value;
   }
 
+  function resetDateRange() {
+    cancelPendingStatisticsLoad();
+    startDate = defaultStartDate;
+    endDate = defaultEndDate;
+  }
+
   function resetFilters() {
     cancelPendingStatisticsLoad();
     selectedDifficulty = "";
@@ -583,6 +589,7 @@
       {endDate}
       onStartDateChange={updateStartDate}
       onEndDateChange={updateEndDate}
+      onResetDateRange={!rangeLoading && (defaultStartDate || defaultEndDate) ? resetDateRange : undefined}
       label="Progression date range"
     />
 

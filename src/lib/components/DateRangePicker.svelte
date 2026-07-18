@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { IconCalendar, IconChevronLeft, IconChevronRight, IconX } from "$lib/icons";
+  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
+  import { IconCalendar, IconChevronLeft, IconChevronRight, IconRotateCcw, IconX } from "$lib/icons";
   import { CalendarDate, type DateValue } from "@internationalized/date";
   import { createDateRangePicker, melt, type DateRange } from "@melt-ui/svelte";
   import { onDestroy } from "svelte";
@@ -11,10 +12,18 @@
     endDate: string;
     onStartDateChange: (value: string) => void;
     onEndDateChange: (value: string) => void;
+    onResetDateRange?: () => void;
     label?: string;
   };
 
-  let { startDate, endDate, onStartDateChange, onEndDateChange, label = "Date range" }: Props = $props();
+  let {
+    startDate,
+    endDate,
+    onStartDateChange,
+    onEndDateChange,
+    onResetDateRange,
+    label = "Date range"
+  }: Props = $props();
 
   const value = writable<DateRange>({ start: undefined, end: undefined });
   let syncingFromProps = false;
@@ -127,6 +136,17 @@
       >
         <IconX class="size-4" />
       </button>
+    {:else if onResetDateRange}
+      <QuickTooltip tooltip="Reset to default date range" class="h-full">
+        <button
+          type="button"
+          class="grid h-full w-8 place-items-center border-l border-neutral-700 text-neutral-500 hover:bg-neutral-700/60 hover:text-neutral-200"
+          aria-label="Reset to default date range"
+          onclick={onResetDateRange}
+        >
+          <IconRotateCcw class="size-4" />
+        </button>
+      </QuickTooltip>
     {/if}
   </div>
 
