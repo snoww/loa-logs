@@ -11,7 +11,7 @@ use crate::live::status_tracker::{
 use crate::local::{LocalInfo, LocalPlayer};
 use crate::models::EntityType::*;
 use crate::models::{
-    ArkGridOrder, ArkPassiveData, ArkPassiveNode, CombatPower, EncounterEntity, EntityType, Esther,
+    ArkGridOrder, ArkPassiveData, ArkPassiveNode, CombatPower, EncounterEntity, EntityType,
     InspectInfo, TripodIndex, TripodLevel,
 };
 use chrono::{DateTime, Utc};
@@ -2153,10 +2153,6 @@ fn get_npc_entity_type_name_grade_bars(
     npc: &NpcStruct,
     max_hp: i64,
 ) -> (EntityType, String, String, Option<u32>) {
-    if let Some(esther) = get_esther_from_npc_id(npc.type_id) {
-        return (EntityType::Esther, esther.name, "none".to_string(), None);
-    }
-
     if let Some((_, npc_info)) = NPC_DATA.get_key_value(&npc.type_id) {
         let hp_bars = if npc_info.hp_bars > 1 {
             Some(npc_info.hp_bars)
@@ -2164,7 +2160,9 @@ fn get_npc_entity_type_name_grade_bars(
             None
         };
         let npc_name = npc_info.name.clone().unwrap_or_default();
-        if (npc_info.grade == "boss"
+        if ESTHER_DATA.iter().any(|esther| esther.name == npc_name) {
+            (EntityType::Esther, npc_name, "none".to_string(), None)
+        } else if (npc_info.grade == "boss"
             || npc_info.grade == "raid"
             || npc_info.grade == "epic_raid"
             || npc_info.grade == "commander")
@@ -2190,13 +2188,6 @@ fn get_npc_entity_type_name_grade_bars(
             None,
         )
     }
-}
-
-fn get_esther_from_npc_id(npc_id: u32) -> Option<Esther> {
-    ESTHER_DATA
-        .iter()
-        .find(|esther| esther.npc_ids.contains(&npc_id))
-        .cloned()
 }
 
 pub fn get_skill_class_id(skill_id: &u32) -> u32 {

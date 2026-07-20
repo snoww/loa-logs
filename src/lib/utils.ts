@@ -1,5 +1,4 @@
 import { bossHpMap } from "$lib/constants/encounters";
-import { estherMap } from "$lib/constants/esthers";
 import { BossHpLog, type DamageStats, type Entity, type IdentityLogType, type IdentityLogTypeValue } from "$lib/types";
 import { writeImage } from "@tauri-apps/plugin-clipboard-manager";
 import { check as checkUpdate } from "@tauri-apps/plugin-updater";
@@ -346,14 +345,6 @@ export function getSkillIcon(skillIcon: string): string {
 
 export function getClassIcon(classId: number | string): string {
   return "/images/classes/" + classId + ".png";
-}
-
-export function getEstherFromNpcId(npcId: number): string {
-  for (const esther of estherMap) {
-    if (esther.npcs.includes(npcId)) return esther.name;
-  }
-
-  return "Unknown";
 }
 
 // from https://stackoverflow.com/a/13542669/11934162

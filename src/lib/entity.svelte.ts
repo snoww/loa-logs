@@ -3,7 +3,6 @@ import {
   customRound,
   formatPlayerName,
   getBaseDamage,
-  getEstherFromNpcId,
   getRDamage,
   isSupportSpec
 } from "$lib/utils";
@@ -38,7 +37,7 @@ export class EntityState {
   name: string = $derived.by(() => {
     if (!this.entity) return "";
     if (this.entity.entityType === EntityType.ESTHER) {
-      return getEstherFromNpcId(this.entity.npcId);
+      return this.entity.name;
     } else if (this.entity.entityType === EntityType.DARK_GRENADE) {
       return "Dark Grenade";
     } else {

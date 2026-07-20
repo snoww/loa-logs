@@ -105,7 +105,7 @@
     "name": "Ealyn",
     "icon": "combined_7.png",
     "skills": [],
-    "npcs": [58900, 58901, 58910, 58912]
+    "npcs": [58900, 58901, 58906, 58908, 58910, 58911, 58912]
   },
   {
     "name": "Jederico",
@@ -148,6 +148,12 @@
     "icon": "esther_7.png",
     "skills": [],
     "npcs": [59600, 59601, 59602, 59603, 59604]
+  },
+  {
+    "name": "Armen",
+    "icon": "combined_18.png",
+    "skills": [],
+    "npcs": []
   },
   {
     "name": "Armen Attack",

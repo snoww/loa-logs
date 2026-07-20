@@ -141,8 +141,6 @@ pub struct Esther {
     pub name: String,
     pub icon: String,
     pub skills: Vec<i32>,
-    #[serde(alias = "npcs")]
-    pub npc_ids: Vec<u32>,
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]
