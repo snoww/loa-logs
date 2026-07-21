@@ -713,9 +713,9 @@ struct RaidProgressionPlayerAggregate {
     spec: Option<String>,
     pulls: i32,
     clears: i32,
-    dps_values: Vec<i64>,
-    rdps_values: Vec<i64>,
-    ndps_values: Vec<i64>,
+    dps_values: Vec<(i64, i64)>,
+    rdps_values: Vec<(i64, i64)>,
+    ndps_values: Vec<(i64, i64)>,
     damage_taken_values: Vec<i64>,
     total_deaths: i32,
     support_ap_values: Vec<f32>,
@@ -1370,7 +1370,9 @@ fn build_progression_summary(
         first_clear_duration: first_clear_pull.map(|pull| pull.duration),
         total_duration: pulls.iter().map(|pull| pull.duration).sum(),
         average_duration: average_i64(pulls.iter().map(|pull| pull.duration)),
-        average_team_dps: average_i64(pulls.iter().map(|pull| pull.team_dps)),
+        average_team_dps: duration_weighted_average(
+            pulls.iter().map(|pull| (pull.team_dps, pull.duration)),
+        ),
         average_damage_taken: average_i64(pulls.iter().map(|pull| pull.damage_taken)),
         average_deaths: average_i32(pulls.iter().map(|pull| pull.deaths)),
         best_progress_bars: best_progress_pull.and_then(|pull| pull.progress_bars),
@@ -1408,7 +1410,9 @@ fn build_progression_gates(pulls: &[RaidProgressionPullAggregate]) -> Vec<RaidPr
                 median_duration: median_i64(clear_rows.iter().map(|pull| pull.duration)),
                 fastest_clear: clear_rows.iter().map(|pull| pull.duration).min(),
                 first_clear: clear_rows.iter().map(|pull| pull.fight_start).min(),
-                average_team_dps: average_i64(rows.iter().map(|pull| pull.team_dps)),
+                average_team_dps: duration_weighted_average(
+                    rows.iter().map(|pull| (pull.team_dps, pull.duration)),
+                ),
                 average_deaths: average_i32(rows.iter().map(|pull| pull.deaths)),
             }
         })
@@ -1560,13 +1564,13 @@ fn update_progression_player(
         player.clears += 1;
     }
     if row.dps > 0 {
-        player.dps_values.push(row.dps);
+        player.dps_values.push((row.dps, row.duration));
     }
     if let Some(rdps) = positive(row.rdps) {
-        player.rdps_values.push(rdps);
+        player.rdps_values.push((rdps, row.duration));
     }
     if let Some(ndps) = positive(row.ndps) {
-        player.ndps_values.push(ndps);
+        player.ndps_values.push((ndps, row.duration));
     }
     if row.player_damage_taken > 0 {
         player.damage_taken_values.push(row.player_damage_taken);
@@ -1597,7 +1601,7 @@ fn update_progression_player(
 
 fn build_progression_player(player: RaidProgressionPlayerAggregate) -> RaidProgressionPlayer {
     let is_support = player.spec.as_deref().is_some_and(is_support_spec);
-    let best_dps = player.dps_values.iter().copied().max();
+    let best_dps = player.dps_values.iter().map(|(dps, _)| *dps).max();
 
     RaidProgressionPlayer {
         name: player.name,
@@ -1608,10 +1612,10 @@ fn build_progression_player(player: RaidProgressionPlayerAggregate) -> RaidProgr
         pulls: player.pulls,
         clears: player.clears,
         clear_rate: percent(player.clears, player.pulls),
-        average_dps: average_i64(player.dps_values.into_iter()),
+        average_dps: duration_weighted_average(player.dps_values.into_iter()),
         best_dps,
-        average_rdps: average_i64(player.rdps_values.into_iter()),
-        average_ndps: average_i64(player.ndps_values.into_iter()),
+        average_rdps: duration_weighted_average(player.rdps_values.into_iter()),
+        average_ndps: duration_weighted_average(player.ndps_values.into_iter()),
         average_damage_taken: average_i64(player.damage_taken_values.into_iter()),
         total_deaths: player.total_deaths,
         deaths_per_pull: if player.pulls == 0 {
@@ -2071,6 +2075,24 @@ fn average_i64(values: impl Iterator<Item = i64>) -> Option<i64> {
     }
 
     if count > 0 { Some(total / count) } else { None }
+}
+
+fn duration_weighted_average(values: impl Iterator<Item = (i64, i64)>) -> Option<i64> {
+    let mut weighted_total = 0_i128;
+    let mut total_duration = 0_i128;
+    for (value, duration) in values {
+        if value <= 0 || duration <= 0 {
+            continue;
+        }
+        weighted_total += value as i128 * duration as i128;
+        total_duration += duration as i128;
+    }
+
+    if total_duration > 0 {
+        i64::try_from(weighted_total / total_duration).ok()
+    } else {
+        None
+    }
 }
 
 fn average_i32(values: impl Iterator<Item = i32>) -> Option<f32> {
@@ -2613,6 +2635,40 @@ mod tests {
 
         assert!(support.is_support);
         assert_eq!(support.average_support_contribution, Some(0.1));
+    }
+
+    #[test]
+    fn progression_dps_averages_are_weighted_by_pull_duration() {
+        let mut long_pull = progression_row("Player", vec![], false);
+        long_pull.duration = 300_000;
+        long_pull.dps = 20;
+        long_pull.rdps = Some(18);
+        long_pull.ndps = Some(19);
+        long_pull.team_dps = 160;
+
+        let mut short_pull = progression_row("Player", vec![], false);
+        short_pull.id = 2;
+        short_pull.fight_start = 2_000;
+        short_pull.duration = 20_000;
+        short_pull.dps = 50;
+        short_pull.rdps = Some(45);
+        short_pull.ndps = Some(48);
+        short_pull.team_dps = 400;
+
+        let statistics = build_raid_progression_statistics(
+            vec![long_pull, short_pull],
+            &HashMap::new(),
+            &HashMap::new(),
+            &[],
+        );
+        let player = statistics.players.first().unwrap();
+
+        assert_eq!(player.average_dps, Some(21));
+        assert_eq!(player.average_rdps, Some(19));
+        assert_eq!(player.average_ndps, Some(20));
+        assert_eq!(player.best_dps, Some(50));
+        assert_eq!(statistics.summary.average_team_dps, Some(175));
+        assert_eq!(statistics.gates[0].average_team_dps, Some(175));
     }
 
     #[test]

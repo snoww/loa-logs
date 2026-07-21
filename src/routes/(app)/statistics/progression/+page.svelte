@@ -656,7 +656,9 @@
       </div>
 
       <div class="h-24 rounded-md border border-neutral-700/70 bg-neutral-800/80 p-3">
-        <div class="text-xs text-neutral-400">Avg Team DPS</div>
+        <QuickTooltip tooltip="DPS weighted by pull duration" class="w-fit">
+          <div class="text-xs text-neutral-400">Avg Team DPS</div>
+        </QuickTooltip>
         <div class="text-2xl font-semibold">{formatDps(statistics.summary.averageTeamDps)}</div>
         <div class="text-xs text-neutral-500">
           avg pull duration {formatDuration(statistics.summary.averageDuration)}
