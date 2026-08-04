@@ -173,6 +173,72 @@ pub struct SkillRuntimeData {
     pub addon_skill_feature_ids: Vec<u32>,
 }
 
+fn has_status_effect_runtime_adjustment(
+    skill_runtime: &SkillRuntimeData,
+    status_effect_id: u32,
+) -> bool {
+    skill_runtime
+        .buff_stat_changes
+        .get(&status_effect_id)
+        .is_some_and(|changes| !changes.is_empty())
+        || skill_runtime
+            .buff_param_changes
+            .get(&status_effect_id)
+            .is_some_and(|(values, _)| !values.is_empty())
+        || skill_runtime
+            .buff_added_stats
+            .get(&status_effect_id)
+            .is_some_and(|stats| !stats.is_empty())
+}
+
+fn skill_runtime_last_used_at(skill_runtime: &SkillRuntimeData) -> Option<i64> {
+    skill_runtime
+        .last_start_at_ms
+        .max(skill_runtime.last_cast_at_ms)
+}
+
+fn select_status_effect_runtime_data<'a>(
+    skill_runtime_data: &'a HashMap<u32, SkillRuntimeData>,
+    source_skill_id: u32,
+    status_effect_id: u32,
+    summon_source_skill_ids: Option<&[u32]>,
+) -> Option<&'a SkillRuntimeData> {
+    let exact_runtime = skill_runtime_data.get(&source_skill_id);
+    if exact_runtime
+        .is_some_and(|runtime| has_status_effect_runtime_adjustment(runtime, status_effect_id))
+    {
+        return exact_runtime;
+    }
+
+    // Summon variants can have their own runtime entry while the selected tripod's
+    // buff adjustment remains attached to the skill that created the summon.
+    summon_source_skill_ids
+        .into_iter()
+        .flatten()
+        .filter_map(|skill_id| skill_runtime_data.get(skill_id))
+        .max_by_key(|runtime| skill_runtime_last_used_at(runtime))
+        .filter(|runtime| has_status_effect_runtime_adjustment(runtime, status_effect_id))
+        .or(exact_runtime)
+}
+
+fn resolve_status_effect_runtime_snapshot(
+    source_entity: &Entity,
+    source_skill_id: u32,
+    status_effect_id: u32,
+) -> Option<SkillRuntimeData> {
+    let summon_source_skill_ids = SKILL_DATA
+        .get(&source_skill_id)
+        .and_then(|skill| skill.summon_source_skills.as_deref());
+
+    select_status_effect_runtime_data(
+        &source_entity.skill_runtime_data,
+        source_skill_id,
+        status_effect_id,
+        summon_source_skill_ids,
+    )
+    .cloned()
+}
+
 #[derive(Debug, Default, Clone)]
 pub struct ChangedCombatEffect {
     pub combat_effect_id: u32,
@@ -1732,9 +1798,14 @@ impl EntityTracker {
         } else {
             None
         };
-        status_effect.source_skill_runtime_snapshot = status_effect
-            .source_skill_id
-            .and_then(|skill_id| source_entity.skill_runtime_data.get(&skill_id).cloned());
+        status_effect.source_skill_runtime_snapshot =
+            status_effect.source_skill_id.and_then(|skill_id| {
+                resolve_status_effect_runtime_snapshot(
+                    source_entity,
+                    skill_id,
+                    status_effect.status_effect_id,
+                )
+            });
     }
 
     pub fn refresh_status_effect_snapshots(
@@ -2779,4 +2850,227 @@ fn ark_grid_order_from_result(result: &PKTPCInspectResult) -> Option<ArkGridOrde
 
     (ark_grid.sun.is_some() || ark_grid.moon.is_some() || ark_grid.star.is_some())
         .then_some(ark_grid)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const SHURDI_SKILL_ID: u32 = 20160;
+    const SHURDI_VARIANT_SKILL_ID: u32 = 20174;
+    const SHINING_GROWTH_STATUS_EFFECT_ID: u32 = 201618;
+    const EVOKE_SKILL_ID: u32 = 19030;
+    const ALTERNATE_EVOKE_SKILL_ID: u32 = 19300;
+    const EVOKE_SUMMON_VARIANT_SKILL_ID: u32 = 427603;
+    const MAGICK_ADDICTION_STATUS_EFFECT_ID: u32 = 190330;
+
+    fn runtime_with_stat_change(
+        status_effect_id: u32,
+        value: i64,
+        last_start_at_ms: i64,
+    ) -> SkillRuntimeData {
+        SkillRuntimeData {
+            last_start_at_ms: Some(last_start_at_ms),
+            buff_stat_changes: HashMap::from([(
+                status_effect_id,
+                HashMap::from([("critical_hit_rate".to_string(), (value, true))]),
+            )]),
+            ..Default::default()
+        }
+    }
+
+    fn runtime_with_param_change(
+        status_effect_id: u32,
+        value: i64,
+        last_start_at_ms: i64,
+    ) -> SkillRuntimeData {
+        SkillRuntimeData {
+            last_start_at_ms: Some(last_start_at_ms),
+            buff_param_changes: HashMap::from([(status_effect_id, (vec![value], true))]),
+            ..Default::default()
+        }
+    }
+
+    fn assert_selected_runtime(
+        skill_runtime_data: &HashMap<u32, SkillRuntimeData>,
+        source_skill_id: u32,
+        status_effect_id: u32,
+        summon_source_skill_ids: Option<&[u32]>,
+        expected_skill_id: u32,
+    ) {
+        let selected = select_status_effect_runtime_data(
+            skill_runtime_data,
+            source_skill_id,
+            status_effect_id,
+            summon_source_skill_ids,
+        )
+        .expect("a runtime snapshot should be selected");
+        let expected = skill_runtime_data
+            .get(&expected_skill_id)
+            .expect("the expected runtime should exist");
+
+        assert!(std::ptr::eq(selected, expected));
+    }
+
+    #[test]
+    fn exact_runtime_adjustment_takes_precedence_over_summon_source() {
+        let skill_runtime_data = HashMap::from([
+            (
+                SHURDI_VARIANT_SKILL_ID,
+                runtime_with_stat_change(SHINING_GROWTH_STATUS_EFFECT_ID, 50, 100),
+            ),
+            (
+                SHURDI_SKILL_ID,
+                runtime_with_stat_change(SHINING_GROWTH_STATUS_EFFECT_ID, 97, 200),
+            ),
+        ]);
+
+        assert_selected_runtime(
+            &skill_runtime_data,
+            SHURDI_VARIANT_SKILL_ID,
+            SHINING_GROWTH_STATUS_EFFECT_ID,
+            Some(&[SHURDI_SKILL_ID]),
+            SHURDI_VARIANT_SKILL_ID,
+        );
+    }
+
+    #[test]
+    fn summon_variant_uses_source_runtime_for_matching_buff_adjustment() {
+        let skill_runtime_data = HashMap::from([
+            (
+                SHURDI_VARIANT_SKILL_ID,
+                SkillRuntimeData {
+                    last_start_at_ms: Some(200),
+                    ..Default::default()
+                },
+            ),
+            (
+                SHURDI_SKILL_ID,
+                runtime_with_stat_change(SHINING_GROWTH_STATUS_EFFECT_ID, 97, 100),
+            ),
+        ]);
+
+        assert_selected_runtime(
+            &skill_runtime_data,
+            SHURDI_VARIANT_SKILL_ID,
+            SHINING_GROWTH_STATUS_EFFECT_ID,
+            Some(&[SHURDI_SKILL_ID]),
+            SHURDI_SKILL_ID,
+        );
+    }
+
+    #[test]
+    fn summon_source_adjustment_for_another_buff_is_ignored() {
+        let skill_runtime_data = HashMap::from([
+            (SHURDI_VARIANT_SKILL_ID, SkillRuntimeData::default()),
+            (
+                SHURDI_SKILL_ID,
+                runtime_with_stat_change(SHINING_GROWTH_STATUS_EFFECT_ID + 1, 97, 100),
+            ),
+        ]);
+
+        assert_selected_runtime(
+            &skill_runtime_data,
+            SHURDI_VARIANT_SKILL_ID,
+            SHINING_GROWTH_STATUS_EFFECT_ID,
+            Some(&[SHURDI_SKILL_ID]),
+            SHURDI_VARIANT_SKILL_ID,
+        );
+    }
+
+    #[test]
+    fn skill_without_summon_sources_keeps_exact_runtime() {
+        let source_skill_id = 21020;
+        let skill_runtime_data = HashMap::from([(source_skill_id, SkillRuntimeData::default())]);
+
+        assert_selected_runtime(
+            &skill_runtime_data,
+            source_skill_id,
+            SHINING_GROWTH_STATUS_EFFECT_ID,
+            None,
+            source_skill_id,
+        );
+    }
+
+    #[test]
+    fn newest_matching_summon_source_runtime_is_selected() {
+        let skill_runtime_data = HashMap::from([
+            (EVOKE_SUMMON_VARIANT_SKILL_ID, SkillRuntimeData::default()),
+            (
+                EVOKE_SKILL_ID,
+                runtime_with_param_change(MAGICK_ADDICTION_STATUS_EFFECT_ID, 72, 100),
+            ),
+            (
+                ALTERNATE_EVOKE_SKILL_ID,
+                runtime_with_param_change(MAGICK_ADDICTION_STATUS_EFFECT_ID, 77, 200),
+            ),
+        ]);
+
+        assert_selected_runtime(
+            &skill_runtime_data,
+            EVOKE_SUMMON_VARIANT_SKILL_ID,
+            MAGICK_ADDICTION_STATUS_EFFECT_ID,
+            Some(&[EVOKE_SKILL_ID, ALTERNATE_EVOKE_SKILL_ID]),
+            ALTERNATE_EVOKE_SKILL_ID,
+        );
+    }
+
+    #[test]
+    fn newer_unadjusted_summon_source_blocks_stale_adjustment() {
+        let skill_runtime_data = HashMap::from([
+            (EVOKE_SUMMON_VARIANT_SKILL_ID, SkillRuntimeData::default()),
+            (
+                EVOKE_SKILL_ID,
+                runtime_with_param_change(MAGICK_ADDICTION_STATUS_EFFECT_ID, 72, 100),
+            ),
+            (
+                ALTERNATE_EVOKE_SKILL_ID,
+                SkillRuntimeData {
+                    last_start_at_ms: Some(200),
+                    ..Default::default()
+                },
+            ),
+        ]);
+
+        assert_selected_runtime(
+            &skill_runtime_data,
+            EVOKE_SUMMON_VARIANT_SKILL_ID,
+            MAGICK_ADDICTION_STATUS_EFFECT_ID,
+            Some(&[EVOKE_SKILL_ID, ALTERNATE_EVOKE_SKILL_ID]),
+            EVOKE_SUMMON_VARIANT_SKILL_ID,
+        );
+    }
+
+    #[test]
+    fn all_runtime_buff_adjustment_types_are_recognized() {
+        let stat_change = runtime_with_stat_change(SHINING_GROWTH_STATUS_EFFECT_ID, 97, 100);
+        assert!(has_status_effect_runtime_adjustment(
+            &stat_change,
+            SHINING_GROWTH_STATUS_EFFECT_ID
+        ));
+
+        let param_change = SkillRuntimeData {
+            buff_param_changes: HashMap::from([(
+                SHINING_GROWTH_STATUS_EFFECT_ID,
+                (vec![97], true),
+            )]),
+            ..Default::default()
+        };
+        assert!(has_status_effect_runtime_adjustment(
+            &param_change,
+            SHINING_GROWTH_STATUS_EFFECT_ID
+        ));
+
+        let added_stat = SkillRuntimeData {
+            buff_added_stats: HashMap::from([(
+                SHINING_GROWTH_STATUS_EFFECT_ID,
+                vec![crate::models::PassiveOption::default()],
+            )]),
+            ..Default::default()
+        };
+        assert!(has_status_effect_runtime_adjustment(
+            &added_stat,
+            SHINING_GROWTH_STATUS_EFFECT_ID
+        ));
+    }
 }

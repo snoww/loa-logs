@@ -3545,6 +3545,39 @@ mod tests {
     use super::*;
 
     #[test]
+    fn shining_growth_runtime_adjustment_resolves_full_crit_rate() {
+        let status_effect_id = 201618_u32;
+        let skill_buff = crate::models::SkillBuffData {
+            id: status_effect_id as i32,
+            per_level_data: HashMap::from([(
+                "1".to_string(),
+                PerLevelData {
+                    passive_options: vec![crate::models::PassiveOption {
+                        option_type: "stat".to_string(),
+                        key_stat: "critical_hit_rate".to_string(),
+                        value: 600,
+                        ..Default::default()
+                    }],
+                    ..Default::default()
+                },
+            )]),
+            ..Default::default()
+        };
+        let skill_runtime = SkillRuntimeData {
+            buff_stat_changes: HashMap::from([(
+                status_effect_id,
+                HashMap::from([("critical_hit_rate".to_string(), (97, true))]),
+            )]),
+            ..Default::default()
+        };
+
+        let resolved = get_level_data_resolved(&skill_buff, 1, Some(&skill_runtime), 1)
+            .expect("Shining Growth level data should resolve");
+
+        assert_eq!(resolved.passive_options[0].value, 1182);
+    }
+
+    #[test]
     fn cached_inspect_base_stats_match_fresh_rebuild() {
         let snapshot = InspectSnapshot::default();
         let owner_id = 123;
