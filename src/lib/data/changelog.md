@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.48.4 - July 22th, 2026
+    v1.48.5 - August 5th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -17,5 +17,4 @@
 
 #### BUG FIXES AND IMPROVEMENTS
 
-- potential fix for sidereal damage counted in player
-- dps in raid prog stats are now weighted by pull duration
+- fix issue with shurdi crit rate, causing average crit to be miscalculated for summoners (and other similar effects)

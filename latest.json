@@ -1,15 +1,15 @@
 {
-  "version": "v1.48.4",
-  "notes": "### v1.48.4 - July 18th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n### Note: ExitLag users must check the ExitLag Compatibility setting\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed some missing sidereals\n- added separate warning for nineveh missing\n- fixed certain filters resetting when changing raid in raid prog stats",
+  "version": "v1.48.5",
+  "notes": "### v1.48.5 - July 18th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n### Note: ExitLag users must check the ExitLag Compatibility setting\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed some missing sidereals\n- added separate warning for nineveh missing\n- fixed certain filters resetting when changing raid in raid prog stats",
   "pub_date": "2026-07-22T04:20:08.001Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.48.4/LOA.Logs_1.48.4_x64-setup.exe",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmR3NzhITEZzMTFQUHdCWXFqTGxwYUJVNnV4QmhZWUEzenpFY3FBOGlINEZwTSs2djE2cktGSVJyWXYyZWZFZ1lTejE2Q0hZRVRMS3BOay9nTUxoTlFnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0Njg2MTg4CWZpbGU6TE9BIExvZ3NfMS40OC40X3g2NC1zZXR1cC5leGUKL2dhcW5BbkRBYWluRW1KQ1J5ZWs2OEpkZk9yMFQ1WFhmMzJoRktVdzZDdzBIaXBhTGp0Uk9VT0hpc1BKOUgwMUdGd25XMFBLZUFkK1ZNRXlwNWNCQXc9PQo="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.48.5/LOA.Logs_1.48.5_x64-setup.exe",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmZ6RVRUMVFYbzhlSWdNNC9NNlNNUC83ejBVUWYwM0JZZ2NOVnd2RGI4MTNSV2ljbmJwbmIxQU5yMWY0a2VyUTQ2ZTYyazJzaDVmUE1zTWhXdGQ4UWc0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg1ODY3NzQ3CWZpbGU6TE9BIExvZ3NfMS40OC41X3g2NC1zZXR1cC5leGUKRWlRN3BXK2RhWGxwSnJEZVNuL2ppWTNLb1dzRW9VRklsUG1lOTZEblZqR0lLeU9JRERyeDVuLytwWXBwZ3JDdDEwWXZrbDREMWIxYlMxQk5kZ004Qmc9PQo="
     },
     "linux-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.48.4/LOA.Logs_1.48.4_amd64.AppImage",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlVsSEU5a3UzYldaa1NoR0IvdGVpNWp2YnB5U3VUSXJHcmg1V2pNeW55NnFDbW1YQVJlTGY2N1NSSS9vWEtJeXE3NWN5Mkp1Uk8ydlNDZ1BQZXFvUWdjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0Njg2NTc4CWZpbGU6TE9BIExvZ3NfMS40OC40X2FtZDY0LkFwcEltYWdlCm96OXRkZWEvelp4V3JzRUlSRld1MVJUc205TmZzV0NzdlZ6MzhRN210NjQyeDU1UnpUNHYxVUZPMVkrQjhTTDNsUTcxMjlsQ3NvYWthUTl2eGFCSEFBPT0K"
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.48.5/LOA.Logs_1.48.5_amd64.AppImage",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmYzTlErZGxsS1N0bDlxdjRoVlZpMW9BNXViR0xOT29lZTZZK2cxNUJDRTVKV1RpbFJsMlRtT0ZkcldDeVVySEF6NlNVcjI0NEpMYlNvUUJ1UURjM0FNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg1ODY4MDgyCWZpbGU6TE9BIExvZ3NfMS40OC41X2FtZDY0LkFwcEltYWdlCi9PRTNnUUFaNUVqd1Vod2htcjJVcVowQndRZVBIQVFkdGl6c1Z1YmhZV2ZXdkliWG52Yi9JTXdZRi83UVJwZDl2VWd4L0FCeFVKN0MwK2Z0NVFjTUJRPT0K"
     }
   }
 }
