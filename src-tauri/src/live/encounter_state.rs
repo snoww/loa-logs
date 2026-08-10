@@ -1402,7 +1402,7 @@ impl EncounterState {
                 self.encounter.current_boss_name.clone()
             };
 
-            if let Some(difficulty) = adjusted_extreme_aegir_difficulty(
+            if let Some(difficulty) = adjusted_extreme_difficulty(
                 &self.encounter.current_boss_name,
                 &self.raid_difficulty,
                 npc.max_hp,
@@ -4800,27 +4800,41 @@ fn status_effect_is_infinite(status_effect: &StatusEffectDetails) -> bool {
     status_effect.expiration_delay <= 0.0 || status_effect.expiration_delay > 3600.0
 }
 
-fn adjusted_extreme_aegir_difficulty(
+fn adjusted_extreme_difficulty(
     boss_name: &str,
     difficulty: &str,
     max_hp: i64,
 ) -> Option<&'static str> {
-    if boss_name != "Aegir, the Oppressor" || difficulty != "Extreme" {
+    if difficulty != "Extreme" {
         return None;
     }
 
-    if max_hp > 4_500_000_000_000 {
-        Some("Extreme Nightmare")
-    } else if max_hp > 2_500_000_000_000 {
-        Some("Extreme Hard")
-    } else {
-        Some("Extreme Normal")
+    if boss_name == "Aegir, the Oppressor" {
+        return if max_hp > 4_500_000_000_000 {
+            Some("Extreme Nightmare")
+        } else if max_hp > 2_500_000_000_000 {
+            Some("Extreme Hard")
+        } else {
+            Some("Extreme Normal")
+        };
     }
+
+    if boss_name == "Phantom Legion Commander Brelshaza" {
+        return if max_hp > 4_500_000_000_000 {
+            Some("Extreme Nightmare")
+        } else if max_hp > 2_000_000_000_000 {
+            Some("Extreme Hard")
+        } else {
+            Some("Extreme Normal")
+        };
+    }
+
+    None
 }
 
 #[cfg(test)]
 mod tests {
-    use super::adjusted_extreme_aegir_difficulty;
+    use super::adjusted_extreme_difficulty;
 
     #[test]
     fn adjusts_extreme_aegir_difficulty_from_boss_hp() {
@@ -4833,7 +4847,28 @@ mod tests {
 
         for (max_hp, expected) in cases {
             assert_eq!(
-                adjusted_extreme_aegir_difficulty("Aegir, the Oppressor", "Extreme", max_hp),
+                adjusted_extreme_difficulty("Aegir, the Oppressor", "Extreme", max_hp),
+                Some(expected)
+            );
+        }
+    }
+
+    #[test]
+    fn adjusts_extreme_brelshaza_difficulty_from_boss_hp() {
+        let cases = [
+            (4_500_000_000_001, "Extreme Nightmare"),
+            (4_500_000_000_000, "Extreme Hard"),
+            (2_000_000_000_001, "Extreme Hard"),
+            (2_000_000_000_000, "Extreme Normal"),
+        ];
+
+        for (max_hp, expected) in cases {
+            assert_eq!(
+                adjusted_extreme_difficulty(
+                    "Phantom Legion Commander Brelshaza",
+                    "Extreme",
+                    max_hp
+                ),
                 Some(expected)
             );
         }
@@ -4842,9 +4877,13 @@ mod tests {
     #[test]
     fn does_not_adjust_other_bosses_or_difficulties() {
         assert_eq!(
-            adjusted_extreme_aegir_difficulty(
-                "Aegir, the Oppressor",
-                "Extreme Hard",
+            adjusted_extreme_difficulty("Aegir, the Oppressor", "Extreme Hard", 5_000_000_000_000),
+            None
+        );
+        assert_eq!(
+            adjusted_extreme_difficulty(
+                "Phantom Manifester Brelshaza",
+                "Extreme",
                 5_000_000_000_000
             ),
             None
