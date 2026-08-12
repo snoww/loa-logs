@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.48.5 - August 5th, 2026
+    v1.49.0 - August 12th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -15,6 +15,6 @@
 
 ### Note: ExitLag users must check the ExitLag Compatibility setting
 
-#### BUG FIXES AND IMPROVEMENTS
+#### NEW FEATURES
 
-- fix issue with shurdi crit rate, causing average crit to be miscalculated for summoners (and other similar effects)
+- updated meter for ex brelshaza
