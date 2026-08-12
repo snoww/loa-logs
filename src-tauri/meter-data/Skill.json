@@ -570973,6 +570973,9 @@
       "16": {
         "manaCost": 0
       },
+      "17": {
+        "manaCost": 0
+      },
       "9": {
         "manaCost": 0
       },
@@ -571079,6 +571082,9 @@
         "manaCost": 0
       },
       "16": {
+        "manaCost": 0
+      },
+      "17": {
         "manaCost": 0
       },
       "9": {
@@ -572002,12 +572008,6 @@
       "6": {
         "manaCost": 0
       },
-      "7": {
-        "manaCost": 0
-      },
-      "8": {
-        "manaCost": 0
-      },
       "9": {
         "manaCost": 0
       },
@@ -572066,12 +572066,6 @@
         "manaCost": 0
       },
       "6": {
-        "manaCost": 0
-      },
-      "7": {
-        "manaCost": 0
-      },
-      "8": {
         "manaCost": 0
       },
       "9": {
@@ -572174,12 +572168,6 @@
         "manaCost": 0
       },
       "6": {
-        "manaCost": 0
-      },
-      "7": {
-        "manaCost": 0
-      },
-      "8": {
         "manaCost": 0
       },
       "9": {
@@ -572959,6 +572947,9 @@
       "10": {
         "manaCost": 0
       },
+      "11": {
+        "manaCost": 0
+      },
       "5": {
         "manaCost": 0
       },
@@ -572997,6 +572988,9 @@
       },
       "3": {
         "manaCost": 0
+      },
+      "4": {
+        "manaCost": 0
       }
     }
   },
@@ -573023,6 +573017,9 @@
         "manaCost": 0
       },
       "3": {
+        "manaCost": 0
+      },
+      "4": {
         "manaCost": 0
       }
     }
@@ -573072,6 +573069,9 @@
       },
       "3": {
         "manaCost": 0
+      },
+      "4": {
+        "manaCost": 0
       }
     }
   },
@@ -573098,6 +573098,9 @@
         "manaCost": 0
       },
       "3": {
+        "manaCost": 0
+      },
+      "4": {
         "manaCost": 0
       }
     }
@@ -573126,6 +573129,9 @@
       },
       "3": {
         "manaCost": 0
+      },
+      "4": {
+        "manaCost": 0
       }
     }
   },
@@ -573153,6 +573159,9 @@
       },
       "3": {
         "manaCost": 0
+      },
+      "4": {
+        "manaCost": 0
       }
     }
   },
@@ -573179,6 +573188,9 @@
         "manaCost": 0
       },
       "13": {
+        "manaCost": 0
+      },
+      "14": {
         "manaCost": 0
       },
       "3": {
@@ -573239,6 +573251,9 @@
         "manaCost": 0
       },
       "13": {
+        "manaCost": 0
+      },
+      "14": {
         "manaCost": 0
       },
       "3": {
@@ -573397,6 +573412,9 @@
       "13": {
         "manaCost": 0
       },
+      "14": {
+        "manaCost": 0
+      },
       "3": {
         "manaCost": 0
       },
@@ -573455,6 +573473,9 @@
         "manaCost": 0
       },
       "13": {
+        "manaCost": 0
+      },
+      "14": {
         "manaCost": 0
       },
       "3": {
@@ -573517,6 +573538,9 @@
       "13": {
         "manaCost": 0
       },
+      "14": {
+        "manaCost": 0
+      },
       "3": {
         "manaCost": 0
       },
@@ -573575,6 +573599,9 @@
         "manaCost": 0
       },
       "13": {
+        "manaCost": 0
+      },
+      "14": {
         "manaCost": 0
       },
       "3": {
@@ -589388,6 +589415,90 @@
     "name": "Squeeze",
     "desc": "Squeeze the fluffy ball to make a sound.",
     "type": "normal",
+    "grade": "normal",
+    "cooldown": 8000,
+    "classId": 0,
+    "icon": "vehicle_65.png",
+    "directionalMask": 0,
+    "identityCategory": "none",
+    "isHyperAwakening": false,
+    "groups": null,
+    "sourceSkills": null,
+    "summonSourceSkills": null,
+    "levels": {
+      "1": {
+        "manaCost": 0
+      }
+    }
+  },
+  "98500": {
+    "id": 98500,
+    "name": "Forward Acceleration",
+    "desc": "Pedal at max speed to quickly charge forward.",
+    "type": "normal",
+    "grade": "normal",
+    "cooldown": 10000,
+    "classId": 0,
+    "icon": "vehicle_60.png",
+    "directionalMask": 0,
+    "identityCategory": "none",
+    "isHyperAwakening": false,
+    "groups": null,
+    "sourceSkills": null,
+    "summonSourceSkills": null,
+    "levels": {
+      "1": {
+        "manaCost": 0
+      }
+    }
+  },
+  "98501": {
+    "id": 98501,
+    "name": "Headlight",
+    "desc": "Gaze at the night sky adorned with shining stars.",
+    "type": "normal",
+    "grade": "normal",
+    "cooldown": 8000,
+    "classId": 0,
+    "icon": "vehicle_63.png",
+    "directionalMask": 0,
+    "identityCategory": "none",
+    "isHyperAwakening": false,
+    "groups": null,
+    "sourceSkills": null,
+    "summonSourceSkills": null,
+    "levels": {
+      "1": {
+        "manaCost": 0
+      }
+    }
+  },
+  "98502": {
+    "id": 98502,
+    "name": "Shake in Place",
+    "desc": "Panda wobbles the bicycle.",
+    "type": "normal",
+    "grade": "normal",
+    "cooldown": 8000,
+    "classId": 0,
+    "icon": "vehicle_64.png",
+    "directionalMask": 0,
+    "identityCategory": "none",
+    "isHyperAwakening": false,
+    "groups": null,
+    "sourceSkills": null,
+    "summonSourceSkills": null,
+    "levels": {
+      "1": {
+        "manaCost": 0
+      }
+    }
+  },
+  "98503": {
+    "id": 98503,
+    "name": "Speed's Fervor",
+    "desc": "Pop a wheelie and advance forward.",
+    "type": "holding",
     "grade": "normal",
     "cooldown": 8000,
     "classId": 0,

@@ -313216,7 +313216,7 @@
     "id": 70013,
     "effects": [
       {
-        "desc": "<FONT SIZE='14' COLOR='#CE43FC'>[Sunlight Fragrance]</FONT>\nUpon using a Hyper Awakening Technique, creates a magick circle with an <FONT COLOR='#ffff99'>8-meter</FONT> radius that explodes, dealing <FONT COLOR='#FF7F00'><$CALC_COMMA (<$PLAYER_INFO ORBPOWER 657830002/>*(<$TABLE_SKILLEFFECT ValueF 171001001/>/10000)+((<$TABLE_SKILLEFFECT ValueA 171001001/> + <$TABLE_SKILLEFFECT ValueB 171001001/>)/2))/></FONT> fixed Damage and restoring the HP of allies within by <FONT COLOR='#99ff99'>27,500</FONT>.\n(Cooldown: 40s)",
+        "desc": "<FONT SIZE='14' COLOR='#CE43FC'>[Sunlight Fragrance]</FONT>\nUpon using a Hyper Awakening Technique, creates a magick circle with an <FONT COLOR='#ffff99'>8-meter</FONT> radius that explodes, dealing<FONT COLOR='#FF7F00'><$CALC_COMMA (<$PLAYER_INFO ORBPOWER 657830002/>*(<$TABLE_SKILLEFFECT ValueF 171001001/>/10000)+((<$TABLE_SKILLEFFECT ValueA 171001001/> + <$TABLE_SKILLEFFECT ValueB 171001001/>)/2))/></FONT> fixed Damage and restoring the HP of allies within by <FONT COLOR='#99ff99'>27,500</FONT>.\n(Cooldown: 40s)",
         "cooldown": 40000,
         "ratio": 10000,
         "conditions": [

@@ -10,7 +10,9 @@ use crate::live::stat_type::StatType;
 use crate::models::ExternalResourceAddon;
 
 use hashbrown::HashMap;
-use meter_defs::defs::{ItemData, PKTPCInspectResult};
+use meter_defs::defs::{
+    ArkPassiveItemOption, BraceletItemOption, ItemData, MinMaxItemOption, PKTPCInspectResult,
+};
 use std::sync::OnceLock;
 
 const DEFAULT_ARK_PASSIVE_KARMA_EVOLUTION_DAMAGE: f64 = 0.06;
@@ -248,17 +250,15 @@ fn apply_item(
             let ark_passive_data = &equippable.ark_passive_data;
             if ark_passive_data.b_0 == 1 {
                 item_debug.ark_passive_line_count = ark_passive_data
-                    .bytearraylist_0
+                    .ark_passive_item_options
                     .as_deref()
                     .map_or(0, |entries| entries.len());
-                for chunk in split_fixed_chunks(
-                    ark_passive_data
-                        .bytearraylist_0
-                        .as_deref()
-                        .unwrap_or_default(),
-                    30,
-                ) {
-                    apply_ark_passive_addon(chunk, raw_stat_pairs, derived);
+                for option in ark_passive_data
+                    .ark_passive_item_options
+                    .as_deref()
+                    .unwrap_or_default()
+                {
+                    apply_ark_passive_addon(option, raw_stat_pairs, derived);
                 }
             }
 
@@ -267,23 +267,23 @@ fn apply_item(
                 && let Some(bracer) = bracer_data.bracer_stats.as_ref()
             {
                 item_debug.bracer_line_count =
-                    bracer.bytearraylist_0.len() + bracer.bytearraylist_1.len();
-                for chunk in split_fixed_chunks(bracer.bytearraylist_0.as_slice(), 30) {
-                    apply_bracer_addon(chunk, raw_stat_pairs, derived);
+                    bracer.bracelet_item_options.len() + bracer.bracelet_item_options0.len();
+                for option in &bracer.bracelet_item_options {
+                    apply_bracer_addon(option, raw_stat_pairs, derived);
                 }
-                for chunk in split_fixed_chunks(bracer.bytearraylist_1.as_slice(), 30) {
-                    apply_bracer_addon(chunk, raw_stat_pairs, derived);
+                for option in &bracer.bracelet_item_options0 {
+                    apply_bracer_addon(option, raw_stat_pairs, derived);
                 }
             }
 
-            for chunk in split_fixed_chunks(equippable.quality_lines.as_slice(), 29) {
+            for quality_line in &equippable.quality_lines {
                 item_debug.quality_line_count += 1;
-                apply_quality_addon(chunk, raw_stat_pairs, derived);
+                apply_quality_addon(quality_line, raw_stat_pairs, derived);
             }
         }
 
         if item_data.b_0 == 7
-            && let Some(gem_bytes) = item_data.bytearraylist_4.as_deref()
+            && let Some(gem_bytes) = item_data.bytearraylist_0.as_deref()
         {
             item_debug.gem_line_count = split_fixed_chunks(gem_bytes, 9).count();
             if let Some(gem_layout) = resolve_gem_layout_once(gem_bytes) {
@@ -819,44 +819,36 @@ fn apply_parsed_item_addon(
 }
 
 fn apply_ark_passive_addon(
-    bytes: &[u8],
+    option: &ArkPassiveItemOption,
     raw_stat_pairs: &HashMap<u8, i64>,
     derived: &mut InspectDerivedStats,
 ) {
-    let addon = parse_ark_passive_addon(bytes);
+    let addon = parse_ark_passive_addon(option);
     apply_parsed_item_addon(addon, raw_stat_pairs, derived);
 }
 
 fn apply_bracer_addon(
-    bytes: &[u8],
+    option: &BraceletItemOption,
     raw_stat_pairs: &HashMap<u8, i64>,
     derived: &mut InspectDerivedStats,
 ) {
-    let addon = parse_bracer_addon(bytes);
+    let addon = parse_bracer_addon(option);
     apply_parsed_item_addon(addon, raw_stat_pairs, derived);
 }
 
 fn apply_quality_addon(
-    bytes: &[u8],
+    option: &MinMaxItemOption,
     raw_stat_pairs: &HashMap<u8, i64>,
     derived: &mut InspectDerivedStats,
 ) {
-    let addon = parse_quality_addon(bytes);
+    let addon = parse_quality_addon(option);
     apply_parsed_item_addon(addon, raw_stat_pairs, derived);
 }
 
-fn parse_ark_passive_addon(bytes: &[u8]) -> ParsedItemAddon {
-    assert!(
-        bytes.len() >= 30,
-        "invalid ark passive addon byte length: {}",
-        bytes.len()
-    );
-    let _item_grade_option_id = read_u32(bytes, 9);
-    let addon_type = bytes[13];
-    let _min_value = read_i32(bytes, 22) as i64;
-    let original_stat = read_u32(bytes, 18);
-    let _max_value = read_i32(bytes, 5) as i64;
-    let mut value = read_i32(bytes, 1) as i64;
+fn parse_ark_passive_addon(option: &ArkPassiveItemOption) -> ParsedItemAddon {
+    let addon_type = option.addon_type;
+    let original_stat = option.key;
+    let mut value = option.value as i32 as i64;
     let mut stat_type = original_stat;
 
     match AddonType::from_raw(addon_type) {
@@ -903,17 +895,10 @@ fn parse_ark_passive_addon(bytes: &[u8]) -> ParsedItemAddon {
     }
 }
 
-fn parse_bracer_addon(bytes: &[u8]) -> ParsedItemAddon {
-    assert!(
-        bytes.len() >= 30,
-        "invalid bracer addon byte length: {}",
-        bytes.len()
-    );
-    let addon_type = bytes[13];
-    let _min_value = read_i32(bytes, 22) as i64;
-    let original_stat = read_u32(bytes, 18);
-    let _max_value = read_i32(bytes, 5) as i64;
-    let value = read_i32(bytes, 1) as i64;
+fn parse_bracer_addon(option: &BraceletItemOption) -> ParsedItemAddon {
+    let addon_type = option.addon_type;
+    let original_stat = option.key;
+    let value = option.value as i32 as i64;
     let mut stat_type = original_stat;
 
     match AddonType::from_raw(addon_type) {
@@ -937,13 +922,8 @@ fn parse_bracer_addon(bytes: &[u8]) -> ParsedItemAddon {
     }
 }
 
-fn parse_quality_addon(bytes: &[u8]) -> ParsedItemAddon {
-    assert!(
-        bytes.len() >= 29,
-        "invalid quality addon byte length: {}",
-        bytes.len()
-    );
-    let addon_type = bytes[12];
+fn parse_quality_addon(option: &MinMaxItemOption) -> ParsedItemAddon {
+    let addon_type = option.addon_type;
     assert!(
         AddonType::from_raw(addon_type) == Some(AddonType::STAT),
         "unhandled quality addon type: {addon_type}"
@@ -951,9 +931,9 @@ fn parse_quality_addon(bytes: &[u8]) -> ParsedItemAddon {
 
     ParsedItemAddon {
         addon_type,
-        stat_type: read_u32(bytes, 17),
-        original_stat: read_u32(bytes, 17),
-        value: read_i32(bytes, 0) as i64,
+        stat_type: option.key,
+        original_stat: option.key,
+        value: option.value as i32 as i64,
     }
 }
 
