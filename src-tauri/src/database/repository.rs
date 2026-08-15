@@ -1477,7 +1477,6 @@ fn progression_death_counts(rows: &[RaidProgressionRow]) -> BTreeMap<String, i32
         return BTreeMap::new();
     };
     let first_elapsed = first_event.elapsed;
-    let first_player_name = first_event.player_name.clone();
 
     let mut counts = BTreeMap::new();
     if rows.first().is_some_and(|row| row.cleared) {
@@ -1487,14 +1486,9 @@ fn progression_death_counts(rows: &[RaidProgressionRow]) -> BTreeMap<String, i32
         return counts;
     }
 
-    // on a wipe, the first death gets counted and every later death
-    // belongs to the wipe. if everyone dies within a short window,
-    // everyone gets a death added.
-    let active_players = rows
-        .iter()
-        .map(|row| row.player_name.as_str())
-        .collect::<BTreeSet<_>>();
-    let simultaneous_players = events
+    // on a wipe, count everyone in the first death cluster. Later deaths
+    // belong to the wipe or restart and are not counted.
+    let initial_death_players = events
         .iter()
         .take_while(|event| {
             event.elapsed.saturating_sub(first_elapsed) <= FULL_WIPE_DEATH_WINDOW_MS
@@ -1502,12 +1496,8 @@ fn progression_death_counts(rows: &[RaidProgressionRow]) -> BTreeMap<String, i32
         .map(|event| event.player_name.as_str())
         .collect::<BTreeSet<_>>();
 
-    if simultaneous_players == active_players {
-        for player_name in simultaneous_players {
-            counts.insert(player_name.to_string(), 1);
-        }
-    } else {
-        counts.insert(first_player_name, 1);
+    for player_name in initial_death_players {
+        counts.insert(player_name.to_string(), 1);
     }
 
     counts
@@ -1594,8 +1584,10 @@ fn update_progression_player(
     }
     player.total_deaths += deaths;
     player.last_seen = player.last_seen.max(row.fight_start);
-    if player.spec.is_none() {
-        player.spec = row.spec.clone();
+    if player.spec.as_deref().is_none_or(|spec| spec == "Unknown")
+        && row.spec.as_deref().is_some_and(|spec| spec != "Unknown")
+    {
+        player.spec.clone_from(&row.spec);
     }
 }
 
@@ -2638,6 +2630,32 @@ mod tests {
     }
 
     #[test]
+    fn progression_player_uses_known_spec_from_a_later_pull() {
+        let mut short_pull = progression_row("Support", vec![], false);
+        short_pull.class_id = 204;
+        short_pull.class_name = "Bard".to_string();
+        short_pull.spec = Some("Unknown".to_string());
+
+        let mut later_pull = progression_row("Support", vec![], false);
+        later_pull.id = 2;
+        later_pull.fight_start = 2_000;
+        later_pull.class_id = 204;
+        later_pull.class_name = "Bard".to_string();
+        later_pull.spec = Some("Desperate Salvation".to_string());
+
+        let statistics = build_raid_progression_statistics(
+            vec![short_pull, later_pull],
+            &HashMap::new(),
+            &HashMap::new(),
+            &[],
+        );
+        let support = statistics.players.first().unwrap();
+
+        assert_eq!(support.spec.as_deref(), Some("Desperate Salvation"));
+        assert!(support.is_support);
+    }
+
+    #[test]
     fn progression_dps_averages_are_weighted_by_pull_duration() {
         let mut long_pull = progression_row("Player", vec![], false);
         long_pull.duration = 300_000;
@@ -2690,19 +2708,23 @@ mod tests {
     }
 
     #[test]
-    fn progression_deaths_only_count_one_of_multiple_non_simultaneous_deaths() {
+    fn progression_deaths_count_everyone_in_the_first_one_second_window() {
         let rows = vec![
-            progression_row("LateDeathA", vec![295_000], false),
-            progression_row("LateDeathB", vec![296_000], false),
-            progression_row("AliveA", vec![], false),
-            progression_row("AliveB", vec![], false),
+            progression_row("ZuluDeath", vec![295_000], false),
+            progression_row("AlphaDeath", vec![295_000], false),
+            progression_row("NearDeath", vec![295_750], false),
+            progression_row("LateDeath", vec![297_000], false),
+            progression_row("Alive", vec![], false),
         ];
 
         let deaths = progression_death_counts(&rows);
 
-        assert_eq!(deaths.get("LateDeathA"), Some(&1));
-        assert_eq!(deaths.get("LateDeathB"), None);
-        assert_eq!(deaths.values().sum::<i32>(), 1);
+        assert_eq!(deaths.get("ZuluDeath"), Some(&1));
+        assert_eq!(deaths.get("AlphaDeath"), Some(&1));
+        assert_eq!(deaths.get("NearDeath"), Some(&1));
+        assert_eq!(deaths.get("LateDeath"), None);
+        assert_eq!(deaths.get("Alive"), None);
+        assert_eq!(deaths.values().sum::<i32>(), 3);
     }
 
     #[test]
@@ -2733,7 +2755,14 @@ mod tests {
 
         let deaths = progression_death_counts(&rows);
 
-        assert_eq!(deaths, BTreeMap::from([("Player1".to_string(), 1)]));
+        assert_eq!(
+            deaths,
+            BTreeMap::from([
+                ("Player1".to_string(), 1),
+                ("Player2".to_string(), 1),
+                ("Player3".to_string(), 1),
+            ])
+        );
     }
 
     #[test]
