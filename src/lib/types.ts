@@ -236,6 +236,10 @@ export interface RaidProgressionPlayer {
   averageDamageTaken?: number;
   totalDeaths: number;
   deathsPerPull: number;
+  totalCounters: number;
+  countersPerPull: number;
+  averageDamageReduced?: number;
+  totalDamageShielded: number;
   averageSupportAp?: number;
   averageSupportContribution?: number | null;
   averageSupportBrand?: number;

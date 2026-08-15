@@ -679,6 +679,9 @@ struct RaidProgressionRow {
     ndps: Option<i64>,
     player_damage_taken: i64,
     death_events: Vec<i64>,
+    counters: i64,
+    damage_reduced: i64,
+    damage_shielded: u64,
     rdps_damage_given: i64,
     party_info: Option<HashMap<i32, Vec<String>>>,
     support_ap: Option<f32>,
@@ -718,6 +721,9 @@ struct RaidProgressionPlayerAggregate {
     ndps_values: Vec<(i64, i64)>,
     damage_taken_values: Vec<i64>,
     total_deaths: i32,
+    total_counters: i64,
+    total_damage_reduced: i64,
+    total_damage_shielded: u64,
     support_ap_values: Vec<f32>,
     support_contribution_values: Vec<f32>,
     support_brand_values: Vec<f32>,
@@ -881,7 +887,9 @@ fn build_raid_progression_query(criteria: RaidProgressionCriteria) -> (Vec<Strin
             p.dps AS player_dps,
             p.rdps,
             p.ndps,
+            p.skills,
             p.damage_stats,
+            p.skill_stats,
             p.rdps_damage_given,
             p.support_ap,
             p.support_brand,
@@ -1028,6 +1036,23 @@ fn map_raid_progression_row(row: &rusqlite::Row) -> rusqlite::Result<RaidProgres
         let JsonColumn(damage_stats): JsonColumn<DamageStats> = row.get("damage_stats")?;
         damage_stats
     };
+    let JsonColumn(skill_stats): JsonColumn<SkillStats> = row.get("skill_stats")?;
+    let class_id = row.get("class_id").unwrap_or_default();
+    let damage_reduced = if u32::try_from(class_id)
+        .ok()
+        .is_some_and(|class_id| is_support_class(&class_id))
+    {
+        let skills = if version >= VERSION_1_13_5 {
+            let CompressedJson(skills): CompressedJson<HashMap<u32, Skill>> = row.get("skills")?;
+            skills
+        } else {
+            let JsonColumn(skills): JsonColumn<HashMap<u32, Skill>> = row.get("skills")?;
+            skills
+        };
+        progression_damage_reduced(&skills)
+    } else {
+        0
+    };
 
     let CompressedJson(mut boss_hp_log): CompressedJson<HashMap<String, Vec<BossHpLog>>> =
         row.get("boss_hp_log")?;
@@ -1060,7 +1085,7 @@ fn map_raid_progression_row(row: &rusqlite::Row) -> rusqlite::Result<RaidProgres
         boss_max_hp: row.get("boss_max_hp").unwrap_or_default(),
         boss_hp_log,
         player_name: row.get("player_name")?,
-        class_id: row.get("class_id").unwrap_or_default(),
+        class_id,
         class_name: row.get("class_name").unwrap_or_default(),
         spec: row.get("spec").unwrap_or_default(),
         player_damage_dealt: damage_stats.damage_dealt,
@@ -1069,6 +1094,9 @@ fn map_raid_progression_row(row: &rusqlite::Row) -> rusqlite::Result<RaidProgres
         ndps: row.get("ndps").unwrap_or_default(),
         player_damage_taken: damage_stats.damage_taken,
         death_events: death_events_from_stats(&damage_stats),
+        counters: skill_stats.counters,
+        damage_reduced,
+        damage_shielded: damage_stats.damage_absorbed_on_others,
         rdps_damage_given: row.get("rdps_damage_given").unwrap_or_default(),
         party_info: misc.party_info,
         support_ap: row.get("support_ap").unwrap_or_default(),
@@ -1076,6 +1104,16 @@ fn map_raid_progression_row(row: &rusqlite::Row) -> rusqlite::Result<RaidProgres
         support_identity: row.get("support_identity").unwrap_or_default(),
         support_hyper: row.get("support_hyper").unwrap_or_default(),
     })
+}
+
+fn progression_damage_reduced(skills: &HashMap<u32, Skill>) -> i64 {
+    skills
+        .values()
+        .map(|skill| {
+            skill.rdps_contributed.get(&4).copied().unwrap_or_default()
+                + skill.rdps_contributed.get(&6).copied().unwrap_or_default()
+        })
+        .sum()
 }
 
 fn death_events_from_stats(stats: &DamageStats) -> Vec<i64> {
@@ -1532,6 +1570,9 @@ fn new_progression_player(
         ndps_values: Vec::new(),
         damage_taken_values: Vec::new(),
         total_deaths: 0,
+        total_counters: 0,
+        total_damage_reduced: 0,
+        total_damage_shielded: 0,
         support_ap_values: Vec::new(),
         support_contribution_values: Vec::new(),
         support_brand_values: Vec::new(),
@@ -1583,6 +1624,9 @@ fn update_progression_player(
         player.support_hyper_values.push(support_hyper);
     }
     player.total_deaths += deaths;
+    player.total_counters += row.counters;
+    player.total_damage_reduced += row.damage_reduced;
+    player.total_damage_shielded += row.damage_shielded;
     player.last_seen = player.last_seen.max(row.fight_start);
     if player.spec.as_deref().is_none_or(|spec| spec == "Unknown")
         && row.spec.as_deref().is_some_and(|spec| spec != "Unknown")
@@ -1615,6 +1659,18 @@ fn build_progression_player(player: RaidProgressionPlayerAggregate) -> RaidProgr
         } else {
             player.total_deaths as f32 / player.pulls as f32
         },
+        total_counters: player.total_counters,
+        counters_per_pull: if player.pulls == 0 {
+            0.0
+        } else {
+            player.total_counters as f32 / player.pulls as f32
+        },
+        average_damage_reduced: if player.total_damage_reduced > 0 && player.pulls > 0 {
+            Some(player.total_damage_reduced / i64::from(player.pulls))
+        } else {
+            None
+        },
+        total_damage_shielded: player.total_damage_shielded,
         average_support_ap: average_f32(player.support_ap_values.into_iter()),
         average_support_contribution: average_f32(player.support_contribution_values.into_iter()),
         average_support_brand: average_f32(player.support_brand_values.into_iter()),
@@ -2656,6 +2712,48 @@ mod tests {
     }
 
     #[test]
+    fn progression_players_include_counters_damage_reduced_and_damage_shielded() {
+        let mut first_pull = progression_row("Support", vec![], false);
+        first_pull.class_id = 204;
+        first_pull.spec = Some("Desperate Salvation".to_string());
+        first_pull.counters = 2;
+        first_pull.damage_reduced = 300;
+        first_pull.damage_shielded = 400;
+
+        let mut second_pull = progression_row("Support", vec![], false);
+        second_pull.id = 2;
+        second_pull.fight_start = 2_000;
+        second_pull.class_id = 204;
+        second_pull.spec = Some("Desperate Salvation".to_string());
+        second_pull.counters = 1;
+        second_pull.damage_shielded = 100;
+
+        let statistics = build_raid_progression_statistics(
+            vec![first_pull, second_pull],
+            &HashMap::new(),
+            &HashMap::new(),
+            &[],
+        );
+        let support = statistics.players.first().unwrap();
+
+        assert_eq!(support.total_counters, 3);
+        assert_eq!(support.counters_per_pull, 1.5);
+        assert_eq!(support.average_damage_reduced, Some(150));
+        assert_eq!(support.total_damage_shielded, 500);
+    }
+
+    #[test]
+    fn progression_damage_reduced_uses_contribution_types_four_and_six() {
+        let mut skill = Skill::default();
+        skill.rdps_contributed = HashMap::from([(1, 100), (4, 200), (6, 300)]);
+
+        assert_eq!(
+            progression_damage_reduced(&HashMap::from([(skill.id, skill)])),
+            500
+        );
+    }
+
+    #[test]
     fn progression_dps_averages_are_weighted_by_pull_duration() {
         let mut long_pull = progression_row("Player", vec![], false);
         long_pull.duration = 300_000;
@@ -2940,6 +3038,9 @@ mod tests {
             ndps: None,
             player_damage_taken: 0,
             death_events,
+            counters: 0,
+            damage_reduced: 0,
+            damage_shielded: 0,
             rdps_damage_given: 0,
             party_info: None,
             support_ap: None,

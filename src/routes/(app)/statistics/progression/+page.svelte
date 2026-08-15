@@ -57,8 +57,10 @@
     | "averageNdps"
     | "averageRdps"
     | "averageDamageTaken"
+    | "countersPerPull"
     | "deathsPerPull"
     | "totalDeaths"
+    | "averageDamageShielded"
     | "averageSupportAp"
     | "averageSupportBrand"
     | "averageSupportIdentity"
@@ -83,8 +85,10 @@
       averageNdps: (player) => player.averageNdps,
       averageRdps: (player) => player.averageRdps,
       averageDamageTaken: (player) => player.averageDamageTaken,
+      countersPerPull: (player) => player.countersPerPull,
       deathsPerPull: (player) => player.deathsPerPull,
       totalDeaths: (player) => player.totalDeaths,
+      averageDamageShielded: (player) => player.totalDamageShielded / player.pulls,
       averageSupportAp: (player) => player.averageSupportAp,
       averageSupportBrand: (player) => player.averageSupportBrand,
       averageSupportIdentity: (player) => player.averageSupportIdentity,
@@ -152,11 +156,17 @@
   let supportPlayers = $derived((statistics?.players ?? []).filter((player) => player.isSupport));
   let sortedDpsPlayers = $derived(sortPlayers(dpsPlayers, dpsSort));
   let sortedSupportPlayers = $derived(sortPlayers(supportPlayers, supportSort));
+  let showDpsCounters = $derived(dpsPlayers.some((player) => player.totalCounters > 0));
+  let showSupportCounters = $derived(supportPlayers.some((player) => player.totalCounters > 0));
   let showSupportContribution = $derived(
     supportPlayers.some(
       (player) => player.averageSupportContribution !== undefined && player.averageSupportContribution !== null
     )
   );
+  let showSupportDamageReduction = $derived(
+    supportPlayers.some((player) => player.averageDamageReduced !== undefined && player.averageDamageReduced !== null)
+  );
+  let showSupportDamageShielded = $derived(supportPlayers.some((player) => player.totalDamageShielded > 0));
   let leastDeathsPerPull = $derived(deathRateSummary(statistics?.players ?? [], "least"));
   let mostDeathsPerPull = $derived(deathRateSummary(statistics?.players ?? [], "most"));
   let pullRows = $derived(statistics?.pulls ?? []);
@@ -652,7 +662,15 @@
                 bestProgressPercent: statistics.summary.bestProgressPercent
               })}
         </div>
-        <div class="text-xs text-neutral-500">clear rate {formatPercent(statistics.summary.clearRate)}</div>
+        <QuickTooltip
+          tooltip={`${statistics.summary.bestProgressBossName ? `${statistics.summary.bestProgressBossName} · ` : ""}clear rate ${formatPercent(statistics.summary.clearRate)}`}
+          class="block min-w-0"
+        >
+          <div class="truncate text-xs text-neutral-500">
+            {statistics.summary.bestProgressBossName ? `${statistics.summary.bestProgressBossName} · ` : ""}clear rate
+            {formatPercent(statistics.summary.clearRate)}
+          </div>
+        </QuickTooltip>
       </div>
 
       <div class="h-24 rounded-md border border-neutral-700/70 bg-neutral-800/80 p-3">
@@ -692,7 +710,7 @@
     <!--  dps/support player total pulls breakdown  -->
 
     <div class="grid grid-cols-1 gap-3 xl:grid-cols-2">
-      <div class="overflow-hidden rounded-md border border-neutral-700/70 bg-neutral-800/80">
+      <div class="min-w-0 overflow-hidden rounded-md border border-neutral-700/70 bg-neutral-800/80">
         <!-- dps section -->
         <div class="flex items-center justify-between border-b border-neutral-700/70 px-3 py-2">
           <h2 class="font-medium">DPS</h2>
@@ -700,7 +718,9 @@
         </div>
         {#if dpsPlayers.length > 0}
           <div class="max-h-[26rem] overflow-auto">
-            <table class="w-full min-w-[60rem] text-left text-xs">
+            <table
+              class={`w-full ${showDpsCounters ? "min-w-[66rem]" : "min-w-[60rem]"} text-left text-xs whitespace-nowrap`}
+            >
               <thead class="sticky top-0 z-10 bg-neutral-900/95 text-neutral-400">
                 <tr>
                   <th class="px-3 py-2 font-medium">Name</th>
@@ -711,6 +731,9 @@
                   {@render sortablePlayerHeader("Avg nDPS", "dps", "averageNdps")}
                   {@render sortablePlayerHeader("Avg rDPS", "dps", "averageRdps")}
                   {@render sortablePlayerHeader("Avg Dmg Taken", "dps", "averageDamageTaken")}
+                  {#if showDpsCounters}
+                    {@render sortablePlayerHeader("Counters/Pull", "dps", "countersPerPull")}
+                  {/if}
                   {@render sortablePlayerHeader("Deaths/Pull", "dps", "deathsPerPull")}
                   {@render sortablePlayerHeader("Deaths", "dps", "totalDeaths")}
                 </tr>
@@ -733,6 +756,13 @@
                     <td class="px-3 py-2">{formatDps(player.averageNdps)}</td>
                     <td class="px-3 py-2">{formatDps(player.averageRdps)}</td>
                     <td class="px-3 py-2">{formatNumber(player.averageDamageTaken)}</td>
+                    {#if showDpsCounters}
+                      <td class="px-3 py-2">
+                        <QuickTooltip tooltip={`${player.totalCounters.toLocaleString()} total counters`}>
+                          {player.countersPerPull.toFixed(2)}
+                        </QuickTooltip>
+                      </td>
+                    {/if}
                     <td class="px-3 py-2">{player.deathsPerPull.toFixed(2)}</td>
                     <td class="px-3 py-2">{player.totalDeaths}</td>
                   </tr>
@@ -747,14 +777,14 @@
 
       <!-- support section -->
 
-      <div class="overflow-hidden rounded-md border border-neutral-700/70 bg-neutral-800/80">
+      <div class="min-w-0 overflow-hidden rounded-md border border-neutral-700/70 bg-neutral-800/80">
         <div class="flex items-center justify-between border-b border-neutral-700/70 px-3 py-2">
           <h2 class="font-medium">Supports</h2>
           <span class="text-xs text-neutral-500">{supportPlayers.length} players</span>
         </div>
         {#if supportPlayers.length > 0}
           <div class="max-h-[26rem] overflow-auto">
-            <table class={`w-full ${showSupportContribution ? "min-w-[62rem]" : "min-w-[58rem]"} text-left text-xs`}>
+            <table class="w-full min-w-[78rem] text-left text-xs whitespace-nowrap">
               <thead class="sticky top-0 z-10 bg-neutral-900/95 text-neutral-400">
                 <tr>
                   <th class="px-3 py-2 font-medium">Name</th>
@@ -768,7 +798,22 @@
                   {@render sortablePlayerHeader("Brand", "support", "averageSupportBrand")}
                   {@render sortablePlayerHeader("Identity", "support", "averageSupportIdentity")}
                   {@render sortablePlayerHeader("T", "support", "averageSupportHyper")}
+                  {#if showSupportDamageReduction}
+                    <th class="px-3 py-2 font-medium">
+                      <QuickTooltip
+                        tooltip="Average damage reduced per pull, calculated from Player Breakdown DR contribution types 4 and 6"
+                      >
+                        Avg DR
+                      </QuickTooltip>
+                    </th>
+                  {/if}
+                  {#if showSupportDamageShielded}
+                    {@render sortablePlayerHeader("Avg Shielded", "support", "averageDamageShielded")}
+                  {/if}
                   {@render sortablePlayerHeader("Avg Dmg Taken", "support", "averageDamageTaken")}
+                  {#if showSupportCounters}
+                    {@render sortablePlayerHeader("Counters/Pull", "support", "countersPerPull")}
+                  {/if}
                   {@render sortablePlayerHeader("Deaths/Pull", "support", "deathsPerPull")}
                   {@render sortablePlayerHeader("Deaths", "support", "totalDeaths")}
                 </tr>
@@ -794,7 +839,24 @@
                     <td class="px-3 py-2">{formatRatioPercent(player.averageSupportBrand)}</td>
                     <td class="px-3 py-2">{formatRatioPercent(player.averageSupportIdentity)}</td>
                     <td class="px-3 py-2">{formatRatioPercent(player.averageSupportHyper)}</td>
+                    {#if showSupportDamageReduction}
+                      <td class="px-3 py-2">{formatNumber(player.averageDamageReduced)}</td>
+                    {/if}
+                    {#if showSupportDamageShielded}
+                      <td class="px-3 py-2">
+                        <QuickTooltip tooltip={`${player.totalDamageShielded.toLocaleString()} total shielded`}>
+                          {formatNumber(player.totalDamageShielded / player.pulls)}
+                        </QuickTooltip>
+                      </td>
+                    {/if}
                     <td class="px-3 py-2">{formatNumber(player.averageDamageTaken)}</td>
+                    {#if showSupportCounters}
+                      <td class="px-3 py-2">
+                        <QuickTooltip tooltip={`${player.totalCounters.toLocaleString()} total counters`}>
+                          {player.countersPerPull.toFixed(2)}
+                        </QuickTooltip>
+                      </td>
+                    {/if}
                     <td class="px-3 py-2">{player.deathsPerPull.toFixed(2)}</td>
                     <td class="px-3 py-2">{player.totalDeaths}</td>
                   </tr>
