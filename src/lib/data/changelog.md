@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.49.0 - August 12th, 2026
+    v1.49.1 - August 15th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -15,6 +15,10 @@
 
 ### Note: ExitLag users must check the ExitLag Compatibility setting
 
-#### NEW FEATURES
+#### BUG FIXES AND IMPROVEMENTS
 
-- updated meter for ex brelshaza
+- raid prog stats:
+  - added counters/pull column
+  - added support avg dr and avg shielding column
+  - fixed certain cases where support specs counting as unknown
+  - fixed case where only 1 player's death is counted on multi-player deaths
