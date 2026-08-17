@@ -86,8 +86,13 @@ pub fn prepare_get_encounter_preview_query(
     };
 
     let difficulty_filter = if !filter.difficulty.is_empty() {
+        let is_extreme = filter.difficulty == "Extreme";
         params.push(filter.difficulty);
-        "AND difficulty = ?"
+        if is_extreme {
+            "AND INSTR(e.difficulty, ?) > 0"
+        } else {
+            "AND e.difficulty = ?"
+        }
     } else {
         ""
     };
@@ -713,4 +718,37 @@ where
     encoder.write_all(&bytes)?;
     let data = encoder.finish()?;
     Ok(data)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn encounter_preview_extreme_filter_includes_specific_difficulties() {
+        let filter = SearchFilter {
+            difficulty: "Extreme".to_string(),
+            ..Default::default()
+        };
+
+        let (params, query, count_query) =
+            prepare_get_encounter_preview_query(String::new(), filter);
+
+        assert_eq!(params, vec!["0", "Extreme"]);
+        assert!(query.contains("AND INSTR(e.difficulty, ?) > 0"));
+        assert!(count_query.contains("AND INSTR(e.difficulty, ?) > 0"));
+    }
+
+    #[test]
+    fn encounter_preview_non_extreme_filter_remains_exact() {
+        let filter = SearchFilter {
+            difficulty: "Hard".to_string(),
+            ..Default::default()
+        };
+
+        let (_, query, count_query) = prepare_get_encounter_preview_query(String::new(), filter);
+
+        assert!(query.contains("AND e.difficulty = ?"));
+        assert!(count_query.contains("AND e.difficulty = ?"));
+    }
 }
