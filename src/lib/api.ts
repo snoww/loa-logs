@@ -143,6 +143,7 @@ export interface RaidProgressionCriteria {
   lastGateBosses?: string[];
   difficulty?: string;
   minDuration?: number;
+  groupKeys?: string[];
 }
 
 export interface RaidProgressionRangeCriteria {

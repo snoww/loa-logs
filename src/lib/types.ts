@@ -162,6 +162,23 @@ export interface RaidProgressionStatistics {
   gates: RaidProgressionGate[];
   pulls: RaidProgressionPull[];
   players: RaidProgressionPlayer[];
+  groups: RaidProgressionGroup[];
+}
+
+export interface RaidProgressionGroup {
+  key: string;
+  parties: RaidProgressionGroupParty[];
+  pulls: number;
+}
+
+export interface RaidProgressionGroupParty {
+  number: number;
+  members: RaidProgressionGroupMember[];
+}
+
+export interface RaidProgressionGroupMember {
+  name: string;
+  classId: number;
 }
 
 export interface RaidProgressionRange {

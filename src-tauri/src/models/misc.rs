@@ -164,6 +164,7 @@ pub struct RaidProgressionCriteria {
     pub start_time: Option<i64>,
     pub end_time: Option<i64>,
     pub min_duration: i32,
+    pub group_keys: Vec<String>,
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]
@@ -189,6 +190,29 @@ pub struct RaidProgressionStatistics {
     pub gates: Vec<RaidProgressionGate>,
     pub pulls: Vec<RaidProgressionPull>,
     pub players: Vec<RaidProgressionPlayer>,
+    pub groups: Vec<RaidProgressionGroup>,
+}
+
+#[derive(Debug, Default, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct RaidProgressionGroup {
+    pub key: String,
+    pub parties: Vec<RaidProgressionGroupParty>,
+    pub pulls: i32,
+}
+
+#[derive(Debug, Default, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct RaidProgressionGroupParty {
+    pub number: i32,
+    pub members: Vec<RaidProgressionGroupMember>,
+}
+
+#[derive(Debug, Default, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct RaidProgressionGroupMember {
+    pub name: String,
+    pub class_id: i32,
 }
 
 #[derive(Debug, Default, Serialize, Clone)]

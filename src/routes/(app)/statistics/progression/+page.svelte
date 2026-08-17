@@ -5,7 +5,7 @@
   import QuickTooltip from "$lib/components/QuickTooltip.svelte";
   import { difficultyColor } from "$lib/components/Snippets.svelte";
   import { difficultyMap, encounterMap } from "$lib/constants/encounters";
-  import { IconArrowUp, IconRotateCcw } from "$lib/icons";
+  import { IconArrowUp, IconChevronDown, IconRotateCcw } from "$lib/icons";
   import type { RaidProgressionPlayer, RaidProgressionPull, RaidProgressionStatistics } from "$lib/types";
   import { getClassIcon } from "$lib/utils";
   import { onMount } from "svelte";
@@ -34,6 +34,7 @@
   type ProgressionFilters = {
     selectedGateId: string;
     selectedDifficulty: string;
+    selectedGroupKeys: string[];
     startDate: string;
     endDate: string;
   };
@@ -42,6 +43,7 @@
     url: string;
     selectedGateId: string;
     selectedDifficulty: string;
+    selectedGroupKeys?: string[];
     startDate: string;
     endDate: string;
     defaultStartDate: string;
@@ -110,11 +112,12 @@
     }));
   const gateOptions = gateOptionGroups.flatMap((group) => group.gates);
   const defaultGateId = gateOptions[0]?.id ?? "";
-  const cacheStorageKey = "loa-logs:raid-progression-state";
+  const cacheStorageKey = "loa-logs:raid-progression-state-v2";
   let cachedProgressionState: ProgressionPageCache | null = null;
 
   let selectedGateId = $state(defaultGateId);
   let selectedDifficulty = $state("");
+  let selectedGroupKeys = $state<string[]>([]);
   let startDate = $state("");
   let endDate = $state("");
   let defaultStartDate = $state("");
@@ -126,6 +129,7 @@
   let hasLoaded = $state(false);
   let error = $state("");
   let initialized = $state(false);
+  let groupsExpanded = $state(false);
   let dpsSort = $state<PlayerSortState>(null);
   let supportSort = $state<PlayerSortState>(null);
   let requestId = 0;
@@ -139,15 +143,18 @@
     Object.fromEntries(selectedBosses.map((boss) => [boss, selectedGateOption?.gate ?? boss]))
   );
   let selectedClearBosses = $derived(selectedBosses);
+  let progressionGroups = $derived(statistics?.groups ?? []);
   let filtersChanged = $derived(
     selectedGateId !== defaultGateId ||
       selectedDifficulty !== "" ||
+      selectedGroupKeys.length > 0 ||
       startDate !== defaultStartDate ||
       endDate !== defaultEndDate
   );
   let currentFilters = $derived({
     selectedGateId,
     selectedDifficulty,
+    selectedGroupKeys,
     startDate,
     endDate
   });
@@ -190,6 +197,7 @@
 
     selectedGateId;
     selectedDifficulty;
+    selectedGroupKeys;
     startDate;
     endDate;
     defaultStartDate;
@@ -246,7 +254,7 @@
     }
   }
 
-  async function loadStatistics() {
+  async function loadStatistics(groupKeys = selectedGroupKeys) {
     const currentRequest = ++requestId;
     loading = true;
     error = "";
@@ -261,7 +269,8 @@
         difficulty: selectedDifficulty,
         startTime: dateToStartTime(startDate),
         endTime: dateToEndTime(endDate),
-        minDuration: 10
+        minDuration: 10,
+        groupKeys
       });
 
       if (currentRequest === requestId) {
@@ -294,6 +303,7 @@
 
     const requestedDifficulty = params.get("difficulty");
     selectedDifficulty = requestedDifficulty && difficultyMap.includes(requestedDifficulty) ? requestedDifficulty : "";
+    selectedGroupKeys = [];
 
     startDate = params.get("start") ?? "";
     endDate = params.get("end") ?? "";
@@ -323,6 +333,7 @@
       url: currentUrlKey(),
       selectedGateId,
       selectedDifficulty,
+      selectedGroupKeys,
       startDate,
       endDate,
       defaultStartDate,
@@ -354,6 +365,7 @@
     cachedProgressionState = cache;
     selectedGateId = cache.selectedGateId;
     selectedDifficulty = cache.selectedDifficulty;
+    selectedGroupKeys = cache.selectedGroupKeys ?? [];
     startDate = cache.startDate;
     endDate = cache.endDate;
     defaultStartDate = cache.defaultStartDate;
@@ -395,6 +407,7 @@
     if (selectedGateId === value) return;
     const preserveDates = hasCustomDateRange();
     selectedGateId = value;
+    selectedGroupKeys = [];
     cancelPendingStatisticsLoad();
     loadDefaultRange(preserveDates);
   }
@@ -403,6 +416,7 @@
     if (selectedDifficulty === value) return;
     const preserveDates = hasCustomDateRange();
     selectedDifficulty = value;
+    selectedGroupKeys = [];
     cancelPendingStatisticsLoad();
     loadDefaultRange(preserveDates);
   }
@@ -411,6 +425,7 @@
     ++rangeRequestId;
     rangeLoading = false;
     cancelPendingStatisticsLoad();
+    selectedGroupKeys = [];
     startDate = value;
   }
 
@@ -418,11 +433,13 @@
     ++rangeRequestId;
     rangeLoading = false;
     cancelPendingStatisticsLoad();
+    selectedGroupKeys = [];
     endDate = value;
   }
 
   function resetDateRange() {
     cancelPendingStatisticsLoad();
+    selectedGroupKeys = [];
     startDate = defaultStartDate;
     endDate = defaultEndDate;
   }
@@ -430,9 +447,21 @@
   function resetFilters() {
     cancelPendingStatisticsLoad();
     selectedDifficulty = "";
+    selectedGroupKeys = [];
     startDate = "";
     endDate = "";
     loadDefaultRange();
+  }
+
+  function toggleGroup(key: string) {
+    selectedGroupKeys = selectedGroupKeys.includes(key)
+      ? selectedGroupKeys.filter((selectedKey) => selectedKey !== key)
+      : [...selectedGroupKeys, key];
+  }
+
+  function unselectAllGroups() {
+    if (selectedGroupKeys.length === 0) return;
+    selectedGroupKeys = [];
   }
 
   function progressLabel(source: { bestProgressBars?: number | null; bestProgressPercent?: number | null }) {
@@ -611,7 +640,7 @@
           : "border border-neutral-700 bg-neutral-800 text-neutral-400 hover:bg-neutral-800"
       }`}
       disabled={!canLoadStatistics}
-      onclick={loadStatistics}
+      onclick={() => loadStatistics()}
     >
       {loading ? "Loading" : "Load"}
     </button>
@@ -634,6 +663,84 @@
   {/if}
 
   {#if statistics}
+    {#if progressionGroups.length > 0}
+      <section class="rounded-md border border-neutral-700/70 bg-neutral-800/80 p-3" aria-label="Progression groups">
+        <div class="flex items-center gap-3">
+          <button
+            type="button"
+            class="flex min-w-0 flex-1 items-center justify-between gap-3 text-left"
+            aria-expanded={groupsExpanded}
+            onclick={() => (groupsExpanded = !groupsExpanded)}
+          >
+            <span>
+              <span class="block font-medium">Progression Groups</span>
+              <span class="block text-xs text-neutral-500">
+                Select a specific prog group to see the group's stats. Includes all prog groups by default.
+              </span>
+            </span>
+            <span class="flex shrink-0 items-center gap-2 text-xs text-neutral-500">
+              {selectedGroupKeys.length === 0 ? "All groups" : `${selectedGroupKeys.length} selected`}
+              <IconChevronDown class={`size-4 transition-transform ${groupsExpanded ? "rotate-180" : ""}`} />
+            </span>
+          </button>
+          {#if selectedGroupKeys.length > 0}
+            <button
+              type="button"
+              class="h-8 shrink-0 rounded-md border border-neutral-700 bg-neutral-900/40 px-2.5 text-xs text-neutral-300 hover:border-neutral-600 hover:bg-neutral-700/40 hover:text-neutral-100 disabled:cursor-default disabled:opacity-60"
+              disabled={loading}
+              onclick={unselectAllGroups}
+            >
+              Unselect all
+            </button>
+          {/if}
+        </div>
+
+        {#if groupsExpanded}
+          <div class="mt-3 overflow-x-auto pb-1">
+            <div class="flex min-w-max gap-2">
+              {#each progressionGroups as group, index (group.key)}
+                {@const selected = selectedGroupKeys.includes(group.key)}
+                <button
+                  type="button"
+                  class={`min-w-80 shrink-0 rounded-md border p-3 text-left transition-colors disabled:cursor-default disabled:opacity-60 ${
+                    selected
+                      ? "border-accent-500 bg-accent-500/10"
+                      : "border-neutral-700 bg-neutral-900/40 hover:border-neutral-600 hover:bg-neutral-700/30"
+                  }`}
+                  aria-pressed={selected}
+                  disabled={loading}
+                  onclick={() => toggleGroup(group.key)}
+                >
+                  <div class="mb-2 flex items-center justify-between gap-3">
+                    <span class="text-sm font-medium">Group {index + 1}</span>
+                    <span class="text-xs text-neutral-500">{group.pulls} pull{group.pulls === 1 ? "" : "s"}</span>
+                  </div>
+                  <div class="grid auto-cols-fr grid-flow-col gap-4">
+                    {#each group.parties as party (party.number)}
+                      <div class="min-w-32">
+                        <div class="flex flex-col gap-1.5">
+                          {#each party.members as member (member.name)}
+                            <div class="flex min-w-0 items-center gap-1.5">
+                              {#if member.classId > 0}
+                                <img src={getClassIcon(member.classId)} alt="" class="size-5 shrink-0" />
+                              {:else}
+                                <div class="size-5 shrink-0 rounded-full bg-neutral-700"></div>
+                              {/if}
+                              <span class="truncate text-xs text-neutral-300" title={member.name}>{member.name}</span>
+                            </div>
+                          {/each}
+                        </div>
+                      </div>
+                    {/each}
+                  </div>
+                </button>
+              {/each}
+            </div>
+          </div>
+        {/if}
+      </section>
+    {/if}
+
     <!-- summary cards -->
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-6">
       <div class="h-24 rounded-md border border-neutral-700/70 bg-neutral-800/80 p-3">
@@ -709,7 +816,7 @@
 
     <!--  dps/support player total pulls breakdown  -->
 
-    <div class="grid grid-cols-1 gap-3 xl:grid-cols-2">
+    <div class="grid grid-cols-1 gap-3 2xl:grid-cols-2">
       <div class="min-w-0 overflow-hidden rounded-md border border-neutral-700/70 bg-neutral-800/80">
         <!-- dps section -->
         <div class="flex items-center justify-between border-b border-neutral-700/70 px-3 py-2">

@@ -235,18 +235,20 @@ impl Repository {
         let boss_to_raid = criteria.boss_to_raid.clone();
         let boss_order = criteria.boss_order.clone();
         let last_gate_bosses = criteria.last_gate_bosses.clone();
+        let group_keys = criteria.group_keys.clone();
         let (params, query) = build_raid_progression_query(criteria);
         let rows = connection
             .prepare_cached(&query)?
             .query_map(params_from_iter(params), map_raid_progression_row)?
             .collect::<Result<Vec<_>, _>>()?;
+        let groups = progression_groups(&rows);
+        let rows = filter_progression_groups(rows, &group_keys);
 
-        Ok(build_raid_progression_statistics(
-            rows,
-            &boss_to_raid,
-            &boss_order,
-            &last_gate_bosses,
-        ))
+        let mut statistics =
+            build_raid_progression_statistics(rows, &boss_to_raid, &boss_order, &last_gate_bosses);
+        statistics.groups = groups;
+
+        Ok(statistics)
     }
 
     pub fn get_raid_progression_range(
@@ -1202,7 +1204,142 @@ fn build_raid_progression_statistics(
             .map(build_progression_pull_row)
             .collect(),
         players,
+        groups: Vec::new(),
     }
+}
+
+fn progression_groups(rows: &[RaidProgressionRow]) -> Vec<RaidProgressionGroup> {
+    let pulls_by_id = progression_rows_by_pull(rows);
+    let mut groups_by_key: BTreeMap<String, RaidProgressionGroup> = BTreeMap::new();
+
+    for pull_rows in pulls_by_id.values() {
+        if pull_rows.is_empty() {
+            continue;
+        }
+        let parties = progression_group_parties(pull_rows);
+        let key = progression_group_key(&parties);
+        groups_by_key
+            .entry(key.clone())
+            .and_modify(|group| {
+                group.pulls += 1;
+                for party in &mut group.parties {
+                    for member in &mut party.members {
+                        if member.class_id == 0 {
+                            member.class_id = parties
+                                .iter()
+                                .flat_map(|current_party| &current_party.members)
+                                .find(|candidate| candidate.name.eq_ignore_ascii_case(&member.name))
+                                .map(|candidate| candidate.class_id)
+                                .unwrap_or_default();
+                        }
+                    }
+                }
+            })
+            .or_insert_with(|| RaidProgressionGroup {
+                key,
+                parties,
+                pulls: 1,
+            });
+    }
+
+    let mut groups = groups_by_key.into_values().collect::<Vec<_>>();
+    groups.sort_by(|a, b| b.pulls.cmp(&a.pulls).then_with(|| a.key.cmp(&b.key)));
+    groups
+}
+
+fn filter_progression_groups(
+    rows: Vec<RaidProgressionRow>,
+    selected_group_keys: &[String],
+) -> Vec<RaidProgressionRow> {
+    if selected_group_keys.is_empty() {
+        return rows;
+    }
+
+    let selected_group_keys = selected_group_keys.iter().cloned().collect::<BTreeSet<_>>();
+    let matching_pull_ids = progression_rows_by_pull(&rows)
+        .into_iter()
+        .filter_map(|(id, pull_rows)| {
+            selected_group_keys
+                .contains(&progression_group_key(&progression_group_parties(
+                    &pull_rows,
+                )))
+                .then_some(id)
+        })
+        .collect::<BTreeSet<_>>();
+
+    rows.into_iter()
+        .filter(|row| matching_pull_ids.contains(&row.id))
+        .collect()
+}
+
+fn progression_rows_by_pull(
+    rows: &[RaidProgressionRow],
+) -> BTreeMap<i32, Vec<&RaidProgressionRow>> {
+    let mut pulls_by_id: BTreeMap<i32, Vec<&RaidProgressionRow>> = BTreeMap::new();
+    for row in rows {
+        pulls_by_id.entry(row.id).or_default().push(row);
+    }
+    pulls_by_id
+}
+
+fn progression_group_parties(rows: &[&RaidProgressionRow]) -> Vec<RaidProgressionGroupParty> {
+    let party_info = rows.iter().find_map(|row| {
+        row.party_info
+            .as_ref()
+            .filter(|parties| !parties.is_empty())
+    });
+
+    if let Some(party_info) = party_info {
+        let mut party_entries = party_info.iter().collect::<Vec<_>>();
+        party_entries.sort_by_key(|(number, _)| *number);
+        return party_entries
+            .into_iter()
+            .enumerate()
+            .map(|(index, (_, players))| RaidProgressionGroupParty {
+                number: index as i32 + 1,
+                members: players
+                    .iter()
+                    .map(|player| progression_group_member(rows, player))
+                    .collect(),
+            })
+            .collect();
+    }
+
+    vec![RaidProgressionGroupParty {
+        number: 1,
+        members: rows
+            .iter()
+            .map(|row| RaidProgressionGroupMember {
+                name: row.player_name.clone(),
+                class_id: row.class_id,
+            })
+            .collect(),
+    }]
+}
+
+fn progression_group_member(
+    rows: &[&RaidProgressionRow],
+    player: &str,
+) -> RaidProgressionGroupMember {
+    RaidProgressionGroupMember {
+        name: player.to_string(),
+        class_id: rows
+            .iter()
+            .find(|row| row.player_name.eq_ignore_ascii_case(player))
+            .map(|row| row.class_id)
+            .unwrap_or_default(),
+    }
+}
+
+fn progression_group_key(parties: &[RaidProgressionGroupParty]) -> String {
+    let mut players = parties
+        .iter()
+        .flat_map(|party| &party.members)
+        .map(|member| member.name.to_lowercase())
+        .collect::<Vec<_>>();
+    players.sort();
+    players.dedup();
+    serde_json::to_string(&players).unwrap_or_default()
 }
 
 fn build_progression_pull(
@@ -2785,6 +2922,67 @@ mod tests {
         assert_eq!(player.best_dps, Some(50));
         assert_eq!(statistics.summary.average_team_dps, Some(175));
         assert_eq!(statistics.gates[0].average_team_dps, Some(175));
+    }
+
+    #[test]
+    fn progression_groups_ignore_party_assignments_and_combine_selected_groups() {
+        let first_layout = HashMap::from([
+            (0, vec!["Alice".to_string(), "Bob".to_string()]),
+            (1, vec!["Cara".to_string(), "Dana".to_string()]),
+        ]);
+        let second_layout = HashMap::from([
+            (0, vec!["Alice".to_string(), "Cara".to_string()]),
+            (1, vec!["Bob".to_string(), "Dana".to_string()]),
+        ]);
+        let third_layout = HashMap::from([
+            (0, vec!["Alice".to_string(), "Bob".to_string()]),
+            (1, vec!["Cara".to_string(), "Eve".to_string()]),
+        ]);
+        let mut rows = Vec::new();
+        for (id, layout, names) in [
+            (1, first_layout, ["Alice", "Bob", "Cara", "Dana"]),
+            (2, second_layout, ["Alice", "Bob", "Cara", "Dana"]),
+            (3, third_layout, ["Alice", "Bob", "Cara", "Eve"]),
+        ] {
+            for name in names {
+                let mut row = progression_row(name, vec![], false);
+                row.id = id;
+                row.fight_start = i64::from(id) * 1_000;
+                row.party_info = Some(layout.clone());
+                rows.push(row);
+            }
+        }
+        let groups = progression_groups(&rows);
+
+        assert_eq!(groups.len(), 2);
+        let first_group = groups.iter().find(|group| group.pulls == 2).unwrap();
+        assert_eq!(first_group.pulls, 2);
+        assert_eq!(first_group.parties[0].number, 1);
+        assert_eq!(first_group.parties[1].number, 2);
+        assert_eq!(
+            first_group.parties[0]
+                .members
+                .iter()
+                .map(|member| member.name.as_str())
+                .collect::<Vec<_>>(),
+            vec!["Alice", "Bob"]
+        );
+        assert_eq!(first_group.parties[0].members[0].class_id, 102);
+
+        let all_group_keys = groups
+            .iter()
+            .map(|group| group.key.clone())
+            .collect::<Vec<_>>();
+        let combined_rows = filter_progression_groups(rows.clone(), &all_group_keys);
+        let combined_statistics =
+            build_raid_progression_statistics(combined_rows, &HashMap::new(), &HashMap::new(), &[]);
+        assert_eq!(combined_statistics.summary.attempts, 3);
+
+        let filtered_rows = filter_progression_groups(rows, &[first_group.key.clone()]);
+        let statistics =
+            build_raid_progression_statistics(filtered_rows, &HashMap::new(), &HashMap::new(), &[]);
+
+        assert_eq!(statistics.summary.attempts, 2);
     }
 
     #[test]
