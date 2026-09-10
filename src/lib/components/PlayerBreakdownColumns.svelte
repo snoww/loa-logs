@@ -722,33 +722,21 @@
 {/snippet}
 
 {#snippet ndmg(state: SkillState)}
-  {#if state.skill.rdpsDamageReceived > 0}
-    {@render damageValue(state.skillNdmgString)}
-  {:else}
-    -
-  {/if}
+  {@render damageValue(state.skillNdmgString)}
 {/snippet}
 
 {#snippet ndmgTooltip(state: SkillState)}
-  {#if state.skill.rdpsDamageReceived > 0}
-    {@const received = state.skill.rdpsDamageReceived}
-    <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
-      <span class="text-gray-300">Neutral: {state.skillNdmg.toLocaleString()}</span>
-      <span class="text-gray-300">rDPS received: {received.toLocaleString()}</span>
-    </div>
-  {:else}
-    N/A
-  {/if}
+  {@const received = state.skill.rdpsDamageReceived ?? 0}
+  <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
+    <span class="text-gray-300">Neutral: {state.skillNdmg.toLocaleString()}</span>
+    <span class="text-gray-300">rDPS received: {received.toLocaleString()}</span>
+  </div>
 {/snippet}
 
 {#snippet ndps(state: SkillState)}
-  {#if state.skill.rdpsDamageReceived > 0}
-    {@render damageValue(state.skillNdpsString)}
-  {:else}
-    -
-  {/if}
+  {@render damageValue(state.skillNdpsString)}
 {/snippet}
 
 {#snippet ndpsTooltip(state: SkillState)}
-  {state.skill.rdpsDamageReceived > 0 ? state.skillNdps.toLocaleString() : "N/A"}
+  {state.skillNdps.toLocaleString()}
 {/snippet}
