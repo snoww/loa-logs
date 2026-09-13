@@ -96,3 +96,23 @@
     {/each}
   </div>
 </Card>
+
+{#if split.npcWindows && split.npcWindows.trackedHits > 0}
+  <Card class="mt-4">
+    <div class="bg-black/10 px-3 py-2 font-medium">NPC Window Stat Gains</div>
+    <div class="grid grid-cols-[1fr_max-content] gap-1 p-2">
+      {#each [
+        ["Domination", split.npcWindows.domination],
+        ["Broken Bone", split.npcWindows.brokenBone],
+        ["NPC Damage Taken / Weakness", split.npcWindows.npcDamageTaken],
+        ["Stagger Combat Effects", split.npcWindows.staggerCombatEffect]
+      ] as [string, StatDamageContribution][] as [name, value]}
+        {@const gain = value.damageDoneByStatPlusValue - value.damageDoneByStat}
+        <span class="text-sm">{name}</span>
+        <span class="text-right font-mono text-sm">
+          +{abbreviateNumber(gain)} ({value.damageDoneByStat > 0 ? (100 * gain / value.damageDoneByStat).toFixed(2) : "0.00"}%)
+        </span>
+      {/each}
+    </div>
+  </Card>
+{/if}

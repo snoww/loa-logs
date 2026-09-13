@@ -56,6 +56,7 @@ struct SkillStatsDump {
 
 #[derive(Debug, Clone, Default)]
 struct DamageDataAccumulator {
+    npc_windows_: NpcWindowDamageMetrics,
     damage_split_by_entity_id_: HashMap<u64, i64>,
     damage_done_by_entity_skill_group_: HashMap<u64, HashMap<String, i64>>,
     damage_increase_by_entity_skill_group_: HashMap<u64, HashMap<String, i64>>,
@@ -87,6 +88,7 @@ struct DamageDataAccumulator {
 
 #[derive(Debug, Serialize, Clone, Default)]
 struct DamageDataDump {
+    npc_windows_: NpcWindowDamageMetrics,
     player_name_: String,
     #[serde(skip_serializing_if = "lal_party_number_unknown")]
     party_number_: i32,
@@ -567,7 +569,11 @@ impl EncounterState {
     fn is_mergeable_owned_source(entity: &EncounterEntity) -> bool {
         !matches!(
             entity.entity_type,
-            EntityType::Player | EntityType::Boss | EntityType::Esther | EntityType::DarkGrenade
+            EntityType::Player
+                | EntityType::Boss
+                | EntityType::Esther
+                | EntityType::DarkGrenade
+                | EntityType::NpcBonus
         )
     }
 
@@ -940,6 +946,10 @@ impl EncounterState {
         target.rdps_damage_received += source.rdps_damage_received;
         target.rdps_damage_received_support += source.rdps_damage_received_support;
         target.rdps_damage_given += source.rdps_damage_given;
+        target.npc_window_incomplete_hits += source.npc_window_incomplete_hits;
+        target.npc_window_tracked_hits += source.npc_window_tracked_hits;
+        target.rdps_damage_received_npc += source.rdps_damage_received_npc;
+
         target.stagger += source.stagger;
         target.buffed_damage += source.buffed_damage;
         target.unbuffed_damage += source.unbuffed_damage;
@@ -1049,6 +1059,10 @@ impl EncounterState {
         target.rdps_damage_received += source.rdps_damage_received;
         target.rdps_damage_received_support += source.rdps_damage_received_support;
         target.rdps_damage_given += source.rdps_damage_given;
+        target.npc_window_incomplete_hits += source.npc_window_incomplete_hits;
+        target.npc_window_tracked_hits += source.npc_window_tracked_hits;
+        target.rdps_damage_received_npc += source.rdps_damage_received_npc;
+
         target.incapacitations.extend(source.incapacitations);
         target
             .incapacitations
@@ -1263,6 +1277,7 @@ impl EncounterState {
         target
             .raid_captain_efficiency_
             .merge(source.raid_captain_efficiency_);
+        target.npc_windows_.merge(source.npc_windows_);
         target
             .blunt_thorn_efficiency_
             .merge(source.blunt_thorn_efficiency_);
@@ -1793,6 +1808,13 @@ impl EncounterState {
         }
 
         if let Some(stat_damage_metrics) = stat_damage_metrics {
+            entry.npc_windows_.merge(stat_damage_metrics.npc_windows);
+            if let Some(entity) = self.encounter.entities.get_mut(player_name) {
+                entity.damage_stats.npc_window_incomplete_hits +=
+                    stat_damage_metrics.npc_windows.incomplete_hits;
+                entity.damage_stats.npc_window_tracked_hits +=
+                    stat_damage_metrics.npc_windows.tracked_hits;
+            }
             entry
                 .additional_damage_1percent_damage_
                 .merge(stat_damage_metrics.additional_damage_1percent_damage);
@@ -1893,6 +1915,7 @@ impl EncounterState {
     fn scrub_rdps_derived_state(&mut self) {
         for entity in self.encounter.entities.values_mut() {
             entity.damage_stats.rdps_damage_received = 0;
+            entity.damage_stats.rdps_damage_received_npc = 0;
             entity.damage_stats.rdps_damage_received_support = 0;
             entity.damage_stats.rdps_damage_given = 0;
             entity.damage_stats.rdps = 0;
@@ -1935,9 +1958,53 @@ impl EncounterState {
                 is_confirmed_player_entity(entity, local_player)
                     && entity.damage_stats.damage_dealt > 0
             }
-            EntityType::DarkGrenade => entity.damage_stats.rdps_damage_given > 0,
+            EntityType::DarkGrenade | EntityType::NpcBonus => {
+                entity.damage_stats.rdps_damage_given > 0
+            }
             _ => false,
         }
+    }
+
+    fn ensure_npc_bonus_entity(&mut self, npc: &Entity) -> &mut EncounterEntity {
+        if let Some(name) = self
+            .encounter
+            .entities
+            .values()
+            .find(|entity| entity.entity_type == EntityType::NpcBonus && entity.id == npc.id)
+            .map(|entity| entity.name.clone())
+        {
+            return self.encounter.entities.get_mut(&name).unwrap();
+        }
+        let npc_name = NPC_DATA
+            .get(&npc.npc_id)
+            .and_then(|data| data.name.as_deref())
+            .filter(|name| !name.trim().is_empty())
+            .unwrap_or("NPC");
+        let base_name = format!("{npc_name} — encounter bonuses");
+        let count = self
+            .encounter
+            .entities
+            .values()
+            .filter(|entity| {
+                entity.entity_type == EntityType::NpcBonus
+                    && (entity.name == base_name
+                        || entity.name.starts_with(&format!("{base_name} (")))
+            })
+            .count();
+        let name = if count == 0 {
+            base_name
+        } else {
+            format!("{base_name} ({})", count + 1)
+        };
+        self.encounter
+            .entities
+            .entry(name.clone())
+            .or_insert_with(|| EncounterEntity {
+                id: npc.id,
+                name,
+                entity_type: EntityType::NpcBonus,
+                ..Default::default()
+            })
     }
 
     fn ensure_dark_grenade_entity(&mut self) -> &mut EncounterEntity {
@@ -1999,6 +2066,15 @@ impl EncounterState {
             .encounter
             .entities
             .values()
+            .filter(|e| {
+                matches!(
+                    e.entity_type,
+                    EntityType::Player
+                        | EntityType::Esther
+                        | EntityType::DarkGrenade
+                        | EntityType::NpcBonus
+                )
+            })
             .map(|e| (e.id, e.name.as_str()))
             .collect();
 
@@ -2024,6 +2100,10 @@ impl EncounterState {
             .values()
             .filter(|e| Self::include_in_lal_damage_dump(e, &self.encounter.local_player))
             .map(|entity| {
+                let npc_windows = accumulators
+                    .get(&entity.name)
+                    .map(|acc| acc.npc_windows_)
+                    .unwrap_or_default();
                 let (
                     damage_split_by_name,
                     damage_done_by_entity_skill_group,
@@ -2114,8 +2194,13 @@ impl EncounterState {
                 };
                 let hyper_awakening_damage = entity.damage_stats.hyper_awakening_damage;
                 ContributionSplit {
+                    npc_windows,
+                    npc_damage_attribution: super::ATTRIBUTE_NPC_BONUSES_TO_NPC.bits(),
                     name: entity.name.clone(),
-                    party_number: if entity.entity_type == EntityType::DarkGrenade {
+                    party_number: if matches!(
+                        entity.entity_type,
+                        EntityType::DarkGrenade | EntityType::NpcBonus
+                    ) {
                         Some(-1)
                     } else {
                         self.party_info
@@ -2248,8 +2333,12 @@ impl EncounterState {
             player_id_to_damage_data_.insert(
                 entity_id_,
                 DamageDataDump {
+                    npc_windows_: accumulator.map(|acc| acc.npc_windows_).unwrap_or_default(),
                     player_name_: entity.name.clone(),
-                    party_number_: if entity.entity_type == EntityType::DarkGrenade {
+                    party_number_: if matches!(
+                        entity.entity_type,
+                        EntityType::DarkGrenade | EntityType::NpcBonus
+                    ) {
                         -1
                     } else {
                         self.party_info
@@ -3260,6 +3349,7 @@ impl EncounterState {
                 entity_tracker,
                 buffered_player_entities,
                 buffered_owner_self_effects,
+                super::ATTRIBUTE_NPC_BONUSES_TO_NPC,
             );
             crit_metrics = hit_analysis.crit_metrics;
             stat_damage_metrics = hit_analysis.stat_damage_metrics;
@@ -3595,6 +3685,7 @@ impl EncounterState {
                 }
                 let filtered_se_on_target = filter_target_effects_for_attacker(
                     dmg_src_entity,
+                    dmg_target_entity,
                     &se_on_target,
                     entity_tracker,
                     buffered_player_entities,
@@ -3776,6 +3867,17 @@ impl EncounterState {
 
         if let Some(rdps_result) = rdps_result {
             for attribution in rdps_result.entity_attributions {
+                if attribution.source_entity_id == dmg_target_entity.id
+                    && dmg_target_entity.npc_id != 0
+                {
+                    self.ensure_npc_bonus_entity(dmg_target_entity)
+                        .damage_stats
+                        .rdps_damage_given += attribution.damage;
+                    if let Some(player) = self.encounter.entities.get_mut(&dmg_src_entity.name) {
+                        player.damage_stats.rdps_damage_received_npc += attribution.damage;
+                    }
+                    continue;
+                }
                 if attribution.source_entity_id == DARK_GRENADE_ENTITY_ID {
                     let contributor_entity = self.ensure_dark_grenade_entity();
                     contributor_entity.damage_stats.rdps_damage_given += attribution.damage;
@@ -4607,7 +4709,9 @@ impl EncounterState {
             .entities
             .iter()
             .filter(|(_, entity)| match entity.entity_type {
-                EntityType::DarkGrenade => entity.damage_stats.rdps_damage_given > 0,
+                EntityType::DarkGrenade | EntityType::NpcBonus => {
+                    entity.damage_stats.rdps_damage_given > 0
+                }
                 EntityType::Player => {
                     is_confirmed_player_entity(entity, &self.encounter.local_player)
                         && entity.damage_stats.damage_dealt > 0
@@ -4720,6 +4824,10 @@ impl EncounterState {
             rdps_damage_received: stats.rdps_damage_received,
             rdps_damage_received_support: stats.rdps_damage_received_support,
             rdps_damage_given: stats.rdps_damage_given,
+            npc_window_incomplete_hits: stats.npc_window_incomplete_hits,
+            npc_window_tracked_hits: stats.npc_window_tracked_hits,
+            rdps_damage_received_npc: stats.rdps_damage_received_npc,
+
             incapacitations: stats.incapacitations.clone(),
             stagger: stats.stagger,
             buffed_damage: stats.buffed_damage,
@@ -4835,6 +4943,45 @@ fn adjusted_extreme_difficulty(
 #[cfg(test)]
 mod tests {
     use super::adjusted_extreme_difficulty;
+
+    #[test]
+    fn npc_window_contributions_survive_live_snapshots_and_save_filtering() {
+        use super::EncounterState;
+        use crate::models::{DamageStats, EncounterEntity, EntityType};
+        let mut stats = DamageStats {
+            damage_dealt: 1000,
+            npc_window_tracked_hits: 4,
+            npc_window_incomplete_hits: 1,
+            rdps_damage_received_npc: 100,
+            ..Default::default()
+        };
+        let source = stats.clone();
+        EncounterState::merge_owned_source_damage_stats(&mut stats, source);
+        let snapshot = EncounterState::live_snapshot_damage_stats(&stats);
+        assert_eq!(snapshot.npc_window_tracked_hits, 8);
+        assert_eq!(snapshot.npc_window_incomplete_hits, 2);
+        assert_eq!(snapshot.rdps_damage_received_npc, 200);
+        let npc = EncounterEntity {
+            id: 2,
+            name: "Drextalas — encounter bonuses".into(),
+            entity_type: EntityType::NpcBonus,
+            damage_stats: DamageStats {
+                rdps_damage_given: 100,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        assert!(crate::database::utils::should_insert_entity(&npc, "Player"));
+        assert!(EncounterState::include_in_lal_damage_dump(&npc, "Player"));
+        assert_eq!(npc.damage_stats.damage_dealt, 0);
+        let serialized = serde_json::to_value(&npc).unwrap();
+        assert_eq!(serialized["entityType"], "NPC_BONUS");
+        assert_eq!(serialized["name"], npc.name);
+        assert_eq!(
+            "NPC_BONUS".parse::<EntityType>().unwrap(),
+            EntityType::NpcBonus
+        );
+    }
 
     #[test]
     fn adjusts_extreme_aegir_difficulty_from_boss_hp() {

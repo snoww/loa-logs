@@ -89,6 +89,9 @@ pub struct EncounterEntity {
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase", default)]
 pub struct DamageStats {
+    pub npc_window_incomplete_hits: i64,
+    pub npc_window_tracked_hits: i64,
+    pub rdps_damage_received_npc: i64,
     pub damage_dealt: i64,
     pub hyper_awakening_damage: i64,
     pub damage_taken: i64,
@@ -278,9 +281,41 @@ impl StatDamageContribution {
     }
 }
 
+#[derive(Debug, Default, Serialize, Deserialize, Clone, Copy)]
+#[serde(rename_all = "camelCase", default)]
+pub struct NpcWindowDamageMetrics {
+    pub domination: StatDamageContribution,
+    pub broken_bone: StatDamageContribution,
+    pub npc_damage_taken: StatDamageContribution,
+    pub stagger_combat_effect: StatDamageContribution,
+    pub tracked_hits: i64,
+    pub incomplete_hits: i64,
+    pub missing_stagger_hits: i64,
+    pub missing_domination_hits: i64,
+    pub missing_weakness_hits: i64,
+}
+
+impl NpcWindowDamageMetrics {
+    pub fn merge(&mut self, other: Self) {
+        self.domination.merge(other.domination);
+        self.broken_bone.merge(other.broken_bone);
+        self.npc_damage_taken.merge(other.npc_damage_taken);
+        self.stagger_combat_effect
+            .merge(other.stagger_combat_effect);
+        self.tracked_hits += other.tracked_hits;
+        self.incomplete_hits += other.incomplete_hits;
+        self.missing_stagger_hits += other.missing_stagger_hits;
+        self.missing_domination_hits += other.missing_domination_hits;
+        self.missing_weakness_hits += other.missing_weakness_hits;
+    }
+}
+
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase", default)]
 pub struct ContributionSplit {
+    pub npc_windows: NpcWindowDamageMetrics,
+    // Bitmask from NpcDamageAttribution, retained in saved/uploaded encounter JSON.
+    pub npc_damage_attribution: u8,
     pub name: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub party_number: Option<i32>,

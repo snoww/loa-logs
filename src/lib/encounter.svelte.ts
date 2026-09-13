@@ -73,10 +73,13 @@ export class EncounterState {
       .sort((a, b) => b.damageStats.damageDealt - a.damageStats.damageDealt);
   });
 
-  /**
-   * Synthetic Dark Grenade entity, if any rDPS was attributed to it.
-   * Has no self damage, only rdpsDamageGiven from dark grenade buff attribution
-   */
+  npcBonuses = $derived(
+    Object.values(this.encounter?.entities ?? {})
+      .filter((entity) => entity.entityType === EntityType.NPC_BONUS && entity.damageStats.rdpsDamageGiven > 0)
+      .sort((a, b) => b.damageStats.rdpsDamageGiven - a.damageStats.rdpsDamageGiven)
+  );
+
+  /** Synthetic Dark Grenade source: contributed damage only. */
   darkGrenade = $derived.by(() => {
     if (!this.encounter) return undefined;
     return Object.values(this.encounter.entities).find(

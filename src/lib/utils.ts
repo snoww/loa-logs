@@ -1,5 +1,5 @@
 import { bossHpMap } from "$lib/constants/encounters";
-import { BossHpLog, type DamageStats, type Entity, type IdentityLogType, type IdentityLogTypeValue } from "$lib/types";
+import { BossHpLog, type DamageStats, type Entity, EntityType, type IdentityLogType, type IdentityLogTypeValue } from "$lib/types";
 import { writeImage } from "@tauri-apps/plugin-clipboard-manager";
 import { check as checkUpdate } from "@tauri-apps/plugin-updater";
 import { snapdom } from "@zumer/snapdom";
@@ -314,6 +314,13 @@ export function removeUnknownHtmlTags(input: string) {
   input = input.replace(/<\$TABLE_SKILLFEATURE[^>]*\/>/g, "??");
   input = input.replace(/<\$[^<>]*?(?:<[^<>]*?>[^<>]*?)*?\/?>/g, "??");
   return input;
+}
+
+export function formatEncounterEntityName(entity: Entity): string {
+  // Contribution keys remain distinct from the boss record; only the displayed name loses the suffix.
+  return entity.entityType === EntityType.NPC_BONUS
+    ? entity.name.replace(/ — encounter bonuses(?= \(\d+\)$|$)/, "")
+    : entity.name;
 }
 
 export function formatPlayerName(player: Entity): string {

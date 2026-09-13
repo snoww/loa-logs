@@ -75,6 +75,7 @@ pub struct HitAnalysisResult {
 
 #[derive(Debug, Clone, Default)]
 pub struct HitStatDamageMetrics {
+    pub npc_windows: crate::models::NpcWindowDamageMetrics,
     pub additional_damage_1percent_damage: StatDamageContribution,
     pub critical_hit_rate_1percent_damage: StatDamageContribution,
     pub critical_damage_rate_1percent_damage: StatDamageContribution,
@@ -564,6 +565,7 @@ pub fn analyze_hit_rdps(
     entity_tracker: &EntityTracker,
     buffered_entities: Option<&HashMap<u64, Entity>>,
     buffered_owner_self_effects: Option<&HashMap<u64, Vec<StatusEffectDetails>>>,
+    npc_attribution: super::npc_windows::NpcDamageAttribution,
 ) -> HitAnalysisResult {
     if damage <= 0 {
         return HitAnalysisResult {
@@ -648,6 +650,34 @@ pub fn analyze_hit_rdps(
         attacker_context.entity_id,
         attacker_context.class_id,
     );
+    let target_stagger = super::npc_windows::stagger_state(se_on_target);
+    let enabled = !is_hyper_awakening && is_affected_by_buffs && target.npc_id != 0;
+    let domination = if enabled && target_stagger == super::npc_windows::Signal::Active {
+        crate::data::NPC_WINDOW_DATA.domination_bonus(
+            attacker_snapshot
+                .stat_pairs
+                .get(&(crate::live::stat_type::StatType::OPPRESSION as u8))
+                .copied(),
+            attacker_context.entity.level,
+        )
+    } else if target_stagger == super::npc_windows::Signal::Unresolved && enabled {
+        None
+    } else {
+        Some(0.0)
+    };
+    stats.apply_npc_window(super::npc_windows::HitWindow {
+        target_stagger,
+        self_stagger: super::npc_windows::stagger_state(se_on_source),
+        enabled,
+        npc_id: target.id,
+        attribution: npc_attribution,
+        domination,
+        weakness: if enabled {
+            crate::data::NPC_WINDOW_DATA.weakness_bonus(target, event_timestamp)
+        } else {
+            Some(0.0)
+        },
+    });
     let stats_after_snapshot = if debug_enabled {
         Some(stats.debug_dump_value())
     } else {
@@ -716,7 +746,6 @@ pub fn analyze_hit_rdps(
             rdps: HitRdpsOutcome::Invalid(reason),
         };
     }
-    let mut damage_multiplier = 1.0;
     let attacker_stats_for_target_effects = stats.clone();
     if let Err(reason) = append_target_contributions(
         &mut stats,
@@ -732,9 +761,8 @@ pub fn analyze_hit_rdps(
         effective_damage_attr,
         damage_type,
         is_hyper_awakening,
-        skill_groups,
+        target,
         se_on_target,
-        &mut damage_multiplier,
         event_timestamp,
         entity_tracker,
         buffered_entities,
@@ -809,7 +837,7 @@ pub fn analyze_hit_rdps(
                 se_on_source,
                 se_on_target,
                 &contributions,
-                Some(damage_multiplier),
+                Some(1.0 + stats.npc_damage_taken_rate.value()),
                 Some(total_attack_power),
                 None,
                 &result,
@@ -826,7 +854,7 @@ pub fn analyze_hit_rdps(
             }),
         };
     }
-    let stat_damage_metrics = if stat_damage_eligible {
+    let mut stat_damage_metrics = if stat_damage_eligible {
         Some(compute_hit_stat_damage_metrics(
             &stats,
             stat_damage_base_stats.as_ref(),
@@ -851,6 +879,40 @@ pub fn analyze_hit_rdps(
     } else {
         None
     };
+
+    let metrics = stat_damage_metrics.get_or_insert_with(HitStatDamageMetrics::default);
+    metrics.npc_windows.tracked_hits = 1;
+    metrics.npc_windows.incomplete_hits = i64::from(stats.npc_window.incomplete());
+    metrics.npc_windows.missing_stagger_hits =
+        i64::from(enabled && target_stagger == super::npc_windows::Signal::Unresolved);
+    metrics.npc_windows.missing_domination_hits = i64::from(enabled && domination.is_none());
+    metrics.npc_windows.missing_weakness_hits =
+        i64::from(enabled && stats.npc_window.weakness.is_none());
+    for (metric, stat) in [
+        (
+            &mut metrics.npc_windows.domination,
+            &stats.domination_damage_rate,
+        ),
+        (
+            &mut metrics.npc_windows.broken_bone,
+            &stats.broken_bone_damage_rate,
+        ),
+        (
+            &mut metrics.npc_windows.npc_damage_taken,
+            &stats.npc_damage_taken_rate,
+        ),
+        (
+            &mut metrics.npc_windows.stagger_combat_effect,
+            &stats.stagger_combat_effect_damage_rate,
+        ),
+    ] {
+        let multiplier = if enabled {
+            stat.positive_multiplier()
+        } else {
+            1.0
+        };
+        metric.add(damage as f64, damage as f64 / multiplier);
+    }
 
     let entity_portions = stats.get_damage_portions_contributed_from_all_entities(
         total_attack_power,
@@ -954,7 +1016,7 @@ pub fn analyze_hit_rdps(
             se_on_source,
             se_on_target,
             &contributions,
-            Some(damage_multiplier),
+            Some(1.0 + stats.npc_damage_taken_rate.value()),
             Some(total_attack_power),
             Some(&entity_portions),
             &result,
@@ -965,6 +1027,462 @@ pub fn analyze_hit_rdps(
         crit_metrics,
         stat_damage_metrics,
         rdps: HitRdpsOutcome::Computed(result),
+    }
+}
+
+#[cfg(test)]
+mod npc_windows_integration_tests {
+    use super::*;
+    use crate::live::entity_tracker::{InspectBaseStats, InspectSnapshot};
+    use crate::live::id_tracker::IdTracker;
+    use crate::live::npc_windows::NpcDamageAttribution;
+    use crate::live::npc_windows::tests::{base_stats, drex, effect};
+    use crate::live::party_tracker::PartyTracker;
+    use crate::live::status_tracker::StatusTracker;
+    use crate::live::test_data::initialize;
+    use crate::models::EntityType;
+    use std::cell::RefCell;
+    use std::rc::Rc;
+
+    fn run_hit(
+        stacks: u8,
+        npc_attribution: NpcDamageAttribution,
+        hyper: bool,
+        have_action: bool,
+        have_domination: bool,
+    ) -> HitAnalysisResult {
+        run_hit_with_effects(
+            npc_attribution,
+            hyper,
+            have_action,
+            have_domination,
+            &[effect(49000010, 1), effect(420676006, stacks)],
+        )
+    }
+
+    fn run_hit_with_effects(
+        npc_attribution: NpcDamageAttribution,
+        hyper: bool,
+        have_action: bool,
+        have_domination: bool,
+        effects: &[StatusEffectDetails],
+    ) -> HitAnalysisResult {
+        initialize();
+        let mut base = base_stats();
+        base.add_ability_feature(
+            "broken_bone",
+            3,
+            &crate::data::EXTERNAL_ABILITY_DATA[&245].levels[&3].values,
+            1,
+        );
+        base.add_combat_effect(605100031, 1, StatSource::Ability(605100031));
+        let attacker = Entity {
+            id: 1,
+            name: "Player".into(),
+            entity_type: EntityType::Player,
+            class_id: 102,
+            level: 70,
+            inspect_snapshot: Some(InspectSnapshot {
+                stat_pairs: if have_domination {
+                    HashMap::from([(17, 79)])
+                } else {
+                    HashMap::new()
+                },
+                ..Default::default()
+            }),
+            inspect_base_stats: Some(InspectBaseStats {
+                owner_id: 1,
+                class_id: 102,
+                stats: Arc::new(base),
+            }),
+            ..Default::default()
+        };
+        let mut target = drex();
+        if have_action {
+            target.observe_npc_action(4206760, Some(0), 1, 0.0, 0, false);
+        }
+        let ids = Rc::new(RefCell::new(IdTracker::new()));
+        let party = Rc::new(RefCell::new(PartyTracker::new(ids.clone())));
+        let statuses = Rc::new(RefCell::new(StatusTracker::new(party.clone())));
+        let mut tracker = EntityTracker::new(statuses, ids, party);
+        tracker.entities.insert(1, attacker.clone());
+        // Target is intentionally absent from the live tracker: queued hits keep their frozen target.
+        analyze_hit_rdps(
+            &attacker,
+            &target,
+            1_000_000,
+            0,
+            0,
+            0,
+            &HitOption::NONE,
+            &HitFlag::NORMAL,
+            None,
+            0,
+            hyper,
+            false,
+            &[],
+            effects,
+            1000,
+            &tracker,
+            None,
+            None,
+            npc_attribution,
+        )
+    }
+
+    #[test]
+    fn npc_window_stat_gains_remove_only_positive_bonuses() {
+        // The exported NPC buff applies -50% physical and magical damage taken.
+        let reduction = effect(413914310, 1);
+        for (effects, positive_multiplier) in [
+            (vec![reduction.clone()], 1.0),
+            (vec![reduction.clone(), effect(420676006, 1)], 1.2),
+            (vec![reduction.clone(), effect(420676006, 2)], 1.4),
+            (
+                vec![reduction, effect(420676006, 1), effect(429970096, 1)],
+                1.2 * 1.03,
+            ),
+        ] {
+            for attribution in [
+                NpcDamageAttribution::empty(),
+                NpcDamageAttribution::DAMAGE_TAKEN,
+            ] {
+                for hyper in [false, true] {
+                    let hit = run_hit_with_effects(attribution, hyper, false, false, &effects);
+                    let metrics = hit
+                        .stat_damage_metrics
+                        .unwrap()
+                        .npc_windows
+                        .npc_damage_taken;
+                    let multiplier = if hyper { 1.0 } else { positive_multiplier };
+                    let expected_without = (1_000_000.0 / multiplier) as i64;
+                    assert!((metrics.damage_done_by_stat - expected_without).abs() <= 1);
+                    assert_eq!(metrics.damage_done_by_stat_plus_value, 1_000_000);
+                    let HitRdpsOutcome::Computed(rdps) = hit.rdps else {
+                        panic!("NPC stat-gain hit failed")
+                    };
+                    let expected_credit = if !hyper && !attribution.is_empty() {
+                        1_000_000 - expected_without
+                    } else {
+                        0
+                    };
+                    assert!((rdps.rdps_damage_received - expected_credit).abs() <= 1);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn full_hit_counts_stacks_and_preserves_metrics_for_every_attribution_combination() {
+        for stacks in [1, 2] {
+            let player = run_hit(stacks, NpcDamageAttribution::empty(), false, true, true);
+            let metrics = player.stat_damage_metrics.unwrap().npc_windows;
+            let expected_without = (1_000_000.0 / (1.2 * (1.0 + 0.2 * f64::from(stacks)))) as i64;
+            assert_eq!(
+                metrics.npc_damage_taken.damage_done_by_stat,
+                expected_without
+            );
+            assert_eq!(
+                metrics.npc_damage_taken.damage_done_by_stat_plus_value,
+                1_000_000
+            );
+            assert_eq!(metrics.incomplete_hits, 0);
+            let expected_metrics = serde_json::to_value(metrics).unwrap();
+            let HitRdpsOutcome::Computed(player_rdps) = player.rdps else {
+                panic!("player attribution failed")
+            };
+            assert_eq!(player_rdps.rdps_damage_received, 0);
+            for bits in 0..=15 {
+                let attribution = NpcDamageAttribution::from_bits(bits).unwrap();
+                let npc = run_hit(stacks, attribution, false, true, true);
+                assert_eq!(
+                    expected_metrics,
+                    serde_json::to_value(npc.stat_damage_metrics.unwrap().npc_windows).unwrap()
+                );
+                let HitRdpsOutcome::Computed(result) = npc.rdps else {
+                    panic!("NPC attribution failed")
+                };
+                assert_eq!(result.rdps_damage_received > 0, !attribution.is_empty());
+                assert_eq!(
+                    result.entity_attributions.len(),
+                    usize::from(!attribution.is_empty())
+                );
+                if let Some(npc) = result.entity_attributions.first() {
+                    assert_eq!(npc.source_entity_id, 2);
+                    assert_eq!(npc.damage, result.rdps_damage_received);
+                }
+                for (flag, source) in [
+                    (
+                        NpcDamageAttribution::DOMINATION,
+                        "domination_damage_rate_/$@[19]",
+                    ),
+                    (
+                        NpcDamageAttribution::BROKEN_BONE,
+                        "broken_bone_damage_rate_/$@[15,\"broken_bone\"]",
+                    ),
+                    (
+                        NpcDamageAttribution::DAMAGE_TAKEN,
+                        "npc_damage_taken_rate_/$@[20]",
+                    ),
+                    (
+                        NpcDamageAttribution::DAMAGE_TAKEN,
+                        "npc_damage_taken_rate_/$@[16,420676006]",
+                    ),
+                    (
+                        NpcDamageAttribution::COMBAT_EFFECTS,
+                        "stagger_combat_effect_damage_rate_/$@[17,605100031]",
+                    ),
+                ] {
+                    assert_eq!(
+                        result.skill_group_attributions.iter().any(|entry| {
+                            entry.source_entity_id == 2
+                                && entry.group_name == source
+                                && entry.damage > 0
+                        }),
+                        attribution.contains(flag),
+                        "{attribution:?}: {source}",
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn configured_npc_window_attribution_exposes_bonus_sources() {
+        let analysis = run_hit(
+            1,
+            crate::live::ATTRIBUTE_NPC_BONUSES_TO_NPC,
+            false,
+            true,
+            true,
+        );
+        let HitRdpsOutcome::Computed(result) = analysis.rdps else {
+            panic!("configured NPC attribution failed")
+        };
+        assert_eq!(
+            crate::live::ATTRIBUTE_NPC_BONUSES_TO_NPC,
+            NpcDamageAttribution::DAMAGE_TAKEN
+        );
+        assert_eq!(
+            result.rdps_damage_received,
+            (1_000_000.0_f64 * (1.0 - 1.0 / 1.44)).round() as i64
+        );
+        assert_eq!(result.entity_attributions.len(), 1);
+        assert_eq!(result.entity_attributions[0].source_entity_id, 2);
+        assert_eq!(
+            result.entity_attributions[0].damage,
+            result.rdps_damage_received
+        );
+        for source in [
+            "npc_damage_taken_rate_/$@[20]",
+            "npc_damage_taken_rate_/$@[16,420676006]",
+        ] {
+            assert!(
+                result.skill_group_attributions.iter().any(|attribution| {
+                    attribution.source_entity_id == 2
+                        && attribution.group_name == source
+                        && attribution.damage > 0
+                }),
+                "missing NPC contribution: {source}"
+            );
+        }
+    }
+
+    #[test]
+    fn npc_window_rejects_other_party_sources_without_reassigning_them_to_the_boss() {
+        initialize();
+        let ids = Rc::new(RefCell::new(IdTracker::new()));
+        let party = Rc::new(RefCell::new(PartyTracker::new(ids.clone())));
+        let statuses = Rc::new(RefCell::new(StatusTracker::new(party.clone())));
+        let mut tracker = EntityTracker::new(statuses, ids.clone(), party.clone());
+        for (id, party_id) in [(1, 1), (3, 1), (4, 2)] {
+            ids.borrow_mut().add_mapping(id + 100, id);
+            party
+                .borrow_mut()
+                .add(1, party_id, id + 100, id, Some(format!("Player {id}")));
+            let mut base = base_stats();
+            base.owner_id = id;
+            tracker.entities.insert(
+                id,
+                Entity {
+                    id,
+                    character_id: id + 100,
+                    name: format!("Player {id}"),
+                    entity_type: EntityType::Player,
+                    class_id: 102,
+                    level: 70,
+                    inspect_snapshot: Some(InspectSnapshot {
+                        stat_pairs: HashMap::from([(17, 0)]),
+                        ..Default::default()
+                    }),
+                    inspect_base_stats: Some(InspectBaseStats {
+                        owner_id: id,
+                        class_id: 102,
+                        stats: Arc::new(base),
+                    }),
+                    ..Default::default()
+                },
+            );
+        }
+        let attacker = tracker.entities[&1].clone();
+        let target = drex(); // Queued target is intentionally absent from live entities.
+        let make_effect = |buff_id, owner| {
+            let mut entry = effect(buff_id, 1);
+            entry.source_id = owner;
+            entry.target_id = target.id;
+            entry.unique_group = SKILL_BUFF_DATA[&buff_id].unique_group;
+            entry.owner_player_stats_snapshot = Some(Arc::new(base_stats()));
+            entry
+        };
+        let own_party = make_effect(361004, 3);
+        let other_party = make_effect(480010, 4);
+        let npc = make_effect(429970096, target.id);
+        let dark = make_effect(32240, 3);
+        let own_bracelet = make_effect(605100063, 3);
+        let own_card = make_effect(610001002, 3);
+        for attribution in [
+            NpcDamageAttribution::empty(),
+            NpcDamageAttribution::DAMAGE_TAKEN,
+        ] {
+            let analyze = |effects: &[StatusEffectDetails]| {
+                analyze_hit_rdps(
+                    &attacker,
+                    &target,
+                    1_000_000,
+                    0,
+                    0,
+                    0,
+                    &HitOption::NONE,
+                    &HitFlag::NORMAL,
+                    None,
+                    0,
+                    false,
+                    false,
+                    &[],
+                    effects,
+                    1000,
+                    &tracker,
+                    None,
+                    None,
+                    attribution,
+                )
+            };
+            let baseline_effects = [
+                own_party.clone(),
+                npc.clone(),
+                dark.clone(),
+                own_bracelet.clone(),
+                own_card.clone(),
+            ];
+            let baseline = analyze(&baseline_effects);
+            let mut observed_effects = baseline_effects.to_vec();
+            observed_effects.extend([
+                other_party.clone(),
+                make_effect(480010, 0),
+                make_effect(605100063, 4),
+                make_effect(610001002, 4),
+                make_effect(608244000, 4),
+                make_effect(161210, 4),
+            ]);
+            let observed = analyze(&observed_effects);
+            let HitRdpsOutcome::Computed(baseline) = baseline.rdps else {
+                panic!("baseline")
+            };
+            let HitRdpsOutcome::Computed(observed) = observed.rdps else {
+                panic!("observed")
+            };
+            assert_eq!(observed.rdps_damage_received, baseline.rdps_damage_received);
+            let portions = |result: &HitRdpsResult| {
+                result
+                    .entity_attributions
+                    .iter()
+                    .map(|entry| (entry.source_entity_id, entry.damage))
+                    .collect::<HashMap<_, _>>()
+            };
+            assert_eq!(portions(&observed), portions(&baseline));
+            assert!(
+                observed
+                    .entity_attributions
+                    .iter()
+                    .any(|entry| entry.source_entity_id == 3)
+            );
+            assert!(
+                observed
+                    .entity_attributions
+                    .iter()
+                    .any(|entry| entry.source_entity_id == DARK_GRENADE_ENTITY_ID)
+            );
+            assert!(
+                !observed
+                    .skill_group_attributions
+                    .iter()
+                    .any(|entry| entry.group_name.contains("480010"))
+            );
+            for entry in observed
+                .skill_group_attributions
+                .iter()
+                .filter(|entry| entry.source_entity_id == target.id)
+            {
+                assert_eq!(entry.group_name, "npc_damage_taken_rate_/$@[16,429970096]");
+            }
+        }
+        let filtered = filter_target_effects_for_attacker(
+            &attacker,
+            &target,
+            &[own_party, other_party],
+            &tracker,
+            None,
+        );
+        assert_eq!(filtered.len(), 1);
+        assert_eq!(filtered[0].status_effect_id, 361004);
+        let mut unresolved_stagger = make_effect(49000010, 0);
+        unresolved_stagger.owner_player_stats_snapshot = None;
+        let filtered = filter_target_effects_for_attacker(
+            &attacker,
+            &target,
+            &[npc, unresolved_stagger, make_effect(480010, 0)],
+            &tracker,
+            None,
+        );
+        assert_eq!(
+            filtered
+                .iter()
+                .map(|entry| entry.status_effect_id)
+                .collect::<Vec<_>>(),
+            vec![429970096, 49000010]
+        );
+    }
+
+    #[test]
+    fn unknown_windows_count_known_bonuses_and_hyper_awakening_stays_raw() {
+        let partial = run_hit(1, NpcDamageAttribution::all(), false, false, false);
+        let metrics = partial.stat_damage_metrics.unwrap().npc_windows;
+        assert_eq!(metrics.incomplete_hits, 1);
+        assert_eq!(metrics.missing_domination_hits, 1);
+        assert_eq!(metrics.missing_weakness_hits, 1);
+        assert!(metrics.broken_bone.damage_done_by_stat < 1_000_000);
+        assert_eq!(
+            metrics.npc_damage_taken.damage_done_by_stat,
+            (1_000_000.0 / 1.2) as i64
+        );
+        assert!(matches!(partial.rdps, HitRdpsOutcome::Computed(_)));
+        let hyper = run_hit(2, NpcDamageAttribution::all(), true, true, true);
+        let metrics = hyper.stat_damage_metrics.unwrap().npc_windows;
+        for stat in [
+            metrics.domination,
+            metrics.broken_bone,
+            metrics.npc_damage_taken,
+            metrics.stagger_combat_effect,
+        ] {
+            assert_eq!(stat.damage_done_by_stat, 1_000_000);
+            assert_eq!(stat.damage_done_by_stat_plus_value, 1_000_000);
+        }
+        assert_eq!(metrics.incomplete_hits, 0);
+        let HitRdpsOutcome::Computed(rdps) = hyper.rdps else {
+            panic!("hyper awakening attribution failed")
+        };
+        assert_eq!(rdps.rdps_damage_received, 0);
+        assert!(rdps.entity_attributions.is_empty());
     }
 }
 
@@ -1485,9 +2003,8 @@ fn append_target_contributions(
     damage_attr: Option<u8>,
     damage_type: u8,
     is_hyper_awakening: bool,
-    _skill_groups: &[u32],
+    target: &Entity,
     se_on_target: &[StatusEffectDetails],
-    damage_multiplier: &mut f64,
     event_timestamp: i64,
     entity_tracker: &EntityTracker,
     buffered_entities: Option<&HashMap<u64, Entity>>,
@@ -1497,8 +2014,13 @@ fn append_target_contributions(
         return Ok(());
     }
 
-    let selected_effects =
-        select_target_effects(attacker, se_on_target, entity_tracker, buffered_entities);
+    let selected_effects = select_target_effects(
+        attacker,
+        target,
+        se_on_target,
+        entity_tracker,
+        buffered_entities,
+    );
     for (effect, source_entity_id) in selected_effects {
         let Some(skill_buff) = SKILL_BUFF_DATA.get(&effect.status_effect_id) else {
             continue;
@@ -1521,13 +2043,16 @@ fn append_target_contributions(
             );
         let is_attributable_source = is_dark_grenade
             || is_player_source_entity_id(source_entity_id, buffered_entities, entity_tracker);
-        if !should_apply_target_effect(
-            skill_buff,
-            attacker,
-            source_entity_id,
-            entity_tracker,
-            buffered_entities,
-        ) {
+        let npc_self_effect = is_npc_self_effect(&effect, target);
+        if !npc_self_effect
+            && !should_apply_target_effect(
+                skill_buff,
+                attacker,
+                source_entity_id,
+                entity_tracker,
+                buffered_entities,
+            )
+        {
             continue;
         }
         let source_skill_id = source_skill_id_from_effect(&effect);
@@ -1598,7 +2123,20 @@ fn append_target_contributions(
         );
         let buff_source = StatSource::SkillBuff(skill_buff.id as u32);
         for option in &level_data.passive_options {
-            apply_target_passive_option(option, damage_type, damage_attr, damage_multiplier);
+            let mut multiplier = 1.0;
+            apply_target_passive_option(option, damage_type, damage_attr, &mut multiplier);
+            if multiplier != 1.0 {
+                if npc_self_effect {
+                    stats.add_npc_damage_taken_bonus(multiplier - 1.0, buff_source.clone());
+                } else {
+                    stats.npc_damage_taken_rate.add(
+                        multiplier - 1.0,
+                        attacker.id,
+                        source_entity_id,
+                        buff_source.clone(),
+                    );
+                }
+            }
             if is_dark_grenade
                 && let Some(factor) = apply_dark_grenade_target_passive_stat(
                     stats,
@@ -2019,6 +2557,11 @@ fn should_apply_target_effect(
     entity_tracker: &EntityTracker,
     buffered_entities: Option<&HashMap<u64, Entity>>,
 ) -> bool {
+    if get_buffered_or_live_entity(source_entity_id, buffered_entities, entity_tracker)
+        .is_some_and(|source| source.npc_id != 0)
+    {
+        return true;
+    }
     if is_party_wide_skill_buff(skill_buff) {
         if is_same_party_target_effect_source(
             attacker,
@@ -2043,8 +2586,13 @@ fn should_apply_target_effect(
     true
 }
 
+fn is_npc_self_effect(effect: &StatusEffectDetails, target: &Entity) -> bool {
+    target.npc_id != 0 && effect.source_id == target.id
+}
+
 pub fn filter_target_effects_for_attacker(
     attacker: &Entity,
+    target: &Entity,
     se_on_target: &[StatusEffectDetails],
     entity_tracker: &EntityTracker,
     buffered_entities: Option<&HashMap<u64, Entity>>,
@@ -2058,6 +2606,11 @@ pub fn filter_target_effects_for_attacker(
             let Some(skill_buff) = SKILL_BUFF_DATA.get(&effect.status_effect_id) else {
                 return true;
             };
+            if is_npc_self_effect(effect, target)
+                || (target.npc_id != 0 && skill_buff.buff_type == "paralyzation")
+            {
+                return true;
+            }
             // Skip the source resolution when the buff can't be filtered out anyway.
             if !is_party_wide_skill_buff(skill_buff) && !is_self_target_skill_buff(skill_buff) {
                 return true;
@@ -3382,6 +3935,7 @@ fn select_source_effects_for_affected_entity_with<'a>(
 
 fn select_target_effects(
     attacker: &Entity,
+    target: &Entity,
     status_effects: &[StatusEffectDetails],
     entity_tracker: &EntityTracker,
     buffered_entities: Option<&HashMap<u64, Entity>>,
@@ -3406,13 +3960,17 @@ fn select_target_effects(
             continue;
         }
 
-        let source_entity_id = resolve_effect_source_id(
-            status_effect,
-            skill_buff,
-            owner_scope_for_effect(skill_buff, attacker.id, attacker.character_id),
-            entity_tracker,
-            buffered_entities,
-        );
+        let source_entity_id = if is_npc_self_effect(status_effect, target) {
+            target.id
+        } else {
+            resolve_effect_source_id(
+                status_effect,
+                skill_buff,
+                owner_scope_for_effect(skill_buff, attacker.id, attacker.character_id),
+                entity_tracker,
+                buffered_entities,
+            )
+        };
         if source_entity_id == 0 {
             continue;
         }
@@ -3960,7 +4518,6 @@ mod tests {
             ..Default::default()
         };
         let mut contributions = Vec::new();
-        let mut damage_multiplier = 1.0;
         let effects = vec![StatusEffectDetails {
             status_effect_id: 521301,
             unique_group: 521301,
@@ -3983,9 +4540,8 @@ mod tests {
             None,
             0,
             false,
-            &[],
+            &Entity::default(),
             &effects,
-            &mut damage_multiplier,
             0,
             &tracker,
             None,
@@ -3994,7 +4550,7 @@ mod tests {
         .unwrap();
 
         assert_approx_eq(stats.outgoing_dmg_stat_amp.get_value_for_entity_id(1), 0.05);
-        assert_approx_eq(damage_multiplier, 1.0);
+        assert_approx_eq(stats.npc_damage_taken_rate.value(), 0.0);
         assert_eq!(contributions.len(), 1);
         assert_eq!(contributions[0].rdps_type, RDPS_TYPE_TARGET_DEBUFF);
         assert_eq!(contributions[0].source_entity_id, 1);
@@ -4178,23 +4734,7 @@ mod tests {
     }
 
     fn ensure_rdps_test_data() {
-        static INIT: std::sync::Once = std::sync::Once::new();
-        INIT.call_once(|| {
-            let skill_buff_path =
-                std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("meter-data/SkillBuff.json");
-            let skill_buff_json =
-                std::fs::read_to_string(&skill_buff_path).expect("SkillBuff test data exists");
-            let skill_buffs: HashMap<u32, crate::models::SkillBuffData> =
-                serde_json::from_str(&skill_buff_json).expect("SkillBuff test data parses");
-
-            let _ = SKILL_BUFF_DATA.set(skill_buffs);
-            let _ = SKILL_DATA.set(HashMap::new());
-            let _ = SUPPORT_IDENTITY_GROUP
-                .set(hashbrown::HashSet::from([211400, 368000, 310501, 480018]));
-            let _ = RDPS_ADDITIONAL_IDENTITY_GROUP
-                .set(hashbrown::HashSet::from([214020, 360102, 480024]));
-            let _ = SUPPORT_MARKING_GROUP.set(hashbrown::HashSet::from([210230]));
-        });
+        crate::live::test_data::initialize();
     }
 
     fn assert_approx_eq(actual: f64, expected: f64) {

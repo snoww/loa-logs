@@ -19,7 +19,9 @@ export const enum StatSourceType {
   AbilityFeature = 15,
   SkillBuff = 16,
   Ability = 17,
-  Composite = 18
+  Composite = 18,
+  Domination = 19,
+  NpcWeakness = 20
 }
 
 export type StatSource =

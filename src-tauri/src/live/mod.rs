@@ -4,12 +4,15 @@ mod entity_tracker;
 mod id_tracker;
 mod inspect_stats;
 mod manager;
+pub(crate) mod npc_windows;
 mod party_tracker;
 mod player_stats;
 mod rdps;
 mod skill_tracker;
 mod stat_type;
 mod status_tracker;
+#[cfg(test)]
+mod test_data;
 mod utils;
 
 use crate::api::{BanList, HeartBeatApi};
@@ -51,6 +54,10 @@ use crate::context::AppContext;
 // Flip these only when debugging live inspect / attribution issues.
 pub(crate) const DEBUG_TRACE_INSPECT_PACKETS: bool = true;
 pub(crate) const DEBUG_DUMP_DAMAGE_STATE_JSON: bool = false;
+
+// Only enabled categories leave the player's nDPS; damage and stat gains are unchanged.
+pub(crate) const ATTRIBUTE_NPC_BONUSES_TO_NPC: npc_windows::NpcDamageAttribution =
+    npc_windows::NpcDamageAttribution::DAMAGE_TAKEN;
 
 static COMPUTE_STAT_DAMAGE_METRICS: AtomicBool = AtomicBool::new(true);
 const LIVE_DURATION_EXCEED: Duration = Duration::from_millis(100);
@@ -328,7 +335,7 @@ pub fn start(args: StartArgs) -> Result<()> {
             }
             PKTDeathNotify::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTDeathNotify>().unwrap()
-                    && let Some(entity) = entity_tracker.entities.get(&pkt.target_id)
+                    && let Some(entity) = entity_tracker.entities.get_mut(&pkt.target_id)
                 {
                     debug_print!(
                         "death: {}, {}, {}",
@@ -336,6 +343,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                         entity.entity_type,
                         entity.id
                     );
+                    entity.npc_action = None;
                     state.on_death(entity);
                 }
             }
@@ -763,6 +771,17 @@ pub fn start(args: StartArgs) -> Result<()> {
             }
             PKTSkillStartNotify::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTSkillStartNotify>().unwrap() {
+                    if let Some(entity) = entity_tracker.entities.get_mut(&pkt.source_id) {
+                        entity.observe_npc_action(
+                            pkt.skill_id,
+                            Some(u32::from(pkt.skill_option_data.layer_index.unwrap_or(0))),
+                            pkt.skill_option_data.start_stage_index.unwrap_or(0),
+                            f32::from_bits(pkt.skill_option_data.stage_start_time.unwrap_or(0))
+                                as f64,
+                            Utc::now().timestamp_millis(),
+                            false,
+                        );
+                    }
                     let mut entity = entity_tracker.get_source_entity(pkt.source_id);
                     entity_tracker.infer_entity_class_from_skill(&mut entity, pkt.skill_id);
                     let should_buffer_for_startup =
@@ -821,9 +840,38 @@ pub fn start(args: StartArgs) -> Result<()> {
                     }
                 }
             }
-            // PKTSkillStageNotify::OPCODE => {
-            //     let pkt = PKTSkillStageNotify::new(&data);
-            // }
+            PKTSkillStageNotify::OPCODE => {
+                if let Some(pkt) = packet.try_parse::<PKTSkillStageNotify>().unwrap()
+                    && let Some(entity) = entity_tracker.entities.get_mut(&pkt.source_id)
+                {
+                    entity.observe_npc_action(
+                        pkt.skill_id,
+                        None,
+                        pkt.stage,
+                        0.0,
+                        Utc::now().timestamp_millis(),
+                        true,
+                    );
+                }
+            }
+            PKTStatChangeOriginNotify::OPCODE => {
+                if let Some(pkt) = packet.try_parse::<PKTStatChangeOriginNotify>().unwrap()
+                    && let Some(entity) = entity_tracker.entities.get_mut(&pkt.object_id)
+                {
+                    for stat in pkt.stat_pairs_results {
+                        entity.observe_stat(stat.stat_type, stat.value);
+                    }
+                }
+            }
+            PKTStatChangeNotify::OPCODE => {
+                if let Some(pkt) = packet.try_parse::<PKTStatChangeNotify>().unwrap()
+                    && let Some(entity) = entity_tracker.entities.get_mut(&pkt.object_id)
+                {
+                    for stat in pkt.stat_pairs {
+                        entity.observe_stat(stat.stat_type, stat.value);
+                    }
+                }
+            }
             PKTSkillDamageAbnormalMoveNotify::OPCODE => {
                 if Instant::now() - raid_end_cd < Duration::from_secs(10) {
                     debug_print!("ignoring damage - SkillDamageAbnormalMoveNotify");

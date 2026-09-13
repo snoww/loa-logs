@@ -593,6 +593,7 @@
           {@const dpsContrib =
             state.entity.damageStats.rdpsDamageReceived -
             state.entity.damageStats.rdpsDamageReceivedSupport -
+            (state.entity.damageStats.rdpsDamageReceivedNpc ?? 0) -
             state.darkGrenadeDamageReceived}
           <div>
             Support Contribution: {customRound(
@@ -604,6 +605,9 @@
           {/if}
           {#if state.darkGrenadeDamageReceived > 0}
             <div>Dark Contribution: {customRound((state.darkGrenadeDamageReceived / state.damageDealt) * 100)}%</div>
+          {/if}
+          {#if (state.entity.damageStats.rdpsDamageReceivedNpc ?? 0) > 0}
+            <div>NPC Contribution: {customRound(((state.entity.damageStats.rdpsDamageReceivedNpc ?? 0) / state.damageDealt) * 100)}%</div>
           {/if}
         {/if}
         <div>

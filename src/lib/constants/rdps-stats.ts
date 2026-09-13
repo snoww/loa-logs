@@ -19,6 +19,10 @@ export type StatDataGroup =
   | "ally_brand_power_"
   | "evolution_damage_"
   | "modify_damage_combat_effect_"
+  | "domination_damage_rate_"
+  | "broken_bone_damage_rate_"
+  | "npc_damage_taken_rate_"
+  | "stagger_combat_effect_damage_rate_"
   | "spec_bonus_identity_1_"
   | "spec_bonus_identity_2_"
   | "spec_bonus_identity_3_"
@@ -82,6 +86,27 @@ const attrRates = (typeName: string): StatDataDescriptor => ({
 });
 
 export const statDataDescriptors: Record<StatDataGroup, StatDataDescriptor> = {
+  domination_damage_rate_: {
+    title: "Domination",
+    help: "Extra damage from Domination against staggered enemies. Does not apply to Hyper Awakening.",
+    type: "multiplicative"
+  },
+  broken_bone_damage_rate_: {
+    title: "Broken Bone",
+    help: "Extra damage from Broken Bone against staggered enemies. Does not apply to Hyper Awakening.",
+    type: "multiplicative"
+  },
+  npc_damage_taken_rate_: {
+    title: "NPC Damage Taken",
+    help: "Extra damage from enemy weaknesses and debuffs that increase damage taken. Does not apply to Hyper Awakening.",
+    type: "multiplicative"
+  },
+  stagger_combat_effect_damage_rate_: {
+    title: "Stagger Combat Effects",
+    help: "Extra damage from effects that activate against staggered enemies. Does not apply to Hyper Awakening.",
+    type: "multiplicative"
+  },
+
   weapon_power_: simpleStat("Weapon Power"),
   weapon_dam_x_: simpleStat("Weapon Power %", "This stat is provided primarily by Earring accessory lines."),
   attack_power_base_multiplier_: simpleStat(

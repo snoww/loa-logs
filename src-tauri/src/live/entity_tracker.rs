@@ -373,6 +373,12 @@ impl EntityTracker {
             class_id: pkt.class_id as u32,
             gear_level: truncate_gear_level(pkt.gear_level),
             character_id: pkt.character_id,
+            level: pkt.level,
+            stats: pkt
+                .stat_pairs
+                .iter()
+                .map(|stat| (stat.stat_type, stat.value))
+                .collect(),
             visibility_generation: self.current_visibility_generation,
             ..Default::default()
         };
@@ -455,6 +461,7 @@ impl EntityTracker {
             class_id: pc_struct.class_id as u32,
             gear_level: truncate_gear_level(pc_struct.max_item_level), // todo?
             character_id: pc_struct.character_id,
+            level: pc_struct.level,
             visibility_generation: self.current_visibility_generation,
             stats: pc_struct
                 .stat_pairs
@@ -760,6 +767,13 @@ impl EntityTracker {
         };
 
         for member in pkt.party_member_datas {
+            for entity in self
+                .entities
+                .values_mut()
+                .filter(|entity| entity.character_id == member.character_id)
+            {
+                entity.level = member.character_level;
+            }
             self.character_id_to_name
                 .insert(member.character_id, member.name.clone());
             if unknown_local
@@ -2342,6 +2356,7 @@ fn merge_player_identity_state(target: &mut Entity, previous: Entity) {
 
 #[derive(Debug, Default, Clone)]
 pub struct Entity {
+    pub npc_action: Option<crate::live::npc_windows::ObservedAction>,
     pub id: u64,
     pub entity_type: EntityType,
     pub name: String,

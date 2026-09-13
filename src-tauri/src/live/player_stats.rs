@@ -25,7 +25,7 @@ const ROSTER_CRITICAL_HIT_BONUS: f64 = 69.0;
 const SKIN_MAIN_STAT_MULTIPLIER_CAP: f64 = 0.08;
 const PET_MAIN_STAT_MULTIPLIER: f64 = 0.011057;
 const PET_SKILL_DAMAGE_RATE: f64 = 0.01;
-const FIXED_STAT_DATA_COUNT: usize = 44;
+const FIXED_STAT_DATA_COUNT: usize = 48;
 pub const STAT_PRIORITY_SUPPORT: i32 = 0;
 pub const STAT_PRIORITY_DEFAULT: i32 = 100;
 
@@ -91,6 +91,8 @@ pub enum StatSource {
         converter: Box<StatSource>,
         original: Box<StatSource>,
     },
+    Domination,
+    NpcWeakness,
     /// Only used in unit tests.
     #[cfg(test)]
     Test,
@@ -312,6 +314,15 @@ impl StatData {
             }
         }
         value
+    }
+
+    // Positive factors in a multiplicative stat, with reductions left in the baseline.
+    pub fn positive_multiplier(&self) -> f64 {
+        self.self_values
+            .iter()
+            .chain(self.modified_values.iter().flat_map(|entry| &entry.values))
+            .filter(|entry| entry.value > 0.0)
+            .fold(1.0, |multiplier, entry| multiplier * (1.0 + entry.value))
     }
 
     pub fn self_value(&self) -> f64 {
@@ -878,6 +889,12 @@ pub struct PlayerStats {
     pub ally_brand_power: StatData,
     pub evolution_damage: StatData,
     pub modify_damage_combat_effect: StatData,
+    pub npc_window: super::npc_windows::HitWindow,
+    pub domination_damage_rate: StatData,
+    pub broken_bone_damage_rate: StatData,
+    pub npc_damage_taken_rate: StatData,
+    pub stagger_combat_effect_damage_rate: StatData,
+
     pub spec_bonus_identity_1: StatData,
     pub spec_bonus_identity_2: StatData,
     pub spec_bonus_identity_3: StatData,
@@ -942,6 +959,12 @@ impl Default for PlayerStats {
             ally_brand_power: StatData::default(),
             evolution_damage: StatData::default(),
             modify_damage_combat_effect: StatData::default(),
+            npc_window: Default::default(),
+            domination_damage_rate: StatData::default(),
+            broken_bone_damage_rate: StatData::default(),
+            npc_damage_taken_rate: StatData::default(),
+            stagger_combat_effect_damage_rate: StatData::default(),
+
             spec_bonus_identity_1: StatData::default(),
             spec_bonus_identity_2: StatData::default(),
             spec_bonus_identity_3: StatData::default(),
@@ -1019,6 +1042,11 @@ impl PlayerStats {
             ally_brand_power,
             evolution_damage,
             modify_damage_combat_effect,
+            npc_window,
+            domination_damage_rate,
+            broken_bone_damage_rate,
+            npc_damage_taken_rate,
+            stagger_combat_effect_damage_rate,
             spec_bonus_identity_1,
             spec_bonus_identity_2,
             spec_bonus_identity_3,
@@ -1176,9 +1204,58 @@ impl PlayerStats {
 
         self.for_each_stat_mut(|stat| stat.clear());
         self.modify_damage_combat_effect.operation_type = OperationType::Multiplicative;
+        self.npc_window = Default::default();
+        self.domination_damage_rate.operation_type = OperationType::Multiplicative;
+        self.broken_bone_damage_rate.operation_type = OperationType::Multiplicative;
+        self.npc_damage_taken_rate.operation_type = OperationType::Multiplicative;
+        self.stagger_combat_effect_damage_rate.operation_type = OperationType::Multiplicative;
+
         self.critical_hit_rate_cap = 1.0;
         self.critical_damage_rate
             .set_self(DEFAULT_CRITICAL_DAMAGE_RATE, StatSource::Base);
+    }
+
+    pub fn apply_npc_window(&mut self, window: super::npc_windows::HitWindow) {
+        self.npc_window = window;
+        self.domination_damage_rate.clear();
+        self.broken_bone_damage_rate.clear();
+        self.npc_damage_taken_rate.clear();
+        self.stagger_combat_effect_damage_rate.clear();
+        self.domination_damage_rate.operation_type = OperationType::Multiplicative;
+        self.broken_bone_damage_rate.operation_type = OperationType::Multiplicative;
+        self.npc_damage_taken_rate.operation_type = OperationType::Multiplicative;
+        self.stagger_combat_effect_damage_rate.operation_type = OperationType::Multiplicative;
+        if !window.enabled {
+            return;
+        }
+        if let Some(bonus) = window.domination {
+            self.domination_damage_rate.add(
+                bonus,
+                self.owner_id,
+                window.bonus_owner(
+                    super::npc_windows::NpcDamageAttribution::DOMINATION,
+                    self.owner_id,
+                ),
+                StatSource::Domination,
+            );
+        }
+        if let Some(bonus) = window.weakness {
+            self.add_npc_damage_taken_bonus(bonus, StatSource::NpcWeakness);
+        }
+    }
+
+    pub fn add_npc_damage_taken_bonus(&mut self, bonus: f64, source: StatSource) {
+        // Damage reductions affect the hit, but do not provide NPC damage credit.
+        let owner = if bonus > 0.0 {
+            self.npc_window.bonus_owner(
+                super::npc_windows::NpcDamageAttribution::DAMAGE_TAKEN,
+                self.owner_id,
+            )
+        } else {
+            self.owner_id
+        };
+        self.npc_damage_taken_rate
+            .add(bonus, self.owner_id, owner, source);
     }
 
     pub fn apply_runtime_state(&mut self, runtime_state: RuntimeState) {
@@ -1751,8 +1828,34 @@ impl PlayerStats {
             ) {
                 continue;
             }
+            let target_stagger = active.effect.conditions.iter().any(|condition| {
+                condition.actor_type == "target"
+                    && super::npc_windows::is_stagger_condition(
+                        &condition.condition_type,
+                        condition.arg,
+                    )
+            });
+            let owner_id = if target_stagger {
+                self.npc_window.bonus_owner(
+                    super::npc_windows::NpcDamageAttribution::COMBAT_EFFECTS,
+                    active.owner_id,
+                )
+            } else {
+                active.owner_id
+            };
             for action in &active.effect.actions {
-                self.evaluate_combat_effect_action(action, active.owner_id, active.source.clone());
+                if target_stagger && action.action_type == "modify_damage" {
+                    if let Some(value) = action.args.first() {
+                        self.stagger_combat_effect_damage_rate.add(
+                            *value as f64 / 10000.0,
+                            self.owner_id,
+                            owner_id,
+                            active.source.clone(),
+                        );
+                    }
+                } else {
+                    self.evaluate_combat_effect_action(action, owner_id, active.source.clone());
+                }
             }
         }
     }
@@ -1865,6 +1968,25 @@ impl PlayerStats {
                 "npc_grade_less" => target_entity
                     .and_then(|entity| Self::npc_grade_rank(&entity.grade))
                     .is_some_and(|grade| grade < condition.arg),
+                "npc_id" => {
+                    target_entity.is_some_and(|target| target.npc_id == condition.arg as u32)
+                }
+                "abnormal_move" | "abnormal_move_all" | "abnormal_move_status_all" => {
+                    self.npc_window.enabled
+                        && super::npc_windows::is_stagger_condition(
+                            &condition.condition_type,
+                            condition.arg,
+                        )
+                        && match condition.actor_type.as_str() {
+                            "target" => {
+                                self.npc_window.target_stagger == super::npc_windows::Signal::Active
+                            }
+                            "self" => {
+                                self.npc_window.self_stagger == super::npc_windows::Signal::Active
+                            }
+                            _ => false,
+                        }
+                }
                 "abnormal_status" => false,
                 _ => true,
             };
@@ -2283,6 +2405,22 @@ impl PlayerStats {
                 "standing_striker" => {
                     if let Some(value) = active.values.first() {
                         self.standing_striker_buff_id = *value as u32;
+                    }
+                }
+                "broken_bone" => {
+                    if self.npc_window.enabled
+                        && self.npc_window.target_stagger == super::npc_windows::Signal::Active
+                        && let Some(value) = active.values.first()
+                    {
+                        self.broken_bone_damage_rate.add(
+                            *value as f64 / 10000.0,
+                            self.owner_id,
+                            self.npc_window.bonus_owner(
+                                super::npc_windows::NpcDamageAttribution::BROKEN_BONE,
+                                self.owner_id,
+                            ),
+                            StatSource::AbilityFeature(active.feature_type.clone()),
+                        );
                     }
                 }
                 "troop_leader" => {
@@ -2951,6 +3089,10 @@ impl PlayerStats {
         }
         attack_power = attack_power
             .mad(&self.modify_damage_combat_effect)
+            .mad(&self.domination_damage_rate)
+            .mad(&self.broken_bone_damage_rate)
+            .mad(&self.npc_damage_taken_rate)
+            .mad(&self.stagger_combat_effect_damage_rate)
             .mad(&self.move_speed_to_damage_rate)
             .mad(&self.critical_hit_to_damage_rate);
         if let Some(index) = damage_attr_to_index(damage_attr) {
@@ -3359,6 +3501,11 @@ impl PlayerStats {
             41 => &self.critical_hit_to_damage_rate,
             42 => &self.evolution_damage_bonus_from_blunt_thorn,
             43 => &self.evolution_damage_bonus_from_supersonic_breakthrough,
+            44 => &self.domination_damage_rate,
+            45 => &self.broken_bone_damage_rate,
+            46 => &self.npc_damage_taken_rate,
+            47 => &self.stagger_combat_effect_damage_rate,
+
             _ => {
                 let index_in_arrays = index.saturating_sub(FIXED_STAT_DATA_COUNT);
                 if index_in_arrays < self.damage_attr_amplifications.len() {
@@ -3421,6 +3568,11 @@ impl PlayerStats {
             41 => &mut self.critical_hit_to_damage_rate,
             42 => &mut self.evolution_damage_bonus_from_blunt_thorn,
             43 => &mut self.evolution_damage_bonus_from_supersonic_breakthrough,
+            44 => &mut self.domination_damage_rate,
+            45 => &mut self.broken_bone_damage_rate,
+            46 => &mut self.npc_damage_taken_rate,
+            47 => &mut self.stagger_combat_effect_damage_rate,
+
             _ => {
                 let index_in_arrays = index.saturating_sub(FIXED_STAT_DATA_COUNT);
                 if index_in_arrays < self.damage_attr_amplifications.len() {
@@ -3483,6 +3635,11 @@ impl PlayerStats {
             41 => "critical_hit_to_damage_rate_".to_string(),
             42 => "evolution_damage_bonus_from_blunt_thorn_".to_string(),
             43 => "evolution_damage_bonus_from_supersonic_breakthrough_".to_string(),
+            44 => "domination_damage_rate_".to_string(),
+            45 => "broken_bone_damage_rate_".to_string(),
+            46 => "npc_damage_taken_rate_".to_string(),
+            47 => "stagger_combat_effect_damage_rate_".to_string(),
+
             _ => {
                 let index_in_arrays = index.saturating_sub(FIXED_STAT_DATA_COUNT);
                 if index_in_arrays < self.damage_attr_amplifications.len() {
@@ -4180,6 +4337,11 @@ impl PlayerStats {
         f(&self.ally_brand_power);
         f(&self.evolution_damage);
         f(&self.modify_damage_combat_effect);
+        f(&self.domination_damage_rate);
+        f(&self.broken_bone_damage_rate);
+        f(&self.npc_damage_taken_rate);
+        f(&self.stagger_combat_effect_damage_rate);
+
         f(&self.spec_bonus_identity_1);
         f(&self.spec_bonus_identity_2);
         f(&self.spec_bonus_identity_3);
@@ -4229,6 +4391,11 @@ impl PlayerStats {
         f(&mut self.ally_brand_power);
         f(&mut self.evolution_damage);
         f(&mut self.modify_damage_combat_effect);
+        f(&mut self.domination_damage_rate);
+        f(&mut self.broken_bone_damage_rate);
+        f(&mut self.npc_damage_taken_rate);
+        f(&mut self.stagger_combat_effect_damage_rate);
+
         f(&mut self.spec_bonus_identity_1);
         f(&mut self.spec_bonus_identity_2);
         f(&mut self.spec_bonus_identity_3);

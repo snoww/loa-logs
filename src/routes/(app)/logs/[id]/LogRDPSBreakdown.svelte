@@ -25,12 +25,14 @@
   import { extractStatSource, type StatSource, StatSourceType } from "$lib/rdps-breakdown";
   import { settings } from "$lib/stores.svelte";
   import { type Entity } from "$lib/types";
-  import { abbreviateNumber, getClassIcon } from "$lib/utils";
+  import { abbreviateNumber, formatEncounterEntityName, getClassIcon } from "$lib/utils";
 
   interface Props {
     player: Entity;
     enc: EncounterState;
   }
+
+  type BreakdownOrigin = StatOrigin | { t: "effect"; source: StatSource };
 
   // bucket -> source -> player
   interface ContributionBucket {
@@ -52,7 +54,7 @@
 
   // source origin -> player -> bucket
   interface SourceGroup {
-    origins: StatOrigin[];
+    origins: BreakdownOrigin[];
     total: number;
     players: SourceGroupPlayer[];
   }
@@ -131,7 +133,7 @@
     const sources = new Map<
       string,
       {
-        origins: StatOrigin[];
+        origins: BreakdownOrigin[];
         total: number;
         players: Map<
           string,
@@ -145,7 +147,7 @@
 
     for (const bucket of buckets) {
       for (const sub of bucket.subgroups) {
-        const origins = dedupeOriginsBasedOnName(normalizeOrigins(statSourceToOrigins(sub.source)));
+        const origins = dedupeOriginsBasedOnName(statSourceToOrigins(sub.source));
         const key = JSON.stringify(origins);
         let srcEntry = sources.get(key);
         if (!srcEntry) {
@@ -275,6 +277,9 @@
 
   // icon of the StatSource; not necessarily the icon of the source of the StatSource
   function statSourceIcon(src: StatSource): string {
+    if (src[0] === StatSourceType.Domination || src[0] === StatSourceType.NpcWeakness) {
+      return "/images/icons/boss.png";
+    }
     if (src[0] === StatSourceType.Composite) {
       // use original source for composite types
       return statSourceIcon(src[2]);
@@ -292,6 +297,8 @@
 
     if (src[0] === StatSourceType.AbilityFeature) {
       if (src[1] === "blocky_thorn") return `https://cdn.ags.lol/icon/${EFTable_ArkPassive[1040100]![1]}.png`; // Blunt Thorn
+      const [origin] = statSourceToOrigins(src);
+      if (origin) return statOriginIcon(origin);
     }
 
     return "/images/skills/unknown.png";
@@ -299,6 +306,8 @@
 
   // name of the StatSource; not necessarily the name of the source of the StatSource
   function statSourceName(src: StatSource): string {
+    if (src[0] === StatSourceType.Domination) return "Domination";
+    if (src[0] === StatSourceType.NpcWeakness) return "NPC Weakness";
     if (src[0] === StatSourceType.Composite) {
       // use original source for composite types
       return statSourceName(src[2]);
@@ -306,7 +315,7 @@
 
     if (src[0] === StatSourceType.SkillBuff) {
       const buff = EFTable_SkillBuff[+src[1]];
-      return buff ? buff[0] : "Untitled Skill Buff";
+      return buff?.[0]?.trim() || `Generic Debuff (#${src[1]})`;
     }
 
     if (src[0] === StatSourceType.Ability) {
@@ -319,6 +328,7 @@
       if (src[1] === "ap_identity_warlord_lonely_knight") return "Gunlance Skill Crit Conversion";
       if (src[1].startsWith("ap_identity_destroyer")) return "Destroyer State Crit Conversion";
       if (src[1] === "blocky_thorn") return "Blunt Thorn";
+      if (src[1] === "broken_bone") return "Broken Bone";
       return "UNKNOWN: Please Report!";
     }
 
@@ -326,24 +336,37 @@
   }
 
   // resolve a StatSource to a list of origins
-  function statSourceToOrigins(src: StatSource): StatOrigin[] {
+  function statSourceToOrigins(src: StatSource): BreakdownOrigin[] {
     if (src[0] === StatSourceType.Composite) {
       // for composite types, use the original source
       return statSourceToOrigins(src[2]);
     }
 
     if (src[0] === StatSourceType.SkillBuff) {
-      return getSkillBuffOrigin(+src[1]);
+      const origins = normalizeOrigins(getSkillBuffOrigin(+src[1]));
+      if (
+        !EFTable_SkillBuff[+src[1]]?.[0]?.trim() ||
+        origins.length === 0 ||
+        origins.every((origin) => origin.t === "gr")
+      ) {
+        return [{ t: "effect", source: src }];
+      }
+      return origins;
     }
 
     if (src[0] === StatSourceType.AbilityFeature) {
-      return getAbilityFeatureOrigin(src[1].split(".")[0]);
+      return normalizeOrigins(getAbilityFeatureOrigin(src[1].split(".")[0]));
+    }
+
+    if (src[0] === StatSourceType.Domination || src[0] === StatSourceType.NpcWeakness) {
+      return [{ t: "effect", source: src }];
     }
 
     return [];
   }
 
-  function statOriginIcon(origin: StatOrigin): string {
+  function statOriginIcon(origin: BreakdownOrigin): string {
+    if (origin.t === "effect") return statSourceIcon(origin.source);
     // skill
     if (origin.t === "s") {
       const skill = EFTable_Skill[origin.i];
@@ -393,7 +416,8 @@
     return "/images/skills/unknown.png";
   }
 
-  function statOriginName(origin: StatOrigin): string {
+  function statOriginName(origin: BreakdownOrigin): string {
+    if (origin.t === "effect") return statSourceName(origin.source);
     // skill
     if (origin.t === "s") {
       const skill = EFTable_Skill[origin.i];
@@ -443,7 +467,10 @@
     return "Unknown, Please Report! (" + JSON.stringify(origin) + ")";
   }
 
-  function statOriginType(origin: StatOrigin): string {
+  function statOriginType(origin: BreakdownOrigin): string {
+    if (origin.t === "effect") {
+      return origin.source[0] === StatSourceType.SkillBuff ? "Status Effect" : "NPC Encounter Bonus";
+    }
     if (origin.t === "s") {
       const skill = EFTable_Skill[origin.i];
       if (!skill || !skill[1]) return "Skill";
@@ -475,9 +502,9 @@
     return origin ? statOriginName(origin) : "Unknown Source, Please Report!";
   }
 
-  function dedupeOriginsBasedOnName(origins: StatOrigin[]): StatOrigin[] {
+  function dedupeOriginsBasedOnName(origins: BreakdownOrigin[]): BreakdownOrigin[] {
     const seen = new Set<string>();
-    const deduped: StatOrigin[] = [];
+    const deduped: BreakdownOrigin[] = [];
     for (const origin of origins) {
       const name = statOriginName(origin);
       if (!seen.has(name)) {
@@ -486,6 +513,11 @@
       }
     }
     return deduped;
+  }
+
+  function contributionPlayerName(name: string): string {
+    const entity = enc.encounter!.entities[name];
+    return entity ? formatEncounterEntityName(entity) : name;
   }
 
   // do we not have origins for this buff, but it's only caused by a boss?
@@ -512,7 +544,7 @@
   <div class="flex flex-col">
     <div class="flex flex-row items-center gap-1">
       <img src={statSourceIcon(subgroup.source)} alt={statSourceName(subgroup.source)} class="size-4 rounded-md" />
-      {#if subgroup.source[0] === StatSourceType.SkillBuff}
+      {#if subgroup.source[0] === StatSourceType.SkillBuff && EFTable_SkillBuff[+subgroup.source[1]]}
         <Tooltipped>
           {#snippet tooltip()}
             {@render sourceBuffTooltip(+subgroup.source[1]!)}
@@ -549,7 +581,7 @@
           <span class="text-xs">Dark Grenade</span>
         {:else}
           {@render playerClassOrBoss(contribution.player, "size-3")}
-          <span class="text-xs">{contribution.player}</span>
+          <span class="text-xs">{contributionPlayerName(contribution.player)}</span>
         {/if}
         <QuickTooltip tooltip={contribution.amount.toLocaleString()} class="flex items-center">
           <span class="text-xs leading-none font-medium">{abbreviateNumber(contribution.amount)}</span>
@@ -571,7 +603,7 @@
         <div class="text-sm font-semibold">Dark Grenade</div>
       {:else}
         {@render playerClassOrBoss(group.player, "size-4 rounded-md")}
-        <div class="text-sm font-semibold">{group.player}</div>
+        <div class="text-sm font-semibold">{contributionPlayerName(group.player)}</div>
       {/if}
 
       {#if showPct}
@@ -592,7 +624,7 @@
   </div>
 {/snippet}
 
-{#snippet originList(origins: StatOrigin[])}
+{#snippet originList(origins: BreakdownOrigin[])}
   {#each origins as origin}
     <div class="flex flex-row items-center gap-2">
       <img src={statOriginIcon(origin)} alt={statOriginName(origin)} class="size-8 rounded-sm" />
@@ -604,7 +636,7 @@
   {/each}
 {/snippet}
 
-{#snippet byOriginHeaderTooltip(origins: StatOrigin[])}
+{#snippet byOriginHeaderTooltip(origins: BreakdownOrigin[])}
   <div class="flex max-w-[300px] flex-col gap-2 text-left">
     {#if origins.length > 1}
       <span class="text-xs text-neutral-500">
@@ -623,7 +655,7 @@
       <div class="flex flex-row items-center gap-2">
         <img src="https://cdn.ags.lol/icon/{buff[2]}.png" alt={buff[0]} class="size-8 rounded-sm" />
         <div class="flex flex-col gap-px">
-          <span class="text-sm">{buff[0]}</span>
+          <span class="text-sm">{statSourceName([StatSourceType.SkillBuff, buffId])}</span>
           <span class="text-xs text-neutral-400">Status Effect</span>
         </div>
       </div>

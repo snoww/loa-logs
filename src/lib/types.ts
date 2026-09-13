@@ -294,7 +294,30 @@ export interface EncounterMisc {
   contributionSplits?: ContributionSplit[];
 }
 
+export interface NpcWindowDamageMetrics {
+  domination: StatDamageContribution;
+  brokenBone: StatDamageContribution;
+  npcDamageTaken: StatDamageContribution;
+  staggerCombatEffect: StatDamageContribution;
+  trackedHits: number;
+  incompleteHits: number;
+  missingStaggerHits: number;
+  missingDominationHits: number;
+  missingWeaknessHits: number;
+}
+
+// Keep bit values synchronized with live/npc_windows.rs.
+export enum NpcDamageAttribution {
+  None = 0,
+  BrokenBone = 1 << 0,
+  Domination = 1 << 1,
+  DamageTaken = 1 << 2,
+  CombatEffects = 1 << 3
+}
+
 export interface ContributionSplit {
+  npcWindows?: NpcWindowDamageMetrics;
+  npcDamageAttribution?: NpcDamageAttribution;
   name: string;
   partyNumber?: number;
   damageSplitByName: Record<string, number>;
@@ -468,6 +491,9 @@ export interface Tripod {
 }
 
 export interface DamageStats {
+  npcWindowIncompleteHits?: number;
+  npcWindowTrackedHits?: number;
+  rdpsDamageReceivedNpc?: number;
   damageDealt: number;
   damageTaken: number;
   hyperAwakeningDamage?: number;
@@ -619,6 +645,7 @@ export enum EntityType {
   PLAYER = "PLAYER",
   NPC = "NPC",
   ESTHER = "ESTHER",
+  NPC_BONUS = "NPC_BONUS",
   DARK_GRENADE = "DARK_GRENADE"
 }
 

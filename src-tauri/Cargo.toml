@@ -50,9 +50,9 @@ dirs = "6.0.0"
 sha2 = "0.10.9"
 ipnet = "2.11.0"
 
-nineveh-formats = { git = "ssh://git@github.com/molenzwiebel/nineveh", features = ["io"], optional = true }
-meter-defs = { git = "ssh://git@github.com/molenzwiebel/nineveh", default-features = false, optional = true }
-meter-decryption = { git = "ssh://git@github.com/molenzwiebel/nineveh", default-features = false, optional = true }
+nineveh-formats = { path = "D:/projects/nineveh/nineveh-formats", features = ["io"], optional = true }
+meter-defs = { path = "D:/projects/nineveh/meter-defs", default-features = false, optional = true }
+meter-decryption = { path = "D:/projects/nineveh/meter-decryption", default-features = false, optional = true }
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-shell = "2.3.1"

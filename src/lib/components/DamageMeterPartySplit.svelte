@@ -60,21 +60,17 @@
         }
       ];
     }
-    // dark grenade synergy table — only in logs view, when rDPS column is enabled
-    if (!enc.live && enc.curSettings.rdps && enc.darkGrenade) {
-      const dg = enc.darkGrenade;
-      const rdamage = dg.damageStats.rdpsDamageGiven;
+    const contributors = [...(enc.darkGrenade ? [enc.darkGrenade] : []), ...enc.npcBonuses];
+    if (!enc.live && enc.curSettings.rdps && contributors.length > 0) {
       result = [
         ...result,
         {
-          title: "Other",
+          title: "Encounter contributions",
           sortable: false,
-          members: [
-            {
-              entity: dg,
-              width: enc.topDamageDealt > 0 ? (rdamage / enc.topDamageDealt) * 100 : 0
-            }
-          ]
+          members: contributors.map((entity) => ({
+            entity,
+            width: enc.topDamageDealt > 0 ? (entity.damageStats.rdpsDamageGiven / enc.topDamageDealt) * 100 : 0
+          }))
         }
       ];
     }
@@ -101,7 +97,7 @@
       </thead>
       <tbody class="relative z-10 text-neutral-200">
         {#each party.members as member (member.entity.name)}
-          {@const clickable = member.entity.entityType !== EntityType.DARK_GRENADE}
+          {@const clickable = ![EntityType.DARK_GRENADE, EntityType.NPC_BONUS].includes(member.entity.entityType)}
           <tr
             animate:flip={{ duration: 200 }}
             class="h-7 px-2 py-1 {clickable && settings.app.general.underlineHovered ? 'hover:underline' : ''}"

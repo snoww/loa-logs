@@ -3249,6 +3249,166 @@ mod tests {
     }
 
     #[test]
+    fn npc_window_upload_payload_survives_database_round_trip() {
+        use crate::live::npc_windows::NpcDamageAttribution;
+        // uploadLog sends this entire saved encounter for manual, bulk and auto upload.
+        for bits in 0..=15 {
+            let attribution = NpcDamageAttribution::from_bits(bits).unwrap();
+            let npc_attribution = !attribution.is_empty();
+            let version = "1.14.0";
+            let database = Database::memory(version).unwrap();
+            let repository = database.create_repository();
+            let npc_name = "Drextalas — encounter bonuses";
+            let mut sources = HashMap::<String, HashMap<String, i64>>::new();
+            let mut npc_damage = 0;
+            for (flag, source, damage) in [
+                (NpcDamageAttribution::DOMINATION, "$@[19]", 80),
+                (NpcDamageAttribution::DAMAGE_TAKEN, "$@[20]", 160),
+                (
+                    NpcDamageAttribution::BROKEN_BONE,
+                    "$@[15,\"broken_bone\"]",
+                    80,
+                ),
+                (NpcDamageAttribution::COMBAT_EFFECTS, "$@[17,605100031]", 80),
+            ] {
+                let owner = if attribution.contains(flag) {
+                    npc_damage += damage;
+                    npc_name
+                } else {
+                    "Player"
+                };
+                sources
+                    .entry(owner.into())
+                    .or_default()
+                    .insert(source.into(), damage);
+            }
+            let mut player = stats_test_entity("Player", 102, Some("Test"), 1600, false);
+            player.damage_stats.rdps_damage_received = 200 + npc_damage;
+            player.damage_stats.rdps_damage_received_npc = npc_damage;
+            player.damage_stats.npc_window_tracked_hits = 10;
+            player.damage_stats.npc_window_incomplete_hits = 2;
+            let mut entities = HashMap::from([("Player".to_string(), player)]);
+            let mut split_by_name = HashMap::from([
+                ("Player".to_string(), 1400 - npc_damage),
+                ("Dark Grenade".to_string(), 200),
+            ]);
+            for (name, entity_type, damage) in [
+                ("Dark Grenade", EntityType::DarkGrenade, 200),
+                (npc_name, EntityType::NpcBonus, npc_damage),
+            ] {
+                entities.insert(
+                    name.into(),
+                    EncounterEntity {
+                        name: name.into(),
+                        entity_type,
+                        spec: Some("Test".into()),
+                        damage_stats: DamageStats {
+                            rdps_damage_given: damage,
+                            ..Default::default()
+                        },
+                        ..Default::default()
+                    },
+                );
+            }
+            if npc_attribution {
+                split_by_name.insert(npc_name.into(), npc_damage);
+            }
+            let gain = StatDamageContribution {
+                damage_done_by_stat: 1400,
+                damage_done_by_stat_plus_value: 1600,
+            };
+            let split = ContributionSplit {
+                name: "Player".into(),
+                npc_damage_attribution: attribution.bits(),
+                npc_windows: NpcWindowDamageMetrics {
+                    domination: gain,
+                    broken_bone: gain,
+                    npc_damage_taken: gain,
+                    stagger_combat_effect: gain,
+                    tracked_hits: 10,
+                    incomplete_hits: 2,
+                    missing_stagger_hits: 1,
+                    missing_domination_hits: 1,
+                    missing_weakness_hits: 2,
+                },
+                damage_split_by_name: split_by_name,
+                damage_done_by_entity_skill_group: sources.clone(),
+                damage_increase_by_entity_skill_group: sources,
+                ..Default::default()
+            };
+            let expected_split = json!(&split);
+            let id = repository
+                .insert_data(InsertEncounterArgs {
+                    encounter: Encounter {
+                        fight_start: 1000,
+                        last_combat_packet: 11000,
+                        local_player: "Player".into(),
+                        current_boss_name: "Drextalas".into(),
+                        boss_only_damage: true,
+                        entities,
+                        ..Default::default()
+                    },
+                    damage_log: HashMap::new(),
+                    cast_log: HashMap::new(),
+                    boss_hp_log: HashMap::new(),
+                    raid_clear: true,
+                    party_info: vec![vec!["Player".into()]],
+                    raid_difficulty: "Hard".into(),
+                    region: None,
+                    player_info: None,
+                    meter_version: version.into(),
+                    ntp_fight_start: 1000,
+                    rdps_valid: true,
+                    rdps_message: None,
+                    manual: false,
+                    skill_cast_log: HashMap::new(),
+                    skill_cooldowns: HashMap::new(),
+                    intermission_start: Some(4000),
+                    intermission_end: Some(6000),
+                    contribution_splits: vec![split],
+                })
+                .unwrap();
+            let saved = repository.get_encounter(&id.to_string()).unwrap();
+            let payload = json!(&saved);
+            let misc = &payload["encounterDamageStats"]["misc"];
+            assert_eq!(
+                misc["rdpsValid"], true,
+                "incomplete NPC evidence remains uploadable"
+            );
+            assert_eq!(misc["contributionSplits"][0], expected_split);
+            assert_eq!(misc["contributionSplits"][0]["npcDamageAttribution"], bits);
+            assert_eq!(payload["encounterDamageStats"]["totalDamageDealt"], 1600);
+            let stats = &payload["entities"]["Player"]["damageStats"];
+            assert_eq!(stats["rdpsDamageReceivedNpc"], npc_damage);
+            assert_eq!(stats["npcWindowTrackedHits"], 10);
+            assert_eq!(stats["npcWindowIncompleteHits"], 2);
+            assert_eq!(stats["rdps"], (1400 - npc_damage) / 8);
+            assert_eq!(
+                payload["entities"]["Dark Grenade"]["damageStats"]["rdps"],
+                25
+            );
+            if npc_attribution {
+                let npc = &payload["entities"][npc_name];
+                assert_eq!(npc["entityType"], "NPC_BONUS");
+                assert_eq!(npc["damageStats"]["damageDealt"], 0);
+                assert_eq!(npc["damageStats"]["rdps"], npc_damage / 8);
+                assert_eq!(npc["damageStats"]["rdpsDamageGiven"], npc_damage);
+                let connection = database.get_connection();
+                let stored_rdps: i64 = connection
+                    .query_row(
+                        "SELECT rdps FROM entity WHERE encounter_id = ? AND name = ?",
+                        params![id, npc_name],
+                        |row| row.get(0),
+                    )
+                    .unwrap();
+                assert_eq!(stored_rdps, npc_damage / 8);
+            } else {
+                assert!(payload["entities"].get(npc_name).is_none());
+            }
+        }
+    }
+
+    #[test]
     fn should_insert_encounter() {
         let version = "1.14.0";
         let current_dir = std::env::current_dir().unwrap();

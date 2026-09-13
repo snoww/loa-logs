@@ -53,6 +53,8 @@
     <QuickTooltip tooltip={entityState.name}>
       <img class="table-cell size-5" src="/images/skills/battle_item_01_47.png" alt={entityState.name} />
     </QuickTooltip>
+  {:else if entity.entityType === EntityType.NPC_BONUS}
+    <span title="NPC encounter bonuses">◆</span>
   {:else}
     <ClassTooltip {entity} />
   {/if}
@@ -61,13 +63,13 @@
 <td colspan="2" onmouseenter={() => (hovering = true)} onmouseleave={() => (hovering = false)}>
   <div class="flex gap-1">
     <div class="truncate">
-      {#if entity.entityType === EntityType.DARK_GRENADE}
+      {#if entity.entityType === EntityType.DARK_GRENADE || entity.entityType === EntityType.NPC_BONUS}
         {entityState.name}
       {:else}
         <ArkPassiveTooltip state={entityState} />
       {/if}
     </div>
-    {#if !screenshot.state && ((enc.live && settings.app.meter.profileShortcut) || (!enc.live && isNameValid(entityState.entity.name) && hovering && entityState.entity.entityType === EntityType.PLAYER))}
+    {#if !screenshot.state && entity.entityType === EntityType.PLAYER && ((enc.live && settings.app.meter.profileShortcut) || (!enc.live && isNameValid(entityState.entity.name) && hovering && entityState.entity.entityType === EntityType.PLAYER))}
       <button
         class="shrink-0"
         title="View Character Profile"
@@ -102,7 +104,7 @@
         (enc.playerSort === "ndps" && columnDef.headerText === "nDPS") ||
         (enc.playerSort === "rdps" && columnDef.headerText === "rDPS") ||
         (enc.playerSort === "stagger" && columnDef.headerText === "STAG"))}
-    {@const isDarkGrenade = entity.entityType === EntityType.DARK_GRENADE}
+    {@const isEncounterSource = entity.entityType === EntityType.DARK_GRENADE || entity.entityType === EntityType.NPC_BONUS}
     <td class="cursor-default px-1 text-center {isActiveSort ? 'bg-white/3' : ''}">
       {#snippet tooltip()}
         {#if columnDef.valueTooltip}
@@ -110,7 +112,7 @@
         {/if}
       {/snippet}
 
-      {#if isDarkGrenade && columnDef.headerText !== "rDPS"}
+      {#if isEncounterSource && columnDef.headerText !== "rDPS"}
         -
       {:else}
         <QuickTooltip tooltip={columnDef.valueTooltip ? tooltip : null}>

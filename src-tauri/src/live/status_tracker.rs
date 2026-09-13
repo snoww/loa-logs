@@ -200,10 +200,11 @@ impl StatusTracker {
         //     "status_effects_on_source: {:?}, status_effects_on_target: {:?}",
         //     status_effects_on_source, status_effects_on_target);
         status_effects_on_target.retain(|se| {
-            !(se.target_type == StatusEffectTargetType::Local
-                && se.category == Debuff
-                && se.source_id != source_id
-                && se.db_target_type == "self")
+            target_entity.npc_id != 0
+                || !(se.target_type == StatusEffectTargetType::Local
+                    && se.category == Debuff
+                    && se.source_id != source_id
+                    && se.db_target_type == "self")
         });
         (status_effects_on_source, status_effects_on_target)
     }

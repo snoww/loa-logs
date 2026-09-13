@@ -163,7 +163,7 @@ fn apply_engravings(result: &PKTPCInspectResult, derived: &mut InspectDerivedSta
                     add_flat_stat("attack_speed_rate", -*value, &HashMap::new(), derived);
                 }
             }
-            "troop_leader" => {
+            "troop_leader" | "broken_bone" => {
                 add_ability_feature(&ability.feature_type, level, &level_data.values, derived);
             }
             "ether_boy" => {

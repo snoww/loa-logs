@@ -1,6 +1,7 @@
 import {
   abbreviateNumberSplit,
   customRound,
+  formatEncounterEntityName,
   formatPlayerName,
   getBaseDamage,
   getRDamage,
@@ -36,8 +37,8 @@ export class EntityState {
 
   name: string = $derived.by(() => {
     if (!this.entity) return "";
-    if (this.entity.entityType === EntityType.ESTHER) {
-      return this.entity.name;
+    if (this.entity.entityType === EntityType.ESTHER || this.entity.entityType === EntityType.NPC_BONUS) {
+      return formatEncounterEntityName(this.entity);
     } else if (this.entity.entityType === EntityType.DARK_GRENADE) {
       return "Dark Grenade";
     } else {

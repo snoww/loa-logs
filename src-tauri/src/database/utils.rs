@@ -376,7 +376,10 @@ pub fn get_total_available_time(
 }
 
 pub fn should_insert_entity(entity: &EncounterEntity, local_player: &str) -> bool {
-    if entity.entity_type == EntityType::DarkGrenade {
+    if matches!(
+        entity.entity_type,
+        EntityType::DarkGrenade | EntityType::NpcBonus
+    ) {
         return entity.damage_stats.rdps_damage_given > 0;
     }
     let is_insertable_damage_entity = is_confirmed_player_entity(entity, local_player)
@@ -433,13 +436,18 @@ pub fn update_entity_stats(
         let unbuffed_dps = unbuffed_damage / duration_seconds;
         entity.damage_stats.unbuffed_damage = unbuffed_damage;
         entity.damage_stats.unbuffed_dps = unbuffed_dps;
+    }
 
-        if rdps_valid {
-            let ndmg = entity.damage_stats.damage_dealt - entity.damage_stats.rdps_damage_received;
-            let rdmg = ndmg + entity.damage_stats.rdps_damage_given;
-            entity.damage_stats.ndps = ndmg / duration_seconds;
-            entity.damage_stats.rdps = rdmg / duration_seconds;
-        }
+    if rdps_valid
+        && matches!(
+            entity.entity_type,
+            EntityType::Player | EntityType::DarkGrenade | EntityType::NpcBonus
+        )
+    {
+        let ndmg = entity.damage_stats.damage_dealt - entity.damage_stats.rdps_damage_received;
+        let rdmg = ndmg + entity.damage_stats.rdps_damage_given;
+        entity.damage_stats.ndps = ndmg / duration_seconds;
+        entity.damage_stats.rdps = rdmg / duration_seconds;
     }
 
     entity.damage_stats.dps = entity.damage_stats.damage_dealt / duration_seconds;
@@ -455,6 +463,7 @@ pub fn sanitize_invalid_rdps(
 ) {
     for entity in encounter.entities.values_mut() {
         entity.damage_stats.rdps_damage_received = 0;
+        entity.damage_stats.rdps_damage_received_npc = 0;
         entity.damage_stats.rdps_damage_received_support = 0;
         entity.damage_stats.rdps_damage_given = 0;
         entity.damage_stats.rdps = 0;
