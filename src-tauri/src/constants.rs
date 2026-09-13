@@ -19,6 +19,9 @@ pub const GAME_EXE_NAME: &str = "LOSTARK.exe";
 pub const NINEVEH_EXE_NAME: &str = "nineveh.exe";
 pub const DARK_GRENADE_ENTITY_ID: u64 = 0xFFFF_FFFF_3224_0000;
 pub const DARK_GRENADE_ENTITY_NAME: &str = "DarkGrenadeSynergy";
+pub const ATROPINE_BUFF_ID: u32 = 32380;
+pub const ATROPINE_ENTITY_ID: u64 = 0xFFFF_FFFF_3238_0000;
+pub const ATROPINE_ENTITY_NAME: &str = "Atropine Potion";
 /// alternate nineveh binary name used when `exitlag_compat` is enabled. ExitLag only proxies
 /// traffic for `LOSTARK.exe`, so we spawn a copy of nineveh named lostark
 pub const NINEVEH_COMPAT_EXE_NAME: &str = "LOSTARK.exe";

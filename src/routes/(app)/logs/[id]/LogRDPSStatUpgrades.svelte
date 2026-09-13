@@ -37,6 +37,21 @@
       return increaseB - increaseA;
     })
   );
+  const miscellaneousGains = $derived.by(() => {
+    const gains: [string, StatDamageContribution][] = [];
+    if (split.npcWindows && split.npcWindows.trackedHits > 0) {
+      gains.push(
+        ["Domination", split.npcWindows.domination],
+        ["Broken Bone", split.npcWindows.brokenBone],
+        ["NPC Damage Taken / Weakness", split.npcWindows.npcDamageTaken],
+        ["Stagger Combat Effects", split.npcWindows.staggerCombatEffect]
+      );
+    }
+    if (split.atropineDamageBonus && split.atropineDamageBonus.damageDoneByStatPlusValue > 0) {
+      gains.push(["Atropine AP", split.atropineDamageBonus]);
+    }
+    return gains;
+  });
 </script>
 
 {#snippet entry(key: keyof ContributionSplit, name: string)}
@@ -97,16 +112,22 @@
   </div>
 </Card>
 
-{#if split.npcWindows && split.npcWindows.trackedHits > 0}
+{#if miscellaneousGains.length > 0}
   <Card class="mt-4">
-    <div class="bg-black/10 px-3 py-2 font-medium">NPC Window Stat Gains</div>
+    <div class="flex items-center justify-between bg-black/10 px-3 py-2 font-medium">
+      <div>Miscellaneous Damage Gains</div>
+      <Tooltipped>
+        {#snippet tooltip()}
+          <div class="max-w-[400px] text-left text-sm">
+            Damage gained compared with the same hits after removing only the listed bonus. These gains can overlap
+            and should not be added together. Atropine measures attack power only, retaining speed-derived damage.
+          </div>
+        {/snippet}
+        <IconInfo class="size-4" />
+      </Tooltipped>
+    </div>
     <div class="grid grid-cols-[1fr_max-content] gap-1 p-2">
-      {#each [
-        ["Domination", split.npcWindows.domination],
-        ["Broken Bone", split.npcWindows.brokenBone],
-        ["NPC Damage Taken / Weakness", split.npcWindows.npcDamageTaken],
-        ["Stagger Combat Effects", split.npcWindows.staggerCombatEffect]
-      ] as [string, StatDamageContribution][] as [name, value]}
+      {#each miscellaneousGains as [name, value]}
         {@const gain = value.damageDoneByStatPlusValue - value.damageDoneByStat}
         <span class="text-sm">{name}</span>
         <span class="text-right font-mono text-sm">

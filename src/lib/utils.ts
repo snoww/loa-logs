@@ -317,6 +317,7 @@ export function removeUnknownHtmlTags(input: string) {
 }
 
 export function formatEncounterEntityName(entity: Entity): string {
+  if (entity.entityType === EntityType.ATROPINE) return "Atropine";
   // Contribution keys remain distinct from the boss record; only the displayed name loses the suffix.
   return entity.entityType === EntityType.NPC_BONUS
     ? entity.name.replace(/ — encounter bonuses(?= \(\d+\)$|$)/, "")

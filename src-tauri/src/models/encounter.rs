@@ -92,6 +92,7 @@ pub struct DamageStats {
     pub npc_window_incomplete_hits: i64,
     pub npc_window_tracked_hits: i64,
     pub rdps_damage_received_npc: i64,
+    pub rdps_damage_received_atropine: i64,
     pub damage_dealt: i64,
     pub hyper_awakening_damage: i64,
     pub damage_taken: i64,
@@ -314,6 +315,8 @@ impl NpcWindowDamageMetrics {
 #[serde(rename_all = "camelCase", default)]
 pub struct ContributionSplit {
     pub npc_windows: NpcWindowDamageMetrics,
+    pub atropine_damage_bonus: StatDamageContribution,
+    pub attribute_atropine_attack_power_to_potion: bool,
     // Bitmask from NpcDamageAttribution, retained in saved/uploaded encounter JSON.
     pub npc_damage_attribution: u8,
     pub name: String,

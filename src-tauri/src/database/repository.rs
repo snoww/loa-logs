@@ -3409,6 +3409,163 @@ mod tests {
     }
 
     #[test]
+    fn atropine_upload_payload_survives_database_round_trip() {
+        use crate::constants::{ATROPINE_ENTITY_ID, ATROPINE_ENTITY_NAME};
+        for (attribute, rdps_valid) in [(false, true), (true, true), (true, false)] {
+            let version = "1.14.0";
+            let database = Database::memory(version).unwrap();
+            let repository = database.create_repository();
+            let mut entities = HashMap::new();
+            let mut splits = Vec::new();
+            for (name, actual, baseline) in
+                [("Player", 130_000, 100_000), ("Atropine", 260_000, 200_000)]
+            {
+                let contributed = if attribute { actual - baseline } else { 0 };
+                let mut player = stats_test_entity(name, 102, Some("Test"), actual, false);
+                player.id = if name == "Player" { 1 } else { 2 };
+                player.character_id = player.id;
+                player.damage_stats.rdps_damage_received = contributed;
+                player.damage_stats.rdps_damage_received_atropine = contributed;
+                entities.insert(name.into(), player);
+                let mut split = ContributionSplit {
+                    name: name.into(),
+                    attribute_atropine_attack_power_to_potion: attribute,
+                    atropine_damage_bonus: StatDamageContribution {
+                        damage_done_by_stat: baseline,
+                        damage_done_by_stat_plus_value: actual,
+                    },
+                    damage_split_by_name: HashMap::from([(name.into(), actual - contributed)]),
+                    ..Default::default()
+                };
+                if attribute {
+                    split
+                        .damage_split_by_name
+                        .insert(ATROPINE_ENTITY_NAME.into(), contributed);
+                    split.damage_done_by_entity_skill_group.insert(
+                        ATROPINE_ENTITY_NAME.into(),
+                        HashMap::from([("attack_power_rate_/$@[16,32380]".into(), contributed)]),
+                    );
+                }
+                splits.push(split);
+            }
+            if attribute {
+                entities.insert(
+                    ATROPINE_ENTITY_NAME.into(),
+                    EncounterEntity {
+                        id: ATROPINE_ENTITY_ID,
+                        name: ATROPINE_ENTITY_NAME.into(),
+                        entity_type: EntityType::Atropine,
+                        damage_stats: DamageStats {
+                            rdps_damage_given: 90_000,
+                            ..Default::default()
+                        },
+                        ..Default::default()
+                    },
+                );
+            }
+            let expected_splits = json!(splits);
+            let id = repository
+                .insert_data(InsertEncounterArgs {
+                    encounter: Encounter {
+                        fight_start: 1000,
+                        last_combat_packet: 11000,
+                        local_player: "Player".into(),
+                        current_boss_name: "Drextalas".into(),
+                        boss_only_damage: true,
+                        entities,
+                        ..Default::default()
+                    },
+                    damage_log: HashMap::new(),
+                    cast_log: HashMap::new(),
+                    boss_hp_log: HashMap::new(),
+                    raid_clear: true,
+                    party_info: vec![vec!["Player".into(), "Atropine".into()]],
+                    raid_difficulty: "Hard".into(),
+                    region: None,
+                    player_info: None,
+                    meter_version: version.into(),
+                    ntp_fight_start: 1000,
+                    rdps_valid,
+                    rdps_message: None,
+                    manual: false,
+                    skill_cast_log: HashMap::new(),
+                    skill_cooldowns: HashMap::new(),
+                    intermission_start: Some(4000),
+                    intermission_end: Some(6000),
+                    contribution_splits: splits,
+                })
+                .unwrap();
+            let payload = json!(repository.get_encounter(&id.to_string()).unwrap());
+            assert_eq!(payload["encounterDamageStats"]["totalDamageDealt"], 390_000);
+            let misc = &payload["encounterDamageStats"]["misc"];
+            assert_eq!(misc["rdpsValid"], rdps_valid);
+            if rdps_valid {
+                assert_eq!(misc["contributionSplits"], expected_splits);
+            } else {
+                assert_eq!(misc["contributionSplits"].as_array().unwrap().len(), 2);
+                for (saved, original) in misc["contributionSplits"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .zip(expected_splits.as_array().unwrap())
+                {
+                    assert_eq!(
+                        saved["atropineDamageBonus"],
+                        original["atropineDamageBonus"]
+                    );
+                    assert_eq!(saved["attributeAtropineAttackPowerToPotion"], true);
+                    assert_eq!(saved["damageDoneByEntitySkillGroup"], json!({}));
+                    assert_eq!(saved["damageIncreaseByEntitySkillGroup"], json!({}));
+                    let name = saved["name"].as_str().unwrap();
+                    let actual = payload["entities"][name]["damageStats"]["damageDealt"].clone();
+                    assert_eq!(saved["damageSplitByName"], json!({name: actual}));
+                    assert_eq!(
+                        payload["entities"][name]["damageStats"]["rdpsDamageReceived"],
+                        0
+                    );
+                    assert_eq!(
+                        payload["entities"][name]["damageStats"]["rdpsDamageReceivedAtropine"],
+                        0
+                    );
+                }
+            }
+            assert_eq!(
+                payload["entities"]["Player"]["damageStats"]["rdpsDamageReceivedAtropine"],
+                if attribute && rdps_valid { 30_000 } else { 0 }
+            );
+            assert_eq!(payload["entities"]["Atropine"]["entityType"], "PLAYER");
+            assert_eq!(
+                payload["entities"]["Atropine"]["damageStats"]["rdps"],
+                if !rdps_valid {
+                    0
+                } else if attribute {
+                    25_000
+                } else {
+                    32_500
+                }
+            );
+            if attribute && rdps_valid {
+                let potion = &payload["entities"][ATROPINE_ENTITY_NAME];
+                assert_eq!(potion["entityType"], "ATROPINE");
+                assert_eq!(potion["damageStats"]["damageDealt"], 0);
+                assert_eq!(potion["damageStats"]["rdpsDamageGiven"], 90_000);
+                assert_eq!(potion["damageStats"]["rdps"], 11_250);
+                let stored_rdps: i64 = database
+                    .get_connection()
+                    .query_row(
+                        "SELECT rdps FROM entity WHERE encounter_id = ? AND name = ?",
+                        params![id, ATROPINE_ENTITY_NAME],
+                        |row| row.get(0),
+                    )
+                    .unwrap();
+                assert_eq!(stored_rdps, 11_250);
+            } else {
+                assert!(payload["entities"].get(ATROPINE_ENTITY_NAME).is_none());
+            }
+        }
+    }
+
+    #[test]
     fn should_insert_encounter() {
         let version = "1.14.0";
         let current_dir = std::env::current_dir().unwrap();

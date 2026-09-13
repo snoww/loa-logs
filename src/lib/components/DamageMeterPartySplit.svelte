@@ -60,7 +60,11 @@
         }
       ];
     }
-    const contributors = [...(enc.darkGrenade ? [enc.darkGrenade] : []), ...enc.npcBonuses];
+    const contributors = [
+      ...(enc.darkGrenade ? [enc.darkGrenade] : []),
+      ...(enc.atropine ? [enc.atropine] : []),
+      ...enc.npcBonuses
+    ].sort((a, b) => b.damageStats.rdpsDamageGiven - a.damageStats.rdpsDamageGiven);
     if (!enc.live && enc.curSettings.rdps && contributors.length > 0) {
       result = [
         ...result,
@@ -97,7 +101,9 @@
       </thead>
       <tbody class="relative z-10 text-neutral-200">
         {#each party.members as member (member.entity.name)}
-          {@const clickable = ![EntityType.DARK_GRENADE, EntityType.NPC_BONUS].includes(member.entity.entityType)}
+          {@const clickable = ![EntityType.DARK_GRENADE, EntityType.NPC_BONUS, EntityType.ATROPINE].includes(
+            member.entity.entityType
+          )}
           <tr
             animate:flip={{ duration: 200 }}
             class="h-7 px-2 py-1 {clickable && settings.app.general.underlineHovered ? 'hover:underline' : ''}"

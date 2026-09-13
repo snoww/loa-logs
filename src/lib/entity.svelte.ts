@@ -37,7 +37,7 @@ export class EntityState {
 
   name: string = $derived.by(() => {
     if (!this.entity) return "";
-    if (this.entity.entityType === EntityType.ESTHER || this.entity.entityType === EntityType.NPC_BONUS) {
+    if ([EntityType.ESTHER, EntityType.NPC_BONUS, EntityType.ATROPINE].includes(this.entity.entityType)) {
       return formatEncounterEntityName(this.entity);
     } else if (this.entity.entityType === EntityType.DARK_GRENADE) {
       return "Dark Grenade";
@@ -52,6 +52,12 @@ export class EntityState {
     }
     if (this.entity.entityType === EntityType.DARK_GRENADE) {
       return "#7a3a8c";
+    }
+    if (this.entity.entityType === EntityType.ATROPINE) {
+      return "#d85858";
+    }
+    if (this.entity.entityType === EntityType.NPC_BONUS) {
+      return "#164e63";
     }
     if (Object.hasOwn(settings.classColors, this.entity.class)) {
       if (settings.app.general.constantLocalPlayerColor && this.encounter.localPlayer == this.entity.name) {
@@ -336,6 +342,7 @@ export class EntityState {
     const split = this.encounter.contributionSplitByName.get(this.entity.name);
     return split?.damageSplitByName["DarkGrenadeSynergy"] ?? 0;
   });
+  atropineDamageReceived = $derived(this.entity.damageStats.rdpsDamageReceivedAtropine ?? 0);
   hasDrContributions = $derived(
     Object.values(this.entity.skills).some((skill) => sumUdpsContributed(skill, [4, 6]) > 0)
   );

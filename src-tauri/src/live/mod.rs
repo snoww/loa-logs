@@ -58,6 +58,8 @@ pub(crate) const DEBUG_DUMP_DAMAGE_STATE_JSON: bool = false;
 // Only enabled categories leave the player's nDPS; damage and stat gains are unchanged.
 pub(crate) const ATTRIBUTE_NPC_BONUSES_TO_NPC: npc_windows::NpcDamageAttribution =
     npc_windows::NpcDamageAttribution::DAMAGE_TAKEN;
+// Only Atropine's AP bonus is attributed; speed-derived damage remains player-owned.
+pub(crate) const ATTRIBUTE_ATROPINE_ATTACK_POWER_TO_POTION: bool = false;
 
 static COMPUTE_STAT_DAMAGE_METRICS: AtomicBool = AtomicBool::new(true);
 const LIVE_DURATION_EXCEED: Duration = Duration::from_millis(100);

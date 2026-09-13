@@ -1,5 +1,7 @@
 use crate::api::{GetCharacterInfoArgs, NtpClock, StatsApi};
-use crate::constants::{DARK_GRENADE_ENTITY_ID, DARK_GRENADE_ENTITY_NAME};
+use crate::constants::{
+    ATROPINE_ENTITY_ID, ATROPINE_ENTITY_NAME, DARK_GRENADE_ENTITY_ID, DARK_GRENADE_ENTITY_NAME,
+};
 use crate::data::*;
 use crate::database::Repository;
 use crate::database::models::InsertEncounterArgs;
@@ -57,6 +59,7 @@ struct SkillStatsDump {
 #[derive(Debug, Clone, Default)]
 struct DamageDataAccumulator {
     npc_windows_: NpcWindowDamageMetrics,
+    atropine_damage_bonus_: StatDamageContribution,
     damage_split_by_entity_id_: HashMap<u64, i64>,
     damage_done_by_entity_skill_group_: HashMap<u64, HashMap<String, i64>>,
     damage_increase_by_entity_skill_group_: HashMap<u64, HashMap<String, i64>>,
@@ -89,6 +92,7 @@ struct DamageDataAccumulator {
 #[derive(Debug, Serialize, Clone, Default)]
 struct DamageDataDump {
     npc_windows_: NpcWindowDamageMetrics,
+    atropine_damage_bonus_: StatDamageDump,
     player_name_: String,
     #[serde(skip_serializing_if = "lal_party_number_unknown")]
     party_number_: i32,
@@ -138,6 +142,7 @@ struct DamageDataDump {
 
 #[derive(Debug, Serialize, Clone, Default)]
 struct DamageStateDump {
+    attribute_atropine_attack_power_to_potion_: bool,
     start_time_: String,
     end_time_: String,
     last_damage_done_time_: String,
@@ -573,6 +578,7 @@ impl EncounterState {
                 | EntityType::Boss
                 | EntityType::Esther
                 | EntityType::DarkGrenade
+                | EntityType::Atropine
                 | EntityType::NpcBonus
         )
     }
@@ -949,6 +955,7 @@ impl EncounterState {
         target.npc_window_incomplete_hits += source.npc_window_incomplete_hits;
         target.npc_window_tracked_hits += source.npc_window_tracked_hits;
         target.rdps_damage_received_npc += source.rdps_damage_received_npc;
+        target.rdps_damage_received_atropine += source.rdps_damage_received_atropine;
 
         target.stagger += source.stagger;
         target.buffed_damage += source.buffed_damage;
@@ -1062,6 +1069,7 @@ impl EncounterState {
         target.npc_window_incomplete_hits += source.npc_window_incomplete_hits;
         target.npc_window_tracked_hits += source.npc_window_tracked_hits;
         target.rdps_damage_received_npc += source.rdps_damage_received_npc;
+        target.rdps_damage_received_atropine += source.rdps_damage_received_atropine;
 
         target.incapacitations.extend(source.incapacitations);
         target
@@ -1278,6 +1286,9 @@ impl EncounterState {
             .raid_captain_efficiency_
             .merge(source.raid_captain_efficiency_);
         target.npc_windows_.merge(source.npc_windows_);
+        target
+            .atropine_damage_bonus_
+            .merge(source.atropine_damage_bonus_);
         target
             .blunt_thorn_efficiency_
             .merge(source.blunt_thorn_efficiency_);
@@ -1809,6 +1820,9 @@ impl EncounterState {
 
         if let Some(stat_damage_metrics) = stat_damage_metrics {
             entry.npc_windows_.merge(stat_damage_metrics.npc_windows);
+            entry
+                .atropine_damage_bonus_
+                .merge(stat_damage_metrics.atropine_damage_bonus);
             if let Some(entity) = self.encounter.entities.get_mut(player_name) {
                 entity.damage_stats.npc_window_incomplete_hits +=
                     stat_damage_metrics.npc_windows.incomplete_hits;
@@ -1916,6 +1930,7 @@ impl EncounterState {
         for entity in self.encounter.entities.values_mut() {
             entity.damage_stats.rdps_damage_received = 0;
             entity.damage_stats.rdps_damage_received_npc = 0;
+            entity.damage_stats.rdps_damage_received_atropine = 0;
             entity.damage_stats.rdps_damage_received_support = 0;
             entity.damage_stats.rdps_damage_given = 0;
             entity.damage_stats.rdps = 0;
@@ -1958,7 +1973,7 @@ impl EncounterState {
                 is_confirmed_player_entity(entity, local_player)
                     && entity.damage_stats.damage_dealt > 0
             }
-            EntityType::DarkGrenade | EntityType::NpcBonus => {
+            EntityType::DarkGrenade | EntityType::NpcBonus | EntityType::Atropine => {
                 entity.damage_stats.rdps_damage_given > 0
             }
             _ => false,
@@ -2007,15 +2022,20 @@ impl EncounterState {
             })
     }
 
-    fn ensure_dark_grenade_entity(&mut self) -> &mut EncounterEntity {
+    fn ensure_battle_item_entity(
+        &mut self,
+        id: u64,
+        name: &str,
+        entity_type: EntityType,
+    ) -> &mut EncounterEntity {
         self.encounter
             .entities
-            .entry(DARK_GRENADE_ENTITY_NAME.to_string())
+            .entry(name.to_string())
             .or_insert_with(|| EncounterEntity {
-                id: DARK_GRENADE_ENTITY_ID,
-                name: DARK_GRENADE_ENTITY_NAME.to_string(),
-                entity_type: EntityType::DarkGrenade,
-                class: DARK_GRENADE_ENTITY_NAME.to_string(),
+                id,
+                name: name.to_string(),
+                entity_type,
+                class: name.to_string(),
                 ..Default::default()
             })
     }
@@ -2072,6 +2092,7 @@ impl EncounterState {
                     EntityType::Player
                         | EntityType::Esther
                         | EntityType::DarkGrenade
+                        | EntityType::Atropine
                         | EntityType::NpcBonus
                 )
             })
@@ -2100,6 +2121,10 @@ impl EncounterState {
             .values()
             .filter(|e| Self::include_in_lal_damage_dump(e, &self.encounter.local_player))
             .map(|entity| {
+                let atropine_damage_bonus = accumulators
+                    .get(&entity.name)
+                    .map(|acc| acc.atropine_damage_bonus_)
+                    .unwrap_or_default();
                 let npc_windows = accumulators
                     .get(&entity.name)
                     .map(|acc| acc.npc_windows_)
@@ -2195,11 +2220,14 @@ impl EncounterState {
                 let hyper_awakening_damage = entity.damage_stats.hyper_awakening_damage;
                 ContributionSplit {
                     npc_windows,
+                    atropine_damage_bonus,
+                    attribute_atropine_attack_power_to_potion:
+                        super::ATTRIBUTE_ATROPINE_ATTACK_POWER_TO_POTION,
                     npc_damage_attribution: super::ATTRIBUTE_NPC_BONUSES_TO_NPC.bits(),
                     name: entity.name.clone(),
                     party_number: if matches!(
                         entity.entity_type,
-                        EntityType::DarkGrenade | EntityType::NpcBonus
+                        EntityType::DarkGrenade | EntityType::NpcBonus | EntityType::Atropine
                     ) {
                         Some(-1)
                     } else {
@@ -2334,10 +2362,13 @@ impl EncounterState {
                 entity_id_,
                 DamageDataDump {
                     npc_windows_: accumulator.map(|acc| acc.npc_windows_).unwrap_or_default(),
+                    atropine_damage_bonus_: accumulator
+                        .map(|acc| acc.atropine_damage_bonus_.into())
+                        .unwrap_or_default(),
                     player_name_: entity.name.clone(),
                     party_number_: if matches!(
                         entity.entity_type,
-                        EntityType::DarkGrenade | EntityType::NpcBonus
+                        EntityType::DarkGrenade | EntityType::NpcBonus | EntityType::Atropine
                     ) {
                         -1
                     } else {
@@ -2403,6 +2434,8 @@ impl EncounterState {
         }
 
         DamageStateDump {
+            attribute_atropine_attack_power_to_potion_:
+                super::ATTRIBUTE_ATROPINE_ATTACK_POWER_TO_POTION,
             start_time_: timestamp_ms_to_lal_datetime(self.encounter.fight_start),
             end_time_: self
                 .lal_debug_end_time_ms
@@ -3350,6 +3383,7 @@ impl EncounterState {
                 buffered_player_entities,
                 buffered_owner_self_effects,
                 super::ATTRIBUTE_NPC_BONUSES_TO_NPC,
+                super::ATTRIBUTE_ATROPINE_ATTACK_POWER_TO_POTION,
             );
             crit_metrics = hit_analysis.crit_metrics;
             stat_damage_metrics = hit_analysis.stat_damage_metrics;
@@ -3878,9 +3912,25 @@ impl EncounterState {
                     }
                     continue;
                 }
-                if attribution.source_entity_id == DARK_GRENADE_ENTITY_ID {
-                    let contributor_entity = self.ensure_dark_grenade_entity();
+                let battle_item = match attribution.source_entity_id {
+                    DARK_GRENADE_ENTITY_ID => {
+                        Some((DARK_GRENADE_ENTITY_NAME, EntityType::DarkGrenade))
+                    }
+                    ATROPINE_ENTITY_ID => Some((ATROPINE_ENTITY_NAME, EntityType::Atropine)),
+                    _ => None,
+                };
+                if let Some((name, entity_type)) = battle_item {
+                    let contributor_entity = self.ensure_battle_item_entity(
+                        attribution.source_entity_id,
+                        name,
+                        entity_type,
+                    );
                     contributor_entity.damage_stats.rdps_damage_given += attribution.damage;
+                    if entity_type == EntityType::Atropine
+                        && let Some(player) = self.encounter.entities.get_mut(&dmg_src_entity.name)
+                    {
+                        player.damage_stats.rdps_damage_received_atropine += attribution.damage;
+                    }
                     continue;
                 }
                 let Some(contributor_name) = entity_tracker
@@ -4709,7 +4759,7 @@ impl EncounterState {
             .entities
             .iter()
             .filter(|(_, entity)| match entity.entity_type {
-                EntityType::DarkGrenade | EntityType::NpcBonus => {
+                EntityType::DarkGrenade | EntityType::NpcBonus | EntityType::Atropine => {
                     entity.damage_stats.rdps_damage_given > 0
                 }
                 EntityType::Player => {
@@ -4827,6 +4877,7 @@ impl EncounterState {
             npc_window_incomplete_hits: stats.npc_window_incomplete_hits,
             npc_window_tracked_hits: stats.npc_window_tracked_hits,
             rdps_damage_received_npc: stats.rdps_damage_received_npc,
+            rdps_damage_received_atropine: stats.rdps_damage_received_atropine,
 
             incapacitations: stats.incapacitations.clone(),
             stagger: stats.stagger,
@@ -4943,6 +4994,70 @@ fn adjusted_extreme_difficulty(
 #[cfg(test)]
 mod tests {
     use super::adjusted_extreme_difficulty;
+
+    #[test]
+    fn atropine_contributions_survive_merges_snapshots_and_debug_serialization() {
+        use super::*;
+        let mut stats = DamageStats {
+            rdps_damage_received_atropine: 30_000,
+            ..Default::default()
+        };
+        let source = stats.clone();
+        EncounterState::merge_owned_source_damage_stats(&mut stats, source);
+        assert_eq!(
+            EncounterState::live_snapshot_damage_stats(&stats).rdps_damage_received_atropine,
+            60_000
+        );
+        let gain = StatDamageContribution {
+            damage_done_by_stat: 100_000,
+            damage_done_by_stat_plus_value: 130_000,
+        };
+        let mut accumulator = DamageDataAccumulator {
+            atropine_damage_bonus_: gain,
+            ..Default::default()
+        };
+        let source = accumulator.clone();
+        EncounterState::merge_damage_data_accumulator(&mut accumulator, source);
+        assert_eq!(
+            accumulator.atropine_damage_bonus_.damage_done_by_stat,
+            200_000
+        );
+        assert_eq!(
+            accumulator
+                .atropine_damage_bonus_
+                .damage_done_by_stat_plus_value,
+            260_000
+        );
+        let dump = serde_json::to_value(DamageDataDump {
+            atropine_damage_bonus_: accumulator.atropine_damage_bonus_.into(),
+            ..Default::default()
+        })
+        .unwrap();
+        assert_eq!(
+            dump["atropine_damage_bonus_"]["damage_done_by_stat_"],
+            200_000
+        );
+        let potion = EncounterEntity {
+            id: ATROPINE_ENTITY_ID,
+            name: ATROPINE_ENTITY_NAME.into(),
+            entity_type: EntityType::Atropine,
+            damage_stats: DamageStats {
+                rdps_damage_given: 60_000,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        assert!(crate::database::utils::should_insert_entity(
+            &potion, "Player"
+        ));
+        assert!(EncounterState::include_in_lal_damage_dump(
+            &potion, "Player"
+        ));
+        assert_eq!(
+            "ATROPINE".parse::<EntityType>().unwrap(),
+            EntityType::Atropine
+        );
+    }
 
     #[test]
     fn npc_window_contributions_survive_live_snapshots_and_save_filtering() {

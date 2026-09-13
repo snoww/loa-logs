@@ -378,7 +378,7 @@ pub fn get_total_available_time(
 pub fn should_insert_entity(entity: &EncounterEntity, local_player: &str) -> bool {
     if matches!(
         entity.entity_type,
-        EntityType::DarkGrenade | EntityType::NpcBonus
+        EntityType::DarkGrenade | EntityType::NpcBonus | EntityType::Atropine
     ) {
         return entity.damage_stats.rdps_damage_given > 0;
     }
@@ -441,7 +441,10 @@ pub fn update_entity_stats(
     if rdps_valid
         && matches!(
             entity.entity_type,
-            EntityType::Player | EntityType::DarkGrenade | EntityType::NpcBonus
+            EntityType::Player
+                | EntityType::DarkGrenade
+                | EntityType::NpcBonus
+                | EntityType::Atropine
         )
     {
         let ndmg = entity.damage_stats.damage_dealt - entity.damage_stats.rdps_damage_received;
@@ -464,6 +467,7 @@ pub fn sanitize_invalid_rdps(
     for entity in encounter.entities.values_mut() {
         entity.damage_stats.rdps_damage_received = 0;
         entity.damage_stats.rdps_damage_received_npc = 0;
+        entity.damage_stats.rdps_damage_received_atropine = 0;
         entity.damage_stats.rdps_damage_received_support = 0;
         entity.damage_stats.rdps_damage_given = 0;
         entity.damage_stats.rdps = 0;

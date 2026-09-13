@@ -589,22 +589,28 @@
           Given: {abbreviateNumber(state.entity.damageStats.rdpsDamageGiven, 2)}
         </div>
       {:else}
-        {#if state.entity.damageStats.rdpsDamageReceivedSupport > 0 && state.damageDealt > 0}
+        {#if state.damageDealt > 0}
           {@const dpsContrib =
             state.entity.damageStats.rdpsDamageReceived -
             state.entity.damageStats.rdpsDamageReceivedSupport -
             (state.entity.damageStats.rdpsDamageReceivedNpc ?? 0) -
-            state.darkGrenadeDamageReceived}
-          <div>
-            Support Contribution: {customRound(
-              (state.entity.damageStats.rdpsDamageReceivedSupport / state.damageDealt) * 100
-            )}%
-          </div>
+            state.darkGrenadeDamageReceived -
+            state.atropineDamageReceived}
+          {#if state.entity.damageStats.rdpsDamageReceivedSupport > 0}
+            <div>
+              Support Contribution: {customRound(
+                (state.entity.damageStats.rdpsDamageReceivedSupport / state.damageDealt) * 100
+              )}%
+            </div>
+          {/if}
           {#if dpsContrib > 0}
             <div>DPS Contribution: {customRound((dpsContrib / state.damageDealt) * 100)}%</div>
           {/if}
           {#if state.darkGrenadeDamageReceived > 0}
             <div>Dark Contribution: {customRound((state.darkGrenadeDamageReceived / state.damageDealt) * 100)}%</div>
+          {/if}
+          {#if state.atropineDamageReceived > 0}
+            <div>Atropine Contribution: {customRound((state.atropineDamageReceived / state.damageDealt) * 100)}%</div>
           {/if}
           {#if (state.entity.damageStats.rdpsDamageReceivedNpc ?? 0) > 0}
             <div>NPC Contribution: {customRound(((state.entity.damageStats.rdpsDamageReceivedNpc ?? 0) / state.damageDealt) * 100)}%</div>

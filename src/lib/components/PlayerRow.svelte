@@ -53,8 +53,14 @@
     <QuickTooltip tooltip={entityState.name}>
       <img class="table-cell size-5" src="/images/skills/battle_item_01_47.png" alt={entityState.name} />
     </QuickTooltip>
+  {:else if entity.entityType === EntityType.ATROPINE}
+    <QuickTooltip tooltip={entityState.name}>
+      <img class="table-cell size-5" src="https://cdn.ags.lol/icon/battle_item_01_72.png" alt={entityState.name} />
+    </QuickTooltip>
   {:else if entity.entityType === EntityType.NPC_BONUS}
-    <span title="NPC encounter bonuses">◆</span>
+    <QuickTooltip tooltip="NPC encounter bonuses">
+      <img class="table-cell size-5" src="/images/icons/boss.png" alt="NPC encounter bonuses" />
+    </QuickTooltip>
   {:else}
     <ClassTooltip {entity} />
   {/if}
@@ -63,7 +69,7 @@
 <td colspan="2" onmouseenter={() => (hovering = true)} onmouseleave={() => (hovering = false)}>
   <div class="flex gap-1">
     <div class="truncate">
-      {#if entity.entityType === EntityType.DARK_GRENADE || entity.entityType === EntityType.NPC_BONUS}
+      {#if [EntityType.DARK_GRENADE, EntityType.NPC_BONUS, EntityType.ATROPINE].includes(entity.entityType)}
         {entityState.name}
       {:else}
         <ArkPassiveTooltip state={entityState} />
@@ -104,7 +110,9 @@
         (enc.playerSort === "ndps" && columnDef.headerText === "nDPS") ||
         (enc.playerSort === "rdps" && columnDef.headerText === "rDPS") ||
         (enc.playerSort === "stagger" && columnDef.headerText === "STAG"))}
-    {@const isEncounterSource = entity.entityType === EntityType.DARK_GRENADE || entity.entityType === EntityType.NPC_BONUS}
+    {@const isEncounterSource = [EntityType.DARK_GRENADE, EntityType.NPC_BONUS, EntityType.ATROPINE].includes(
+      entity.entityType
+    )}
     <td class="cursor-default px-1 text-center {isActiveSort ? 'bg-white/3' : ''}">
       {#snippet tooltip()}
         {#if columnDef.valueTooltip}

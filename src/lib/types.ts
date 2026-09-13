@@ -317,6 +317,8 @@ export enum NpcDamageAttribution {
 
 export interface ContributionSplit {
   npcWindows?: NpcWindowDamageMetrics;
+  atropineDamageBonus?: StatDamageContribution;
+  attributeAtropineAttackPowerToPotion?: boolean;
   npcDamageAttribution?: NpcDamageAttribution;
   name: string;
   partyNumber?: number;
@@ -494,6 +496,7 @@ export interface DamageStats {
   npcWindowIncompleteHits?: number;
   npcWindowTrackedHits?: number;
   rdpsDamageReceivedNpc?: number;
+  rdpsDamageReceivedAtropine?: number;
   damageDealt: number;
   damageTaken: number;
   hyperAwakeningDamage?: number;
@@ -646,7 +649,8 @@ export enum EntityType {
   NPC = "NPC",
   ESTHER = "ESTHER",
   NPC_BONUS = "NPC_BONUS",
-  DARK_GRENADE = "DARK_GRENADE"
+  DARK_GRENADE = "DARK_GRENADE",
+  ATROPINE = "ATROPINE"
 }
 
 export interface ClassColors {

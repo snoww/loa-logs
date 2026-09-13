@@ -1,4 +1,5 @@
-use crate::constants::DARK_GRENADE_ENTITY_ID;
+use crate::constants::{ATROPINE_BUFF_ID, ATROPINE_ENTITY_ID, DARK_GRENADE_ENTITY_ID};
+
 use crate::data::{
     ENGRAVING_DATA, RDPS_ADDITIONAL_IDENTITY_GROUP, SKILL_BUFF_DATA, SKILL_DATA, SKILL_EFFECT_DATA,
     SUPPORT_IDENTITY_GROUP, SUPPORT_MARKING_GROUP, identity_category_matches,
@@ -76,6 +77,7 @@ pub struct HitAnalysisResult {
 #[derive(Debug, Clone, Default)]
 pub struct HitStatDamageMetrics {
     pub npc_windows: crate::models::NpcWindowDamageMetrics,
+    pub atropine_damage_bonus: StatDamageContribution,
     pub additional_damage_1percent_damage: StatDamageContribution,
     pub critical_hit_rate_1percent_damage: StatDamageContribution,
     pub critical_damage_rate_1percent_damage: StatDamageContribution,
@@ -566,6 +568,7 @@ pub fn analyze_hit_rdps(
     buffered_entities: Option<&HashMap<u64, Entity>>,
     buffered_owner_self_effects: Option<&HashMap<u64, Vec<StatusEffectDetails>>>,
     npc_attribution: super::npc_windows::NpcDamageAttribution,
+    attribute_atropine_attack_power_to_potion: bool,
 ) -> HitAnalysisResult {
     if damage <= 0 {
         return HitAnalysisResult {
@@ -597,9 +600,13 @@ pub fn analyze_hit_rdps(
     };
     let attacker_snapshot = attacker_context.inspect_snapshot;
     if !is_affected_by_buffs && !is_hyper_awakening {
+        let mut metrics = HitStatDamageMetrics::default();
+        metrics
+            .atropine_damage_bonus
+            .add(damage as f64, damage as f64);
         return HitAnalysisResult {
             crit_metrics: None,
-            stat_damage_metrics: None,
+            stat_damage_metrics: Some(metrics),
             rdps: HitRdpsOutcome::NotApplicable(RdpsNotApplicableReason::BuffsCannotAffectSkill),
         };
     }
@@ -722,7 +729,7 @@ pub fn analyze_hit_rdps(
     }
     let mut contributions = Vec::new();
     let attacker_stats_for_source_effects = stats.clone();
-    if let Err(reason) = append_source_contributions(
+    let atropine_attack_power_rate = match append_source_contributions(
         &mut stats,
         &mut contributions,
         attacker_context.entity_id,
@@ -739,13 +746,17 @@ pub fn analyze_hit_rdps(
         entity_tracker,
         buffered_entities,
         buffered_owner_self_effects,
+        attribute_atropine_attack_power_to_potion,
     ) {
-        return HitAnalysisResult {
-            crit_metrics: None,
-            stat_damage_metrics: None,
-            rdps: HitRdpsOutcome::Invalid(reason),
-        };
-    }
+        Ok(atropine_attack_power_rate) => atropine_attack_power_rate,
+        Err(reason) => {
+            return HitAnalysisResult {
+                crit_metrics: None,
+                stat_damage_metrics: None,
+                rdps: HitRdpsOutcome::Invalid(reason),
+            };
+        }
+    };
     let attacker_stats_for_target_effects = stats.clone();
     if let Err(reason) = append_target_contributions(
         &mut stats,
@@ -881,6 +892,23 @@ pub fn analyze_hit_rdps(
     };
 
     let metrics = stat_damage_metrics.get_or_insert_with(HitStatDamageMetrics::default);
+    let atropine_bonus = if stat_damage_eligible {
+        atropine_attack_power_rate.max(0.0)
+    } else {
+        0.0
+    };
+    let attack_power_multiplier = 1.0 + stats.attack_power_rate.value();
+    if atropine_bonus == 0.0 {
+        metrics
+            .atropine_damage_bonus
+            .add(damage as f64, damage as f64);
+    } else if attack_power_multiplier.is_finite() && attack_power_multiplier > 0.0 {
+        // Remove only Atropine from the additive AP bucket, retaining other AP and speed bonuses.
+        metrics.atropine_damage_bonus.add(
+            damage as f64,
+            damage as f64 * ((attack_power_multiplier - atropine_bonus) / attack_power_multiplier),
+        );
+    }
     metrics.npc_windows.tracked_hits = 1;
     metrics.npc_windows.incomplete_hits = i64::from(stats.npc_window.incomplete());
     metrics.npc_windows.missing_stagger_hits =
@@ -1127,6 +1155,7 @@ mod npc_windows_integration_tests {
             None,
             None,
             npc_attribution,
+            crate::live::ATTRIBUTE_ATROPINE_ATTACK_POWER_TO_POTION,
         )
     }
 
@@ -1365,6 +1394,7 @@ mod npc_windows_integration_tests {
                     None,
                     None,
                     attribution,
+                    crate::live::ATTRIBUTE_ATROPINE_ATTACK_POWER_TO_POTION,
                 )
             };
             let baseline_effects = [
@@ -1693,7 +1723,9 @@ fn append_source_contributions(
     entity_tracker: &EntityTracker,
     buffered_entities: Option<&HashMap<u64, Entity>>,
     buffered_owner_self_effects: Option<&HashMap<u64, Vec<StatusEffectDetails>>>,
-) -> Result<(), RdpsInvalidReason> {
+    attribute_atropine_attack_power_to_potion: bool,
+) -> Result<f64, RdpsInvalidReason> {
+    let mut atropine_attack_power_rate = 0.0;
     let attacker_attack_power = stats
         .calculate_attack_power_pre_multipliers()
         .value()
@@ -1781,19 +1813,39 @@ fn append_source_contributions(
 
         for option in &level_data.passive_options {
             match option.option_type.as_str() {
-                "stat" => apply_source_passive_stat(
-                    stats,
-                    option,
-                    skill_buff,
-                    source_entity_id,
-                    effect.status_effect_id,
-                    source_class_id,
-                    source_skill_id,
-                    source_player_stats_ref,
-                    is_attributable_source,
-                    buff_source.clone(),
-                    source_priority,
-                )?,
+                "stat" => {
+                    let is_atropine_attack_power = is_self_source
+                        && effect.status_effect_id == ATROPINE_BUFF_ID
+                        && option.key_stat == "attack_power_rate";
+                    let attack_power_before = if is_atropine_attack_power {
+                        stats.attack_power_rate.value()
+                    } else {
+                        0.0
+                    };
+                    let stat_owner_id =
+                        if attribute_atropine_attack_power_to_potion && is_atropine_attack_power {
+                            ATROPINE_ENTITY_ID
+                        } else {
+                            source_entity_id
+                        };
+                    apply_source_passive_stat(
+                        stats,
+                        option,
+                        skill_buff,
+                        stat_owner_id,
+                        effect.status_effect_id,
+                        source_class_id,
+                        source_skill_id,
+                        source_player_stats_ref,
+                        is_attributable_source,
+                        buff_source.clone(),
+                        source_priority,
+                    )?;
+                    if is_atropine_attack_power {
+                        atropine_attack_power_rate +=
+                            stats.attack_power_rate.value() - attack_power_before;
+                    }
+                }
                 "combat_effect" if option.key_index > 0 => stats.add_combat_effect_from_id(
                     option.key_index as u32,
                     source_entity_id,
@@ -1927,7 +1979,7 @@ fn append_source_contributions(
             });
         }
     }
-    Ok(())
+    Ok(atropine_attack_power_rate)
 }
 
 fn apply_source_passive_stat(
@@ -4101,6 +4153,9 @@ fn load_player_stats_from_snapshot(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::live::entity_tracker::{InspectBaseStats, InspectSnapshot};
+    use crate::live::npc_windows::{NpcDamageAttribution, tests::base_stats};
+    use crate::models::EntityType;
 
     #[test]
     fn shining_growth_runtime_adjustment_resolves_full_crit_rate() {
@@ -4445,6 +4500,7 @@ mod tests {
             &tracker,
             None,
             None,
+            crate::live::ATTRIBUTE_ATROPINE_ATTACK_POWER_TO_POTION,
         )
         .unwrap();
 
@@ -4494,6 +4550,7 @@ mod tests {
             &tracker,
             None,
             None,
+            crate::live::ATTRIBUTE_ATROPINE_ATTACK_POWER_TO_POTION,
         )
         .unwrap();
 
@@ -4742,5 +4799,368 @@ mod tests {
             (actual - expected).abs() < 1e-9,
             "expected {actual} to equal {expected}"
         );
+    }
+
+    const POTION_ID: u64 = 0xFFFF_FFFF_3238_0000;
+
+    struct HitOptions {
+        attribute: bool,
+        other_attack_power: f64,
+        raid_captain: bool,
+        hyper: bool,
+        skill_effect_id: u32,
+        target_effects: Vec<StatusEffectDetails>,
+        buffered: bool,
+    }
+
+    impl Default for HitOptions {
+        fn default() -> Self {
+            Self {
+                attribute: crate::live::ATTRIBUTE_ATROPINE_ATTACK_POWER_TO_POTION,
+                other_attack_power: 0.0,
+                raid_captain: false,
+                hyper: false,
+                skill_effect_id: 0,
+                target_effects: Vec::new(),
+                buffered: false,
+            }
+        }
+    }
+
+    fn atropine(player_id: u64) -> StatusEffectDetails {
+        StatusEffectDetails {
+            status_effect_id: 32380,
+            source_id: player_id,
+            target_id: player_id,
+            skill_level: 1,
+            stack_count: 1,
+            ..Default::default()
+        }
+    }
+
+    fn run_hit(player_id: u64, damage: i64, buffs: &[StatusEffectDetails]) -> HitAnalysisResult {
+        run_hit_with_options(player_id, damage, buffs, HitOptions::default())
+    }
+
+    fn run_hit_with_options(
+        player_id: u64,
+        damage: i64,
+        buffs: &[StatusEffectDetails],
+        options: HitOptions,
+    ) -> HitAnalysisResult {
+        crate::live::test_data::initialize();
+        let mut base = base_stats();
+        base.owner_id = player_id;
+        base.attack_power_rate
+            .add_self(options.other_attack_power, StatSource::Base);
+        if options.raid_captain {
+            base.add_ability_feature("troop_leader", 1, &[5500], player_id);
+        }
+        let attacker = Entity {
+            id: player_id,
+            name: format!("Player {player_id}"),
+            entity_type: EntityType::Player,
+            class_id: 102,
+            level: 70,
+            inspect_snapshot: Some(InspectSnapshot::default()),
+            inspect_base_stats: Some(InspectBaseStats {
+                owner_id: player_id,
+                class_id: 102,
+                stats: Arc::new(base),
+            }),
+            ..Default::default()
+        };
+        let ids = Rc::new(RefCell::new(IdTracker::new()));
+        let party = Rc::new(RefCell::new(PartyTracker::new(ids.clone())));
+        let statuses = Rc::new(RefCell::new(StatusTracker::new(party.clone())));
+        let mut tracker = EntityTracker::new(statuses, ids, party);
+        let buffered = options
+            .buffered
+            .then(|| HashMap::from([(player_id, attacker.clone())]));
+        if !options.buffered {
+            tracker.entities.insert(player_id, attacker.clone());
+        }
+        let target = crate::live::npc_windows::tests::drex();
+        analyze_hit_rdps(
+            &attacker,
+            &target,
+            damage,
+            0,
+            0,
+            options.skill_effect_id,
+            &HitOption::NONE,
+            &HitFlag::NORMAL,
+            None,
+            0,
+            options.hyper,
+            false,
+            buffs,
+            &options.target_effects,
+            1000,
+            &tracker,
+            buffered.as_ref(),
+            None,
+            NpcDamageAttribution::DAMAGE_TAKEN,
+            options.attribute,
+        )
+    }
+
+    #[test]
+    fn atropine_attack_power_is_separated_for_each_player() {
+        for (player_id, damage, expected) in [(1, 130_000, 30_000), (3, 260_000, 60_000)] {
+            let analysis = run_hit(player_id, damage, &[atropine(player_id)]);
+            let HitRdpsOutcome::Computed(result) = analysis.rdps else {
+                panic!("hit analysis failed: {:?}", analysis.rdps);
+            };
+            assert_eq!(result.entity_attributions.len(), 1);
+            assert_eq!(result.entity_attributions[0].source_entity_id, POTION_ID);
+            assert_eq!(result.entity_attributions[0].damage, expected);
+            assert_eq!(result.rdps_damage_received_support, 0);
+            let groups: Vec<_> = result
+                .skill_group_attributions
+                .iter()
+                .filter(|entry| entry.source_entity_id == POTION_ID)
+                .collect();
+            assert_eq!(groups.len(), 1);
+            assert_eq!(groups[0].group_name, "attack_power_rate_/$@[16,32380]");
+        }
+    }
+
+    #[test]
+    fn atropine_gain_retains_other_attack_power_in_both_modes() {
+        for attribute in [false, true] {
+            for (other_attack_power, damage, baseline) in
+                [(0.2, 150_000, 120_000), (-0.2, 110_000, 80_000)]
+            {
+                let hit = run_hit_with_options(
+                    1,
+                    damage,
+                    &[atropine(1)],
+                    HitOptions {
+                        attribute,
+                        other_attack_power,
+                        ..Default::default()
+                    },
+                );
+                let gain = hit.stat_damage_metrics.unwrap().atropine_damage_bonus;
+                assert_eq!(gain.damage_done_by_stat_plus_value, damage);
+                assert!((gain.damage_done_by_stat - baseline).abs() <= 1);
+                let HitRdpsOutcome::Computed(result) = hit.rdps else {
+                    panic!("invalid hit")
+                };
+                assert_eq!(
+                    result
+                        .entity_attributions
+                        .iter()
+                        .any(|entry| entry.source_entity_id == POTION_ID),
+                    attribute
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn atropine_does_not_gain_damage_on_unbuffed_or_unaffected_hits() {
+        for attribute in [false, true] {
+            for (buffs, hyper, skill_effect_id) in [
+                (vec![], false, 0),
+                (vec![atropine(1)], true, 0),
+                (vec![atropine(1)], false, 98725),
+            ] {
+                let hit = run_hit_with_options(
+                    1,
+                    130_000,
+                    &buffs,
+                    HitOptions {
+                        attribute,
+                        hyper,
+                        skill_effect_id,
+                        ..Default::default()
+                    },
+                );
+                let gain = hit.stat_damage_metrics.unwrap().atropine_damage_bonus;
+                assert_eq!(gain.damage_done_by_stat_plus_value, 130_000);
+                assert_eq!(gain.damage_done_by_stat, 130_000);
+                if let HitRdpsOutcome::Computed(result) = hit.rdps {
+                    assert!(result.entity_attributions.is_empty());
+                } else {
+                    assert!(matches!(
+                        hit.rdps,
+                        HitRdpsOutcome::NotApplicable(
+                            RdpsNotApplicableReason::BuffsCannotAffectSkill
+                        )
+                    ));
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn atropine_speed_and_raid_captain_remain_player_owned() {
+        for attribute in [false, true] {
+            let hit = run_hit_with_options(
+                1,
+                144_300,
+                &[atropine(1)],
+                HitOptions {
+                    attribute,
+                    raid_captain: true,
+                    ..Default::default()
+                },
+            );
+            let metrics = hit.stat_damage_metrics.unwrap();
+            assert!((metrics.atropine_damage_bonus.damage_done_by_stat - 111_000).abs() <= 1);
+            assert!(
+                (metrics
+                    .raid_captain_efficiency
+                    .damage_done_by_stat_plus_value
+                    - 2 * metrics.raid_captain_efficiency.damage_done_by_stat)
+                    .abs()
+                    <= 2
+            );
+            let HitRdpsOutcome::Computed(result) = hit.rdps else {
+                panic!("invalid hit")
+            };
+            assert_eq!(
+                result.rdps_damage_received,
+                if attribute { 33_300 } else { 0 }
+            );
+            assert!(
+                result
+                    .skill_group_attributions
+                    .iter()
+                    .filter(|entry| entry.source_entity_id == POTION_ID)
+                    .all(|entry| entry.group_name == "attack_power_rate_/$@[16,32380]")
+            );
+        }
+    }
+
+    #[test]
+    fn atropine_assigns_only_attack_power_to_potion_in_buff_stats() {
+        crate::live::test_data::initialize();
+        for attribute in [false, true] {
+            let mut stats = base_stats();
+            stats.add_ability_feature("troop_leader", 1, &[5500], 1);
+            let attacker_stats = stats.clone();
+            let ids = Rc::new(RefCell::new(IdTracker::new()));
+            let party = Rc::new(RefCell::new(PartyTracker::new(ids.clone())));
+            let statuses = Rc::new(RefCell::new(StatusTracker::new(party.clone())));
+            let tracker = EntityTracker::new(statuses, ids, party);
+            let attack_power = append_source_contributions(
+                &mut stats,
+                &mut Vec::new(),
+                1,
+                102,
+                0,
+                &attacker_stats,
+                0,
+                &HitFlag::NORMAL,
+                None,
+                false,
+                None,
+                &[atropine(1)],
+                1000,
+                &tracker,
+                None,
+                None,
+                attribute,
+            )
+            .unwrap();
+            crate::live::npc_windows::tests::apply_dynamic(&mut stats, &Entity::default());
+            assert!((attack_power - 0.3).abs() < 1e-8);
+            assert!(
+                (stats.attack_power_rate.get_value_for_entity_id(POTION_ID)
+                    - if attribute { 0.3 } else { 0.0 })
+                .abs()
+                    < 1e-8
+            );
+            for stat in [&stats.move_speed_rate, &stats.attack_speed_rate] {
+                assert!((stat.self_value() - 0.2).abs() < 1e-8);
+                assert_eq!(stat.get_value_for_entity_id(POTION_ID), 0.0);
+            }
+            assert!((stats.move_speed_to_damage_rate.self_value() - 0.11).abs() < 1e-8);
+            assert_eq!(
+                stats
+                    .move_speed_to_damage_rate
+                    .get_value_for_entity_id(POTION_ID),
+                0.0
+            );
+        }
+    }
+
+    #[test]
+    fn atropine_uses_frozen_buffs_and_attacker_for_buffered_hits() {
+        let mut live_buffs = vec![atropine(1)];
+        let frozen_buffs = live_buffs.clone();
+        live_buffs.clear();
+        let queued = run_hit_with_options(
+            1,
+            130_000,
+            &frozen_buffs,
+            HitOptions {
+                buffered: true,
+                ..Default::default()
+            },
+        );
+        let HitRdpsOutcome::Computed(result) = queued.rdps else {
+            panic!("invalid queued hit")
+        };
+        assert_eq!(result.rdps_damage_received, 30_000);
+        let later = run_hit(1, 100_000, &live_buffs);
+        let HitRdpsOutcome::Computed(result) = later.rdps else {
+            panic!("invalid later hit")
+        };
+        assert_eq!(result.rdps_damage_received, 0);
+        let mut gain = queued.stat_damage_metrics.unwrap().atropine_damage_bonus;
+        gain.merge(later.stat_damage_metrics.unwrap().atropine_damage_bonus);
+        assert_eq!(gain.damage_done_by_stat_plus_value, 230_000);
+        assert!((gain.damage_done_by_stat - 200_000).abs() <= 1);
+    }
+
+    #[test]
+    fn atropine_gain_is_independent_of_npc_and_dark_grenade_allocation() {
+        for attribute in [false, true] {
+            let hit = run_hit_with_options(
+                1,
+                171_600,
+                &[atropine(1)],
+                HitOptions {
+                    attribute,
+                    target_effects: vec![
+                        crate::live::npc_windows::tests::effect(420676006, 1),
+                        crate::live::npc_windows::tests::effect(32240, 1),
+                    ],
+                    ..Default::default()
+                },
+            );
+            let gain = hit.stat_damage_metrics.unwrap().atropine_damage_bonus;
+            assert!((gain.damage_done_by_stat - 132_000).abs() <= 1);
+            let HitRdpsOutcome::Computed(result) = hit.rdps else {
+                panic!("invalid hit")
+            };
+            assert!(
+                result
+                    .entity_attributions
+                    .iter()
+                    .any(|entry| entry.source_entity_id == DARK_GRENADE_ENTITY_ID)
+            );
+            assert!(
+                result
+                    .entity_attributions
+                    .iter()
+                    .any(|entry| entry.source_entity_id == 2)
+            );
+            if attribute {
+                let potion = result
+                    .entity_attributions
+                    .iter()
+                    .find(|entry| entry.source_entity_id == POTION_ID)
+                    .unwrap();
+                assert_ne!(
+                    potion.damage,
+                    gain.damage_done_by_stat_plus_value - gain.damage_done_by_stat
+                );
+            }
+        }
     }
 }

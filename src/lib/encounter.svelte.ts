@@ -79,6 +79,12 @@ export class EncounterState {
       .sort((a, b) => b.damageStats.rdpsDamageGiven - a.damageStats.rdpsDamageGiven)
   );
 
+  atropine = $derived(
+    Object.values(this.encounter?.entities ?? {}).find(
+      (entity) => entity.entityType === EntityType.ATROPINE && entity.damageStats.rdpsDamageGiven > 0
+    )
+  );
+
   /** Synthetic Dark Grenade source: contributed damage only. */
   darkGrenade = $derived.by(() => {
     if (!this.encounter) return undefined;

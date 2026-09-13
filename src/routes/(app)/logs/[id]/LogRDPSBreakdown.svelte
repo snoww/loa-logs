@@ -24,7 +24,7 @@
   import { IconInfo, IconRefresh } from "$lib/icons";
   import { extractStatSource, type StatSource, StatSourceType } from "$lib/rdps-breakdown";
   import { settings } from "$lib/stores.svelte";
-  import { type Entity } from "$lib/types";
+  import { EntityType, type Entity } from "$lib/types";
   import { abbreviateNumber, formatEncounterEntityName, getClassIcon } from "$lib/utils";
 
   interface Props {
@@ -533,6 +533,8 @@
   {@const playerEntity = enc.encounter!.entities[name]}
   {#if !playerEntity}
     <img src="/images/skills/unknown.png" alt="Unknown Entity" class={clazz} />
+  {:else if playerEntity.entityType === EntityType.ATROPINE}
+    <img src="https://cdn.ags.lol/icon/{BattleItemData[101291]![1]}.png" alt="Atropine" class={clazz} />
   {:else if playerEntity.classId}
     <img src={getClassIcon(playerEntity.classId)} alt={playerEntity.class} class={clazz} />
   {:else}
