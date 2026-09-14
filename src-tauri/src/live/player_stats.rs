@@ -25,7 +25,7 @@ const ROSTER_CRITICAL_HIT_BONUS: f64 = 69.0;
 const SKIN_MAIN_STAT_MULTIPLIER_CAP: f64 = 0.08;
 const PET_MAIN_STAT_MULTIPLIER: f64 = 0.011057;
 const PET_SKILL_DAMAGE_RATE: f64 = 0.01;
-const FIXED_STAT_DATA_COUNT: usize = 48;
+const FIXED_STAT_DATA_COUNT: usize = 55;
 pub const STAT_PRIORITY_SUPPORT: i32 = 0;
 pub const STAT_PRIORITY_DEFAULT: i32 = 100;
 
@@ -316,13 +316,31 @@ impl StatData {
         value
     }
 
-    // Positive factors in a multiplicative stat, with reductions left in the baseline.
+    // Remove positive terms using this stat's operation, keeping reductions in the baseline.
+    // Damage-taken terms retain opposing signs separately even when source names match.
     pub fn positive_multiplier(&self) -> f64 {
-        self.self_values
+        let values = self
+            .self_values
             .iter()
-            .chain(self.modified_values.iter().flat_map(|entry| &entry.values))
-            .filter(|entry| entry.value > 0.0)
-            .fold(1.0, |multiplier, entry| multiplier * (1.0 + entry.value))
+            .chain(self.modified_values.iter().flat_map(|entry| &entry.values));
+        match self.operation_type {
+            OperationType::Additive => {
+                let mut positive_sum = 0.0;
+                let mut negative_sum = 0.0;
+                for entry in values {
+                    positive_sum += entry.value.max(0.0);
+                    negative_sum += entry.value.min(0.0);
+                }
+                if positive_sum == 0.0 {
+                    1.0
+                } else {
+                    (1.0 + negative_sum + positive_sum) / (1.0 + negative_sum)
+                }
+            }
+            OperationType::Multiplicative => values
+                .filter(|entry| entry.value > 0.0)
+                .fold(1.0, |multiplier, entry| multiplier * (1.0 + entry.value)),
+        }
     }
 
     pub fn self_value(&self) -> f64 {
@@ -347,20 +365,45 @@ impl StatData {
     }
 
     pub fn add_self(&mut self, value: f64, source: StatSource) {
+        self.add_self_internal(value, source, false);
+    }
+
+    /// Like `add_self`, but a value never merges into a same-source entry of the opposite
+    /// sign, so `positive_multiplier` can remove only the positive part.
+    pub fn add_self_preserving_sign(&mut self, value: f64, source: StatSource) {
+        self.add_self_internal(value, source, true);
+    }
+
+    fn add_self_internal(&mut self, value: f64, source: StatSource, preserve_opposing_signs: bool) {
         if value == 0.0 {
             return;
         }
         if self.operation_type == OperationType::Additive
-            && let Some(existing) = self
-                .self_values
-                .iter_mut()
-                .find(|entry| entry.source == source)
+            && let Some(existing) = self.self_values.iter_mut().find(|entry| {
+                entry.source == source
+                    && (!preserve_opposing_signs || (entry.value > 0.0) == (value > 0.0))
+            })
         {
             existing.value += value;
             return;
         }
         self.self_values.push(StatDataValue { value, source });
         self.sort_self_values();
+    }
+
+    /// `add` that keeps opposing signs of one source apart; see `add_self_preserving_sign`.
+    pub fn add_preserving_sign(
+        &mut self,
+        value: f64,
+        stats_owner_id: u64,
+        value_owner_id: u64,
+        source: StatSource,
+    ) {
+        if stats_owner_id == value_owner_id || value_owner_id == 0 {
+            self.add_self_preserving_sign(value, source);
+            return;
+        }
+        self.add_modification_internal(value, value_owner_id, source, STAT_PRIORITY_DEFAULT, true);
     }
 
     pub fn add(
@@ -405,6 +448,17 @@ impl StatData {
         source: StatSource,
         source_priority: i32,
     ) {
+        self.add_modification_internal(value, source_entity_id, source, source_priority, false);
+    }
+
+    fn add_modification_internal(
+        &mut self,
+        value: f64,
+        source_entity_id: u64,
+        source: StatSource,
+        source_priority: i32,
+        preserve_opposing_signs: bool,
+    ) {
         if value == 0.0 {
             return;
         }
@@ -420,10 +474,10 @@ impl StatData {
                 should_sort_modifications = true;
             }
             if self.operation_type == OperationType::Additive
-                && let Some(existing) = modification
-                    .values
-                    .iter_mut()
-                    .find(|entry| entry.source == source)
+                && let Some(existing) = modification.values.iter_mut().find(|entry| {
+                    entry.source == source
+                        && (!preserve_opposing_signs || (entry.value > 0.0) == (value > 0.0))
+                })
             {
                 existing.value += value;
                 if should_sort_modifications {
@@ -892,8 +946,18 @@ pub struct PlayerStats {
     pub npc_window: super::npc_windows::HitWindow,
     pub domination_damage_rate: StatData,
     pub broken_bone_damage_rate: StatData,
-    pub npc_damage_taken_rate: StatData,
+    // Authored WeaknessAttack is independent of target incoming-damage stat buckets.
+    pub npc_action_weakness_damage_rate: StatData,
     pub stagger_combat_effect_damage_rate: StatData,
+    // Buff contributions add within each exact target stat; the hit's buckets multiply.
+    pub target_physical_inc_rate: StatData,
+    pub target_physical_inc_sub_rate_1: StatData,
+    pub target_physical_inc_sub_rate_2: StatData,
+    pub target_magical_inc_rate: StatData,
+    pub target_magical_inc_sub_rate_1: StatData,
+    pub target_magical_inc_sub_rate_2: StatData,
+    // Matching elemental-resistance modifiers retain their per-source multiplication.
+    pub target_elemental_damage_taken_rate: StatData,
 
     pub spec_bonus_identity_1: StatData,
     pub spec_bonus_identity_2: StatData,
@@ -962,8 +1026,15 @@ impl Default for PlayerStats {
             npc_window: Default::default(),
             domination_damage_rate: StatData::default(),
             broken_bone_damage_rate: StatData::default(),
-            npc_damage_taken_rate: StatData::default(),
+            npc_action_weakness_damage_rate: StatData::default(),
             stagger_combat_effect_damage_rate: StatData::default(),
+            target_physical_inc_rate: StatData::default(),
+            target_physical_inc_sub_rate_1: StatData::default(),
+            target_physical_inc_sub_rate_2: StatData::default(),
+            target_magical_inc_rate: StatData::default(),
+            target_magical_inc_sub_rate_1: StatData::default(),
+            target_magical_inc_sub_rate_2: StatData::default(),
+            target_elemental_damage_taken_rate: StatData::default(),
 
             spec_bonus_identity_1: StatData::default(),
             spec_bonus_identity_2: StatData::default(),
@@ -1045,8 +1116,15 @@ impl PlayerStats {
             npc_window,
             domination_damage_rate,
             broken_bone_damage_rate,
-            npc_damage_taken_rate,
+            npc_action_weakness_damage_rate,
             stagger_combat_effect_damage_rate,
+            target_physical_inc_rate,
+            target_physical_inc_sub_rate_1,
+            target_physical_inc_sub_rate_2,
+            target_magical_inc_rate,
+            target_magical_inc_sub_rate_1,
+            target_magical_inc_sub_rate_2,
+            target_elemental_damage_taken_rate,
             spec_bonus_identity_1,
             spec_bonus_identity_2,
             spec_bonus_identity_3,
@@ -1205,26 +1283,39 @@ impl PlayerStats {
         self.for_each_stat_mut(|stat| stat.clear());
         self.modify_damage_combat_effect.operation_type = OperationType::Multiplicative;
         self.npc_window = Default::default();
-        self.domination_damage_rate.operation_type = OperationType::Multiplicative;
-        self.broken_bone_damage_rate.operation_type = OperationType::Multiplicative;
-        self.npc_damage_taken_rate.operation_type = OperationType::Multiplicative;
-        self.stagger_combat_effect_damage_rate.operation_type = OperationType::Multiplicative;
+        self.set_damage_window_operations();
 
         self.critical_hit_rate_cap = 1.0;
         self.critical_damage_rate
             .set_self(DEFAULT_CRITICAL_DAMAGE_RATE, StatSource::Base);
     }
 
-    pub fn apply_npc_window(&mut self, window: super::npc_windows::HitWindow) {
-        self.npc_window = window;
-        self.domination_damage_rate.clear();
-        self.broken_bone_damage_rate.clear();
-        self.npc_damage_taken_rate.clear();
-        self.stagger_combat_effect_damage_rate.clear();
+    fn set_damage_window_operations(&mut self) {
         self.domination_damage_rate.operation_type = OperationType::Multiplicative;
         self.broken_bone_damage_rate.operation_type = OperationType::Multiplicative;
-        self.npc_damage_taken_rate.operation_type = OperationType::Multiplicative;
+        self.npc_action_weakness_damage_rate.operation_type = OperationType::Multiplicative;
+        self.target_elemental_damage_taken_rate.operation_type = OperationType::Multiplicative;
         self.stagger_combat_effect_damage_rate.operation_type = OperationType::Multiplicative;
+    }
+
+    fn for_each_damage_window_stat_mut<F: FnMut(&mut StatData)>(&mut self, mut f: F) {
+        f(&mut self.domination_damage_rate);
+        f(&mut self.broken_bone_damage_rate);
+        f(&mut self.npc_action_weakness_damage_rate);
+        f(&mut self.stagger_combat_effect_damage_rate);
+        f(&mut self.target_physical_inc_rate);
+        f(&mut self.target_physical_inc_sub_rate_1);
+        f(&mut self.target_physical_inc_sub_rate_2);
+        f(&mut self.target_magical_inc_rate);
+        f(&mut self.target_magical_inc_sub_rate_1);
+        f(&mut self.target_magical_inc_sub_rate_2);
+        f(&mut self.target_elemental_damage_taken_rate);
+    }
+
+    pub fn apply_npc_window(&mut self, window: super::npc_windows::HitWindow) {
+        self.npc_window = window;
+        self.for_each_damage_window_stat_mut(|stat| stat.clear());
+        self.set_damage_window_operations();
         if !window.enabled {
             return;
         }
@@ -1240,22 +1331,166 @@ impl PlayerStats {
             );
         }
         if let Some(bonus) = window.weakness {
-            self.add_npc_damage_taken_bonus(bonus, StatSource::NpcWeakness);
+            self.add_npc_action_weakness_bonus(bonus, StatSource::NpcWeakness);
         }
     }
 
-    pub fn add_npc_damage_taken_bonus(&mut self, bonus: f64, source: StatSource) {
-        // Damage reductions affect the hit, but do not provide NPC damage credit.
-        let owner = if bonus > 0.0 {
+    /// The target's damage-taken owner for an NPC-owned bonus: positive bonuses may be
+    /// credited to the NPC window; reductions affect the hit without NPC damage credit.
+    fn npc_damage_taken_bonus_owner(&self, bonus: f64) -> u64 {
+        if bonus > 0.0 {
             self.npc_window.bonus_owner(
                 super::npc_windows::NpcDamageAttribution::DAMAGE_TAKEN,
                 self.owner_id,
             )
         } else {
             self.owner_id
-        };
-        self.npc_damage_taken_rate
-            .add(bonus, self.owner_id, owner, source);
+        }
+    }
+
+    pub fn add_npc_action_weakness_bonus(&mut self, bonus: f64, source: StatSource) {
+        let owner = self.npc_damage_taken_bonus_owner(bonus);
+        let stats_owner_id = self.owner_id;
+        self.npc_action_weakness_damage_rate.add_preserving_sign(
+            bonus,
+            stats_owner_id,
+            owner,
+            source,
+        );
+    }
+
+    pub fn add_target_elemental_damage_taken_bonus(&mut self, bonus: f64, source: StatSource) {
+        let owner = self.npc_damage_taken_bonus_owner(bonus);
+        self.add_target_elemental_damage_taken_bonus_from_source(bonus, owner, source);
+    }
+
+    pub fn add_target_elemental_damage_taken_bonus_from_source(
+        &mut self,
+        bonus: f64,
+        value_owner_id: u64,
+        source: StatSource,
+    ) {
+        let stats_owner_id = self.owner_id;
+        self.target_elemental_damage_taken_rate.add_preserving_sign(
+            bonus,
+            stats_owner_id,
+            value_owner_id,
+            source,
+        );
+    }
+
+    pub fn is_target_incoming_damage_stat(key_stat: &str) -> bool {
+        matches!(
+            key_stat,
+            "physical_inc_rate"
+                | "physical_inc_sub_rate_1"
+                | "physical_inc_sub_rate_2"
+                | "magical_inc_rate"
+                | "magical_inc_sub_rate_1"
+                | "magical_inc_sub_rate_2"
+        )
+    }
+
+    /// An NPC-owned incoming-damage debuff on the target; see `npc_damage_taken_bonus_owner`.
+    pub fn add_target_incoming_damage_stat(
+        &mut self,
+        key_stat: &str,
+        bonus: f64,
+        source: StatSource,
+    ) {
+        let owner = self.npc_damage_taken_bonus_owner(bonus);
+        self.add_target_incoming_damage_stat_from_source(key_stat, bonus, owner, source);
+    }
+
+    /// An incoming-damage debuff on the target credited to `value_owner_id`.
+    pub fn add_target_incoming_damage_stat_from_source(
+        &mut self,
+        key_stat: &str,
+        bonus: f64,
+        value_owner_id: u64,
+        source: StatSource,
+    ) {
+        let stats_owner_id = self.owner_id;
+        self.target_incoming_damage_stat_mut(key_stat)
+            .add_preserving_sign(bonus, stats_owner_id, value_owner_id, source);
+    }
+
+    fn target_incoming_damage_stat_mut(&mut self, key_stat: &str) -> &mut StatData {
+        match key_stat {
+            "physical_inc_rate" => &mut self.target_physical_inc_rate,
+            "physical_inc_sub_rate_1" => &mut self.target_physical_inc_sub_rate_1,
+            "physical_inc_sub_rate_2" => &mut self.target_physical_inc_sub_rate_2,
+            "magical_inc_rate" => &mut self.target_magical_inc_rate,
+            "magical_inc_sub_rate_1" => &mut self.target_magical_inc_sub_rate_1,
+            "magical_inc_sub_rate_2" => &mut self.target_magical_inc_sub_rate_2,
+            _ => panic!("{key_stat} is not a target incoming-damage stat."),
+        }
+    }
+
+    /// The three incoming-damage buckets the hit's damage type selects: (rate, sub rate 1,
+    /// sub rate 2). Physical damage is type 0, magical damage type 1.
+    fn target_incoming_damage_stats(&self, damage_type: u8) -> Option<[&StatData; 3]> {
+        match damage_type {
+            0 => Some([
+                &self.target_physical_inc_rate,
+                &self.target_physical_inc_sub_rate_1,
+                &self.target_physical_inc_sub_rate_2,
+            ]),
+            1 => Some([
+                &self.target_magical_inc_rate,
+                &self.target_magical_inc_sub_rate_1,
+                &self.target_magical_inc_sub_rate_2,
+            ]),
+            _ => None,
+        }
+    }
+
+    /// Product of the positive parts of every damage-taken bucket that applies to the hit,
+    /// with reductions left in the baseline. Hyper Awakening ignores every bucket.
+    pub fn get_npc_damage_taken_positive_multiplier(
+        &self,
+        is_hyper_awakening: bool,
+        damage_type: u8,
+    ) -> f64 {
+        if is_hyper_awakening {
+            return 1.0;
+        }
+        let mut multiplier = self.npc_action_weakness_damage_rate.positive_multiplier()
+            * self
+                .target_elemental_damage_taken_rate
+                .positive_multiplier();
+        if let Some(incoming_stats) = self.target_incoming_damage_stats(damage_type) {
+            for stat in incoming_stats {
+                multiplier *= stat.positive_multiplier();
+            }
+        }
+        multiplier
+    }
+
+    fn apply_damage_window_multipliers(&self, attack_power: StatData, damage_type: u8) -> StatData {
+        let mut attack_power = attack_power
+            .mad(&self.domination_damage_rate)
+            .mad(&self.broken_bone_damage_rate)
+            .mad(&self.npc_action_weakness_damage_rate)
+            .mad(&self.stagger_combat_effect_damage_rate)
+            .mad(&self.target_elemental_damage_taken_rate);
+        if let Some(incoming_stats) = self.target_incoming_damage_stats(damage_type) {
+            for stat in incoming_stats {
+                attack_power = attack_power.mad(stat);
+            }
+        }
+        attack_power
+    }
+
+    /// Combined factor of the NPC damage-window stats for a hit of `damage_type`.
+    pub fn get_damage_window_multiplier(&self, is_hyper_awakening: bool, damage_type: u8) -> f64 {
+        if is_hyper_awakening {
+            return 1.0;
+        }
+        let mut base_value = StatData::default();
+        base_value.set_self(1.0, StatSource::Base);
+        self.apply_damage_window_multipliers(base_value, damage_type)
+            .value()
     }
 
     pub fn apply_runtime_state(&mut self, runtime_state: RuntimeState) {
@@ -1686,6 +1921,7 @@ impl PlayerStats {
             stat_type: stat_type.to_string(),
             key_index,
             key_value,
+            ..Default::default()
         };
         self.handle_external_addon_with_priority(
             &addon,
@@ -3087,12 +3323,11 @@ impl PlayerStats {
         if let Some(index) = damage_attr_to_index(damage_attr) {
             attack_power = attack_power.mad(&self.damage_attr_rates[index]);
         }
-        attack_power = attack_power
-            .mad(&self.modify_damage_combat_effect)
-            .mad(&self.domination_damage_rate)
-            .mad(&self.broken_bone_damage_rate)
-            .mad(&self.npc_damage_taken_rate)
-            .mad(&self.stagger_combat_effect_damage_rate)
+        attack_power = self
+            .apply_damage_window_multipliers(
+                attack_power.mad(&self.modify_damage_combat_effect),
+                damage_type,
+            )
             .mad(&self.move_speed_to_damage_rate)
             .mad(&self.critical_hit_to_damage_rate);
         if let Some(index) = damage_attr_to_index(damage_attr) {
@@ -3503,8 +3738,15 @@ impl PlayerStats {
             43 => &self.evolution_damage_bonus_from_supersonic_breakthrough,
             44 => &self.domination_damage_rate,
             45 => &self.broken_bone_damage_rate,
-            46 => &self.npc_damage_taken_rate,
+            46 => &self.npc_action_weakness_damage_rate,
             47 => &self.stagger_combat_effect_damage_rate,
+            48 => &self.target_physical_inc_rate,
+            49 => &self.target_physical_inc_sub_rate_1,
+            50 => &self.target_physical_inc_sub_rate_2,
+            51 => &self.target_magical_inc_rate,
+            52 => &self.target_magical_inc_sub_rate_1,
+            53 => &self.target_magical_inc_sub_rate_2,
+            54 => &self.target_elemental_damage_taken_rate,
 
             _ => {
                 let index_in_arrays = index.saturating_sub(FIXED_STAT_DATA_COUNT);
@@ -3570,8 +3812,15 @@ impl PlayerStats {
             43 => &mut self.evolution_damage_bonus_from_supersonic_breakthrough,
             44 => &mut self.domination_damage_rate,
             45 => &mut self.broken_bone_damage_rate,
-            46 => &mut self.npc_damage_taken_rate,
+            46 => &mut self.npc_action_weakness_damage_rate,
             47 => &mut self.stagger_combat_effect_damage_rate,
+            48 => &mut self.target_physical_inc_rate,
+            49 => &mut self.target_physical_inc_sub_rate_1,
+            50 => &mut self.target_physical_inc_sub_rate_2,
+            51 => &mut self.target_magical_inc_rate,
+            52 => &mut self.target_magical_inc_sub_rate_1,
+            53 => &mut self.target_magical_inc_sub_rate_2,
+            54 => &mut self.target_elemental_damage_taken_rate,
 
             _ => {
                 let index_in_arrays = index.saturating_sub(FIXED_STAT_DATA_COUNT);
@@ -3637,8 +3886,15 @@ impl PlayerStats {
             43 => "evolution_damage_bonus_from_supersonic_breakthrough_".to_string(),
             44 => "domination_damage_rate_".to_string(),
             45 => "broken_bone_damage_rate_".to_string(),
-            46 => "npc_damage_taken_rate_".to_string(),
+            46 => "npc_action_weakness_damage_rate_".to_string(),
             47 => "stagger_combat_effect_damage_rate_".to_string(),
+            48 => "target_physical_inc_rate_".to_string(),
+            49 => "target_physical_inc_sub_rate_1_".to_string(),
+            50 => "target_physical_inc_sub_rate_2_".to_string(),
+            51 => "target_magical_inc_rate_".to_string(),
+            52 => "target_magical_inc_sub_rate_1_".to_string(),
+            53 => "target_magical_inc_sub_rate_2_".to_string(),
+            54 => "target_elemental_damage_taken_rate_".to_string(),
 
             _ => {
                 let index_in_arrays = index.saturating_sub(FIXED_STAT_DATA_COUNT);
@@ -4339,8 +4595,15 @@ impl PlayerStats {
         f(&self.modify_damage_combat_effect);
         f(&self.domination_damage_rate);
         f(&self.broken_bone_damage_rate);
-        f(&self.npc_damage_taken_rate);
+        f(&self.npc_action_weakness_damage_rate);
         f(&self.stagger_combat_effect_damage_rate);
+        f(&self.target_physical_inc_rate);
+        f(&self.target_physical_inc_sub_rate_1);
+        f(&self.target_physical_inc_sub_rate_2);
+        f(&self.target_magical_inc_rate);
+        f(&self.target_magical_inc_sub_rate_1);
+        f(&self.target_magical_inc_sub_rate_2);
+        f(&self.target_elemental_damage_taken_rate);
 
         f(&self.spec_bonus_identity_1);
         f(&self.spec_bonus_identity_2);
@@ -4393,8 +4656,15 @@ impl PlayerStats {
         f(&mut self.modify_damage_combat_effect);
         f(&mut self.domination_damage_rate);
         f(&mut self.broken_bone_damage_rate);
-        f(&mut self.npc_damage_taken_rate);
+        f(&mut self.npc_action_weakness_damage_rate);
         f(&mut self.stagger_combat_effect_damage_rate);
+        f(&mut self.target_physical_inc_rate);
+        f(&mut self.target_physical_inc_sub_rate_1);
+        f(&mut self.target_physical_inc_sub_rate_2);
+        f(&mut self.target_magical_inc_rate);
+        f(&mut self.target_magical_inc_sub_rate_1);
+        f(&mut self.target_magical_inc_sub_rate_2);
+        f(&mut self.target_elemental_damage_taken_rate);
 
         f(&mut self.spec_bonus_identity_1);
         f(&mut self.spec_bonus_identity_2);
@@ -4522,22 +4792,22 @@ fn get_damage_splits(damage: f64, factors: &[f64]) -> Vec<f64> {
             weights,
         } = &mut *scratch;
 
-        // Group the Shapley sum by subset size. The elementary symmetric
-        // coefficients contain the summed product for every subset of a given
-        // size, avoiding explicit enumeration of all 2^count subsets.
+        // Group the Shapley sum by subset size over each contributor's remaining damage
+        // fraction 1 / (1 + factor). Products of remaining damage stay finite when removing a
+        // bonus leaves zero damage (an infinite factor), unlike products of (1 + factor).
+        // The elementary symmetric coefficients contain the summed product for every subset
+        // of a given size, avoiding explicit enumeration of all 2^count subsets.
         elementary_symmetric.resize(count + 1, 0.0);
         elementary_symmetric.fill(0.0);
         elementary_symmetric[0] = 1.0;
-        let mut total_factor = 1.0;
         for (factor_index, factor) in factors.iter().copied().enumerate() {
-            let coalition_factor = 1.0 + factor;
-            total_factor *= coalition_factor;
+            let remaining_damage = 1.0 / (1.0 + factor);
             for degree in (1..=factor_index + 1).rev() {
-                elementary_symmetric[degree] += coalition_factor * elementary_symmetric[degree - 1];
+                elementary_symmetric[degree] += remaining_damage * elementary_symmetric[degree - 1];
             }
         }
 
-        let base_damage = 1.0 / total_factor;
+        let base_damage = elementary_symmetric[count];
         pieces[0] = base_damage * damage;
 
         weights.resize(count, 0.0);
@@ -4550,17 +4820,19 @@ fn get_damage_splits(damage: f64, factors: &[f64]) -> Vec<f64> {
 
         excluded_symmetric.resize(count, 0.0);
         for (index, factor) in factors.iter().copied().enumerate() {
-            let coalition_factor = 1.0 + factor;
+            let remaining_damage = 1.0 / (1.0 + factor);
             excluded_symmetric[0] = 1.0;
             let mut weighted_sum = weights[0];
             for degree in 1..count {
-                // e[k] = q[k] + coalition_factor * q[k - 1], where q is the
+                // e[k] = q[k] + remaining_damage * q[k - 1], where q is the
                 // polynomial with this contributor excluded.
                 excluded_symmetric[degree] = elementary_symmetric[degree]
-                    - coalition_factor * excluded_symmetric[degree - 1];
+                    - remaining_damage * excluded_symmetric[degree - 1];
                 weighted_sum += excluded_symmetric[degree] * weights[degree];
             }
-            pieces[index + 1] = base_damage * factor * weighted_sum * damage;
+            // The contributor removes this fraction of the damage present with it.
+            let removed_fraction = 1.0 - remaining_damage;
+            pieces[index + 1] = removed_fraction * weighted_sum * damage;
         }
     });
 
@@ -4669,5 +4941,375 @@ mod damage_split_tests {
             let total = actual.iter().sum::<f64>();
             assert!((total - damage).abs() <= damage * 1e-10);
         }
+    }
+
+    #[test]
+    fn damage_splits_preserve_shares_for_finite_and_zero_baselines() {
+        // Expected Shapley shares average the marginal damage across the source orderings.
+        let cases: [(&[f64], &[f64]); 7] = [
+            (&[], &[1.0]),
+            (&[0.0, 0.0], &[1.0, 0.0, 0.0]),
+            (&[0.25, 1.0, 3.0], &[0.1, 0.1, 0.2875, 0.5125]),
+            (&[0.25, 0.0, 1.0, 3.0], &[0.1, 0.1, 0.0, 0.2875, 0.5125]),
+            (&[0.25, -0.2], &[1.0, 0.225, -0.225]),
+            (&[f64::INFINITY, 0.25], &[0.0, 0.9, 0.1]),
+            (&[f64::INFINITY, f64::INFINITY], &[0.0, 0.5, 0.5]),
+        ];
+        for (factors, expected) in cases {
+            let splits = get_damage_splits(10_000.0, factors);
+            assert_eq!(splits.len(), expected.len(), "factors={factors:?}");
+            for (split, expected_share) in splits.iter().zip(expected) {
+                assert!(
+                    (split - expected_share * 10_000.0).abs() <= 1e-8,
+                    "factors={factors:?}, expected={expected:?}, actual={splits:?}"
+                );
+            }
+            assert!((splits.iter().sum::<f64>() - 10_000.0).abs() <= 1e-8);
+        }
+    }
+}
+
+#[cfg(test)]
+mod target_incoming_damage_tests {
+    use super::{OperationType, PlayerStats, StatData, StatSource};
+    use crate::live::npc_windows::{HitWindow, NpcDamageAttribution};
+    use crate::models::{HitFlag, HitOption};
+
+    const NPC_ID: u64 = 99;
+
+    fn stats_with_window(attribution: NpcDamageAttribution) -> PlayerStats {
+        let mut stats = PlayerStats {
+            owner_id: 1,
+            ..Default::default()
+        };
+        stats
+            .attack_power_addend_2
+            .add_self(100.0, StatSource::Test);
+        stats.apply_npc_window(HitWindow {
+            enabled: true,
+            npc_id: NPC_ID,
+            attribution,
+            domination: Some(0.0),
+            weakness: Some(0.0),
+            ..Default::default()
+        });
+        stats
+    }
+
+    fn final_attack_power(stats: &PlayerStats, damage_type: u8) -> f64 {
+        stats
+            .calculate_final_attack_power(
+                &HitOption::FLANK_ATTACK,
+                &HitFlag::NORMAL,
+                None,
+                damage_type,
+                false,
+                true,
+                false,
+                false,
+            )
+            .value()
+    }
+
+    const BUCKETS: [(&str, u8); 6] = [
+        ("physical_inc_rate", 0),
+        ("physical_inc_sub_rate_1", 0),
+        ("physical_inc_sub_rate_2", 0),
+        ("magical_inc_rate", 1),
+        ("magical_inc_sub_rate_1", 1),
+        ("magical_inc_sub_rate_2", 1),
+    ];
+
+    #[test]
+    fn different_buffs_add_within_the_same_incoming_stat() {
+        for (key_stat, damage_type) in BUCKETS {
+            let mut stats = stats_with_window(NpcDamageAttribution::DAMAGE_TAKEN);
+            stats.add_target_incoming_damage_stat(key_stat, 0.2, StatSource::SkillBuff(900000001));
+            stats.add_target_incoming_damage_stat(key_stat, 0.1, StatSource::SkillBuff(900000002));
+            stats.add_target_incoming_damage_stat(key_stat, 0.1, StatSource::SkillBuff(900000002));
+            // Independent buffs contribute 20% and two 10% stacks to one additive bucket.
+            assert!(
+                (final_attack_power(&stats, damage_type) - 140.0).abs() < 1e-8,
+                "{key_stat}"
+            );
+        }
+    }
+
+    #[test]
+    fn only_the_hits_three_buckets_multiply_across_damage_and_display_paths() {
+        let mut stats = stats_with_window(NpcDamageAttribution::DAMAGE_TAKEN);
+        for (key_stat, bonus, buff_id) in [
+            ("physical_inc_rate", 0.1, 900000001),
+            ("physical_inc_rate", 0.2, 900000002),
+            ("physical_inc_sub_rate_1", 0.15, 900000003),
+            ("physical_inc_sub_rate_2", -0.1, 900000004),
+            ("magical_inc_rate", 0.4, 900000005),
+            ("magical_inc_sub_rate_1", -0.2, 900000006),
+            ("magical_inc_sub_rate_2", 0.05, 900000007),
+        ] {
+            stats.add_target_incoming_damage_stat(key_stat, bonus, StatSource::SkillBuff(buff_id));
+        }
+        // Physical: (1 + .1 + .2) * 1.15 * .9. Magical: 1.4 * .8 * 1.05.
+        for (damage_type, expected, expected_positive_gain) in
+            [(0, 1.3455, 1.495), (1, 1.176, 1.47)]
+        {
+            assert!((final_attack_power(&stats, damage_type) - 100.0 * expected).abs() < 1e-8);
+            assert!(
+                (stats.get_damage_window_multiplier(false, damage_type) - expected).abs() < 1e-8
+            );
+            assert!(
+                (stats.get_npc_damage_taken_positive_multiplier(false, damage_type)
+                    - expected_positive_gain)
+                    .abs()
+                    < 1e-8
+            );
+            assert_eq!(stats.get_damage_window_multiplier(true, damage_type), 1.0);
+            assert_eq!(
+                stats.get_npc_damage_taken_positive_multiplier(true, damage_type),
+                1.0
+            );
+        }
+    }
+
+    #[test]
+    fn stagger_and_weaken_add_while_authored_action_weakness_multiplies() {
+        for (key_stat, damage_type) in [
+            ("physical_inc_sub_rate_1", 0),
+            ("magical_inc_sub_rate_1", 1),
+        ] {
+            let mut stats = stats_with_window(NpcDamageAttribution::DAMAGE_TAKEN);
+            stats.apply_npc_window(HitWindow {
+                weakness: Some(0.2),
+                domination: Some(0.05),
+                attribution: NpcDamageAttribution::DAMAGE_TAKEN | NpcDamageAttribution::DOMINATION,
+                ..stats.npc_window
+            });
+            stats.add_target_incoming_damage_stat(key_stat, 0.2, StatSource::SkillBuff(420672406));
+            stats.add_target_incoming_damage_stat(key_stat, 0.2, StatSource::SkillBuff(420676006));
+
+            assert!((stats.npc_action_weakness_damage_rate.value() - 0.2).abs() < 1e-8);
+            assert!((final_attack_power(&stats, damage_type) - 176.4).abs() < 1e-8);
+            assert!(
+                (stats.get_npc_damage_taken_positive_multiplier(false, damage_type) - 1.68).abs()
+                    < 1e-8
+            );
+        }
+    }
+
+    #[test]
+    fn positive_gain_removes_additive_bonuses_and_keeps_same_source_reductions() {
+        for (attribution, reduction, first_bonus, second_bonus, expected_multiplier) in [
+            (NpcDamageAttribution::empty(), -0.5, 0.2, 0.1, 1.6),
+            (NpcDamageAttribution::DAMAGE_TAKEN, -0.5, 0.2, 0.1, 1.6),
+            (NpcDamageAttribution::empty(), -1.0, 0.2, 0.0, f64::INFINITY),
+            (
+                NpcDamageAttribution::DAMAGE_TAKEN,
+                -1.0,
+                0.2,
+                0.0,
+                f64::INFINITY,
+            ),
+            (NpcDamageAttribution::empty(), -0.5, 0.0, 0.0, 1.0),
+            (NpcDamageAttribution::DAMAGE_TAKEN, -0.5, 0.0, 0.0, 1.0),
+        ] {
+            let mut stats = stats_with_window(attribution);
+            let source = StatSource::SkillBuff(1);
+            stats.add_target_incoming_damage_stat(
+                "physical_inc_sub_rate_1",
+                reduction,
+                source.clone(),
+            );
+            stats.add_target_incoming_damage_stat(
+                "physical_inc_sub_rate_1",
+                first_bonus,
+                source.clone(),
+            );
+            stats.add_target_incoming_damage_stat("physical_inc_sub_rate_1", second_bonus, source);
+
+            let positive_multiplier = stats.get_npc_damage_taken_positive_multiplier(false, 0);
+            assert_eq!(
+                positive_multiplier, expected_multiplier,
+                "{attribution:?} {reduction}"
+            );
+            let expected_attack_power = 100.0 * (1.0 + reduction + first_bonus + second_bonus);
+            assert!((final_attack_power(&stats, 0) - expected_attack_power).abs() < 1e-8);
+            let expected_credit = if attribution.is_empty() {
+                0.0
+            } else {
+                first_bonus + second_bonus
+            };
+            assert!(
+                (stats
+                    .target_physical_inc_sub_rate_1
+                    .get_value_for_entity_id(NPC_ID)
+                    - expected_credit)
+                    .abs()
+                    < 1e-8
+            );
+        }
+    }
+
+    #[test]
+    fn six_buckets_retain_their_stat_identity_across_clone_restore_debug_and_hit_reset() {
+        let names = [
+            "target_physical_inc_rate_",
+            "target_physical_inc_sub_rate_1_",
+            "target_physical_inc_sub_rate_2_",
+            "target_magical_inc_rate_",
+            "target_magical_inc_sub_rate_1_",
+            "target_magical_inc_sub_rate_2_",
+        ];
+        let mut stats = stats_with_window(NpcDamageAttribution::DAMAGE_TAKEN);
+        for (index, (key_stat, _)) in BUCKETS.iter().enumerate() {
+            stats.add_target_incoming_damage_stat(
+                key_stat,
+                0.01 * (index + 1) as f64,
+                StatSource::Test,
+            );
+            stats.add_target_incoming_damage_stat(key_stat, 0.1, StatSource::Base);
+        }
+        let mut copy = PlayerStats::default();
+        copy.restore_from(&stats);
+        let cloned = stats.clone();
+        stats.clear();
+        let exported = copy.debug_dump_value();
+        let exported_stats = exported["stat_datas"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|row| {
+                (
+                    row[0].as_str().unwrap().to_string(),
+                    row[1]["value"].as_f64().unwrap(),
+                )
+            })
+            .collect::<std::collections::HashMap<_, _>>();
+        for (index, name) in names.iter().enumerate() {
+            let expected = 0.1 + 0.01 * (index + 1) as f64;
+            let stat_indices = copy
+                .iterate_stat_datas()
+                .into_iter()
+                .filter(|stat_index| copy.get_stat_data_name(*stat_index) == *name)
+                .collect::<Vec<_>>();
+            assert_eq!(stat_indices.len(), 1, "{name}");
+            let stat_index = stat_indices[0];
+            assert!((copy.get_stat_data_ref(stat_index).value() - expected).abs() < 1e-8);
+            assert!((cloned.get_stat_data_ref(stat_index).value() - expected).abs() < 1e-8);
+            assert!((exported_stats[*name] - expected).abs() < 1e-8);
+            assert_eq!(
+                copy.get_stat_data_ref(stat_index).operation_type(),
+                OperationType::Additive
+            );
+            assert_eq!(stats.get_stat_data_ref(stat_index).value(), 0.0);
+        }
+
+        copy.apply_npc_window(HitWindow {
+            npc_id: 100,
+            ..copy.npc_window
+        });
+        for ((key_stat, _), name) in BUCKETS.iter().zip(names) {
+            let stat_index = copy
+                .iterate_stat_datas()
+                .into_iter()
+                .find(|stat_index| copy.get_stat_data_name(*stat_index) == name)
+                .unwrap();
+            assert_eq!(copy.get_stat_data_ref(stat_index).value(), 0.0);
+            copy.add_target_incoming_damage_stat(key_stat, 0.2, StatSource::Test);
+            copy.add_target_incoming_damage_stat(key_stat, 0.1, StatSource::Test);
+            assert_eq!(
+                copy.get_stat_data_ref(stat_index)
+                    .get_value_for_entity_id(NPC_ID),
+                0.0
+            );
+            assert!(
+                (copy
+                    .get_stat_data_ref(stat_index)
+                    .get_value_for_entity_id(100)
+                    - 0.3)
+                    .abs()
+                    < 1e-8
+            );
+        }
+    }
+
+    fn zero_baseline_stats(support_bonus: f64) -> PlayerStats {
+        let mut stats = stats_with_window(NpcDamageAttribution::DAMAGE_TAKEN);
+        stats.add_target_incoming_damage_stat(
+            "physical_inc_sub_rate_1",
+            -1.0,
+            StatSource::SkillBuff(1),
+        );
+        stats.add_target_incoming_damage_stat(
+            "physical_inc_sub_rate_1",
+            0.2,
+            StatSource::SkillBuff(2),
+        );
+        stats
+            .attack_power_rate
+            .add(support_bonus, 1, 2, StatSource::SkillBuff(3));
+        stats
+    }
+
+    #[test]
+    fn zero_baseline_npc_attribution_conserves_damage() {
+        for (support_bonus, npc_share, support_share) in [(0.0, 1.0, 0.0), (0.25, 0.9, 0.1)] {
+            let mut stats = zero_baseline_stats(support_bonus);
+            let attack_power = final_attack_power(&stats, 0);
+            let portions = stats.get_damage_portions_contributed_from_all_entities(
+                attack_power,
+                &HitOption::FLANK_ATTACK,
+                &HitFlag::NORMAL,
+                None,
+                0,
+                false,
+                true,
+                false,
+                false,
+            );
+            assert!(portions.iter().all(|(portion, _)| portion.is_finite()));
+            assert!((portions.iter().map(|(portion, _)| portion).sum::<f64>() - 1.0).abs() < 1e-8);
+            let portion_of = |entity_id: u64| {
+                portions
+                    .iter()
+                    .find(|(_, owner)| *owner == entity_id)
+                    .map(|(portion, _)| *portion)
+            };
+            assert_eq!(portion_of(1), Some(0.0));
+            assert!((portion_of(NPC_ID).unwrap() - npc_share).abs() < 1e-8);
+            if support_bonus > 0.0 {
+                assert!((portion_of(2).unwrap() - support_share).abs() < 1e-8);
+            }
+        }
+    }
+
+    #[test]
+    fn ordinary_crit_sources_still_cancel_before_the_cap_is_applied() {
+        let mut crit = StatData::default();
+        crit.add_self(0.9, StatSource::Base);
+        crit.add_modification(0.2, 2, StatSource::SkillBuff(1));
+        crit.add_modification(0.3, 3, StatSource::SkillBuff(2));
+        crit.add_modification(-0.3, 3, StatSource::SkillBuff(2));
+        crit.clamp(0.0, 1.0);
+
+        assert!((crit.value() - 1.0).abs() < 1e-8);
+        assert!((crit.get_value_for_entity_id(2) - 0.1).abs() < 1e-8);
+        assert_eq!(crit.get_value_for_entity_id(3), 0.0);
+    }
+
+    #[test]
+    fn additive_positive_multiplier_keeps_opposing_signs_of_one_source_apart() {
+        let mut stat = StatData::default();
+        stat.add_self_preserving_sign(-0.5, StatSource::Base);
+        stat.add_self_preserving_sign(0.2, StatSource::Base);
+        stat.add_self_preserving_sign(0.1, StatSource::Base);
+        assert_eq!(stat.self_values.len(), 2);
+        assert!((stat.value() + 0.2).abs() < 1e-8);
+        assert!((stat.positive_multiplier() - 1.6).abs() < 1e-8);
+
+        let mut merged = StatData::default();
+        merged.add_self(-0.5, StatSource::Base);
+        merged.add_self(0.3, StatSource::Base);
+        assert_eq!(merged.self_values.len(), 1);
+        assert_eq!(merged.positive_multiplier(), 1.0);
     }
 }

@@ -43,12 +43,12 @@
       gains.push(
         ["Domination", split.npcWindows.domination],
         ["Broken Bone", split.npcWindows.brokenBone],
-        ["NPC Damage Taken / Weakness", split.npcWindows.npcDamageTaken],
+        ["NPC Damage Taken (e.g. Rumble)", split.npcWindows.npcDamageTaken],
         ["Stagger Combat Effects", split.npcWindows.staggerCombatEffect]
       );
     }
     if (split.atropineDamageBonus && split.atropineDamageBonus.damageDoneByStatPlusValue > 0) {
-      gains.push(["Atropine AP", split.atropineDamageBonus]);
+      gains.push(["Atropine Attack Power Bonus", split.atropineDamageBonus]);
     }
     return gains;
   });
@@ -75,7 +75,7 @@
   {/if}
 {/snippet}
 
-<Card class="mt-4">
+<Card>
   <div class="flex items-center justify-between bg-black/10 px-3 py-2 font-medium">
     <div>Damage Increase Potential</div>
     <Tooltipped>
@@ -113,14 +113,15 @@
 </Card>
 
 {#if miscellaneousGains.length > 0}
-  <Card class="mt-4">
+  <Card>
     <div class="flex items-center justify-between bg-black/10 px-3 py-2 font-medium">
       <div>Miscellaneous Damage Gains</div>
       <Tooltipped>
         {#snippet tooltip()}
           <div class="max-w-[400px] text-left text-sm">
-            Damage gained compared with the same hits after removing only the listed bonus. These gains can overlap
-            and should not be added together. Atropine measures attack power only, retaining speed-derived damage.
+            Damage gained compared with the same hits after removing only the listed bonus. These gains can overlap and
+            should not be added together. Atropine measures attack power only, attack speed bonus portion is not
+            included.
           </div>
         {/snippet}
         <IconInfo class="size-4" />
@@ -131,7 +132,9 @@
         {@const gain = value.damageDoneByStatPlusValue - value.damageDoneByStat}
         <span class="text-sm">{name}</span>
         <span class="text-right font-mono text-sm">
-          +{abbreviateNumber(gain)} ({value.damageDoneByStat > 0 ? (100 * gain / value.damageDoneByStat).toFixed(2) : "0.00"}%)
+          +{abbreviateNumber(gain)} ({value.damageDoneByStat > 0
+            ? ((100 * gain) / value.damageDoneByStat).toFixed(2)
+            : "0.00"}%)
         </span>
       {/each}
     </div>

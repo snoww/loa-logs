@@ -5,13 +5,20 @@ use crate::constants::{
 use crate::data::*;
 use crate::database::Repository;
 use crate::database::models::InsertEncounterArgs;
+use crate::live::entity_tracker::AppliedInspectResult;
 use crate::live::entity_tracker::{Entity, EntityTracker, SkillOptionSnapshot};
+use crate::live::player_stats::PlayerStats;
 use crate::live::rdps::{
     HitCritMetrics, HitRdpsOutcome, HitRdpsResult, HitStatDamageMetrics, RdpsInvalidReason,
-    analyze_hit_rdps, filter_target_effects_for_attacker, resolve_skill_effect_flags,
+    analyze_hit_rdps, effect_provides_passive_stat, evaluate_stats_with_tracked_buffs,
+    filter_target_effects_for_attacker, is_identity_skill_buff, resolve_skill_effect_flags,
 };
 use crate::live::skill_tracker::SkillTracker;
-use crate::live::status_tracker::{StatusEffectDetails, StatusTracker};
+use crate::live::stat_type::StatType;
+use crate::live::status_tracker::{
+    DeadlineMode, IDENTITY_STAT_TYPES, MeasuredStat, StatusEffectDetails, StatusTracker,
+    apply_measured_stat, hide_expired, identity_stat_key,
+};
 use crate::live::utils::*;
 use crate::live::{DEBUG_DUMP_DAMAGE_STATE_JSON, write_debug_json_dump};
 use crate::models::*;
@@ -19,7 +26,7 @@ use crate::utils::{
     get_class_from_id, get_player_spec, is_confirmed_player_entity, is_support_class,
     normalize_encounter_damage_totals,
 };
-use chrono::Utc;
+use chrono::{DateTime, Utc};
 use hashbrown::HashMap;
 use log::{info, warn};
 use meter_defs::defs::{CombatAnalyzerEntry, SkillCooldownStruct};
@@ -204,6 +211,78 @@ struct DamageHitContext {
     hit_option: HitOption,
 }
 
+// An identity buff instance's magnitude is fixed by the server when the instance is created,
+// from owner stats the meter may never have seen: the owner can change build without any
+// observable packet while the server keeps the creation-time value across refreshes and
+// zone-in. The receiver's inspect stat sheet carries the applied total for
+// SKILL_DAMAGE_SUB_RATE_1/2, so the instance's real value is that sheet minus everything else
+// the meter computes on the stat. Every identity instance active at the fight-start inspect is
+// measured that way and the measured value is pinned on it. The meter's own identity model
+// sits within a few percent of the sheet, while a build swap moves the value by tens of
+// percent, so a mismatch beyond this tolerance marks the owner snapshot as describing a
+// different build (the pre-stacked buff exploit) in the log.
+const IDENTITY_BUFF_MISMATCH_TOLERANCE: f64 = 0.10;
+
+/// A receiver's inspect stat sheet waiting to calibrate the identity buff instances it carried.
+#[derive(Debug, Clone)]
+struct PendingInspectMeasurement {
+    receiver_entity_id: u64,
+    receiver_name: String,
+    request_sent_at: DateTime<Utc>,
+    /// The receiver's tracked buffs when the sheet arrived.
+    receiver_effects: Vec<StatusEffectDetails>,
+    /// Server stat sheet values of SKILL_DAMAGE_SUB_RATE_1/2, in `IDENTITY_STAT_TYPES` order.
+    server_values: [Option<i64>; 2],
+    /// Whether no source of each stat changed on the receiver during the request.
+    stat_sources_stable: [bool; 2],
+}
+
+struct IdentityBuffSample {
+    receiver_entity_id: u64,
+    receiver_name: String,
+    effect: StatusEffectDetails,
+    stat_type: StatType,
+    computed_value: f64,
+    measured_value: f64,
+}
+
+/// The identity stat an unmeasured identity buff instance provides, if any.
+fn unmeasured_identity_stat(effect: &StatusEffectDetails) -> Option<StatType> {
+    if effect.measured_stat.is_some() {
+        return None;
+    }
+    let skill_buff = SKILL_BUFF_DATA.try_get()?.get(&effect.status_effect_id)?;
+    if !is_identity_skill_buff(skill_buff) {
+        return None;
+    }
+    IDENTITY_STAT_TYPES
+        .into_iter()
+        .find(|stat_type| effect_provides_passive_stat(effect, identity_stat_key(*stat_type)))
+}
+
+fn identity_stat_index(stat_type: StatType) -> usize {
+    IDENTITY_STAT_TYPES
+        .iter()
+        .position(|candidate| *candidate == stat_type)
+        .unwrap_or_default()
+}
+
+fn identity_stat_value(stats: &PlayerStats, stat_type: StatType) -> f64 {
+    match stat_type {
+        StatType::SKILL_DAMAGE_SUB_RATE_1 => stats.skill_damage_sub_rate_1.value(),
+        _ => stats.skill_damage_sub_rate_2.value(),
+    }
+}
+
+/// The registry keys a player's status effects may be tracked under.
+fn receiver_target_ids(receiver: &Entity) -> Vec<u64> {
+    let mut target_ids = vec![receiver.id];
+    if receiver.character_id != 0 {
+        target_ids.push(receiver.character_id);
+    }
+    target_ids
+}
+
 #[derive(Debug)]
 pub struct EncounterState {
     pub app: AppHandle,
@@ -244,6 +323,7 @@ pub struct EncounterState {
     startup_barrier: Option<StartupBarrierState>,
     rearm_startup_barrier_on_next_combat: bool,
     pending_phase_transition: Option<i32>,
+    pending_inspect_measurements: Vec<PendingInspectMeasurement>,
 
     pub damage_is_valid: bool,
     player_contributions: HashMap<String, DamageDataAccumulator>,
@@ -292,6 +372,7 @@ impl EncounterState {
             startup_barrier: None,
             rearm_startup_barrier_on_next_combat: false,
             pending_phase_transition: None,
+            pending_inspect_measurements: Vec::new(),
 
             damage_is_valid: true,
             player_contributions: HashMap::new(),
@@ -303,8 +384,12 @@ impl EncounterState {
     }
 
     // keep all player entities, reset all stats
-    pub fn soft_reset(&mut self, keep_bosses: bool) {
+    /// Returns whether a fight was active, so its inspect requests can be retired.
+    pub fn soft_reset(&mut self, keep_bosses: bool) -> bool {
         let entities = std::mem::take(&mut self.encounter.entities);
+        let fight_was_active = self.encounter.fight_start != 0;
+        // Stale sheets must not calibrate instances of a later fight.
+        self.pending_inspect_measurements.clear();
 
         self.encounter.fight_start = 0;
         self.encounter.boss_only_damage = self.boss_only_damage;
@@ -362,6 +447,7 @@ impl EncounterState {
                 },
             );
         }
+        fight_was_active
     }
 
     fn refresh_encounter_player_damage_totals(&mut self) {
@@ -696,7 +782,10 @@ impl EncounterState {
         self.soft_reset(false);
     }
 
-    pub fn on_transit(&mut self, zone_id: u32) {
+    /// Returns whether an active fight was discarded, so its inspect requests can be retired.
+    /// The Kazeros intermission retains the fight, and a phase transition retires through the
+    /// reset it schedules.
+    pub fn on_transit(&mut self, zone_id: u32) -> bool {
         if zone_id == 37545 {
             // do not reset on kazeros g2-2 for nm/hm
             if self.raid_difficulty != "The First" {
@@ -722,14 +811,14 @@ impl EncounterState {
             } else {
                 self.on_phase_transition(2);
             }
-            return;
+            return false;
         }
 
         self.app
             .emit("zone-change", "no-toast")
             .expect("failed to emit zone-change");
 
-        self.soft_reset(false);
+        self.soft_reset(false)
     }
 
     pub fn on_phase_transition(&mut self, phase_code: i32) {
@@ -1886,7 +1975,7 @@ impl EncounterState {
 
         for attribution in &result.skill_group_attributions {
             if attribution.source_entity_id == 0
-                || (attribution.damage <= 0 && attribution.damage_increase <= 0)
+                || (attribution.damage <= 0 && attribution.damage_increase.unwrap_or_default() <= 0)
             {
                 continue;
             }
@@ -1896,12 +1985,15 @@ impl EncounterState {
                 .or_default()
                 .entry(attribution.group_name.clone())
                 .or_default() += attribution.damage;
-            *entry
-                .damage_increase_by_entity_skill_group_
-                .entry(attribution.source_entity_id)
-                .or_default()
-                .entry(attribution.group_name.clone())
-                .or_default() += attribution.damage_increase;
+            // A relative increase from a zero baseline cannot be represented in this report.
+            if let Some(damage_increase) = attribution.damage_increase {
+                *entry
+                    .damage_increase_by_entity_skill_group_
+                    .entry(attribution.source_entity_id)
+                    .or_default()
+                    .entry(attribution.group_name.clone())
+                    .or_default() += damage_increase;
+            }
         }
     }
 
@@ -2466,6 +2558,8 @@ impl EncounterState {
         entity_tracker: &mut EntityTracker,
         status_tracker: &mut StatusTracker,
     ) {
+        // LAL snapshots a queued hit's attacker buffs from its packet collection: the deadline view.
+        let se_on_source = hide_expired(se_on_source);
         let buffered_player_entities = Self::collect_buffered_player_entities(
             dmg_src_entity,
             &se_on_source,
@@ -2525,6 +2619,253 @@ impl EncounterState {
 
     pub fn startup_barrier_active(&self) -> bool {
         self.startup_barrier.is_some()
+    }
+
+    /// Queues a receiver's inspect stat sheet to calibrate the unmeasured identity buff
+    /// instances it carries. Measured immediately unless buffered hits are waiting on the
+    /// fight-start inspects, in which case the barrier flush measures once every required
+    /// player's inspect is in.
+    pub fn queue_identity_buff_measurement(
+        &mut self,
+        applied: &AppliedInspectResult,
+        entity_tracker: &EntityTracker,
+    ) {
+        let Some(receiver) = entity_tracker.entities.values().find(|entity| {
+            entity.entity_type == EntityType::Player
+                && entity.name == applied.name
+                && entity.inspect_snapshot.is_some()
+        }) else {
+            return;
+        };
+        let Some(snapshot) = receiver.inspect_snapshot.as_ref() else {
+            return;
+        };
+        let status_tracker = entity_tracker.status_tracker();
+        let receiver_effects = status_tracker.borrow_mut().get_source_status_effects(
+            receiver,
+            Utc::now(),
+            DeadlineMode::HideExpired,
+        );
+        if !receiver_effects
+            .iter()
+            .any(|effect| unmeasured_identity_stat(effect).is_some())
+        {
+            return;
+        }
+        let Some(request_sent_at) = applied.request_sent_at else {
+            info!(
+                "Identity buff measurement skipped for {}: inspect request missing or overlapping.",
+                receiver.name
+            );
+            return;
+        };
+        let receiver_target_ids = receiver_target_ids(receiver);
+        let server_values = IDENTITY_STAT_TYPES
+            .map(|stat_type| snapshot.stat_pairs.get(&(stat_type as u8)).copied());
+        let stat_sources_stable = IDENTITY_STAT_TYPES.map(|stat_type| {
+            !status_tracker.borrow().has_stat_source_changed_since(
+                &receiver_target_ids,
+                stat_type,
+                request_sent_at,
+            )
+        });
+        self.pending_inspect_measurements
+            .push(PendingInspectMeasurement {
+                receiver_entity_id: receiver.id,
+                receiver_name: receiver.name.clone(),
+                request_sent_at,
+                receiver_effects,
+                server_values,
+                stat_sources_stable,
+            });
+        if self.startup_barrier.is_none() {
+            self.measure_queued_identity_buffs(entity_tracker, &mut []);
+        }
+    }
+
+    fn measure_queued_identity_buffs(
+        &mut self,
+        entity_tracker: &EntityTracker,
+        pending_damage: &mut [PendingDamageEvent],
+    ) {
+        if self.pending_inspect_measurements.is_empty() {
+            return;
+        }
+        let measurements = std::mem::take(&mut self.pending_inspect_measurements);
+        let mut samples = Vec::new();
+        for measurement in &measurements {
+            Self::collect_identity_buff_samples(measurement, entity_tracker, &mut samples);
+        }
+        // The last sample of one instance wins.
+        let mut latest_sample_by_instance: HashMap<
+            (u64, u32, u64, u32, DateTime<Utc>),
+            IdentityBuffSample,
+        > = HashMap::new();
+        for sample in samples {
+            latest_sample_by_instance.insert(
+                (
+                    sample.receiver_entity_id,
+                    sample.effect.instance_id,
+                    sample.effect.source_id,
+                    sample.effect.status_effect_id,
+                    sample.effect.first_tracked,
+                ),
+                sample,
+            );
+        }
+        let status_tracker = entity_tracker.status_tracker();
+        for sample in latest_sample_by_instance.into_values() {
+            let mismatch =
+                (sample.measured_value - sample.computed_value).abs() / sample.computed_value;
+            let verdict = if mismatch <= IDENTITY_BUFF_MISMATCH_TOLERANCE {
+                "matches"
+            } else {
+                "mismatches"
+            };
+            let measured = MeasuredStat {
+                stat_type: sample.stat_type,
+                value: sample.measured_value.round() as i64,
+            };
+            let receiver_target_ids = entity_tracker
+                .entities
+                .get(&sample.receiver_entity_id)
+                .map(receiver_target_ids)
+                .unwrap_or_else(|| vec![sample.receiver_entity_id]);
+            let applied_to_live = status_tracker.borrow_mut().try_apply_measured_stat(
+                &receiver_target_ids,
+                &sample.effect,
+                measured,
+            );
+            // Buffered hits captured this instance before the measurement; carry it over.
+            for pending in pending_damage.iter_mut() {
+                for effect in pending
+                    .se_on_source
+                    .iter_mut()
+                    .chain(pending.se_on_target.iter_mut())
+                    .chain(
+                        pending
+                            .owner_self_effects_by_entity_id
+                            .values_mut()
+                            .flatten(),
+                    )
+                {
+                    apply_measured_stat(effect, &sample.effect, measured);
+                }
+            }
+            info!(
+                "Identity buff {} ({})#{} from {:X} on {} (pre_zone={}) {verdict} its owner snapshot: computed={:.0} measured={:.0} ({:.1}%); pinned per instance (applied_to_live={applied_to_live}).",
+                sample.effect.name,
+                sample.effect.status_effect_id,
+                sample.effect.instance_id,
+                sample.effect.source_id,
+                sample.receiver_name,
+                sample.effect.created_before_zone,
+                sample.computed_value,
+                sample.measured_value,
+                mismatch * 100.0
+            );
+        }
+    }
+
+    fn collect_identity_buff_samples(
+        measurement: &PendingInspectMeasurement,
+        entity_tracker: &EntityTracker,
+        samples: &mut Vec<IdentityBuffSample>,
+    ) {
+        let Some(receiver) = entity_tracker
+            .entities
+            .get(&measurement.receiver_entity_id)
+            .filter(|entity| entity.inspect_snapshot.is_some())
+        else {
+            return;
+        };
+        let receiver_effects = &measurement.receiver_effects;
+        for effect in receiver_effects {
+            let Some(stat_type) = unmeasured_identity_stat(effect) else {
+                continue;
+            };
+            if effect.first_tracked > measurement.request_sent_at {
+                continue;
+            }
+            let stat_index = identity_stat_index(stat_type);
+            if !measurement.stat_sources_stable[stat_index] {
+                info!(
+                    "Identity buff {} on {} not measured: {stat_type:?} sources changed during the inspect request, including removed or refreshed instances.",
+                    effect.instance_id, measurement.receiver_name
+                );
+                continue;
+            }
+            let Some(server_value) = measurement.server_values[stat_index] else {
+                info!(
+                    "Identity buff {}#{} on {} not measured: {stat_type:?} missing from the inspect stat sheet.",
+                    effect.name, effect.instance_id, measurement.receiver_name
+                );
+                continue;
+            };
+
+            let key_stat = identity_stat_key(stat_type);
+            let mut sheet_predates_other_source = false;
+            let mut has_other_candidate = false;
+            for other in receiver_effects {
+                if other.instance_id == effect.instance_id
+                    || !effect_provides_passive_stat(other, key_stat)
+                {
+                    continue;
+                }
+                if other.first_tracked > measurement.request_sent_at {
+                    sheet_predates_other_source = true;
+                } else if unmeasured_identity_stat(other) == Some(stat_type) {
+                    has_other_candidate = true;
+                }
+            }
+            if sheet_predates_other_source || has_other_candidate {
+                info!(
+                    "Identity buff {}#{} on {} not measured: sheet_predates_other_source={sheet_predates_other_source}, other_candidate={has_other_candidate}.",
+                    effect.name, effect.instance_id, measurement.receiver_name
+                );
+                continue;
+            }
+
+            let effects_without_candidate = receiver_effects
+                .iter()
+                .filter(|other| other.instance_id != effect.instance_id)
+                .cloned()
+                .collect::<Vec<_>>();
+            let (Some(stats_with_candidate), Some(stats_without_candidate)) = (
+                evaluate_stats_with_tracked_buffs(receiver, receiver_effects, entity_tracker),
+                evaluate_stats_with_tracked_buffs(
+                    receiver,
+                    &effects_without_candidate,
+                    entity_tracker,
+                ),
+            ) else {
+                info!(
+                    "Identity buff {}#{} on {} not measured: receiver stats with tracked buffs unavailable.",
+                    effect.name, effect.instance_id, measurement.receiver_name
+                );
+                continue;
+            };
+            let total_with_candidate = identity_stat_value(&stats_with_candidate, stat_type);
+            let total_without_candidate = identity_stat_value(&stats_without_candidate, stat_type);
+            let computed_value = 10000.0 * (total_with_candidate - total_without_candidate);
+            let measured_value = server_value as f64 - 10000.0 * (1.0 + total_without_candidate);
+            if computed_value <= 0.0 || measured_value <= 0.0 {
+                info!(
+                    "Identity buff {}#{} on {} not measured: computed={computed_value:.0} measured={measured_value:.0}.",
+                    effect.name, effect.instance_id, measurement.receiver_name
+                );
+                continue;
+            }
+
+            samples.push(IdentityBuffSample {
+                receiver_entity_id: receiver.id,
+                receiver_name: receiver.name.clone(),
+                effect: effect.clone(),
+                stat_type,
+                computed_value,
+                measured_value,
+            });
+        }
     }
 
     pub fn remove_startup_required_player(&mut self, player: &Entity) -> bool {
@@ -2604,7 +2945,11 @@ impl EncounterState {
 
             owner_self_effects_by_entity_id.insert(
                 entity.id,
-                status_tracker.get_source_status_effects(entity, timestamp),
+                status_tracker.get_source_status_effects(
+                    entity,
+                    timestamp,
+                    DeadlineMode::HideExpired,
+                ),
             );
         }
 
@@ -2718,12 +3063,14 @@ impl EncounterState {
             return;
         }
 
-        let (pending_skill, pending_damage) = self
+        let (pending_skill, mut pending_damage) = self
             .startup_barrier
             .take()
             .map(|barrier| (barrier.pending_skill, barrier.pending_damage))
             .unwrap_or_default();
         entity_tracker.reset_bootstrap_inspect_throttle();
+        // Measured once every required inspect is in, before the buffered hits replay.
+        self.measure_queued_identity_buffs(entity_tracker, &mut pending_damage);
 
         if stats_ready {
             self.rdps_valid = true;
@@ -2781,12 +3128,14 @@ impl EncounterState {
         let stats_names = Self::startup_stats_required_names(barrier);
         let stats_ready = entity_tracker.is_startup_barrier_stats_ready(&stats_names);
         let has_inspect_failures = entity_tracker.has_failed_startup_barrier_inspects(&stats_names);
-        let (pending_skill, pending_damage) = self
+        let (pending_skill, mut pending_damage) = self
             .startup_barrier
             .take()
             .map(|barrier| (barrier.pending_skill, barrier.pending_damage))
             .unwrap_or_default();
         entity_tracker.reset_bootstrap_inspect_throttle();
+        // Measured once every required inspect is in, before the buffered hits replay.
+        self.measure_queued_identity_buffs(entity_tracker, &mut pending_damage);
 
         if stats_ready {
             self.rdps_valid = true;

@@ -394,11 +394,23 @@ fn apply_item(
     derived.item_build_debug.push(item_debug);
 }
 
+/// Every Ark Passive node the inspected player learned, across all tree sections.
+fn learned_ark_passive_node_ids(result: &PKTPCInspectResult) -> std::collections::HashSet<u32> {
+    result
+        .ark_passive_tree_data_inspect
+        .ark_passive_node_datas
+        .iter()
+        .flatten()
+        .map(|node| node.ark_passive_id)
+        .collect()
+}
+
 fn apply_ark_passives(
     result: &PKTPCInspectResult,
     raw_stat_pairs: &HashMap<u8, i64>,
     derived: &mut InspectDerivedStats,
 ) {
+    let learned_node_ids = learned_ark_passive_node_ids(result);
     let mut goddess_blessing_level = 0u32;
     let mut goddess_blessing_values: Option<Vec<i64>> = None;
     for section in &result.ark_passive_tree_data_inspect.ark_passive_node_datas {
@@ -409,6 +421,10 @@ fn apply_ark_passives(
             let level = node.points.unwrap_or(1);
             if let Some(level_data) = passive.levels.get(&level) {
                 for addon in &level_data.addons {
+                    // Alternative option rows of one node are gated on other learned nodes.
+                    if !addon.is_admitted_by_node_gates(&learned_node_ids) {
+                        continue;
+                    }
                     if addon.addon_type == "ability_feature"
                         && let Some(ability) = EXTERNAL_ABILITY_DATA.get(&addon.key_index)
                         && let Some(ability_level) = ability.levels.get(&(addon.key_value as u32))
@@ -524,6 +540,7 @@ fn apply_ark_grid(
     derived: &mut InspectDerivedStats,
 ) {
     let mut pending_ability_points: HashMap<u32, i64> = HashMap::new();
+    let learned_node_ids = learned_ark_passive_node_ids(result);
     let entry_count = usize::min(
         usize::from(result.ark_grid_cores.num),
         usize::min(
@@ -553,7 +570,10 @@ fn apply_ark_grid(
             .sum::<u32>();
 
         for option_slot in &core.options {
-            if aggregate_rank <= option_slot.required_points {
+            // An option activates once the gem points reach its requirement (ReqOptionPoint).
+            // A core holds four gems of order rank 1-5, so the 20-point option is reachable
+            // only as an exact match; requiring more would make it dead.
+            if aggregate_rank < option_slot.required_points {
                 continue;
             }
             let Some(core_option) = EXTERNAL_ARK_GRID_DATA
@@ -562,6 +582,13 @@ fn apply_ark_grid(
             else {
                 continue;
             };
+            // EFTable_ArkGridCoreOption.IncludeEffectNodeId: the option applies only while
+            // that Ark Passive node is learned.
+            if core_option.include_effect_node_id != 0
+                && !learned_node_ids.contains(&core_option.include_effect_node_id)
+            {
+                continue;
+            }
             for addon in &core_option.addons {
                 if addon.addon_type == "ability_point" {
                     *pending_ability_points.entry(addon.key_index).or_default() += addon.key_value;
@@ -588,6 +615,8 @@ fn apply_ark_grid(
                         } else {
                             level.addon_value
                         },
+                        include_effect_node_id: 0,
+                        exclude_effect_node_id: 0,
                     };
                     apply_external_addon(&addon, raw_stat_pairs, derived);
                 }
@@ -775,18 +804,21 @@ fn apply_parsed_item_addon(
             stat_type: addon.stat_type.to_string(),
             key_index: addon.original_stat,
             key_value: addon.value,
+            ..Default::default()
         }),
         Some(AddonType::COMBAT_EFFECT) => derived.deferred_addons.push(ExternalResourceAddon {
             addon_type: "combat_effect".to_string(),
             stat_type: addon.stat_type.to_string(),
             key_index: addon.original_stat,
             key_value: addon.value,
+            ..Default::default()
         }),
         Some(AddonType::CLASS_OPTION) => derived.deferred_addons.push(ExternalResourceAddon {
             addon_type: "class_option".to_string(),
             stat_type: addon.stat_type.to_string(),
             key_index: addon.original_stat,
             key_value: addon.value,
+            ..Default::default()
         }),
         Some(AddonType::ATTACK_POWER_AMPLIFY_MULTIPLIER) => {
             derived.ally_attack_power_power += addon.value as f64 / 10000.0;
@@ -1309,5 +1341,47 @@ impl ItemOptionLevelLike for crate::models::ExternalItemGradeStaticOptionData {
     }
     fn vitality(&self) -> i64 {
         self.vitality
+    }
+}
+
+#[cfg(test)]
+mod ark_passive_gate_tests {
+    use crate::models::ExternalArkPassiveData;
+    use hashbrown::HashMap;
+    use std::collections::HashSet;
+
+    fn ark_passive_data() -> HashMap<u32, ExternalArkPassiveData> {
+        let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("meter-data")
+            .join("ArkPassive.json");
+        serde_json::from_slice(&std::fs::read(path).unwrap()).unwrap()
+    }
+
+    #[test]
+    fn ark_passive_alternatives_respect_both_row_gates() {
+        let data = ark_passive_data();
+        let passive = &data[&2220800];
+        for (orb_bonus, level, expected_effect) in [
+            (false, 1, 2220800),
+            (true, 1, 2220805),
+            (false, 5, 2220804),
+            (true, 5, 2220809),
+        ] {
+            let mut learned = HashSet::from([2220800u32]);
+            if orb_bonus {
+                learned.insert(2220300);
+            }
+            let effects = passive.levels[&level]
+                .addons
+                .iter()
+                .filter(|addon| addon.is_admitted_by_node_gates(&learned))
+                .map(|addon| addon.key_index)
+                .collect::<Vec<_>>();
+            assert_eq!(
+                effects,
+                vec![expected_effect],
+                "orb_bonus={orb_bonus} level={level}"
+            );
+        }
     }
 }

@@ -22,7 +22,15 @@ export type StatDataGroup =
   | "domination_damage_rate_"
   | "broken_bone_damage_rate_"
   | "npc_damage_taken_rate_"
+  | "npc_action_weakness_damage_rate_"
   | "stagger_combat_effect_damage_rate_"
+  | "target_physical_inc_rate_"
+  | "target_physical_inc_sub_rate_1_"
+  | "target_physical_inc_sub_rate_2_"
+  | "target_magical_inc_rate_"
+  | "target_magical_inc_sub_rate_1_"
+  | "target_magical_inc_sub_rate_2_"
+  | "target_elemental_damage_taken_rate_"
   | "spec_bonus_identity_1_"
   | "spec_bonus_identity_2_"
   | "spec_bonus_identity_3_"
@@ -85,6 +93,14 @@ const attrRates = (typeName: string): StatDataDescriptor => ({
   type: "additive"
 });
 
+// One of the enemy's six incoming-damage stats. Debuffs on the same stat add together; the
+// hit's damage type selects three of them, which multiply with each other.
+const targetIncomingDamage = (damageType: string, name: string): StatDataDescriptor => ({
+  title: `Enemy ${damageType} ${name}`,
+  help: `Extra damage from enemy debuffs that increase ${damageType.toLowerCase()} damage taken through this stat. Debuffs on the same stat add together. Does not apply to Hyper Awakening.`,
+  type: "additive"
+});
+
 export const statDataDescriptors: Record<StatDataGroup, StatDataDescriptor> = {
   domination_damage_rate_: {
     title: "Domination",
@@ -96,9 +112,26 @@ export const statDataDescriptors: Record<StatDataGroup, StatDataDescriptor> = {
     help: "Extra damage from Broken Bone against staggered enemies. Does not apply to Hyper Awakening.",
     type: "multiplicative"
   },
+  // Logs saved before the damage-taken buckets were separated report this combined group.
   npc_damage_taken_rate_: {
     title: "NPC Damage Taken",
     help: "Extra damage from enemy weaknesses and debuffs that increase damage taken. Does not apply to Hyper Awakening.",
+    type: "multiplicative"
+  },
+  npc_action_weakness_damage_rate_: {
+    title: "NPC Action Weakness",
+    help: "Extra damage from the authored weakness of the enemy's current action. Independent of damage-taken debuffs. Does not apply to Hyper Awakening.",
+    type: "multiplicative"
+  },
+  target_physical_inc_rate_: targetIncomingDamage("Physical", "Damage Taken %"),
+  target_physical_inc_sub_rate_1_: targetIncomingDamage("Physical", "Damage Taken % (Debuffs)"),
+  target_physical_inc_sub_rate_2_: targetIncomingDamage("Physical", "Damage Taken % (Effects)"),
+  target_magical_inc_rate_: targetIncomingDamage("Magical", "Damage Taken %"),
+  target_magical_inc_sub_rate_1_: targetIncomingDamage("Magical", "Damage Taken % (Debuffs)"),
+  target_magical_inc_sub_rate_2_: targetIncomingDamage("Magical", "Damage Taken % (Effects)"),
+  target_elemental_damage_taken_rate_: {
+    title: "Elemental Resistance Reduction",
+    help: "Extra damage from enemy resistance modifiers matching the hit's element. Does not apply to Hyper Awakening.",
     type: "multiplicative"
   },
   stagger_combat_effect_damage_rate_: {

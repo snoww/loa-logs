@@ -79,6 +79,11 @@ impl<T> OnceLockWrapper<T> {
             .set(value)
             .map_err(|_| anyhow!("OnceLockWrapper already initialized"))
     }
+
+    /// The value when initialized; `Deref` panics instead.
+    pub fn try_get(&self) -> Option<&T> {
+        self.0.get()
+    }
 }
 
 impl<T> Deref for OnceLockWrapper<T> {

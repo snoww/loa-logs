@@ -5,7 +5,7 @@ use crate::live::party_tracker::PartyTracker;
 use crate::live::player_stats::{PlayerStats, RuntimeState};
 use crate::live::rdps::snapshot_owner_player_stats_for_buffs;
 use crate::live::status_tracker::{
-    StatusEffectDetails, StatusEffectTargetType, StatusEffectType, StatusTracker,
+    DeadlineMode, StatusEffectDetails, StatusEffectTargetType, StatusEffectType, StatusTracker,
     build_status_effect,
 };
 use crate::local::{LocalInfo, LocalPlayer};
@@ -55,11 +55,23 @@ pub struct EntityTracker {
     pub local_character_id: u64,
     pub character_id_to_name: HashMap<u64, String>,
     status_effect_owner_round_robin: HashMap<(u32, bool, u32), usize>,
+    inspect_request_timing_by_name: HashMap<String, InspectRequestTiming>,
 }
 
 pub struct AppliedInspectResult {
     pub name: String,
     pub info: InspectInfo,
+    /// When the meter sent the inspect request this result answers; `None` when the request
+    /// is unknown or overlapped another request for the same name.
+    pub request_sent_at: Option<DateTime<Utc>>,
+}
+
+/// Timing of the meter's own outstanding inspect requests for one player name.
+#[derive(Debug, Clone, Copy)]
+struct InspectRequestTiming {
+    sent_at: DateTime<Utc>,
+    outstanding: u32,
+    ambiguous: bool,
 }
 
 #[derive(Debug, Default, Clone)]
@@ -276,6 +288,109 @@ impl EntityTracker {
             local_character_id: 0,
             character_id_to_name: HashMap::new(),
             status_effect_owner_round_robin: HashMap::new(),
+            inspect_request_timing_by_name: HashMap::new(),
+        }
+    }
+
+    pub fn status_tracker(&self) -> Rc<RefCell<StatusTracker>> {
+        self.status_tracker.clone()
+    }
+
+    /// Records that the meter sent an inspect request for `name`. A second outstanding request
+    /// for the same name makes both replies ambiguous.
+    pub fn begin_inspect_request(&mut self, name: &str, sent_at: DateTime<Utc>) {
+        let timing = self
+            .inspect_request_timing_by_name
+            .entry(name.to_string())
+            .or_insert(InspectRequestTiming {
+                sent_at,
+                outstanding: 0,
+                ambiguous: false,
+            });
+        timing.ambiguous |= timing.outstanding > 0;
+        timing.outstanding += 1;
+    }
+
+    /// Consumes one outstanding request for `name` and returns when it was sent, unless the
+    /// request is unknown or overlapped another request for the same name.
+    fn take_inspect_request_sent_at(&mut self, name: &str) -> Option<DateTime<Utc>> {
+        let timing = self.inspect_request_timing_by_name.get_mut(name)?;
+        let sent_at = timing.sent_at;
+        let ambiguous = timing.ambiguous;
+        timing.outstanding -= 1;
+        if timing.outstanding == 0 {
+            self.inspect_request_timing_by_name.remove(name);
+        }
+        (!ambiguous).then_some(sent_at)
+    }
+
+    /// Fight end or reset: replies to requests sent for the finished fight can no longer be
+    /// associated, so stale work cannot contaminate later measurements.
+    pub fn retire_fight_inspect_requests(&mut self) {
+        self.inspect_request_timing_by_name.clear();
+    }
+
+    /// Applies a PKTStatusEffectDurationNotify to the tracked instance on `object_id`, whichever
+    /// registry holds the object's effects.
+    pub fn update_status_effect_duration(
+        &mut self,
+        object_id: u64,
+        instance_id: u32,
+        end_tick: u64,
+    ) -> bool {
+        let character_id = self
+            .entities
+            .get(&object_id)
+            .map(|entity| entity.character_id)
+            .unwrap_or_default();
+        let mut targets = vec![(object_id, StatusEffectTargetType::Local)];
+        if character_id != 0 && self.should_use_party_status_effect_for_character(character_id) {
+            targets.insert(0, (character_id, StatusEffectTargetType::Party));
+        }
+        let now = Utc::now();
+        let mut status_tracker = self.status_tracker.borrow_mut();
+        targets.into_iter().any(|(target_id, target_type)| {
+            status_tracker.update_status_duration(
+                instance_id,
+                target_id,
+                end_tick,
+                target_type,
+                now,
+            )
+        })
+    }
+
+    /// Fills in the owner stats snapshot of tracked buffs owned by a player whose inspect
+    /// arrived after the buffs were first seen (for example before the fight-start inspect).
+    fn refresh_owned_status_effect_snapshots(&mut self, owner: &Entity) {
+        let now = Utc::now();
+        let mut effects_to_refresh = Vec::new();
+        self.status_tracker
+            .borrow_mut()
+            .update_effects_owned_by(owner.id, |effect| {
+                if effect.owner_player_stats_snapshot.is_none() {
+                    effects_to_refresh.push(effect.clone());
+                }
+            });
+        for mut effect in effects_to_refresh {
+            self.populate_status_effect_snapshots(&mut effect, owner, now);
+            let Some(snapshot) = effect.owner_player_stats_snapshot.clone() else {
+                continue;
+            };
+            let runtime_snapshot = effect.source_skill_runtime_snapshot.clone();
+            self.status_tracker
+                .borrow_mut()
+                .update_effects_owned_by(owner.id, |tracked| {
+                    if tracked.instance_id == effect.instance_id
+                        && tracked.target_id == effect.target_id
+                        && tracked.owner_player_stats_snapshot.is_none()
+                    {
+                        tracked.owner_player_stats_snapshot = Some(snapshot.clone());
+                        if tracked.source_skill_runtime_snapshot.is_none() {
+                            tracked.source_skill_runtime_snapshot = runtime_snapshot.clone();
+                        }
+                    }
+                });
         }
     }
 
@@ -556,21 +671,43 @@ impl EntityTracker {
             (pc_struct.player_id, StatusEffectTargetType::Local)
         };
         let timestamp = Utc::now();
+        self.status_tracker
+            .borrow_mut()
+            .note_zone_published(pc_struct.player_id);
         for sed in &pc_struct.status_effect_datas {
             let source_entity = self.resolve_status_effect_source_entity(sed);
-            let status_effect = self.build_status_effect_with_snapshots(
+            let mut status_effect = self.build_status_effect_with_snapshots(
                 sed,
                 status_effect_target_id,
                 status_effect_target_type,
                 timestamp,
                 None,
-                Some(source_entity),
+                Some(source_entity.clone()),
             );
-            self.status_tracker
-                .borrow_mut()
-                .register_status_effect(status_effect);
+            // Seen through the player's snapshot: the instance predates this view of the owner.
+            status_effect.created_before_zone = true;
+            self.register_status_effect_keeping_carried_source(status_effect, &source_entity);
         }
         entity
+    }
+
+    /// Registers a built status effect; a re-notified instance that carries over its creation
+    /// source skill without a runtime cache resolves that skill's current cache on the source.
+    fn register_status_effect_keeping_carried_source(
+        &self,
+        status_effect: StatusEffectDetails,
+        source_entity: &Entity,
+    ) {
+        let status_effect_id = status_effect.status_effect_id;
+        self.status_tracker
+            .borrow_mut()
+            .register_status_effect_with(status_effect, |carried_skill_id| {
+                resolve_status_effect_runtime_snapshot(
+                    source_entity,
+                    carried_skill_id,
+                    status_effect_id,
+                )
+            });
     }
 
     pub fn new_npc(&mut self, pkt: PKTNewNpc, max_hp: i64) -> Entity {
@@ -653,24 +790,31 @@ impl EntityTracker {
         } else {
             (pkt.character_id, StatusEffectTargetType::Party)
         };
+        // A party notify for a player never published in this zone may carry an end tick from
+        // another server's clock.
+        let published_object_id = match target_type {
+            StatusEffectTargetType::Local => Some(target_id),
+            StatusEffectTargetType::Party => self.id_tracker.borrow().get_entity_id(target_id),
+        };
+        let end_tick_on_zone_clock = published_object_id
+            .is_some_and(|object_id| self.status_tracker.borrow().is_zone_published(object_id));
         for sed in pkt.status_effect_datas {
             let source_entity = self.resolve_status_effect_source_entity(&sed);
             let encounter_entity = entities.get(&source_entity.name);
-            let status_effect = self.build_status_effect_with_snapshots(
+            let mut status_effect = self.build_status_effect_with_snapshots(
                 &sed,
                 target_id,
                 target_type,
                 timestamp,
                 encounter_entity,
-                Some(source_entity),
+                Some(source_entity.clone()),
             );
+            status_effect.end_tick_on_zone_clock = end_tick_on_zone_clock;
             if status_effect.status_effect_type == StatusEffectType::Shield {
                 shields.push(status_effect.clone());
             }
 
-            self.status_tracker
-                .borrow_mut()
-                .register_status_effect(status_effect);
+            self.register_status_effect_keeping_carried_source(status_effect, &source_entity);
         }
         shields
     }
@@ -1168,6 +1312,7 @@ impl EntityTracker {
     ) -> Option<AppliedInspectResult> {
         let name = result.name.clone();
         self.inspect_requested_names.remove(&name);
+        let request_sent_at = self.take_inspect_request_sent_at(&name);
         let was_bootstrap_refresh = self.bootstrap_refresh_sent_names.contains(&name);
         self.bootstrap_inspect_sent_at_ms_by_name.remove(&name);
         self.bootstrap_failed_inspect_names.remove(&name);
@@ -1226,8 +1371,22 @@ impl EntityTracker {
             }
         }
 
+        let owners = self
+            .entities
+            .values()
+            .filter(|entity| entity.entity_type == Player && entity.name == name)
+            .cloned()
+            .collect::<Vec<_>>();
+        for owner in owners {
+            self.refresh_owned_status_effect_snapshots(&owner);
+        }
+
         self.forced_refresh_names.remove(&name);
-        Some(AppliedInspectResult { name, info })
+        Some(AppliedInspectResult {
+            name,
+            info,
+            request_sent_at,
+        })
     }
 
     pub fn get_local_character_id(&self) -> u64 {
@@ -1720,28 +1879,34 @@ impl EntityTracker {
         }
     }
 
+    /// Registers a status effect seen directly on `target_id`: through a notify, or through an
+    /// object snapshot (`observed_from_snapshot`), in which case the owner's build at the
+    /// instance's creation may differ from the build the meter knows.
     pub fn build_and_register_status_effect(
         &mut self,
         sed: &StatusEffectData,
         target_id: u64,
         timestamp: DateTime<Utc>,
         entities: Option<&HashMap<String, EncounterEntity>>,
+        observed_from_snapshot: bool,
     ) -> StatusEffectDetails {
         let source_entity = self.resolve_status_effect_source_entity(sed);
         let source_encounter_entity =
             entities.and_then(|entities| entities.get(&source_entity.name));
-        let status_effect = self.build_status_effect_with_snapshots(
+        let mut status_effect = self.build_status_effect_with_snapshots(
             sed,
             target_id,
             StatusEffectTargetType::Local,
             timestamp,
             source_encounter_entity,
-            Some(source_entity),
+            Some(source_entity.clone()),
         );
+        status_effect.created_before_zone = observed_from_snapshot;
 
         self.status_tracker
             .borrow_mut()
-            .register_status_effect(status_effect.clone());
+            .note_zone_published(target_id);
+        self.register_status_effect_keeping_carried_source(status_effect.clone(), &source_entity);
 
         status_effect
     }
@@ -1788,6 +1953,7 @@ impl EntityTracker {
         source_entity: &Entity,
         timestamp: DateTime<Utc>,
     ) {
+        status_effect.owner_is_player = source_entity.entity_type == EntityType::Player;
         if source_entity.entity_type != EntityType::Player {
             status_effect.owner_player_stats_snapshot = None;
             status_effect.source_skill_runtime_snapshot = None;
@@ -1797,10 +1963,11 @@ impl EntityTracker {
         // snapshot_owner_player_stats_for_buffs returns None without an inspect_snapshot,
         // so skip building self_effects entirely in that case.
         status_effect.owner_player_stats_snapshot = if source_entity.inspect_snapshot.is_some() {
-            let self_effects = self
-                .status_tracker
-                .borrow_mut()
-                .get_source_status_effects(source_entity, timestamp);
+            let self_effects = self.status_tracker.borrow_mut().get_source_status_effects(
+                source_entity,
+                timestamp,
+                DeadlineMode::KeepUntilRemoved,
+            );
             snapshot_owner_player_stats_for_buffs(
                 source_entity,
                 status_effect.source_skill_id,
@@ -1964,10 +2131,11 @@ impl EntityTracker {
         eligible.remove(selected_index)
     }
 
+    /// Registers the status effects carried by an object snapshot.
     fn build_and_register_status_effects(&mut self, seds: Vec<StatusEffectData>, target_id: u64) {
         let timestamp = Utc::now();
         for sed in seds.into_iter() {
-            self.build_and_register_status_effect(&sed, target_id, timestamp, None);
+            self.build_and_register_status_effect(&sed, target_id, timestamp, None, true);
         }
     }
 

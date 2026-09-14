@@ -10,7 +10,7 @@ use crate::live::entity_tracker::{
 use crate::live::player_stats::{
     PlayerStats, STAT_PRIORITY_DEFAULT, STAT_PRIORITY_SUPPORT, StatSource,
 };
-use crate::live::status_tracker::StatusEffectDetails;
+use crate::live::status_tracker::{StatusEffectDetails, identity_stat_key};
 use crate::live::{
     DEBUG_DUMP_DAMAGE_STATE_JSON, compute_stat_damage_metrics, write_debug_json_dump,
 };
@@ -48,7 +48,9 @@ pub struct HitSkillGroupAttribution {
     pub source_entity_id: u64,
     pub group_name: String,
     pub damage: i64,
-    pub damage_increase: i64,
+    /// None when the relative increase is undefined because removing the bonus leaves zero
+    /// damage.
+    pub damage_increase: Option<i64>,
 }
 
 #[derive(Debug, Clone, Default)]
@@ -848,7 +850,7 @@ pub fn analyze_hit_rdps(
                 se_on_source,
                 se_on_target,
                 &contributions,
-                Some(1.0 + stats.npc_damage_taken_rate.value()),
+                Some(stats.get_damage_window_multiplier(is_hyper_awakening, damage_type)),
                 Some(total_attack_power),
                 None,
                 &result,
@@ -926,10 +928,6 @@ pub fn analyze_hit_rdps(
             &stats.broken_bone_damage_rate,
         ),
         (
-            &mut metrics.npc_windows.npc_damage_taken,
-            &stats.npc_damage_taken_rate,
-        ),
-        (
             &mut metrics.npc_windows.stagger_combat_effect,
             &stats.stagger_combat_effect_damage_rate,
         ),
@@ -940,6 +938,19 @@ pub fn analyze_hit_rdps(
             1.0
         };
         metric.add(damage as f64, damage as f64 / multiplier);
+    }
+    // Every damage-taken bucket of the hit: action weakness, elemental resistance and the
+    // damage type's three incoming-damage stats. An infinite gain has a valid zero baseline.
+    let npc_damage_taken_multiplier = if enabled {
+        stats.get_npc_damage_taken_positive_multiplier(is_hyper_awakening, damage_type)
+    } else {
+        1.0
+    };
+    if npc_damage_taken_multiplier > 0.0 {
+        metrics
+            .npc_windows
+            .npc_damage_taken
+            .add(damage as f64, damage as f64 / npc_damage_taken_multiplier);
     }
 
     let entity_portions = stats.get_damage_portions_contributed_from_all_entities(
@@ -1044,7 +1055,7 @@ pub fn analyze_hit_rdps(
             se_on_source,
             se_on_target,
             &contributions,
-            Some(1.0 + stats.npc_damage_taken_rate.value()),
+            Some(stats.get_damage_window_multiplier(is_hyper_awakening, damage_type)),
             Some(total_attack_power),
             Some(&entity_portions),
             &result,
@@ -1167,9 +1178,11 @@ mod npc_windows_integration_tests {
             (vec![reduction.clone()], 1.0),
             (vec![reduction.clone(), effect(420676006, 1)], 1.2),
             (vec![reduction.clone(), effect(420676006, 2)], 1.4),
+            // Weaken and Total Offensive share PHYSICAL_INC_SUB_RATE_1, so they add; the
+            // reduction sits in PHYSICAL_INC_SUB_RATE_2 and stays in the baseline.
             (
                 vec![reduction, effect(420676006, 1), effect(429970096, 1)],
-                1.2 * 1.03,
+                1.23,
             ),
         ] {
             for attribution in [
@@ -1251,11 +1264,11 @@ mod npc_windows_integration_tests {
                     ),
                     (
                         NpcDamageAttribution::DAMAGE_TAKEN,
-                        "npc_damage_taken_rate_/$@[20]",
+                        "npc_action_weakness_damage_rate_/$@[20]",
                     ),
                     (
                         NpcDamageAttribution::DAMAGE_TAKEN,
-                        "npc_damage_taken_rate_/$@[16,420676006]",
+                        "target_physical_inc_sub_rate_1_/$@[16,420676006]",
                     ),
                     (
                         NpcDamageAttribution::COMBAT_EFFECTS,
@@ -1303,8 +1316,8 @@ mod npc_windows_integration_tests {
             result.rdps_damage_received
         );
         for source in [
-            "npc_damage_taken_rate_/$@[20]",
-            "npc_damage_taken_rate_/$@[16,420676006]",
+            "npc_action_weakness_damage_rate_/$@[20]",
+            "target_physical_inc_sub_rate_1_/$@[16,420676006]",
         ] {
             assert!(
                 result.skill_group_attributions.iter().any(|attribution| {
@@ -1453,7 +1466,10 @@ mod npc_windows_integration_tests {
                 .iter()
                 .filter(|entry| entry.source_entity_id == target.id)
             {
-                assert_eq!(entry.group_name, "npc_damage_taken_rate_/$@[16,429970096]");
+                assert_eq!(
+                    entry.group_name,
+                    "target_physical_inc_sub_rate_1_/$@[16,429970096]"
+                );
             }
         }
         let filtered = filter_target_effects_for_attacker(
@@ -1769,7 +1785,10 @@ fn append_source_contributions(
         let source_class_id = source_entity
             .map(|entity| entity.class_id)
             .unwrap_or_default();
-        let source_player_stats: Option<Arc<PlayerStats>> = buffered_owner_self_effects
+        // A pre-zone instance keeps the owner snapshot taken at its creation: the owner's build
+        // may have changed since, and the fight-start inspect would describe the wrong build.
+        let instance_owner_snapshot: Option<Arc<PlayerStats>> = buffered_owner_self_effects
+            .filter(|_| !keeps_creation_owner_snapshot(&effect))
             .and_then(|_| {
                 rebuild_missing_effect_owner_snapshot(
                     &effect,
@@ -1782,8 +1801,9 @@ fn append_source_contributions(
                 )
             })
             .map(Arc::new)
-            .or_else(|| effect.owner_player_stats_snapshot.clone())
-            .or_else(|| {
+            .or_else(|| effect.owner_player_stats_snapshot.clone());
+        let source_player_stats: Option<Arc<PlayerStats>> =
+            instance_owner_snapshot.clone().or_else(|| {
                 source_snapshot.and_then(|snapshot| {
                     source_entity.map(|entity| {
                         Arc::new(load_player_stats_from_snapshot(
@@ -1802,6 +1822,21 @@ fn append_source_contributions(
             attacker_character_id,
             attacker_stats,
         );
+        // An identity buff's magnitude was fixed at the instance's creation, so the owner's own
+        // copy follows the instance snapshot too; current attacker stats only fill a missing one.
+        let identity_source_stats_ref: Option<&PlayerStats> = if is_self_source {
+            instance_owner_snapshot
+                .as_deref()
+                .or(source_player_stats_ref)
+        } else {
+            source_player_stats_ref
+        };
+        let is_identity_buff = is_identity_skill_buff(skill_buff);
+        let passive_source_stats_ref = if is_identity_buff {
+            identity_source_stats_ref
+        } else {
+            source_player_stats_ref
+        };
         let is_support = is_attributable_source
             && is_support_source(
                 source_entity_id,
@@ -1828,6 +1863,11 @@ fn append_source_contributions(
                         } else {
                             source_entity_id
                         };
+                    // A receiver-side measurement pins this instance's applied value.
+                    let measured_stat_value = effect
+                        .measured_stat
+                        .filter(|measured| identity_stat_key(measured.stat_type) == option.key_stat)
+                        .map(|measured| measured.value);
                     apply_source_passive_stat(
                         stats,
                         option,
@@ -1836,8 +1876,10 @@ fn append_source_contributions(
                         effect.status_effect_id,
                         source_class_id,
                         source_skill_id,
-                        source_player_stats_ref,
+                        passive_source_stats_ref,
                         is_attributable_source,
+                        is_self_source,
+                        measured_stat_value,
                         buff_source.clone(),
                         source_priority,
                     )?;
@@ -1954,8 +1996,9 @@ fn append_source_contributions(
                     effect.status_effect_id,
                     source_class_id,
                     source_entity_id,
-                    source_player_stats_ref,
+                    passive_source_stats_ref,
                     is_attributable_source,
+                    is_self_source,
                 )?
         } else {
             normal_damage_factor
@@ -1982,6 +2025,63 @@ fn append_source_contributions(
     Ok(atropine_attack_power_rate)
 }
 
+/// Whether the effect's resolved level data (including runtime-added stats) carries a passive
+/// `stat` option for `key_stat`.
+pub(crate) fn effect_provides_passive_stat(effect: &StatusEffectDetails, key_stat: &str) -> bool {
+    let Some(skill_buff) = SKILL_BUFF_DATA
+        .try_get()
+        .and_then(|data| data.get(&effect.status_effect_id))
+    else {
+        return false;
+    };
+    get_level_data_resolved(
+        skill_buff,
+        effect.skill_level,
+        effect.source_skill_runtime_snapshot.as_ref(),
+        effect.stack_count,
+    )
+    .is_some_and(|level_data| {
+        level_data.passive_options.iter().any(|option| {
+            option.option_type.eq_ignore_ascii_case("stat") && option.key_stat == key_stat
+        })
+    })
+}
+
+/// Evaluates a player's stats with the given tracked buffs through the same path hit analysis
+/// uses for source effects; inspect calibration compares the result with the stat sheet.
+pub(crate) fn evaluate_stats_with_tracked_buffs(
+    receiver: &Entity,
+    se_on_source: &[StatusEffectDetails],
+    entity_tracker: &EntityTracker,
+) -> Option<PlayerStats> {
+    let snapshot = receiver.inspect_snapshot.as_ref()?;
+    let mut stats =
+        player_stats_from_inspect_snapshot(receiver, snapshot, receiver.id, receiver.class_id);
+    let base_stats = stats.clone();
+    let mut contributions = Vec::new();
+    append_source_contributions(
+        &mut stats,
+        &mut contributions,
+        receiver.id,
+        receiver.class_id,
+        receiver.character_id,
+        &base_stats,
+        0,
+        &HitFlag::NORMAL,
+        None,
+        false,
+        None,
+        se_on_source,
+        chrono::Utc::now().timestamp_millis(),
+        entity_tracker,
+        None,
+        None,
+        false,
+    )
+    .ok()?;
+    Some(stats)
+}
+
 fn apply_source_passive_stat(
     stats: &mut PlayerStats,
     option: &crate::models::PassiveOption,
@@ -1992,11 +2092,17 @@ fn apply_source_passive_stat(
     source_skill_id: u32,
     source_player_stats: Option<&PlayerStats>,
     is_attributable_source: bool,
+    is_self_source: bool,
+    measured_stat_value: Option<i64>,
     buff_source: StatSource,
     source_priority: i32,
 ) -> Result<(), RdpsInvalidReason> {
     let mut value = get_passive_option_stat_value(option, status_effect_id, source_player_stats);
-    if matches!(
+    if let Some(measured_stat_value) = measured_stat_value {
+        // The receiver's inspect stat sheet fixed this instance's applied value, so the owner
+        // snapshot no longer matters for it.
+        value = measured_stat_value;
+    } else if matches!(
         option.key_stat.as_str(),
         "skill_damage_sub_rate_1" | "skill_damage_sub_rate_2"
     ) && let Some(source_player_stats) = require_source_player_stats(
@@ -2018,6 +2124,7 @@ fn apply_source_passive_stat(
                     source_player_stats,
                     source_class_id,
                     source_skill_id,
+                    is_self_source,
                 ))
             .round() as i64;
         } else if option
@@ -2140,6 +2247,7 @@ fn append_target_contributions(
             None
         } else {
             buffered_owner_self_effects
+                .filter(|_| !keeps_creation_owner_snapshot(&effect))
                 .and_then(|_| {
                     rebuild_missing_effect_owner_snapshot(
                         &effect,
@@ -2175,19 +2283,33 @@ fn append_target_contributions(
         );
         let buff_source = StatSource::SkillBuff(skill_buff.id as u32);
         for option in &level_data.passive_options {
-            let mut multiplier = 1.0;
-            apply_target_passive_option(option, damage_type, damage_attr, &mut multiplier);
-            if multiplier != 1.0 {
-                if npc_self_effect {
-                    stats.add_npc_damage_taken_bonus(multiplier - 1.0, buff_source.clone());
-                } else {
-                    stats.npc_damage_taken_rate.add(
-                        multiplier - 1.0,
-                        attacker.id,
-                        source_entity_id,
-                        buff_source.clone(),
-                    );
+            // NPC self effects belong to the attacker's target multiplier, not a support
+            // contribution; other sources keep their credit inside the same bucket.
+            match target_damage_taken_bonus(option, damage_attr) {
+                Some(TargetDamageTakenBonus::Incoming(key_stat, bonus)) => {
+                    if npc_self_effect {
+                        stats.add_target_incoming_damage_stat(key_stat, bonus, buff_source.clone());
+                    } else {
+                        stats.add_target_incoming_damage_stat_from_source(
+                            key_stat,
+                            bonus,
+                            source_entity_id,
+                            buff_source.clone(),
+                        );
+                    }
                 }
+                Some(TargetDamageTakenBonus::Elemental(bonus)) => {
+                    if npc_self_effect {
+                        stats.add_target_elemental_damage_taken_bonus(bonus, buff_source.clone());
+                    } else {
+                        stats.add_target_elemental_damage_taken_bonus_from_source(
+                            bonus,
+                            source_entity_id,
+                            buff_source.clone(),
+                        );
+                    }
+                }
+                None => {}
             }
             if is_dark_grenade
                 && let Some(factor) = apply_dark_grenade_target_passive_stat(
@@ -2545,6 +2667,12 @@ fn is_player_source_entity_id(
         .is_some_and(|entity| matches!(entity.entity_type, crate::models::EntityType::Player))
 }
 
+/// A pre-zone instance keeps the owner snapshot taken at its creation instead of a rebuild from
+/// the fight-start inspect; see `StatusEffectDetails::created_before_zone`.
+fn keeps_creation_owner_snapshot(effect: &StatusEffectDetails) -> bool {
+    effect.created_before_zone && effect.owner_player_stats_snapshot.is_some()
+}
+
 fn rebuild_missing_effect_owner_snapshot(
     effect: &StatusEffectDetails,
     source_entity_id: u64,
@@ -2689,48 +2817,32 @@ pub fn filter_target_effects_for_attacker(
         .collect()
 }
 
-fn apply_target_passive_option(
-    option: &crate::models::PassiveOption,
-    damage_type: u8,
-    damage_attr: Option<u8>,
-    damage_multiplier: &mut f64,
-) {
-    if !option.option_type.eq_ignore_ascii_case("stat") {
-        return;
-    }
+enum TargetDamageTakenBonus<'a> {
+    /// One of the six incoming-damage stats; the hit's damage type selects which apply.
+    Incoming(&'a str, f64),
+    /// A resistance modifier matching the hit's damage attribute, as a damage bonus.
+    Elemental(f64),
+}
 
-    if matches!(
-        option.key_stat.as_str(),
-        "skill_damage_sub_rate_1" | "skill_damage_sub_rate_2" | "critical_hit_rate"
-    ) {
-        return;
+fn target_damage_taken_bonus(
+    option: &crate::models::PassiveOption,
+    damage_attr: Option<u8>,
+) -> Option<TargetDamageTakenBonus<'_>> {
+    if !option.option_type.eq_ignore_ascii_case("stat") {
+        return None;
     }
 
     let value = option.value as f64 / 10000.0;
     if value == 0.0 {
-        return;
+        return None;
     }
 
-    if damage_type == 1
-        && matches!(
-            option.key_stat.as_str(),
-            "magical_inc_sub_rate_1" | "magical_inc_sub_rate_2" | "magical_inc_rate"
-        )
-    {
-        *damage_multiplier *= 1.0 + value;
-        return;
+    if PlayerStats::is_target_incoming_damage_stat(&option.key_stat) {
+        return Some(TargetDamageTakenBonus::Incoming(&option.key_stat, value));
     }
 
-    if damage_type == 0
-        && matches!(
-            option.key_stat.as_str(),
-            "physical_inc_sub_rate_1" | "physical_inc_sub_rate_2" | "physical_inc_rate"
-        )
-    {
-        *damage_multiplier *= 1.0 + value;
-        return;
-    }
-
+    // FIRE_DAM_RATE and the like only appear on paradise effects whose descriptions read
+    // like -resistance (e.g. Humidity), so resistance modifiers act as damage taken here.
     if matches!(
         (option.key_stat.as_str(), damage_attr),
         ("fire_res_rate", Some(1))
@@ -2740,8 +2852,10 @@ fn apply_target_passive_option(
             | ("dark_res_rate", Some(6))
             | ("holy_res_rate", Some(7))
     ) {
-        *damage_multiplier *= 1.0 - value;
+        return Some(TargetDamageTakenBonus::Elemental(-value));
     }
+
+    None
 }
 
 fn apply_dark_grenade_target_passive_stat(
@@ -3020,6 +3134,7 @@ fn get_source_damage_multiplier(
     source_entity_id: u64,
     source_player_stats: Option<&PlayerStats>,
     is_attributable_source: bool,
+    is_self_source: bool,
 ) -> Result<f64, RdpsInvalidReason> {
     let requires_stats =
         is_identity_skill_buff(skill_buff) || source_skill_has_identity_group(source_skill_id);
@@ -3040,6 +3155,7 @@ fn get_source_damage_multiplier(
             source_player_stats,
             source_class_id,
             source_skill_id,
+            is_self_source,
         ));
     }
     if source_skill_has_identity_group(source_skill_id) {
@@ -3233,12 +3349,16 @@ fn compute_skill_group_attributions(
                 }
             }
 
-            if attack_power_without <= 0.0 {
-                continue;
-            }
-
             let delta = total_attack_power - attack_power_without;
-            let contribution = delta / attack_power_without;
+            // An additive target bonus can have infinite relative gain over a zero-damage
+            // baseline; the damage splits handle that factor.
+            let contribution = if attack_power_without > 0.0 {
+                delta / attack_power_without
+            } else if delta > 0.0 {
+                f64::INFINITY
+            } else {
+                continue;
+            };
             if contribution > 0.0 {
                 stat_contributions.push((
                     contribution,
@@ -3277,8 +3397,11 @@ fn compute_skill_group_attributions(
                 let name = format!("{stat_name}/{source}");
                 let contribution = stat_shapley * (value / sum_value);
                 let damage_contribution = (contribution * damage as f64 * scalar) as i64;
-                let damage_increase = (stat_factor * value / sum_value * damage as f64) as i64;
-                if damage_contribution == 0 && damage_increase == 0 {
+                // A zero comparison baseline has no finite relative increase to report.
+                let damage_increase = stat_factor
+                    .is_finite()
+                    .then(|| (stat_factor * value / sum_value * damage as f64) as i64);
+                if damage_contribution == 0 && damage_increase.unwrap_or_default() == 0 {
                     continue;
                 }
 
@@ -4078,7 +4201,7 @@ fn is_support_source(
     }
 }
 
-fn is_identity_skill_buff(skill_buff: &crate::models::SkillBuffData) -> bool {
+pub(crate) fn is_identity_skill_buff(skill_buff: &crate::models::SkillBuffData) -> bool {
     SUPPORT_IDENTITY_GROUP.contains(&skill_buff.unique_group)
         || RDPS_ADDITIONAL_IDENTITY_GROUP.contains(&skill_buff.unique_group)
         || skill_buff
@@ -4099,15 +4222,25 @@ fn source_skill_has_identity_group(source_skill_id: u32) -> bool {
         })
 }
 
+/// Whether the owner's specialization scales this identity buff instance. Paladin (105) and
+/// Artist (602) identities scale every copy; Bard (204) and Valkyrie (113) identities scale only
+/// the party copies, not the owner's own copy.
+fn identity_buff_uses_specialization(source_class_id: u32, is_self_copy: bool) -> bool {
+    matches!(source_class_id, 105 | 602) || (matches!(source_class_id, 204 | 113) && !is_self_copy)
+}
+
 fn get_identity_buff_multiplier(
     player_stats: &PlayerStats,
     source_class_id: u32,
     source_skill_id: u32,
+    is_self_copy: bool,
 ) -> f64 {
-    let spec_bonus = match source_class_id {
-        105 | 602 => player_stats.spec_bonus_identity_1.value(),
-        204 | 113 => player_stats.spec_bonus_identity_2.value(),
-        _ => 0.0,
+    let spec_bonus = if !identity_buff_uses_specialization(source_class_id, is_self_copy) {
+        0.0
+    } else if matches!(source_class_id, 105 | 602) {
+        player_stats.spec_bonus_identity_1.value()
+    } else {
+        player_stats.spec_bonus_identity_2.value()
     };
     (1.0 + spec_bonus.max(0.0))
         * (1.0
@@ -4302,6 +4435,8 @@ mod tests {
             789,
             None,
             true,
+            false,
+            None,
             StatSource::Test,
             STAT_PRIORITY_DEFAULT,
         );
@@ -4607,7 +4742,7 @@ mod tests {
         .unwrap();
 
         assert_approx_eq(stats.outgoing_dmg_stat_amp.get_value_for_entity_id(1), 0.05);
-        assert_approx_eq(stats.npc_damage_taken_rate.value(), 0.0);
+        assert_approx_eq(stats.get_damage_window_multiplier(false, 0), 1.0);
         assert_eq!(contributions.len(), 1);
         assert_eq!(contributions[0].rdps_type, RDPS_TYPE_TARGET_DEBUFF);
         assert_eq!(contributions[0].source_entity_id, 1);
@@ -5161,6 +5296,125 @@ mod tests {
                     gain.damage_done_by_stat_plus_value - gain.damage_done_by_stat
                 );
             }
+        }
+    }
+}
+
+#[cfg(test)]
+mod identity_instance_tests {
+    use super::*;
+    use crate::live::entity_tracker::{InspectBaseStats, InspectSnapshot};
+    use crate::live::id_tracker::IdTracker;
+    use crate::live::npc_windows::tests::base_stats;
+    use crate::live::party_tracker::PartyTracker;
+    use crate::live::status_tracker::StatusTracker;
+    use crate::live::test_data::initialize;
+    use crate::models::EntityType;
+    use std::cell::RefCell;
+    use std::rc::Rc;
+
+    const ARTIST_CLASS_ID: u32 = 602;
+    const MOONFALL_BUFF_ID: u32 = 310501;
+    const MOONFALL_SKILL_ID: u32 = 31050;
+
+    fn stats_with_identity_specialization(owner_id: u64, bonus: f64) -> PlayerStats {
+        let mut stats = base_stats();
+        stats.owner_id = owner_id;
+        stats
+            .spec_bonus_identity_1
+            .add_self(bonus, StatSource::Test);
+        stats
+    }
+
+    /// An inspected Artist whose current build carries the given identity specialization bonus.
+    fn artist(id: u64, current_specialization_bonus: f64) -> (Entity, EntityTracker) {
+        initialize();
+        let entity = Entity {
+            id,
+            character_id: id + 100,
+            name: format!("Artist {id}"),
+            entity_type: EntityType::Player,
+            class_id: ARTIST_CLASS_ID,
+            level: 70,
+            inspect_snapshot: Some(InspectSnapshot::default()),
+            inspect_base_stats: Some(InspectBaseStats {
+                owner_id: id,
+                class_id: ARTIST_CLASS_ID,
+                stats: Arc::new(stats_with_identity_specialization(
+                    id,
+                    current_specialization_bonus,
+                )),
+            }),
+            ..Default::default()
+        };
+        let ids = Rc::new(RefCell::new(IdTracker::new()));
+        let party = Rc::new(RefCell::new(PartyTracker::new(ids.clone())));
+        let statuses = Rc::new(RefCell::new(StatusTracker::new(party.clone())));
+        let mut tracker = EntityTracker::new(statuses, ids, party);
+        tracker.entities.insert(id, entity.clone());
+        (entity, tracker)
+    }
+
+    fn moonfall_on_self(owner: &Entity) -> StatusEffectDetails {
+        StatusEffectDetails {
+            instance_id: 1,
+            status_effect_id: MOONFALL_BUFF_ID,
+            unique_group: MOONFALL_BUFF_ID,
+            source_id: owner.id,
+            target_id: owner.id,
+            source_skill_id: Some(MOONFALL_SKILL_ID),
+            skill_level: 1,
+            stack_count: 1,
+            owner_is_player: true,
+            ..Default::default()
+        }
+    }
+
+    #[test]
+    fn self_owned_identity_buff_follows_its_retained_creation_snapshot() {
+        let (owner, tracker) = artist(1, 0.1);
+        // Cast on the spec build (+50%) before entering the zone; the owner now runs +10%.
+        let mut pre_zone_moonfall = moonfall_on_self(&owner);
+        pre_zone_moonfall.owner_player_stats_snapshot =
+            Some(Arc::new(stats_with_identity_specialization(owner.id, 0.5)));
+        pre_zone_moonfall.created_before_zone = true;
+        let stats =
+            evaluate_stats_with_tracked_buffs(&owner, &[pre_zone_moonfall], &tracker).unwrap();
+        assert!((stats.skill_damage_sub_rate_2.value() - 0.15).abs() < 1e-9);
+
+        // Without a creation snapshot the owner's current stats fill in.
+        let stats =
+            evaluate_stats_with_tracked_buffs(&owner, &[moonfall_on_self(&owner)], &tracker)
+                .unwrap();
+        assert!((stats.skill_damage_sub_rate_2.value() - 0.11).abs() < 1e-9);
+    }
+
+    #[test]
+    fn bard_and_valkyrie_specialization_affects_party_copies_only() {
+        initialize();
+        let mut owner_stats = PlayerStats::default();
+        owner_stats
+            .spec_bonus_identity_1
+            .add_self(0.5, StatSource::Test);
+        owner_stats
+            .spec_bonus_identity_2
+            .add_self(0.5, StatSource::Test);
+        for (class_id, skill_id, self_multiplier) in [
+            (204, 21140, 1.0),
+            (113, 48040, 1.0),
+            (105, 36800, 1.5),
+            (ARTIST_CLASS_ID, MOONFALL_SKILL_ID, 1.5),
+        ] {
+            assert_eq!(
+                get_identity_buff_multiplier(&owner_stats, class_id, skill_id, true),
+                self_multiplier,
+                "class {class_id} self copy"
+            );
+            assert_eq!(
+                get_identity_buff_multiplier(&owner_stats, class_id, skill_id, false),
+                1.5,
+                "class {class_id} party copy"
+            );
         }
     }
 }

@@ -154,6 +154,28 @@ pub struct ExternalResourceAddon {
     pub key_index: u32,
     #[serde(default, deserialize_with = "null_or_default")]
     pub key_value: i64,
+    /// EFTable_ArkPassiveOption.IncludeEffectNodeId of the option row this addon came from:
+    /// the option applies only while that node is learned. Zero when unconditional.
+    #[serde(default, deserialize_with = "null_or_default")]
+    pub include_effect_node_id: u32,
+    /// EFTable_ArkPassiveOption.ExcludeEffectNodeId of the option row this addon came from:
+    /// the option is suppressed while that node is learned. Zero when unconditional.
+    #[serde(default, deserialize_with = "null_or_default")]
+    pub exclude_effect_node_id: u32,
+}
+
+impl ExternalResourceAddon {
+    /// Whether the addon's Ark Passive node gates admit it for a player who learned
+    /// `learned_node_ids`.
+    pub fn is_admitted_by_node_gates(
+        &self,
+        learned_node_ids: &std::collections::HashSet<u32>,
+    ) -> bool {
+        (self.include_effect_node_id == 0
+            || learned_node_ids.contains(&self.include_effect_node_id))
+            && (self.exclude_effect_node_id == 0
+                || !learned_node_ids.contains(&self.exclude_effect_node_id))
+    }
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]
@@ -369,6 +391,10 @@ pub struct ExternalArkGridCoreChoice {
 #[derive(Debug, Default, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct ExternalArkGridCoreOptionData {
+    /// EFTable_ArkGridCoreOption.IncludeEffectNodeId: the option applies only while that
+    /// Ark Passive node is learned. Zero when unconditional.
+    #[serde(default, deserialize_with = "null_or_default")]
+    pub include_effect_node_id: u32,
     #[serde(default, deserialize_with = "null_or_default")]
     pub addons: Vec<ExternalResourceAddon>,
 }

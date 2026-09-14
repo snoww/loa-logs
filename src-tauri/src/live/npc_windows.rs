@@ -637,12 +637,9 @@ pub(super) mod tests {
                 attribution,
                 ..window
             });
-            stats.npc_damage_taken_rate.add(
+            stats.add_target_incoming_damage_stat(
+                "physical_inc_sub_rate_1",
                 0.2,
-                1,
-                stats
-                    .npc_window
-                    .bonus_owner(NpcDamageAttribution::DAMAGE_TAKEN, 1),
                 StatSource::SkillBuff(420676006),
             );
             stats.add_ability_feature(
@@ -671,8 +668,13 @@ pub(super) mod tests {
                 ),
                 (
                     NpcDamageAttribution::DAMAGE_TAKEN,
-                    &stats.npc_damage_taken_rate,
-                    0.44,
+                    &stats.npc_action_weakness_damage_rate,
+                    0.2,
+                ),
+                (
+                    NpcDamageAttribution::DAMAGE_TAKEN,
+                    &stats.target_physical_inc_sub_rate_1,
+                    0.2,
                 ),
                 (
                     NpcDamageAttribution::COMBAT_EFFECTS,
@@ -761,11 +763,28 @@ pub(super) mod tests {
             weakness: Some(-0.5),
             ..Default::default()
         });
-        assert_eq!(stats.npc_damage_taken_rate.self_value(), -0.5);
-        assert_eq!(stats.npc_damage_taken_rate.get_value_for_entity_id(2), 0.0);
-        stats.add_npc_damage_taken_bonus(0.03, StatSource::SkillBuff(429970096));
+        assert_eq!(stats.npc_action_weakness_damage_rate.self_value(), -0.5);
+        assert_eq!(
+            stats
+                .npc_action_weakness_damage_rate
+                .get_value_for_entity_id(2),
+            0.0
+        );
+        stats.add_target_incoming_damage_stat(
+            "physical_inc_sub_rate_1",
+            0.03,
+            StatSource::SkillBuff(429970096),
+        );
         assert!((attack_power(&stats, false) / base - 0.515).abs() < 1e-12);
-        assert!((stats.npc_damage_taken_rate.get_value_for_entity_id(2) - 0.03).abs() < 1e-12);
+        assert!(
+            (stats
+                .target_physical_inc_sub_rate_1
+                .get_value_for_entity_id(2)
+                - 0.03)
+                .abs()
+                < 1e-12
+        );
+        assert!((stats.get_damage_window_multiplier(false, 0) - 0.515).abs() < 1e-12);
         let ap = attack_power(&stats, false);
         let portions = stats.get_damage_portions_contributed_from_all_entities(
             ap,

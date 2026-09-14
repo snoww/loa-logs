@@ -163,7 +163,9 @@ pub fn start(args: StartArgs) -> Result<()> {
     while let Some(live_event) = next_live_event(&runtime, &mut command_rx, &mut ipc.1) {
         let event = match live_event {
             LiveEvent::Command(Command::Reset) => {
-                state.soft_reset(true);
+                if state.soft_reset(true) {
+                    entity_tracker.retire_fight_inspect_requests();
+                }
                 continue;
             }
             LiveEvent::Command(Command::Save) => {
@@ -177,7 +179,9 @@ pub fn start(args: StartArgs) -> Result<()> {
                     true
                 };
 
-                state.soft_reset(true);
+                if state.soft_reset(true) {
+                    entity_tracker.retire_fight_inspect_requests();
+                }
                 state.resetting = false;
                 state.saved = false;
                 party_freeze = false;
@@ -272,6 +276,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                 if let Some(entity) = state.encounter.entities.get_mut(&applied.name) {
                     apply_player_info(entity, &applied.info, is_support_class(&entity.class_id));
                 }
+                state.queue_identity_buff_measurement(&applied, &entity_tracker);
             } else if DEBUG_TRACE_INSPECT_PACKETS {
                 info!("inspect result deferred: name={inspect_name}");
             }
@@ -395,8 +400,12 @@ pub fn start(args: StartArgs) -> Result<()> {
                         banned = false;
                         ban_toast_sent = false;
                     }
+                    let fight_was_active = state.encounter.fight_start != 0;
                     let entity = entity_tracker.init_env(pkt);
                     state.on_init_env(entity);
+                    if fight_was_active {
+                        entity_tracker.retire_fight_inspect_requests();
+                    }
                     state.disabled = banned;
                 }
             }
@@ -1145,6 +1154,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                         object_id,
                         Utc::now(),
                         Some(&state.encounter.entities),
+                        false,
                     );
 
                     if status_effect.status_effect_type == StatusEffectType::Shield {
@@ -1176,20 +1186,20 @@ pub fn start(args: StartArgs) -> Result<()> {
                     }
                 }
             }
-            // PKTStatusEffectDurationNotify::OPCODE => {
-            //     if let Some(pkt) = parse_pkt(
-            //         &data,
-            //         PKTStatusEffectDurationNotify::new,
-            //         "PKTStatusEffectDurationNotify",
-            //     ) {
-            //         status_tracker.borrow_mut().update_status_duration(
-            //             pkt.effect_instance_id,
-            //             pkt.target_id,
-            //             pkt.expiration_tick,
-            //             StatusEffectTargetType::Local,
-            //         );
-            //     }
-            // }
+            PKTStatusEffectDurationNotify::OPCODE => {
+                if let Some(pkt) = packet.try_parse::<PKTStatusEffectDurationNotify>().unwrap()
+                    && !entity_tracker.update_status_effect_duration(
+                        pkt.object_id,
+                        pkt.status_effect_instance_id,
+                        pkt.end_tick,
+                    )
+                {
+                    info!(
+                        "Status effect duration for untracked instance {} on object id {:X}: end tick {}, b_0 {}.",
+                        pkt.status_effect_instance_id, pkt.object_id, pkt.end_tick, pkt.b_0
+                    );
+                }
+            }
             PKTStatusEffectRemoveNotify::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTStatusEffectRemoveNotify>().unwrap() {
                     let (is_shield, shields_broken, effects_removed, _left_workshop) =
@@ -1438,7 +1448,9 @@ pub fn start(args: StartArgs) -> Result<()> {
                     } else {
                         update_party(&party_tracker, &entity_tracker)
                     };
-                    state.on_transit(pkt.zone_id);
+                    if state.on_transit(pkt.zone_id) {
+                        entity_tracker.retire_fight_inspect_requests();
+                    }
                 }
             }
             _ => {}
@@ -1469,7 +1481,9 @@ pub fn start(args: StartArgs) -> Result<()> {
                 last_update = Instant::now();
                 // skip encounter update while a banned player is present
                 if state.resetting {
-                    state.soft_reset(true);
+                    if state.soft_reset(true) {
+                        entity_tracker.retire_fight_inspect_requests();
+                    }
                     state.resetting = false;
                     state.saved = false;
                     party_freeze = false;
@@ -1537,7 +1551,9 @@ pub fn start(args: StartArgs) -> Result<()> {
         }
 
         if state.resetting {
-            state.soft_reset(true);
+            if state.soft_reset(true) {
+                entity_tracker.retire_fight_inspect_requests();
+            }
             state.resetting = false;
             state.saved = false;
             party_freeze = false;
@@ -1660,8 +1676,11 @@ fn queue_missing_party_inspects(
             .send(damage_handler.request_inspect(connection_id, name.clone()))
             .is_ok()
         {
+            let sent_at = Utc::now();
+            // Reply consumption reads this registration, so it precedes even a fast reply.
+            entity_tracker.begin_inspect_request(&name, sent_at);
             if bootstrap_active {
-                entity_tracker.note_bootstrap_inspect_sent(&name, Utc::now().timestamp_millis());
+                entity_tracker.note_bootstrap_inspect_sent(&name, sent_at.timestamp_millis());
             }
             continue;
         }
