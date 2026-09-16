@@ -172,6 +172,8 @@ pub struct SkillRuntimeData {
     pub cached_critical_hit_damage_bonus: f64,
     pub cached_critical_rate_bonus: f64,
     pub cached_attack_speed_bonus: f64,
+    /// Fraction of the target's defense the selected "ignore X% of foe Defense" tripods remove.
+    pub cached_defense_penetration: f64,
     pub cached_critical_hit_damage_bonus_per_skill_effect: HashMap<u32, f64>,
     pub cached_critical_rate_bonus_per_skill_effect: HashMap<u32, f64>,
     pub cached_directional_mask: Option<i32>,
@@ -2654,10 +2656,16 @@ impl SkillOptionSnapshot {
     }
 }
 
+/// Untyped PassiveOptionValue entries below this carry the flag value 100 for formula or chance
+/// variants whose percentage is not exported; the exported "ignore X% of foe Defense" values are
+/// 3000 to 8400.
+const MINIMUM_DEFENSE_PENETRATION_OPTION_VALUE: i64 = 1000;
+
 fn populate_skill_runtime_data(skill_runtime: &mut SkillRuntimeData, skill_id: u32) {
     skill_runtime.cached_critical_hit_damage_bonus = 0.0;
     skill_runtime.cached_critical_rate_bonus = 0.0;
     skill_runtime.cached_attack_speed_bonus = 0.0;
+    skill_runtime.cached_defense_penetration = 0.0;
     skill_runtime
         .cached_critical_hit_damage_bonus_per_skill_effect
         .clear();
@@ -2690,10 +2698,10 @@ fn populate_skill_runtime_data(skill_runtime: &mut SkillRuntimeData, skill_id: u
     ];
 
     for (row_name, selected_index, key_offset) in selected_tripods {
-        let tripod_key = selected_index + key_offset;
-        if tripod_key == 0 {
+        if selected_index == 0 {
             continue;
         }
+        let tripod_key = selected_index + key_offset;
         let Some(tripod) = skill_feature.tripods.get(&tripod_key) else {
             let skill_name = SKILL_DATA
                 .get(&skill_id)
@@ -2748,6 +2756,20 @@ fn populate_skill_runtime_data(skill_runtime: &mut SkillRuntimeData, skill_id: u
                 "change_attack_stage_speed" => {
                     if let Some(value) = entry.parameters.first() {
                         skill_runtime.cached_attack_speed_bonus += *value as f64 / 100.0;
+                    }
+                }
+                // The dumper converts crit-rate and crit-damage PassiveOptionValue tripods into typed
+                // entries and leaves the "ignore X% of foe Defense" ones untyped. Formula and chance
+                // variants carry the flag value 100 without their percentage. Several such tripods
+                // multiply on remaining defense.
+                "none" => {
+                    if entry.passive_option_value >= MINIMUM_DEFENSE_PENETRATION_OPTION_VALUE
+                        && tripod.desc.contains(" PassiveOptionValue ")
+                    {
+                        let penetration = entry.passive_option_value as f64 / 10000.0;
+                        skill_runtime.cached_defense_penetration = 1.0
+                            - (1.0 - skill_runtime.cached_defense_penetration)
+                                * (1.0 - penetration);
                     }
                 }
                 "change_buff_stat" => {
@@ -3038,6 +3060,41 @@ fn ark_grid_order_from_result(result: &PKTPCInspectResult) -> Option<ArkGridOrde
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn ignore_defense_tripod_is_cached_as_skill_penetration() {
+        crate::live::test_data::initialize();
+        // Meteor Stream key 6 ignores 70%; Shadow Storm key 3 ignores 62% in PvE.
+        // Zero means no selection in that row, including rows whose offset points at one of these keys.
+        for (skill_id, first, second, third, expected_penetration) in [
+            (38100, 1, 3, 1, 0.7),
+            (38100, 1, 3, 0, 0.7),
+            (38100, 1, 1, 1, 0.0),
+            (38100, 1, 1, 0, 0.0),
+            (38100, 1, 0, 0, 0.0),
+            (38100, 0, 0, 0, 0.0),
+            (26600, 3, 0, 0, 0.62),
+            (26600, 1, 0, 0, 0.0),
+        ] {
+            let mut runtime = SkillRuntimeData {
+                skill_option_data: Some(SkillOptionSnapshot {
+                    tripod_index: Some(TripodIndex {
+                        first,
+                        second,
+                        third,
+                    }),
+                    ..Default::default()
+                }),
+                ..Default::default()
+            };
+            populate_skill_runtime_data(&mut runtime, skill_id);
+            assert!(
+                (runtime.cached_defense_penetration - expected_penetration).abs() < 1e-12,
+                "skill {skill_id}, tripods ({first}, {second}, {third}): expected {expected_penetration}, got {}",
+                runtime.cached_defense_penetration
+            );
+        }
+    }
 
     const SHURDI_SKILL_ID: u32 = 20160;
     const SHURDI_VARIANT_SKILL_ID: u32 = 20174;

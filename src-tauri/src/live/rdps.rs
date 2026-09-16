@@ -9,6 +9,7 @@ use crate::live::entity_tracker::{
 };
 use crate::live::player_stats::{
     PlayerStats, STAT_PRIORITY_DEFAULT, STAT_PRIORITY_SUPPORT, StatSource,
+    defense_reduction_multiplier,
 };
 use crate::live::status_tracker::{StatusEffectDetails, identity_stat_key};
 use crate::live::{
@@ -291,6 +292,7 @@ fn compute_hit_stat_damage_metrics(
                         true,
                         can_crit,
                         can_crit,
+                        None,
                     )
                     .value();
                 new_final_attack_power / final_attack_power * damage_done as f64
@@ -709,6 +711,11 @@ pub fn analyze_hit_rdps(
             )
         });
     stats.apply_skill_runtime_data(skill_effect_id, runtime_data);
+    stats.apply_attacker_penetration(
+        attacker_context.entity.class_id,
+        skill_id_real,
+        runtime_data,
+    );
     let stats_after_runtime = if debug_enabled {
         Some(stats.debug_dump_value())
     } else {
@@ -823,6 +830,7 @@ pub fn analyze_hit_rdps(
             is_affected_by_buffs,
             can_crit,
             can_crit,
+            None,
         )
         .value();
     if total_attack_power <= 0.0 {
@@ -2311,16 +2319,19 @@ fn append_target_contributions(
                 }
                 None => {}
             }
-            if is_dark_grenade
-                && let Some(factor) = apply_dark_grenade_target_passive_stat(
-                    stats,
-                    attacker.id,
-                    option,
-                    damage_type,
-                    buff_source.clone(),
-                    source_priority,
-                )
-                && factor > 0.0
+            // DEF_X / RES_X target debuffs (Dark Grenade, the Dagger bracelet effect) keep their applier's
+            // credit; a grenade's source is already the shared grenade entity.
+            if let Some(factor) = apply_defense_x_target_passive_stat(
+                stats,
+                attacker.id,
+                source_entity_id,
+                option,
+                damage_type,
+                buff_source.clone(),
+                source_priority,
+            ) && factor > 0.0
+                && is_attributable_source
+                && !is_self_source
             {
                 contributions.push(ContributionFactor {
                     rdps_type: RDPS_TYPE_TARGET_DEBUFF,
@@ -2858,9 +2869,12 @@ fn target_damage_taken_bonus(
     None
 }
 
-fn apply_dark_grenade_target_passive_stat(
+/// Applies a `def_x` / `res_x` target debuff to the DEF_X defense layer credited to `source_entity_id`
+/// and returns the buff's standalone damage factor when it affects the hit's damage type.
+fn apply_defense_x_target_passive_stat(
     stats: &mut PlayerStats,
     attacker_id: u64,
+    source_entity_id: u64,
     option: &crate::models::PassiveOption,
     damage_type: u8,
     buff_source: StatSource,
@@ -2875,27 +2889,28 @@ fn apply_dark_grenade_target_passive_stat(
         return None;
     }
 
-    let factor = -value * 0.5;
+    let defense_reduction = -value;
+    let standalone_damage_factor = defense_reduction_multiplier(defense_reduction) - 1.0;
     match option.key_stat.as_str() {
         "def_x" => {
-            stats.physical_defense_break.add_with_priority(
-                factor,
+            stats.physical_defense_x_break.add_with_priority(
+                defense_reduction,
                 attacker_id,
-                DARK_GRENADE_ENTITY_ID,
+                source_entity_id,
                 buff_source,
                 source_priority,
             );
-            (damage_type == 0).then_some(factor)
+            (damage_type == 0).then_some(standalone_damage_factor)
         }
         "res_x" => {
-            stats.magical_defense_break.add_with_priority(
-                factor,
+            stats.magical_defense_x_break.add_with_priority(
+                defense_reduction,
                 attacker_id,
-                DARK_GRENADE_ENTITY_ID,
+                source_entity_id,
                 buff_source,
                 source_priority,
             );
-            (damage_type != 0).then_some(factor)
+            (damage_type != 0).then_some(standalone_damage_factor)
         }
         _ => None,
     }
@@ -2958,8 +2973,11 @@ fn get_target_direct_factor(
         },
         "instant_stat_amplify" => {
             let mut factor = get_status_effect_factor(status_effect_values, 7);
-            factor += -get_status_effect_factor(status_effect_values, 2) * 0.5;
-            factor += -get_status_effect_factor(status_effect_values, 3) * 0.5;
+            let defense_reduction = -get_status_effect_factor(
+                status_effect_values,
+                if damage_type == 0 { 2 } else { 3 },
+            );
+            factor += defense_reduction_multiplier(defense_reduction) - 1.0;
             if can_crit {
                 factor += get_status_effect_factor(status_effect_values, 0);
                 factor += get_status_effect_factor(status_effect_values, 1);
@@ -3076,14 +3094,14 @@ fn apply_target_direct_stats(
                 );
             }
             stats.physical_defense_break.add_with_priority(
-                -get_status_effect_factor(status_effect_values, 2) * 0.5,
+                -get_status_effect_factor(status_effect_values, 2),
                 attacker_id,
                 source_entity_id,
                 buff_source.clone(),
                 source_priority,
             );
             stats.magical_defense_break.add_with_priority(
-                -get_status_effect_factor(status_effect_values, 3) * 0.5,
+                -get_status_effect_factor(status_effect_values, 3),
                 attacker_id,
                 source_entity_id,
                 buff_source.clone(),
@@ -3289,6 +3307,7 @@ fn compute_skill_group_attributions(
     can_crit: bool,
 ) -> Vec<HitSkillGroupAttribution> {
     let mut output = Vec::new();
+    let defense_attribution = stats.create_defense_attribution_context(damage_type);
     for &(entity_damage_portion, entity_id) in entity_portions {
         if entity_id == 0 || entity_id == stats.owner_id || entity_damage_portion <= 0.0 {
             continue;
@@ -3337,6 +3356,7 @@ fn compute_skill_group_attributions(
                     is_affected_by_buffs,
                     can_crit,
                     true,
+                    Some(defense_attribution),
                 )
                 .value();
 
@@ -4291,6 +4311,75 @@ mod tests {
     use crate::models::EntityType;
 
     #[test]
+    fn defense_skill_breakdown_uses_the_same_self_only_baseline() {
+        for (damage_type, stat_name) in [
+            (0, "physical_defense_break_"),
+            (1, "magical_defense_break_"),
+        ] {
+            let mut stats = PlayerStats {
+                owner_id: 1,
+                ..Default::default()
+            };
+            stats
+                .attack_power_addend_2
+                .add_self(100.0, StatSource::Test);
+            let defense = if damage_type == 0 {
+                &mut stats.physical_defense_break
+            } else {
+                &mut stats.magical_defense_break
+            };
+            defense.add_self(0.12, StatSource::Test);
+            defense.add_with_priority(0.20, 1, 2, StatSource::Test, STAT_PRIORITY_DEFAULT);
+            let total = stats
+                .calculate_final_attack_power(
+                    &HitOption::NONE,
+                    &HitFlag::NORMAL,
+                    None,
+                    damage_type,
+                    false,
+                    true,
+                    false,
+                    false,
+                    None,
+                )
+                .value();
+            let groups = compute_skill_group_attributions(
+                &mut stats,
+                total,
+                940000,
+                &[(42.0 / 47.0, 1), (5.0 / 47.0, 2)],
+                &HitOption::NONE,
+                &HitFlag::NORMAL,
+                None,
+                damage_type,
+                false,
+                true,
+                false,
+            );
+            assert_eq!(groups.len(), 1);
+            assert_eq!(groups[0].source_entity_id, 2);
+            assert!(groups[0].group_name.starts_with(&format!("{stat_name}/")));
+            assert!((99999..=100000).contains(&groups[0].damage));
+            // Relative gain over self-only damage: (1.88 / 1.68 - 1) * 940000.
+            assert_eq!(groups[0].damage_increase, Some(111904));
+            let restored = stats
+                .calculate_final_attack_power(
+                    &HitOption::NONE,
+                    &HitFlag::NORMAL,
+                    None,
+                    damage_type,
+                    false,
+                    true,
+                    false,
+                    false,
+                    None,
+                )
+                .value();
+            assert!((restored - 200.0 / 1.68).abs() < 1e-9);
+        }
+    }
+
+    #[test]
     fn shining_growth_runtime_adjustment_resolves_full_crit_rate() {
         let status_effect_id = 201618_u32;
         let skill_buff = crate::models::SkillBuffData {
@@ -4748,6 +4837,70 @@ mod tests {
         assert_eq!(contributions[0].source_entity_id, 1);
         assert_eq!(contributions[0].source_skill_id, 555);
         assert_approx_eq(contributions[0].factor, 0.05);
+    }
+
+    #[test]
+    fn dagger_bracelet_defense_break_joins_the_def_x_layer_with_its_applier() {
+        ensure_rdps_test_data();
+        let tracker = test_entity_tracker(vec![
+            test_player(1, 101, "source", None, None),
+            test_player(3, 102, "attacker", None, None),
+        ]);
+        let attacker = tracker.entities.get(&3).unwrap().clone();
+        let mut stats = PlayerStats {
+            owner_id: attacker.id,
+            ..Default::default()
+        };
+        let attacker_stats = PlayerStats {
+            owner_id: attacker.id,
+            ..Default::default()
+        };
+        let mut contributions = Vec::new();
+        // Dagger (605000033) is a def_x / res_x -2.5% passive option applied by another player.
+        let effects = vec![StatusEffectDetails {
+            status_effect_id: 605000033,
+            unique_group: 605000040,
+            source_id: 1,
+            ..Default::default()
+        }];
+
+        append_target_contributions(
+            &mut stats,
+            &mut contributions,
+            &attacker,
+            attacker.character_id,
+            &attacker_stats,
+            0,
+            0,
+            &HitOption::NONE,
+            &HitFlag::NORMAL,
+            true,
+            None,
+            0,
+            false,
+            &Entity::default(),
+            &effects,
+            0,
+            &tracker,
+            None,
+            None,
+        )
+        .unwrap();
+
+        // It lands in the DEF_X layer credited to its applier, not in the synergy layer.
+        assert_approx_eq(
+            stats.physical_defense_x_break.get_value_for_entity_id(1),
+            0.025,
+        );
+        assert_approx_eq(
+            stats.magical_defense_x_break.get_value_for_entity_id(1),
+            0.025,
+        );
+        assert_approx_eq(stats.physical_defense_break.get_value_for_entity_id(1), 0.0);
+        assert_eq!(contributions.len(), 1);
+        assert_eq!(contributions[0].rdps_type, RDPS_TYPE_TARGET_DEBUFF);
+        assert_eq!(contributions[0].source_entity_id, 1);
+        assert_approx_eq(contributions[0].factor, 2.0 / 1.975 - 1.0);
     }
 
     #[test]

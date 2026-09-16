@@ -23,11 +23,116 @@ const DESTROYER_RECENT_CONSUMED_CORE_WINDOW_MS: i64 = 5_000;
 const ROSTER_MAIN_STAT_BONUS: f64 = 1930.0;
 const ROSTER_CRITICAL_HIT_BONUS: f64 = 69.0;
 const SKIN_MAIN_STAT_MULTIPLIER_CAP: f64 = 0.08;
+/// The defense model assumes target defense equals the attacker's level constant.
+const TARGET_NORMALIZED_DEFENSE: f64 = 1.0;
+const GUNSLINGER_CLASS_ID: u32 = 512;
+const GUNSLINGER_SHOTGUN_IDENTITY_CATEGORY: &str = "devil_hunter_shotgun";
 const PET_MAIN_STAT_MULTIPLIER: f64 = 0.011057;
 const PET_SKILL_DAMAGE_RATE: f64 = 0.01;
-const FIXED_STAT_DATA_COUNT: usize = 55;
+const FIXED_STAT_DATA_COUNT: usize = 61;
 pub const STAT_PRIORITY_SUPPORT: i32 = 0;
 pub const STAT_PRIORITY_DEFAULT: i32 = 100;
+
+/// Damage multiplier from a summed defense reduction fraction on the target (same-stat reductions add).
+pub fn defense_reduction_multiplier(defense_reduction: f64) -> f64 {
+    (1.0 + TARGET_NORMALIZED_DEFENSE)
+        / (1.0 + TARGET_NORMALIZED_DEFENSE * (1.0 - defense_reduction))
+}
+
+/// Every layer multiplies on remaining defense: the `instant_stat_amplify` and `def_x` target
+/// layers, the `def_pen_rate` stat bucket, and the per-hit skill penetration. 12% and 20% target
+/// reductions leave 0.88 * 0.80 of it.
+pub fn remaining_defense(
+    amplify_reduction: f64,
+    x_reduction: f64,
+    penetration_rate: f64,
+    skill_penetration: f64,
+) -> f64 {
+    (1.0 - amplify_reduction)
+        * (1.0 - x_reduction)
+        * (1.0 - penetration_rate)
+        * (1.0 - skill_penetration)
+}
+
+pub fn defense_multiplier_from_remaining(remaining_defense: f64) -> f64 {
+    (1.0 + TARGET_NORMALIZED_DEFENSE) / (1.0 + TARGET_NORMALIZED_DEFENSE * remaining_defense)
+}
+
+/// Total and self-owned reduction of one defense layer.
+#[derive(Clone, Copy, Default)]
+pub struct DefenseLayer {
+    total: f64,
+    self_owned: f64,
+}
+
+impl DefenseLayer {
+    fn external_log_remaining(self) -> f64 {
+        (1.0 - self.self_owned).ln() - (1.0 - self.total).ln()
+    }
+
+    fn weighted_remaining_share(self, remaining: f64) -> f64 {
+        if self.total == self.self_owned {
+            0.0
+        } else {
+            self.external_log_remaining() * (remaining - self.self_owned)
+                / (self.total - self.self_owned)
+        }
+    }
+}
+
+/// Captured before source removal; external factors share only the gain above self-only damage.
+/// The external gain is split between the defense layers by their log remaining defense, which is
+/// exact for layers that multiply, and linearly by reduction inside each layer. Skill penetration is
+/// attacker-owned and part of the baseline.
+#[derive(Clone, Copy)]
+pub struct DefenseAttributionContext {
+    amplify: DefenseLayer,
+    x: DefenseLayer,
+    penetration_rate: DefenseLayer,
+    skill_penetration: f64,
+}
+
+impl DefenseAttributionContext {
+    fn multiplier(
+        self,
+        remaining_amplify_reduction: f64,
+        remaining_x_reduction: f64,
+        remaining_penetration_rate: f64,
+    ) -> f64 {
+        let external_log_remaining = self.amplify.external_log_remaining()
+            + self.x.external_log_remaining()
+            + self.penetration_rate.external_log_remaining();
+        if external_log_remaining == 0.0 {
+            return defense_multiplier_from_remaining(remaining_defense(
+                remaining_amplify_reduction,
+                remaining_x_reduction,
+                remaining_penetration_rate,
+                self.skill_penetration,
+            ));
+        }
+        let remaining_share = (self
+            .amplify
+            .weighted_remaining_share(remaining_amplify_reduction)
+            + self.x.weighted_remaining_share(remaining_x_reduction)
+            + self
+                .penetration_rate
+                .weighted_remaining_share(remaining_penetration_rate))
+            / external_log_remaining;
+        let self_multiplier = defense_multiplier_from_remaining(remaining_defense(
+            self.amplify.self_owned,
+            self.x.self_owned,
+            self.penetration_rate.self_owned,
+            self.skill_penetration,
+        ));
+        let external_multiplier = defense_multiplier_from_remaining(remaining_defense(
+            self.amplify.total,
+            self.x.total,
+            self.penetration_rate.total,
+            self.skill_penetration,
+        )) / self_multiplier;
+        self_multiplier * external_multiplier.powf(remaining_share)
+    }
+}
 
 #[derive(Default)]
 struct DamageSplitScratch {
@@ -976,8 +1081,20 @@ pub struct PlayerStats {
     pub ultimate_awakening_damage_rate: StatData,
     pub move_speed_to_damage_rate: StatData,
     pub critical_hit_to_damage_rate: StatData,
+    /// Defense reductions live in two layers that multiply on remaining defense: `instant_stat_amplify`
+    /// values add within `*_defense_break`, `def_x` / `res_x` values (Dark Grenade) add within
+    /// `*_defense_x_break`.
     pub physical_defense_break: StatData,
     pub magical_defense_break: StatData,
+    pub physical_defense_x_break: StatData,
+    pub magical_defense_x_break: StatData,
+    /// Attacker-side penetration. `def_pen_rate` / `res_pen_rate` stat values add within
+    /// `*_penetration_rate`; the per-hit identity value (Gunslinger Shotgun stance) and the skill's
+    /// "ignore defense" tripod are separate factors. Every layer multiplies on remaining defense.
+    pub physical_penetration_rate: StatData,
+    pub magical_penetration_rate: StatData,
+    pub identity_penetration: StatData,
+    pub tripod_penetration: StatData,
     pub outgoing_dmg_stat_amp: StatData,
     pub skill_damage_amplify: StatData,
     pub front_attack_amplify: StatData,
@@ -1055,6 +1172,12 @@ impl Default for PlayerStats {
             critical_hit_to_damage_rate: StatData::default(),
             physical_defense_break: StatData::default(),
             magical_defense_break: StatData::default(),
+            physical_defense_x_break: StatData::default(),
+            magical_defense_x_break: StatData::default(),
+            physical_penetration_rate: StatData::default(),
+            magical_penetration_rate: StatData::default(),
+            identity_penetration: StatData::default(),
+            tripod_penetration: StatData::default(),
             outgoing_dmg_stat_amp: StatData::default(),
             skill_damage_amplify: StatData::default(),
             front_attack_amplify: StatData::default(),
@@ -1144,6 +1267,12 @@ impl PlayerStats {
             critical_hit_to_damage_rate,
             physical_defense_break,
             magical_defense_break,
+            physical_defense_x_break,
+            magical_defense_x_break,
+            physical_penetration_rate,
+            magical_penetration_rate,
+            identity_penetration,
+            tripod_penetration,
             outgoing_dmg_stat_amp,
             skill_damage_amplify,
             front_attack_amplify,
@@ -3287,6 +3416,80 @@ impl PlayerStats {
             .added(&self.attack_power_addend)
     }
 
+    fn defense_break_stat(&self, damage_type: u8) -> &StatData {
+        if damage_type == 0 {
+            &self.physical_defense_break
+        } else {
+            &self.magical_defense_break
+        }
+    }
+
+    fn defense_x_break_stat(&self, damage_type: u8) -> &StatData {
+        if damage_type == 0 {
+            &self.physical_defense_x_break
+        } else {
+            &self.magical_defense_x_break
+        }
+    }
+
+    fn penetration_rate_stat(&self, damage_type: u8) -> &StatData {
+        if damage_type == 0 {
+            &self.physical_penetration_rate
+        } else {
+            &self.magical_penetration_rate
+        }
+    }
+
+    fn skill_penetration(&self) -> f64 {
+        1.0 - (1.0 - self.identity_penetration.value()) * (1.0 - self.tripod_penetration.value())
+    }
+
+    /// Per-hit attacker penetration: the class identity value for the skill's stance and the skill's
+    /// "ignore defense" tripod. Both are attacker-owned and multiply each other.
+    pub fn set_attacker_penetration(&mut self, identity_penetration: f64, tripod_penetration: f64) {
+        self.identity_penetration
+            .set_self(identity_penetration, StatSource::Base);
+        self.tripod_penetration
+            .set_self(tripod_penetration, StatSource::SkillTripods);
+    }
+
+    /// Gunslinger Specialization gives Shotgun-stance skills `identity_value2` as defense penetration
+    /// (42.84% at 1198 Specialization); the selected "ignore defense" tripods come from the skill runtime.
+    pub fn apply_attacker_penetration(
+        &mut self,
+        class_id: u32,
+        skill_id: u32,
+        runtime_data: Option<&SkillRuntimeData>,
+    ) {
+        let identity_penetration = if class_id == GUNSLINGER_CLASS_ID
+            && self
+                .resolve_skill_identity_category(skill_id, runtime_data)
+                .is_some_and(|category| {
+                    category.eq_ignore_ascii_case(GUNSLINGER_SHOTGUN_IDENTITY_CATEGORY)
+                }) {
+            self.spec_bonus_identity_2.value()
+        } else {
+            0.0
+        };
+        let tripod_penetration =
+            runtime_data.map_or(0.0, |runtime| runtime.cached_defense_penetration);
+        self.set_attacker_penetration(identity_penetration, tripod_penetration);
+    }
+
+    pub fn create_defense_attribution_context(&self, damage_type: u8) -> DefenseAttributionContext {
+        let layer = |stat: &StatData| DefenseLayer {
+            total: stat.value(),
+            self_owned: stat.get_value_for_entity_id(0),
+        };
+        DefenseAttributionContext {
+            amplify: layer(self.defense_break_stat(damage_type)),
+            x: layer(self.defense_x_break_stat(damage_type)),
+            penetration_rate: layer(self.penetration_rate_stat(damage_type)),
+            skill_penetration: self.skill_penetration(),
+        }
+    }
+
+    /// `defense_attribution` is captured before removing external sources; full-hit calculations use `None`.
     pub fn calculate_final_attack_power(
         &self,
         hit_option: &HitOption,
@@ -3297,6 +3500,7 @@ impl PlayerStats {
         is_affected_by_buffs: bool,
         can_crit: bool,
         include_average_crit: bool,
+        defense_attribution: Option<DefenseAttributionContext>,
     ) -> StatData {
         if is_hyper_awakening {
             let mut attack_power = StatData::default();
@@ -3333,11 +3537,23 @@ impl PlayerStats {
         if let Some(index) = damage_attr_to_index(damage_attr) {
             attack_power = attack_power.mad(&self.damage_attr_amplifications[index]);
         }
-        attack_power = if damage_type == 0 {
-            attack_power.mad(&self.physical_defense_break)
-        } else {
-            attack_power.mad(&self.magical_defense_break)
+        let defense_amplify_reduction = self.defense_break_stat(damage_type).value();
+        let defense_x_reduction = self.defense_x_break_stat(damage_type).value();
+        let penetration_rate = self.penetration_rate_stat(damage_type).value();
+        let defense_multiplier = match defense_attribution {
+            Some(context) => context.multiplier(
+                defense_amplify_reduction,
+                defense_x_reduction,
+                penetration_rate,
+            ),
+            None => defense_multiplier_from_remaining(remaining_defense(
+                defense_amplify_reduction,
+                defense_x_reduction,
+                penetration_rate,
+                self.skill_penetration(),
+            )),
         };
+        attack_power = attack_power.multiplied_by_scalar(defense_multiplier);
 
         match hit_option {
             HitOption::FRONTAL_ATTACK => {
@@ -3474,6 +3690,7 @@ impl PlayerStats {
         include_average_crit: bool,
     ) -> f64 {
         let owner_id = self.owner_id;
+        let defense_attribution = self.create_defense_attribution_context(damage_type);
         let mut snapshots: Vec<(usize, Vec<StatDataValue>)> = Vec::new();
         for stat_idx in self.iterate_stat_datas() {
             if let Some(taken) = self
@@ -3494,6 +3711,7 @@ impl PlayerStats {
                 is_affected_by_buffs,
                 can_crit,
                 include_average_crit,
+                Some(defense_attribution),
             )
             .value();
 
@@ -3667,6 +3885,7 @@ impl PlayerStats {
         can_crit: bool,
         include_average_crit: bool,
     ) -> f64 {
+        let defense_attribution = self.create_defense_attribution_context(damage_type);
         let mut copied = self.clone();
         let owner_id = copied.owner_id;
         copied.for_each_stat_mut(|stat| {
@@ -3684,6 +3903,7 @@ impl PlayerStats {
                 is_affected_by_buffs,
                 can_crit,
                 include_average_crit,
+                Some(defense_attribution),
             )
             .value();
         let delta = total_attack_power_original - without_value;
@@ -3747,6 +3967,12 @@ impl PlayerStats {
             52 => &self.target_magical_inc_sub_rate_1,
             53 => &self.target_magical_inc_sub_rate_2,
             54 => &self.target_elemental_damage_taken_rate,
+            55 => &self.physical_defense_x_break,
+            56 => &self.magical_defense_x_break,
+            57 => &self.physical_penetration_rate,
+            58 => &self.magical_penetration_rate,
+            59 => &self.identity_penetration,
+            60 => &self.tripod_penetration,
 
             _ => {
                 let index_in_arrays = index.saturating_sub(FIXED_STAT_DATA_COUNT);
@@ -3821,6 +4047,12 @@ impl PlayerStats {
             52 => &mut self.target_magical_inc_sub_rate_1,
             53 => &mut self.target_magical_inc_sub_rate_2,
             54 => &mut self.target_elemental_damage_taken_rate,
+            55 => &mut self.physical_defense_x_break,
+            56 => &mut self.magical_defense_x_break,
+            57 => &mut self.physical_penetration_rate,
+            58 => &mut self.magical_penetration_rate,
+            59 => &mut self.identity_penetration,
+            60 => &mut self.tripod_penetration,
 
             _ => {
                 let index_in_arrays = index.saturating_sub(FIXED_STAT_DATA_COUNT);
@@ -3895,6 +4127,12 @@ impl PlayerStats {
             52 => "target_magical_inc_sub_rate_1_".to_string(),
             53 => "target_magical_inc_sub_rate_2_".to_string(),
             54 => "target_elemental_damage_taken_rate_".to_string(),
+            55 => "physical_defense_x_break_".to_string(),
+            56 => "magical_defense_x_break_".to_string(),
+            57 => "physical_penetration_rate_".to_string(),
+            58 => "magical_penetration_rate_".to_string(),
+            59 => "identity_penetration_".to_string(),
+            60 => "tripod_penetration_".to_string(),
 
             _ => {
                 let index_in_arrays = index.saturating_sub(FIXED_STAT_DATA_COUNT);
@@ -4473,6 +4711,20 @@ impl PlayerStats {
                 source,
                 source_priority,
             ),
+            "def_pen_rate" => self.physical_penetration_rate.add_with_priority(
+                value_as_multiplier,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
+            "res_pen_rate" => self.magical_penetration_rate.add_with_priority(
+                value_as_multiplier,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
             _ => {}
         }
     }
@@ -4623,6 +4875,12 @@ impl PlayerStats {
         f(&self.critical_hit_to_damage_rate);
         f(&self.physical_defense_break);
         f(&self.magical_defense_break);
+        f(&self.physical_defense_x_break);
+        f(&self.magical_defense_x_break);
+        f(&self.physical_penetration_rate);
+        f(&self.magical_penetration_rate);
+        f(&self.identity_penetration);
+        f(&self.tripod_penetration);
         f(&self.outgoing_dmg_stat_amp);
         f(&self.skill_damage_amplify);
         f(&self.front_attack_amplify);
@@ -4684,6 +4942,12 @@ impl PlayerStats {
         f(&mut self.critical_hit_to_damage_rate);
         f(&mut self.physical_defense_break);
         f(&mut self.magical_defense_break);
+        f(&mut self.physical_defense_x_break);
+        f(&mut self.magical_defense_x_break);
+        f(&mut self.physical_penetration_rate);
+        f(&mut self.magical_penetration_rate);
+        f(&mut self.identity_penetration);
+        f(&mut self.tripod_penetration);
         f(&mut self.outgoing_dmg_stat_amp);
         f(&mut self.skill_damage_amplify);
         f(&mut self.front_attack_amplify);
@@ -5007,6 +5271,7 @@ mod target_incoming_damage_tests {
                 true,
                 false,
                 false,
+                None,
             )
             .value()
     }
@@ -5311,5 +5576,476 @@ mod target_incoming_damage_tests {
         merged.add_self(0.3, StatSource::Base);
         assert_eq!(merged.self_values.len(), 1);
         assert_eq!(merged.positive_multiplier(), 1.0);
+    }
+}
+
+#[cfg(test)]
+mod defense_reduction_tests {
+    use super::{
+        PlayerStats, STAT_PRIORITY_DEFAULT, SkillRuntimeData, StatSource,
+        defense_reduction_multiplier, remaining_defense,
+    };
+    use crate::models::{HitFlag, HitOption};
+
+    const OWNER_ID: u64 = 1;
+
+    fn stats_with_self_and_external_reductions(
+        damage_type: u8,
+        self_reduction: f64,
+        external_reductions: &[(u64, f64)],
+    ) -> PlayerStats {
+        let mut stats = stats_with_physical_defense_reductions(&[]);
+        let (defense, other_defense) = if damage_type == 0 {
+            (
+                &mut stats.physical_defense_break,
+                &mut stats.magical_defense_break,
+            )
+        } else {
+            (
+                &mut stats.magical_defense_break,
+                &mut stats.physical_defense_break,
+            )
+        };
+        defense.add_self(self_reduction, StatSource::Test);
+        for &(entity_id, reduction) in external_reductions {
+            defense.add_with_priority(
+                reduction,
+                OWNER_ID,
+                entity_id,
+                StatSource::Test,
+                STAT_PRIORITY_DEFAULT,
+            );
+        }
+        other_defense.add_self(0.50, StatSource::Test);
+        stats
+    }
+
+    fn attack_power_for_type(stats: &PlayerStats, damage_type: u8) -> f64 {
+        stats
+            .calculate_final_attack_power(
+                &HitOption::NONE,
+                &HitFlag::NORMAL,
+                None,
+                damage_type,
+                false,
+                true,
+                false,
+                false,
+                None,
+            )
+            .value()
+    }
+
+    #[test]
+    fn removing_the_only_external_source_retains_the_self_only_damage() {
+        for damage_type in [0, 1] {
+            for self_reduction in [0.0, 0.12, 0.24] {
+                let mut stats = stats_with_self_and_external_reductions(
+                    damage_type,
+                    self_reduction,
+                    &[(2, 0.20)],
+                );
+                let total = attack_power_for_type(&stats, damage_type);
+                let expected_without = 200.0 / (2.0 - self_reduction);
+                assert!((total - 200.0 / (1.8 - self_reduction)).abs() < 1e-9);
+                let increase = stats.get_damage_increase_contributed_from_entity_id(
+                    2,
+                    total,
+                    &HitOption::NONE,
+                    &HitFlag::NORMAL,
+                    None,
+                    damage_type,
+                    false,
+                    true,
+                    false,
+                    false,
+                );
+                let portion = stats.get_damage_portion_contributed_from_entity_id(
+                    2,
+                    total,
+                    &HitOption::NONE,
+                    &HitFlag::NORMAL,
+                    None,
+                    damage_type,
+                    false,
+                    true,
+                    false,
+                    false,
+                );
+                let all_increase = stats.get_damage_increase_contributed_from_all_entity_ids(
+                    total,
+                    &HitOption::NONE,
+                    &HitFlag::NORMAL,
+                    None,
+                    damage_type,
+                    false,
+                    true,
+                    false,
+                    false,
+                );
+                assert!((total / (1.0 + increase) - expected_without).abs() < 1e-9);
+                assert!((total * (1.0 - portion) - expected_without).abs() < 1e-9);
+                assert!((total / (1.0 + all_increase) - expected_without).abs() < 1e-9);
+                assert!((attack_power_for_type(&stats, damage_type) - total).abs() < 1e-9);
+            }
+        }
+    }
+
+    #[test]
+    fn equal_external_sources_share_only_the_gain_above_self_damage() {
+        for damage_type in [0, 1] {
+            let mut stats =
+                stats_with_self_and_external_reductions(damage_type, 0.12, &[(2, 0.12), (3, 0.12)]);
+            let total = attack_power_for_type(&stats, damage_type);
+            let portions = stats.get_damage_portions_contributed_from_all_entities(
+                total,
+                &HitOption::NONE,
+                &HitFlag::NORMAL,
+                None,
+                damage_type,
+                false,
+                true,
+                false,
+                false,
+            );
+            let share = |id| {
+                portions
+                    .iter()
+                    .find(|(_, entity_id)| *entity_id == id)
+                    .unwrap()
+                    .0
+            };
+            let expected_owner = 1.64 / 1.88;
+            assert!((share(OWNER_ID) - expected_owner).abs() < 1e-9);
+            assert!((share(2) - (1.0 - expected_owner) / 2.0).abs() < 1e-9);
+            assert!((share(3) - (1.0 - expected_owner) / 2.0).abs() < 1e-9);
+            assert!((portions.iter().map(|(share, _)| share).sum::<f64>() - 1.0).abs() < 1e-9);
+            let all_increase = stats.get_damage_increase_contributed_from_all_entity_ids(
+                total,
+                &HitOption::NONE,
+                &HitFlag::NORMAL,
+                None,
+                damage_type,
+                false,
+                true,
+                false,
+                false,
+            );
+            assert!((total / (1.0 + all_increase) - 200.0 / 1.88).abs() < 1e-9);
+        }
+    }
+
+    #[test]
+    fn other_stats_do_not_redistribute_self_owned_defense() {
+        for damage_type in [0, 1] {
+            let mut stats = stats_with_self_and_external_reductions(damage_type, 0.24, &[]);
+            stats.attack_power_rate.add_with_priority(
+                0.15,
+                OWNER_ID,
+                2,
+                StatSource::Test,
+                STAT_PRIORITY_DEFAULT,
+            );
+            let total = attack_power_for_type(&stats, damage_type);
+            let increase = stats.get_damage_increase_contributed_from_entity_id(
+                2,
+                total,
+                &HitOption::NONE,
+                &HitFlag::NORMAL,
+                None,
+                damage_type,
+                false,
+                true,
+                false,
+                false,
+            );
+            assert!((increase - 0.15).abs() < 1e-9);
+            assert!((total / (1.0 + increase) - 200.0 / 1.76).abs() < 1e-9);
+        }
+    }
+
+    #[test]
+    fn captured_context_retains_its_baseline_across_partial_and_full_removal() {
+        for damage_type in [0, 1] {
+            let mut stats =
+                stats_with_self_and_external_reductions(damage_type, 0.12, &[(2, 0.12), (3, 0.12)]);
+            let context = stats.create_defense_attribution_context(damage_type);
+            let defense_index = if damage_type == 0 { 33 } else { 34 };
+            stats
+                .get_stat_data_ref_mut(defense_index)
+                .set(0.0, OWNER_ID, 2, StatSource::Test);
+            let partial = stats
+                .calculate_final_attack_power(
+                    &HitOption::NONE,
+                    &HitFlag::NORMAL,
+                    None,
+                    damage_type,
+                    false,
+                    true,
+                    false,
+                    false,
+                    Some(context),
+                )
+                .value();
+            // One of two equal external sources retains the geometric mean of full and self-only damage.
+            assert!((partial - 200.0 / (1.88_f64 * 1.64).sqrt()).abs() < 1e-9);
+            stats
+                .get_stat_data_ref_mut(defense_index)
+                .set(0.0, OWNER_ID, 3, StatSource::Test);
+            let without = stats
+                .calculate_final_attack_power(
+                    &HitOption::NONE,
+                    &HitFlag::NORMAL,
+                    None,
+                    damage_type,
+                    false,
+                    true,
+                    false,
+                    false,
+                    Some(context),
+                )
+                .value();
+            assert!((without - 200.0 / 1.88).abs() < 1e-9);
+        }
+    }
+
+    fn stats_with_physical_defense_reductions(reductions: &[(u64, f64)]) -> PlayerStats {
+        let mut stats = PlayerStats {
+            owner_id: OWNER_ID,
+            ..Default::default()
+        };
+        stats
+            .attack_power_addend_2
+            .add_self(100.0, StatSource::Test);
+        for &(entity_id, reduction) in reductions {
+            stats.physical_defense_break.add_with_priority(
+                reduction,
+                OWNER_ID,
+                entity_id,
+                StatSource::Test,
+                STAT_PRIORITY_DEFAULT,
+            );
+        }
+        stats
+    }
+
+    fn final_attack_power(stats: &PlayerStats) -> f64 {
+        stats
+            .calculate_final_attack_power(
+                &HitOption::NONE,
+                &HitFlag::NORMAL,
+                None,
+                0,
+                false,
+                true,
+                false,
+                false,
+                None,
+            )
+            .value()
+    }
+
+    fn with_physical_dark_grenade(
+        mut stats: PlayerStats,
+        entity_id: u64,
+        reduction: f64,
+    ) -> PlayerStats {
+        stats.physical_defense_x_break.add_with_priority(
+            reduction,
+            OWNER_ID,
+            entity_id,
+            StatSource::Test,
+            STAT_PRIORITY_DEFAULT,
+        );
+        stats
+    }
+
+    #[test]
+    fn summed_defense_reductions_scale_damage_by_two_over_two_minus_x() {
+        let undebuffed = final_attack_power(&stats_with_physical_defense_reductions(&[]));
+        let single = final_attack_power(&stats_with_physical_defense_reductions(&[(2, 0.12)]));
+        assert!((single / undebuffed - 2.0 / 1.88).abs() < 1e-9);
+
+        // Three `instant_stat_amplify` sources add to 44% inside their layer before the curve.
+        let stacked = final_attack_power(&stats_with_physical_defense_reductions(&[
+            (2, 0.12),
+            (3, 0.12),
+            (4, 0.20),
+        ]));
+        assert!((stacked / undebuffed - 2.0 / 1.56).abs() < 1e-9);
+        assert!((defense_reduction_multiplier(0.44) - 2.0 / 1.56).abs() < 1e-12);
+    }
+
+    #[test]
+    fn defense_layers_multiply_on_remaining_defense() {
+        let undebuffed = final_attack_power(&stats_with_physical_defense_reductions(&[]));
+        let grenade_only = final_attack_power(&with_physical_dark_grenade(
+            stats_with_physical_defense_reductions(&[]),
+            4,
+            0.20,
+        ));
+        assert!((grenade_only / undebuffed - 2.0 / 1.8).abs() < 1e-9);
+
+        // A 12% `instant_stat_amplify` synergy and a 20% `def_x` grenade leave 0.88 * 0.80.
+        let layered = final_attack_power(&with_physical_dark_grenade(
+            stats_with_physical_defense_reductions(&[(2, 0.12)]),
+            4,
+            0.20,
+        ));
+        assert!((layered / undebuffed - 2.0 / 1.704).abs() < 1e-9);
+
+        // Synergies add inside their layer before the grenade layer multiplies.
+        let stacked = final_attack_power(&with_physical_dark_grenade(
+            stats_with_physical_defense_reductions(&[(2, 0.12), (3, 0.12)]),
+            4,
+            0.20,
+        ));
+        assert!((stacked / undebuffed - 2.0 / 1.608).abs() < 1e-9);
+        assert!((remaining_defense(0.24, 0.20, 0.0, 0.0) - 0.608).abs() < 1e-12);
+    }
+
+    #[test]
+    fn penetration_rate_stat_is_its_own_multiplying_layer() {
+        // A 28% def_pen_rate bucket owned by the attacker and a 12% external synergy leave 0.72 * 0.88.
+        let mut stats = stats_with_physical_defense_reductions(&[(2, 0.12)]);
+        stats
+            .physical_penetration_rate
+            .add_self(0.28, StatSource::Test);
+        let undebuffed = final_attack_power(&stats_with_physical_defense_reductions(&[]));
+        let total = final_attack_power(&stats);
+        assert!((total / undebuffed - 2.0 / (1.0 + 0.72 * 0.88)).abs() < 1e-9);
+
+        // The synergy's factor is its exact marginal over the attacker-owned baseline.
+        let increase = stats.get_damage_increase_contributed_from_entity_id(
+            2,
+            total,
+            &HitOption::NONE,
+            &HitFlag::NORMAL,
+            None,
+            0,
+            false,
+            true,
+            false,
+            false,
+        );
+        assert!((1.0 + increase - 1.72 / 1.6336).abs() < 1e-9);
+        // The magical channel is untouched by a physical penetration bucket.
+        stats.magical_defense_break.add_self(0.0, StatSource::Test);
+        assert!((attack_power_for_type(&stats, 1) - 100.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn skill_penetration_is_attacker_owned_and_multiplies_with_target_layers() {
+        // Gunslinger Shotgun identity value 42.84% and a 70% ignore-defense tripod multiply each other.
+        let mut stats =
+            with_physical_dark_grenade(stats_with_physical_defense_reductions(&[]), 4, 0.20);
+        stats.set_attacker_penetration(0.4284, 0.7);
+        let undebuffed = final_attack_power(&stats_with_physical_defense_reductions(&[]));
+        let total = final_attack_power(&stats);
+        let remaining = 0.5716 * 0.3 * 0.8;
+        assert!((total / undebuffed - 2.0 / (1.0 + remaining)).abs() < 1e-9);
+
+        // The grenade is worth less once the attacker already ignores most of the defense.
+        let increase = stats.get_damage_increase_contributed_from_entity_id(
+            4,
+            total,
+            &HitOption::NONE,
+            &HitFlag::NORMAL,
+            None,
+            0,
+            false,
+            true,
+            false,
+            false,
+        );
+        assert!((1.0 + increase - (1.0 + 0.17148) / (1.0 + 0.17148 * 0.8)).abs() < 1e-9);
+        let all_increase = stats.get_damage_increase_contributed_from_all_entity_ids(
+            total,
+            &HitOption::NONE,
+            &HitFlag::NORMAL,
+            None,
+            0,
+            false,
+            true,
+            false,
+            false,
+        );
+        assert!((total / (1.0 + all_increase) / undebuffed - 2.0 / 1.17148).abs() < 1e-9);
+    }
+
+    #[test]
+    fn gunslinger_shotgun_skills_take_identity_value2_as_penetration() {
+        crate::live::test_data::initialize();
+        let mut stats = stats_with_physical_defense_reductions(&[]);
+        stats
+            .spec_bonus_identity_2
+            .add_self(0.4284, StatSource::Test);
+        let mut runtime = SkillRuntimeData::default();
+        runtime.cached_defense_penetration = 0.7;
+
+        // Sharpshooter (Shotgun) takes the identity value; the tripod comes from the skill runtime.
+        stats.apply_attacker_penetration(512, 38110, Some(&runtime));
+        assert!((stats.identity_penetration.value() - 0.4284).abs() < 1e-12);
+        assert!((stats.tripod_penetration.value() - 0.7).abs() < 1e-12);
+        // Dexterous Shot (Handgun) and a non-Gunslinger class get no identity penetration.
+        stats.apply_attacker_penetration(512, 38200, None);
+        assert_eq!(stats.identity_penetration.value(), 0.0);
+        assert_eq!(stats.tripod_penetration.value(), 0.0);
+        stats.apply_attacker_penetration(102, 38110, None);
+        assert_eq!(stats.identity_penetration.value(), 0.0);
+    }
+
+    #[test]
+    fn layered_external_sources_multiply_back_to_the_full_hit() {
+        let mut stats = with_physical_dark_grenade(
+            stats_with_physical_defense_reductions(&[(2, 0.12), (3, 0.12)]),
+            4,
+            0.20,
+        );
+        let total = final_attack_power(&stats);
+        let portions = stats.get_damage_portions_contributed_from_all_entities(
+            total,
+            &HitOption::NONE,
+            &HitFlag::NORMAL,
+            None,
+            0,
+            false,
+            true,
+            false,
+            false,
+        );
+        let share = |entity_id: u64| {
+            portions
+                .iter()
+                .find(|(_, id)| *id == entity_id)
+                .map(|(share, _)| *share)
+                .unwrap()
+        };
+        // The owner keeps exactly 1 / M(0.392); equal synergies share equally; the larger grenade
+        // layer earns more.
+        assert!((share(OWNER_ID) - 1.608 / 2.0).abs() < 1e-9);
+        assert!((share(2) - share(3)).abs() < 1e-9);
+        assert!(share(4) > share(2));
+        assert!((portions.iter().map(|(share, _)| share).sum::<f64>() - 1.0).abs() < 1e-9);
+
+        // Removing each external source with the captured context multiplies back to the full hit.
+        let mut product = 1.0;
+        for entity_id in [2, 3, 4] {
+            let increase = stats.get_damage_increase_contributed_from_entity_id(
+                entity_id,
+                total,
+                &HitOption::NONE,
+                &HitFlag::NORMAL,
+                None,
+                0,
+                false,
+                true,
+                false,
+                false,
+            );
+            product *= 1.0 + increase;
+        }
+        let undebuffed = final_attack_power(&stats_with_physical_defense_reductions(&[]));
+        assert!((product - total / undebuffed).abs() < 1e-9);
     }
 }

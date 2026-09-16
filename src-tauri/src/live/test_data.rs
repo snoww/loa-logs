@@ -15,6 +15,9 @@ pub fn initialize() {
         SKILL_BUFF_DATA.set(read("SkillBuff.json")).unwrap();
         SKILL_DATA.set(read("Skill.json")).unwrap();
         SKILL_EFFECT_DATA.set(read("SkillEffect.json")).unwrap();
+        EXTERNAL_SKILL_FEATURE_DATA
+            .set(read("SkillFeature.json"))
+            .unwrap();
         COMBAT_EFFECT_DATA.set(read("CombatEffect.json")).unwrap();
         EXTERNAL_ABILITY_DATA.set(read("Ability.json")).unwrap();
         STAT_TYPE_NAME_MAP.set(HashMap::new()).unwrap();
