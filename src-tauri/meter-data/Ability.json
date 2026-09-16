@@ -1459,7 +1459,7 @@
     "icon": "achieve_03_40.png",
     "levels": {
       "1": {
-        "desc": "+<FONT COLOR='#99ff99'>10%</FONT> Crit Damage but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'>10%</FONT> Crit Damage but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 1,
         "values": [
           1000,
@@ -1484,7 +1484,7 @@
         ]
       },
       "2": {
-        "desc": "+<FONT COLOR='#99ff99'>25%</FONT> Crit Damage but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'>25%</FONT> Crit Damage but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 2,
         "values": [
           1000,
@@ -1509,7 +1509,7 @@
         ]
       },
       "3": {
-        "desc": "+<FONT COLOR='#99ff99'>50%</FONT> Crit Damage but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'>50%</FONT> Crit Damage but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 3,
         "values": [
           1000,
@@ -4863,7 +4863,7 @@
     "icon": "buff_104.png",
     "levels": {
       "1": {
-        "desc": "When obtained, Ethers deal Mag. Damage equal to 50% of your Max HP.",
+        "desc": "When obtained, Ethers inflict Mag. Damage equal to 50% of your Max HP.",
         "level": 1,
         "values": [
           100500003,
@@ -4888,7 +4888,7 @@
         ]
       },
       "2": {
-        "desc": "When obtained, Ethers deal Mag. Damage equal to 75% of your Max HP.",
+        "desc": "When obtained, Ethers inflict Mag. Damage equal to 75% of your Max HP.",
         "level": 2,
         "values": [
           100500013,
@@ -4913,7 +4913,7 @@
         ]
       },
       "3": {
-        "desc": "When obtained, Ethers deal Mag. Damage equal to 100% of your Max HP.",
+        "desc": "When obtained, Ethers inflict Mag. Damage equal to 100% of your Max HP.",
         "level": 3,
         "values": [
           100500015,
@@ -9221,7 +9221,7 @@
     "icon": "ability_249.png",
     "levels": {
       "1": {
-        "desc": "When casting Sunrise, the energy spreads to recover HP of Party Members within <FONT COLOR='#ffff99'>24m</FONT> of the Artist and Sun Marble. It recovers up to <FONT COLOR='#99ff99'><$CALC (<$TABLE_SKILLEFFECT ValueD 311114/>/100)/>%</FONT> of the Artist's Max HP.",
+        "desc": "When casting Sunrise, the energy spreads to recover HP of Party Members within <FONT COLOR='#ffff99'>24 meters</FONT> of the Artist and Sun Marble. It recovers up to <FONT COLOR='#99ff99'><$CALC (<$TABLE_SKILLEFFECT ValueD 311114/>/100)/>%</FONT> of the Artist's Max HP.",
         "level": 1,
         "values": [
           31120,
@@ -9246,7 +9246,7 @@
         ]
       },
       "2": {
-        "desc": "When casting Sunrise, the energy spreads to recover HP of Party Members within <FONT COLOR='#ffff99'>24m</FONT> of the Artist and Sun Marble. It recovers up to <FONT COLOR='#99ff99'><$CALC (<$TABLE_SKILLEFFECT ValueD 311119/>/100)/>%</FONT> of the Artist's Max HP.",
+        "desc": "When casting Sunrise, the energy spreads to recover HP of Party Members within <FONT COLOR='#ffff99'>24 meters</FONT> of the Artist and Sun Marble. It recovers up to <FONT COLOR='#99ff99'><$CALC (<$TABLE_SKILLEFFECT ValueD 311119/>/100)/>%</FONT> of the Artist's Max HP.",
         "level": 2,
         "values": [
           31130,
@@ -9271,7 +9271,7 @@
         ]
       },
       "3": {
-        "desc": "When casting Sunrise, the energy spreads to recover HP of Party Members within <FONT COLOR='#ffff99'>24m</FONT> of the Artist and Sun Marble. It recovers up to <FONT COLOR='#99ff99'><$CALC (<$TABLE_SKILLEFFECT ValueD 311124/>/100)/>%</FONT> of the Artist's Max HP.",
+        "desc": "When casting Sunrise, the energy spreads to recover HP of Party Members within <FONT COLOR='#ffff99'>24 meters</FONT> of the Artist and Sun Marble. It recovers up to <FONT COLOR='#99ff99'><$CALC (<$TABLE_SKILLEFFECT ValueD 311124/>/100)/>%</FONT> of the Artist's Max HP.",
         "level": 3,
         "values": [
           31140,
@@ -60840,7 +60840,7 @@
     "icon": "achieve_03_40.png",
     "levels": {
       "1": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 5/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 5/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 1,
         "values": [
           1000,
@@ -60865,7 +60865,7 @@
         ]
       },
       "2": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 6/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 6/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 2,
         "values": [
           1000,
@@ -60890,7 +60890,7 @@
         ]
       },
       "3": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 7/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 7/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 3,
         "values": [
           1000,
@@ -60915,7 +60915,7 @@
         ]
       },
       "4": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 8/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 8/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 4,
         "values": [
           1000,
@@ -60940,7 +60940,7 @@
         ]
       },
       "5": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 9/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 9/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 5,
         "values": [
           1000,
@@ -60965,7 +60965,7 @@
         ]
       },
       "6": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 10/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 10/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 6,
         "values": [
           1000,
@@ -60990,7 +60990,7 @@
         ]
       },
       "7": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 11/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 11/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 7,
         "values": [
           1000,
@@ -61015,7 +61015,7 @@
         ]
       },
       "8": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 12/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 12/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 8,
         "values": [
           1000,
@@ -61040,7 +61040,7 @@
         ]
       },
       "9": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 13/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 13/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 9,
         "values": [
           1000,
@@ -61065,7 +61065,7 @@
         ]
       },
       "21": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 25/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 25/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 21,
         "values": [
           1000,
@@ -61090,7 +61090,7 @@
         ]
       },
       "22": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 26/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 26/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 22,
         "values": [
           1000,
@@ -61115,7 +61115,7 @@
         ]
       },
       "23": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 27/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 27/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 23,
         "values": [
           1000,
@@ -61140,7 +61140,7 @@
         ]
       },
       "24": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 28/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 28/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 24,
         "values": [
           1000,
@@ -61165,7 +61165,7 @@
         ]
       },
       "25": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 29/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 29/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 25,
         "values": [
           1000,
@@ -61190,7 +61190,7 @@
         ]
       },
       "26": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 30/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 30/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 26,
         "values": [
           1000,
@@ -61215,7 +61215,7 @@
         ]
       },
       "27": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 31/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 31/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 27,
         "values": [
           1000,
@@ -61240,7 +61240,7 @@
         ]
       },
       "28": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 32/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 32/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 28,
         "values": [
           1000,
@@ -61265,7 +61265,7 @@
         ]
       },
       "29": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 33/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 33/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 29,
         "values": [
           1000,
@@ -61290,7 +61290,7 @@
         ]
       },
       "41": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 45/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 45/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 41,
         "values": [
           1000,
@@ -61315,7 +61315,7 @@
         ]
       },
       "42": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 46/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 46/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 42,
         "values": [
           1000,
@@ -61340,7 +61340,7 @@
         ]
       },
       "43": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 47/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 47/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 43,
         "values": [
           1000,
@@ -61365,7 +61365,7 @@
         ]
       },
       "44": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 48/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 48/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 44,
         "values": [
           1000,
@@ -61390,7 +61390,7 @@
         ]
       },
       "45": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 49/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 49/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 45,
         "values": [
           1000,
@@ -61415,7 +61415,7 @@
         ]
       },
       "46": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 50/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 50/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 46,
         "values": [
           1000,
@@ -61440,7 +61440,7 @@
         ]
       },
       "47": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 51/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 51/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 47,
         "values": [
           1000,
@@ -61465,7 +61465,7 @@
         ]
       },
       "48": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 52/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 52/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 48,
         "values": [
           1000,
@@ -61490,7 +61490,7 @@
         ]
       },
       "49": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 53/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 53/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 49,
         "values": [
           1000,
@@ -61515,7 +61515,7 @@
         ]
       },
       "61": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 65/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 65/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 61,
         "values": [
           1000,
@@ -61540,7 +61540,7 @@
         ]
       },
       "62": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 66/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 66/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 62,
         "values": [
           1000,
@@ -61565,7 +61565,7 @@
         ]
       },
       "63": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 67/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 67/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 63,
         "values": [
           1000,
@@ -61590,7 +61590,7 @@
         ]
       },
       "64": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 68/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 68/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 64,
         "values": [
           1000,
@@ -61615,7 +61615,7 @@
         ]
       },
       "65": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 69/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 69/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 65,
         "values": [
           1000,
@@ -61640,7 +61640,7 @@
         ]
       },
       "66": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 70/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 70/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 66,
         "values": [
           1000,
@@ -61665,7 +61665,7 @@
         ]
       },
       "67": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 71/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 71/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 67,
         "values": [
           1000,
@@ -61690,7 +61690,7 @@
         ]
       },
       "68": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 72/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 72/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 68,
         "values": [
           1000,
@@ -61715,7 +61715,7 @@
         ]
       },
       "69": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 73/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 73/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 69,
         "values": [
           1000,
@@ -61740,7 +61740,7 @@
         ]
       },
       "81": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 85/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 85/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 81,
         "values": [
           1000,
@@ -61765,7 +61765,7 @@
         ]
       },
       "82": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 86/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 86/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 82,
         "values": [
           1000,
@@ -61790,7 +61790,7 @@
         ]
       },
       "83": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 87/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 87/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 83,
         "values": [
           1000,
@@ -61815,7 +61815,7 @@
         ]
       },
       "84": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 88/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 88/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 84,
         "values": [
           1000,
@@ -61840,7 +61840,7 @@
         ]
       },
       "85": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 89/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 89/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 85,
         "values": [
           1000,
@@ -61865,7 +61865,7 @@
         ]
       },
       "86": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 90/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 90/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 86,
         "values": [
           1000,
@@ -61890,7 +61890,7 @@
         ]
       },
       "87": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 91/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 91/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 87,
         "values": [
           1000,
@@ -61915,7 +61915,7 @@
         ]
       },
       "88": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 92/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 92/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 88,
         "values": [
           1000,
@@ -61940,7 +61940,7 @@
         ]
       },
       "89": {
-        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 93/>/100/>%</FONT> Crit Damage, but your attacks have a chance to deal -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
+        "desc": "+<FONT COLOR='#99ff99'><$CALC_COMMA %2 <$TABLE_ABILITYFEATURE VALUE02 1141 93/>/100/>%</FONT> Crit Damage, but your attacks have a chance to inflict -<FONT COLOR='#ff9999'>20%</FONT> Damage.",
         "level": 89,
         "values": [
           1000,
@@ -83162,6 +83162,24 @@
           0
         ],
         "addons": null
+      },
+      "8": {
+        "desc": null,
+        "level": 8,
+        "values": [
+          25038,
+          2250400,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
       }
     },
     "featureType": "ap_identity_blade_burst",
@@ -83177,79 +83195,7 @@
         "desc": null,
         "level": 1,
         "values": [
-          1500,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      },
-      "2": {
-        "desc": null,
-        "level": 2,
-        "values": [
-          1500,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      },
-      "3": {
-        "desc": null,
-        "level": 3,
-        "values": [
-          1500,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      },
-      "4": {
-        "desc": null,
-        "level": 4,
-        "values": [
-          1500,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      },
-      "5": {
-        "desc": null,
-        "level": 5,
-        "values": [
-          1500,
+          10000,
           0,
           0,
           0,
@@ -83670,13 +83616,13 @@
         "level": 1,
         "values": [
           1,
+          25440,
           0,
-          2250900,
-          1500,
+          3000,
           0,
           3250600,
           0,
-          3,
+          0,
           0,
           0,
           0
@@ -83697,12 +83643,12 @@
         "desc": null,
         "level": 1,
         "values": [
-          1,
-          0,
           3250700,
+          25440,
           0,
+          400,
           0,
-          0,
+          5,
           0,
           0,
           0,
@@ -83715,12 +83661,12 @@
         "desc": null,
         "level": 2,
         "values": [
-          1,
+          3250800,
+          25440,
           0,
-          3250700,
+          500,
           0,
-          0,
-          0,
+          5,
           0,
           0,
           0,
@@ -83730,7 +83676,7 @@
         "addons": null
       }
     },
-    "featureType": "ag_alpha_instant_skilleffect",
+    "featureType": "ag_status_stack_damage",
     "isEngrave": false,
     "isPenalty": false
   },
@@ -83774,7 +83720,7 @@
           1,
           25200,
           0,
-          3500,
+          2600,
           0,
           3251200,
           0,
@@ -83792,7 +83738,7 @@
           1,
           25200,
           0,
-          4500,
+          3400,
           0,
           3251201,
           0,
@@ -83848,7 +83794,7 @@
           1,
           0,
           3251700,
-          1200,
+          1600,
           0,
           3251700,
           0,
@@ -83866,7 +83812,7 @@
           1,
           0,
           3251700,
-          1600,
+          2000,
           0,
           3251701,
           0,
@@ -84041,7 +83987,7 @@
         "values": [
           1,
           0,
-          2250400,
+          3253600,
           1,
           0,
           0,
@@ -84068,8 +84014,8 @@
         "level": 1,
         "values": [
           1,
-          25130,
           0,
+          3253600,
           1,
           0,
           0,
@@ -85753,7 +85699,7 @@
         "values": [
           2260500,
           2260501,
-          2800,
+          4100,
           2260510,
           2260501,
           0,
@@ -85771,7 +85717,7 @@
         "values": [
           2260502,
           2260503,
-          5500,
+          8200,
           2260510,
           2260501,
           0,
@@ -85789,7 +85735,7 @@
         "values": [
           2260504,
           2260505,
-          8000,
+          12500,
           2260510,
           2260501,
           0,
@@ -86437,8 +86383,26 @@
         "values": [
           1,
           500,
+          3260600,
           3260700,
           0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "3": {
+        "desc": null,
+        "level": 3,
+        "values": [
+          1,
+          500,
+          3260600,
+          3260800,
           0,
           0,
           0,
@@ -86769,12 +86733,12 @@
         "values": [
           1,
           0,
-          2260200,
+          3260600,
           1,
           0,
           0,
-          0,
-          0,
+          1,
+          2,
           0,
           0,
           0
@@ -87097,7 +87061,7 @@
         "desc": null,
         "level": 1,
         "values": [
-          10000,
+          12000,
           160,
           0,
           0,
@@ -87115,7 +87079,7 @@
         "desc": null,
         "level": 2,
         "values": [
-          10000,
+          12000,
           320,
           0,
           0,
@@ -87133,7 +87097,7 @@
         "desc": null,
         "level": 3,
         "values": [
-          10000,
+          12000,
           480,
           0,
           0,
@@ -87151,7 +87115,7 @@
         "desc": null,
         "level": 4,
         "values": [
-          10000,
+          12000,
           640,
           0,
           0,
@@ -87169,7 +87133,7 @@
         "desc": null,
         "level": 5,
         "values": [
-          10000,
+          12000,
           800,
           0,
           0,
@@ -87354,7 +87318,7 @@
           12000,
           4000,
           2000,
-          2400,
+          3000,
           0,
           0,
           0,
@@ -87372,7 +87336,7 @@
           12000,
           4000,
           4000,
-          3600,
+          4200,
           0,
           0,
           0,
@@ -87390,7 +87354,7 @@
           12000,
           4000,
           6000,
-          4800,
+          5500,
           0,
           0,
           0,
@@ -87408,7 +87372,7 @@
           12000,
           4000,
           6000,
-          4800,
+          5500,
           2000,
           0,
           0,
@@ -87426,7 +87390,7 @@
           12000,
           4000,
           6000,
-          4800,
+          5500,
           3500,
           0,
           0,
@@ -87444,7 +87408,7 @@
           12000,
           4000,
           6000,
-          4800,
+          5500,
           5000,
           0,
           0,
@@ -87462,7 +87426,7 @@
           12000,
           4000,
           6000,
-          4800,
+          5500,
           5000,
           0,
           0,
@@ -87515,8 +87479,8 @@
         "desc": null,
         "level": 1,
         "values": [
-          500,
-          100,
+          2500,
+          160,
           0,
           0,
           0,
@@ -87533,8 +87497,8 @@
         "desc": null,
         "level": 2,
         "values": [
-          1000,
-          200,
+          2500,
+          320,
           0,
           0,
           0,
@@ -87551,8 +87515,8 @@
         "desc": null,
         "level": 3,
         "values": [
-          1500,
-          300,
+          2500,
+          480,
           0,
           0,
           0,
@@ -87569,8 +87533,8 @@
         "desc": null,
         "level": 4,
         "values": [
-          2000,
-          400,
+          2500,
+          640,
           0,
           0,
           0,
@@ -87588,7 +87552,7 @@
         "level": 5,
         "values": [
           2500,
-          500,
+          800,
           0,
           0,
           0,
@@ -88038,7 +88002,7 @@
           1,
           0,
           3461100,
-          7000,
+          5400,
           0,
           3461200,
           13000,
@@ -88056,7 +88020,7 @@
           1,
           0,
           3461100,
-          8000,
+          6400,
           0,
           3461201,
           13000,
@@ -88176,7 +88140,7 @@
           1,
           0,
           2460400,
-          1200,
+          1500,
           0,
           3462200,
           0,
@@ -88194,7 +88158,7 @@
           1,
           0,
           2460400,
-          1200,
+          1500,
           0,
           3462200,
           0,
@@ -90279,7 +90243,7 @@
         "desc": null,
         "level": 6,
         "values": [
-          4200,
+          4500,
           10000,
           2000,
           0,
@@ -90297,7 +90261,7 @@
         "desc": null,
         "level": 7,
         "values": [
-          5400,
+          6000,
           10000,
           2000,
           0,
@@ -90529,7 +90493,7 @@
           0,
           0,
           2341000,
-          2400,
+          2500,
           2340020,
           0,
           2340021,
@@ -90547,7 +90511,7 @@
           0,
           0,
           2341000,
-          4800,
+          5000,
           2340022,
           0,
           2340021,
@@ -90565,7 +90529,7 @@
           0,
           0,
           2341000,
-          7200,
+          7500,
           2340023,
           0,
           2340021,
@@ -90744,7 +90708,7 @@
         "level": 8,
         "values": [
           60000,
-          5300,
+          5500,
           3000,
           500,
           1,
@@ -90762,7 +90726,7 @@
         "level": 9,
         "values": [
           60000,
-          6600,
+          7000,
           3000,
           500,
           1,
@@ -90826,7 +90790,7 @@
         "level": 3,
         "values": [
           0,
-          1000,
+          1100,
           2000,
           1,
           0,
@@ -90844,7 +90808,7 @@
         "level": 4,
         "values": [
           0,
-          2000,
+          2200,
           2000,
           1,
           0,
@@ -90862,7 +90826,7 @@
         "level": 5,
         "values": [
           0,
-          3000,
+          3300,
           2000,
           1,
           0,
@@ -91557,12 +91521,12 @@
         "desc": null,
         "level": 1,
         "values": [
-          0,
-          0,
-          0,
-          1,
-          0,
-          0,
+          10000,
+          20000,
+          30000,
+          24030,
+          24031,
+          24032,
           0,
           0,
           0,
@@ -91575,12 +91539,12 @@
         "desc": null,
         "level": 2,
         "values": [
-          0,
-          0,
-          1,
-          1,
-          0,
-          0,
+          10000,
+          20000,
+          30000,
+          24030,
+          24031,
+          24032,
           0,
           0,
           0,
@@ -91593,12 +91557,12 @@
         "desc": null,
         "level": 3,
         "values": [
-          1000,
-          3000,
-          1,
-          1,
-          0,
-          0,
+          10000,
+          20000,
+          30000,
+          24030,
+          24031,
+          24032,
           0,
           0,
           0,
@@ -91611,12 +91575,12 @@
         "desc": null,
         "level": 4,
         "values": [
-          1700,
-          3000,
-          1,
-          1,
-          0,
-          0,
+          10000,
+          20000,
+          30000,
+          24030,
+          24031,
+          24032,
           0,
           0,
           0,
@@ -91629,12 +91593,48 @@
         "desc": null,
         "level": 5,
         "values": [
-          2400,
-          3000,
-          1,
-          1,
+          10000,
+          20000,
+          30000,
+          24030,
+          24031,
+          24032,
           0,
           0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "6": {
+        "desc": null,
+        "level": 6,
+        "values": [
+          10000,
+          20000,
+          30000,
+          24030,
+          24031,
+          24032,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "7": {
+        "desc": null,
+        "level": 7,
+        "values": [
+          10000,
+          20000,
+          30000,
+          24030,
+          24031,
+          24032,
           0,
           0,
           0,
@@ -91658,12 +91658,12 @@
         "level": 1,
         "values": [
           24025,
-          146,
+          15,
           240220,
           0,
-          600,
           0,
           0,
+          500,
           0,
           0,
           0,
@@ -91676,12 +91676,12 @@
         "level": 2,
         "values": [
           24025,
-          146,
+          15,
           240220,
           0,
-          1300,
           0,
           0,
+          1000,
           0,
           0,
           0,
@@ -91694,12 +91694,12 @@
         "level": 3,
         "values": [
           24025,
-          146,
+          15,
           240220,
           0,
-          2000,
           0,
           0,
+          1500,
           0,
           0,
           0,
@@ -91712,12 +91712,12 @@
         "level": 4,
         "values": [
           24025,
-          146,
+          15,
           240220,
-          30000,
-          2000,
           0,
           0,
+          0,
+          1500,
           0,
           0,
           0,
@@ -91730,12 +91730,12 @@
         "level": 5,
         "values": [
           24025,
-          146,
+          15,
           2240600,
-          30000,
-          2000,
+          4000,
+          5400,
           0,
-          0,
+          1500,
           0,
           0,
           0,
@@ -91748,12 +91748,12 @@
         "level": 6,
         "values": [
           24025,
-          146,
+          15,
           2240601,
-          30000,
-          2000,
+          4000,
+          6400,
           0,
-          0,
+          1500,
           0,
           0,
           0,
@@ -91766,12 +91766,12 @@
         "level": 7,
         "values": [
           24025,
-          146,
+          15,
           2240602,
-          30000,
-          2000,
+          4000,
+          7400,
           0,
-          0,
+          1500,
           0,
           0,
           0,
@@ -91784,14 +91784,14 @@
         "level": 8,
         "values": [
           24025,
-          146,
+          15,
           2241000,
-          30000,
-          2000,
+          4000,
+          8214,
           0,
-          0,
-          0,
-          0,
+          1500,
+          2241001,
+          5000,
           0,
           0
         ],
@@ -91802,14 +91802,14 @@
         "level": 9,
         "values": [
           24025,
-          146,
+          15,
           2241001,
-          30000,
-          2000,
+          4000,
+          9028,
           0,
-          0,
-          0,
-          0,
+          1500,
+          2241001,
+          5000,
           0,
           0
         ],
@@ -91820,14 +91820,14 @@
         "level": 10,
         "values": [
           24025,
-          146,
+          15,
           2241002,
-          30000,
-          2000,
+          4000,
+          9842,
           0,
-          0,
-          0,
-          0,
+          1500,
+          2241001,
+          5000,
           0,
           0
         ],
@@ -91838,7 +91838,7 @@
     "isEngrave": false,
     "isPenalty": false
   },
-  "2240800": {
+  "2240300": {
     "id": 0,
     "name": null,
     "icon": null,
@@ -91848,79 +91848,7 @@
         "level": 1,
         "values": [
           2240800,
-          10,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      },
-      "2": {
-        "desc": null,
-        "level": 2,
-        "values": [
-          2240800,
-          20,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      },
-      "3": {
-        "desc": null,
-        "level": 3,
-        "values": [
-          2240800,
-          30,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      },
-      "4": {
-        "desc": null,
-        "level": 4,
-        "values": [
-          2240800,
-          40,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      },
-      "5": {
-        "desc": null,
-        "level": 5,
-        "values": [
-          2240800,
-          50,
+          350,
           0,
           0,
           0,
@@ -91938,7 +91866,7 @@
     "isEngrave": false,
     "isPenalty": false
   },
-  "2241100": {
+  "2240800": {
     "id": 0,
     "name": null,
     "icon": null,
@@ -91947,11 +91875,11 @@
         "desc": null,
         "level": 1,
         "values": [
-          1000,
+          24031,
           0,
+          24032,
           0,
-          0,
-          0,
+          200,
           0,
           0,
           0,
@@ -91965,11 +91893,11 @@
         "desc": null,
         "level": 2,
         "values": [
-          2000,
+          24031,
           0,
+          24032,
           0,
-          0,
-          0,
+          400,
           0,
           0,
           0,
@@ -91983,11 +91911,11 @@
         "desc": null,
         "level": 3,
         "values": [
-          3000,
+          24031,
           0,
+          24032,
           0,
-          0,
-          0,
+          600,
           0,
           0,
           0,
@@ -92001,11 +91929,11 @@
         "desc": null,
         "level": 4,
         "values": [
-          4000,
+          24031,
           0,
+          24032,
           0,
-          0,
-          0,
+          800,
           0,
           0,
           0,
@@ -92019,11 +91947,11 @@
         "desc": null,
         "level": 5,
         "values": [
-          5000,
+          24031,
           0,
+          24032,
           0,
-          0,
-          0,
+          1000,
           0,
           0,
           0,
@@ -92034,7 +91962,7 @@
         "addons": null
       }
     },
-    "featureType": "ap_identity_forcemaster_penalty_duration_control",
+    "featureType": "ap_next_skill_enhance",
     "isEngrave": false,
     "isPenalty": false
   },
@@ -93600,7 +93528,7 @@
           3231601,
           23440,
           0,
-          800,
+          700,
           3231602,
           0,
           0,
@@ -93942,7 +93870,7 @@
           1,
           0,
           3340600,
-          0,
+          3340601,
           0,
           0,
           0,
@@ -93960,8 +93888,8 @@
           1,
           0,
           3340600,
+          3340601,
           3340700,
-          0,
           0,
           0,
           0,
@@ -93987,7 +93915,7 @@
         "values": [
           3340700,
           0,
-          3340701,
+          3340702,
           500,
           0,
           1,
@@ -94005,7 +93933,7 @@
         "values": [
           3340700,
           0,
-          3340701,
+          3340702,
           500,
           0,
           1,
@@ -94486,7 +94414,7 @@
         "level": 1,
         "values": [
           1,
-          10000,
+          100,
           3240100,
           0,
           0,
@@ -94504,52 +94432,6 @@
     "isEngrave": false,
     "isPenalty": false
   },
-  "3240200": {
-    "id": 0,
-    "name": null,
-    "icon": null,
-    "levels": {
-      "1": {
-        "desc": null,
-        "level": 1,
-        "values": [
-          1,
-          24210,
-          0,
-          4000,
-          0,
-          3240200,
-          10000,
-          1,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      },
-      "2": {
-        "desc": null,
-        "level": 2,
-        "values": [
-          1,
-          24210,
-          0,
-          4500,
-          0,
-          3240300,
-          10000,
-          1,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      }
-    },
-    "featureType": "ag_alpha_next_skill_enhance",
-    "isEngrave": false,
-    "isPenalty": false
-  },
   "3243100": {
     "id": 0,
     "name": null,
@@ -94560,8 +94442,8 @@
         "level": 1,
         "values": [
           1,
-          24250,
           0,
+          3243100,
           1,
           100,
           0,
@@ -94617,7 +94499,7 @@
         "values": [
           1,
           0,
-          3243600,
+          3243100,
           1,
           100,
           0,
@@ -94646,8 +94528,44 @@
           1,
           100,
           3241100,
+          3241105,
           0,
           0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "2": {
+        "desc": null,
+        "level": 2,
+        "values": [
+          1,
+          100,
+          3241100,
+          3241101,
+          3241105,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "3": {
+        "desc": null,
+        "level": 3,
+        "values": [
+          1,
+          100,
+          3241100,
+          3241102,
+          3241105,
           0,
           0,
           0,
@@ -94662,34 +94580,6 @@
     "isEngrave": false,
     "isPenalty": false
   },
-  "3241101": {
-    "id": 0,
-    "name": null,
-    "icon": null,
-    "levels": {
-      "1": {
-        "desc": null,
-        "level": 1,
-        "values": [
-          3241101,
-          24110,
-          0,
-          500,
-          3241102,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      }
-    },
-    "featureType": "ag_status_stack_damage",
-    "isEngrave": false,
-    "isPenalty": false
-  },
   "3244100": {
     "id": 0,
     "name": null,
@@ -94700,11 +94590,11 @@
         "level": 1,
         "values": [
           1,
-          24220,
           0,
-          1,
+          3243600,
+          2,
           100,
-          0,
+          3244100,
           0,
           0,
           0,
@@ -94793,7 +94683,7 @@
         "values": [
           1,
           0,
-          3243600,
+          3242700,
           1,
           100,
           0,
@@ -94822,43 +94712,7 @@
           1,
           100,
           3242100,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      },
-      "2": {
-        "desc": null,
-        "level": 2,
-        "values": [
-          1,
-          100,
-          3242200,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      },
-      "3": {
-        "desc": null,
-        "level": 3,
-        "values": [
-          1,
-          100,
-          3242300,
-          0,
+          3242101,
           0,
           0,
           0,
@@ -94874,70 +94728,6 @@
     "isEngrave": false,
     "isPenalty": false
   },
-  "3242101": {
-    "id": 0,
-    "name": null,
-    "icon": null,
-    "levels": {
-      "1": {
-        "desc": null,
-        "level": 1,
-        "values": [
-          3242103,
-          24290,
-          0,
-          2000,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      },
-      "2": {
-        "desc": null,
-        "level": 2,
-        "values": [
-          3242203,
-          24290,
-          0,
-          2000,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      },
-      "3": {
-        "desc": null,
-        "level": 3,
-        "values": [
-          3242303,
-          24290,
-          0,
-          2000,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      }
-    },
-    "featureType": "ag_status_stack_damage",
-    "isEngrave": false,
-    "isPenalty": false
-  },
   "3245100": {
     "id": 0,
     "name": null,
@@ -94948,8 +94738,8 @@
         "level": 1,
         "values": [
           1,
-          24140,
           0,
+          3242700,
           1,
           100,
           0,
@@ -94963,6 +94753,62 @@
       }
     },
     "featureType": "ag_beta_use_skill",
+    "isEngrave": false,
+    "isPenalty": false
+  },
+  "3245200": {
+    "id": 0,
+    "name": null,
+    "icon": null,
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": [
+          3245200,
+          24032,
+          0,
+          1000,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      }
+    },
+    "featureType": "ag_status_stack_damage",
+    "isEngrave": false,
+    "isPenalty": false
+  },
+  "3245300": {
+    "id": 0,
+    "name": null,
+    "icon": null,
+    "levels": {
+      "2": {
+        "desc": null,
+        "level": 2,
+        "values": [
+          3245300,
+          24032,
+          0,
+          1250,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      }
+    },
+    "featureType": "ag_status_stack_damage",
     "isEngrave": false,
     "isPenalty": false
   },
@@ -95005,10 +94851,10 @@
         "values": [
           1,
           0,
-          3242600,
-          1,
-          0,
-          0,
+          3245600,
+          5,
+          100,
+          3245600,
           0,
           0,
           0,
@@ -95294,7 +95140,7 @@
         "level": 5,
         "values": [
           3000,
-          800,
+          1650,
           20000,
           400,
           400,
@@ -95312,7 +95158,7 @@
         "level": 6,
         "values": [
           3000,
-          1600,
+          2500,
           20000,
           400,
           400,
@@ -95330,7 +95176,7 @@
         "level": 7,
         "values": [
           3000,
-          2500,
+          3350,
           20000,
           400,
           400,
@@ -95348,7 +95194,7 @@
         "level": 8,
         "values": [
           3000,
-          2500,
+          3350,
           20000,
           400,
           400,
@@ -95447,7 +95293,7 @@
         "desc": null,
         "level": 5,
         "values": [
-          -3300,
+          -3700,
           1,
           0,
           0,
@@ -95465,7 +95311,7 @@
         "desc": null,
         "level": 6,
         "values": [
-          -4200,
+          -4600,
           1,
           0,
           0,
@@ -95483,7 +95329,7 @@
         "desc": null,
         "level": 7,
         "values": [
-          -5150,
+          -5550,
           1,
           0,
           0,
@@ -97350,7 +97196,7 @@
           0,
           3000,
           0,
-          1500,
+          1800,
           0,
           0,
           0,
@@ -97368,7 +97214,7 @@
           0,
           4000,
           0,
-          1500,
+          1800,
           0,
           0,
           0,
@@ -97386,7 +97232,7 @@
           0,
           5000,
           0,
-          1500,
+          1800,
           0,
           0,
           0,
@@ -97404,7 +97250,7 @@
           2283200,
           5000,
           28170,
-          1500,
+          1800,
           0,
           0,
           0,
@@ -97422,7 +97268,7 @@
           2283201,
           5000,
           28170,
-          1500,
+          1800,
           0,
           0,
           0,
@@ -97440,7 +97286,7 @@
           2283202,
           5000,
           28170,
-          1500,
+          1800,
           0,
           0,
           0,
@@ -97458,7 +97304,7 @@
           2283202,
           5000,
           28300,
-          1500,
+          1800,
           0,
           0,
           0,
@@ -97476,7 +97322,7 @@
           2283202,
           5000,
           28300,
-          1500,
+          1800,
           0,
           0,
           0,
@@ -97494,7 +97340,7 @@
           2283202,
           5000,
           28300,
-          1500,
+          1800,
           0,
           0,
           0,
@@ -99659,7 +99505,7 @@
         "desc": null,
         "level": 5,
         "values": [
-          600,
+          1000,
           2000,
           3000,
           0,
@@ -99677,7 +99523,7 @@
         "desc": null,
         "level": 6,
         "values": [
-          1000,
+          1450,
           3000,
           3000,
           0,
@@ -99695,7 +99541,7 @@
         "desc": null,
         "level": 7,
         "values": [
-          1400,
+          1900,
           4000,
           3000,
           0,
@@ -101033,7 +100879,7 @@
           200,
           10000,
           2351000,
-          0,
+          4000,
           0,
           0
         ],
@@ -101051,7 +100897,7 @@
           200,
           10000,
           2351001,
-          0,
+          7000,
           0,
           0
         ],
@@ -101069,7 +100915,7 @@
           200,
           10000,
           2351002,
-          0,
+          10000,
           0,
           0
         ],
@@ -102798,7 +102644,7 @@
         "level": 4,
         "values": [
           667,
-          800,
+          1200,
           0,
           480053,
           1,
@@ -102816,7 +102662,7 @@
         "level": 5,
         "values": [
           667,
-          1250,
+          1650,
           0,
           480053,
           1,
@@ -102834,7 +102680,7 @@
         "level": 6,
         "values": [
           667,
-          1750,
+          2150,
           0,
           480053,
           1,
@@ -102852,7 +102698,7 @@
         "level": 7,
         "values": [
           667,
-          1750,
+          2150,
           5000,
           480053,
           1,
@@ -102870,7 +102716,7 @@
         "level": 8,
         "values": [
           667,
-          1750,
+          2150,
           10000,
           480053,
           1,
@@ -102888,7 +102734,7 @@
         "level": 9,
         "values": [
           667,
-          1750,
+          2150,
           15000,
           480053,
           1,
@@ -102906,7 +102752,7 @@
         "level": 10,
         "values": [
           667,
-          1750,
+          2150,
           15000,
           480054,
           3,
@@ -103915,7 +103761,7 @@
         "desc": null,
         "level": 4,
         "values": [
-          700,
+          800,
           5000,
           0,
           0,
@@ -103933,7 +103779,7 @@
         "desc": null,
         "level": 5,
         "values": [
-          1400,
+          1700,
           5000,
           0,
           0,
@@ -103951,7 +103797,7 @@
         "desc": null,
         "level": 6,
         "values": [
-          2200,
+          2600,
           5000,
           0,
           0,
@@ -104142,7 +103988,7 @@
         "level": 10,
         "values": [
           19282,
-          12000,
+          10000,
           4700,
           19287,
           19286,
@@ -104160,7 +104006,7 @@
         "level": 11,
         "values": [
           19282,
-          16000,
+          12000,
           4700,
           19287,
           19286,
@@ -104451,8 +104297,8 @@
         "desc": null,
         "level": 1,
         "values": [
-          199,
-          600,
+          2200000,
+          40000,
           0,
           0,
           0,
@@ -104460,8 +104306,8 @@
           90000424,
           0,
           0,
-          0,
-          0
+          1500,
+          199
         ],
         "addons": null
       },
@@ -104469,8 +104315,8 @@
         "desc": null,
         "level": 2,
         "values": [
-          199,
-          1300,
+          2200000,
+          40000,
           0,
           0,
           0,
@@ -104478,8 +104324,8 @@
           90000424,
           0,
           0,
-          0,
-          0
+          1500,
+          199
         ],
         "addons": null
       },
@@ -104487,8 +104333,8 @@
         "desc": null,
         "level": 3,
         "values": [
-          199,
-          2000,
+          2200000,
+          40000,
           0,
           0,
           0,
@@ -104496,8 +104342,8 @@
           90000424,
           0,
           0,
-          0,
-          0
+          1500,
+          199
         ],
         "addons": null
       },
@@ -104505,8 +104351,8 @@
         "desc": null,
         "level": 4,
         "values": [
-          199,
-          2000,
+          2200000,
+          40000,
           0,
           32,
           3,
@@ -104514,8 +104360,8 @@
           90000424,
           0,
           0,
-          0,
-          0
+          1500,
+          199
         ],
         "addons": null
       },
@@ -104523,8 +104369,8 @@
         "desc": null,
         "level": 5,
         "values": [
-          199,
-          2000,
+          2200000,
+          40000,
           0,
           32,
           6,
@@ -104532,8 +104378,8 @@
           90000424,
           0,
           0,
-          0,
-          0
+          1500,
+          199
         ],
         "addons": null
       },
@@ -104541,8 +104387,8 @@
         "desc": null,
         "level": 6,
         "values": [
-          199,
-          2000,
+          2200000,
+          40000,
           0,
           32,
           10,
@@ -104550,8 +104396,8 @@
           90000424,
           0,
           0,
-          0,
-          0
+          1500,
+          199
         ],
         "addons": null
       }
@@ -104570,7 +104416,7 @@
         "level": 1,
         "values": [
           2200900,
-          2800,
+          3000,
           2200910,
           50,
           90000424,
@@ -104588,7 +104434,7 @@
         "level": 2,
         "values": [
           2200900,
-          3700,
+          4000,
           2200910,
           50,
           90000424,
@@ -104606,7 +104452,7 @@
         "level": 3,
         "values": [
           2200900,
-          4500,
+          5000,
           2200910,
           50,
           90000424,
@@ -104652,7 +104498,7 @@
         "level": 2,
         "values": [
           1,
-          700,
+          900,
           0,
           0,
           0,
@@ -104670,7 +104516,7 @@
         "level": 3,
         "values": [
           1,
-          1400,
+          1600,
           0,
           0,
           0,
@@ -104688,7 +104534,7 @@
         "level": 4,
         "values": [
           1,
-          2100,
+          2300,
           0,
           0,
           0,
@@ -104706,7 +104552,7 @@
         "level": 5,
         "values": [
           1,
-          2100,
+          2300,
           500,
           0,
           0,
@@ -104724,7 +104570,7 @@
         "level": 6,
         "values": [
           1,
-          2100,
+          2300,
           1000,
           0,
           0,
@@ -104742,7 +104588,7 @@
         "level": 7,
         "values": [
           1,
-          2100,
+          2300,
           1600,
           0,
           0,
@@ -104760,7 +104606,7 @@
         "level": 8,
         "values": [
           1,
-          2800,
+          3100,
           1600,
           40,
           0,
@@ -104778,7 +104624,7 @@
         "level": 9,
         "values": [
           1,
-          3500,
+          3900,
           1600,
           70,
           0,
@@ -104796,7 +104642,7 @@
         "level": 10,
         "values": [
           1,
-          4200,
+          4700,
           1600,
           100,
           0,
@@ -105817,7 +105663,7 @@
         "values": [
           37110,
           1000,
-          2200,
+          2400,
           1000,
           0,
           0,
@@ -105835,7 +105681,7 @@
         "values": [
           37110,
           1000,
-          3300,
+          3500,
           1000,
           0,
           0,
@@ -105853,7 +105699,7 @@
         "values": [
           37110,
           1000,
-          4500,
+          4700,
           1000,
           0,
           0,
@@ -105871,7 +105717,7 @@
         "values": [
           37110,
           1000,
-          4500,
+          4700,
           1000,
           0,
           370020,
@@ -105889,7 +105735,7 @@
         "values": [
           37110,
           1000,
-          4500,
+          4700,
           1000,
           0,
           370026,
@@ -105907,7 +105753,7 @@
         "values": [
           37110,
           1000,
-          4500,
+          4700,
           1000,
           0,
           370027,
@@ -106218,7 +106064,7 @@
           3190200,
           0,
           2190902,
-          1000,
+          1300,
           0,
           1,
           1,
@@ -106236,7 +106082,7 @@
           3190300,
           0,
           2190902,
-          1100,
+          1450,
           0,
           1,
           1,
@@ -106782,7 +106628,7 @@
           2,
           0,
           2370100,
-          1200,
+          1600,
           0,
           3370100,
           0,
@@ -107185,7 +107031,7 @@
         "values": [
           1,
           4,
-          7200,
+          7800,
           3000,
           0,
           3372700,
@@ -107203,7 +107049,7 @@
         "values": [
           1,
           4,
-          7900,
+          8400,
           3000,
           0,
           3372800,
@@ -107528,7 +107374,7 @@
           1,
           1000,
           3200600,
-          0,
+          3200601,
           0,
           0,
           0,
@@ -107546,7 +107392,7 @@
           1,
           1000,
           3200700,
-          0,
+          3200601,
           0,
           0,
           0,
@@ -107564,7 +107410,7 @@
           1,
           1000,
           3200800,
-          0,
+          3200601,
           0,
           0,
           0,
@@ -107730,7 +107576,7 @@
           1,
           20260,
           0,
-          2500,
+          3000,
           0,
           3202100,
           0,
@@ -107748,7 +107594,7 @@
           1,
           20260,
           0,
-          4500,
+          5500,
           0,
           3202200,
           0,
@@ -107766,7 +107612,7 @@
           1,
           20260,
           0,
-          4900,
+          5900,
           0,
           3202300,
           0,
@@ -107792,7 +107638,7 @@
         "level": 1,
         "values": [
           1,
-          12500,
+          14500,
           3202601,
           3500,
           3202602,
@@ -107810,15 +107656,15 @@
         "level": 2,
         "values": [
           1,
-          12500,
+          14500,
           3202701,
-          6000,
+          6800,
           3202702,
-          4500,
+          5200,
           3202703,
-          3000,
+          3600,
           3202704,
-          4000,
+          4800,
           3202700
         ],
         "addons": null
@@ -107828,15 +107674,15 @@
         "level": 3,
         "values": [
           1,
-          13500,
+          15500,
           3202801,
-          6000,
+          6800,
           3202802,
-          4500,
+          5200,
           3202803,
-          3000,
+          3600,
           3202804,
-          4800,
+          5600,
           3202800
         ],
         "addons": null
@@ -107884,7 +107730,7 @@
         "level": 1,
         "values": [
           1,
-          20160,
+          20220,
           0,
           1,
           0,
@@ -107940,7 +107786,7 @@
         "level": 1,
         "values": [
           1,
-          20090,
+          20312,
           0,
           1,
           0,
@@ -111242,106 +111088,6 @@
     "isEngrave": false,
     "isPenalty": false
   },
-  "2330200": {
-    "id": 0,
-    "name": null,
-    "icon": null,
-    "levels": {
-      "1": {
-        "desc": null,
-        "level": 1,
-        "values": [
-          60,
-          12000,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      },
-      "2": {
-        "desc": null,
-        "level": 2,
-        "values": [
-          120,
-          12000,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      },
-      "3": {
-        "desc": null,
-        "level": 3,
-        "values": [
-          180,
-          12000,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      },
-      "4": {
-        "desc": null,
-        "level": 4,
-        "values": [
-          240,
-          12000,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      },
-      "5": {
-        "desc": null,
-        "level": 5,
-        "values": [
-          300,
-          12000,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "addons": null
-      }
-    },
-    "featureType": "ap_identity_druid_resonance",
-    "isEngrave": false,
-    "isPenalty": false
-  },
   "2330300": {
     "id": 0,
     "name": null,
@@ -111351,7 +111097,7 @@
         "desc": null,
         "level": 1,
         "values": [
-          10000,
+          8000,
           2330300,
           0,
           0,
@@ -111369,7 +111115,7 @@
         "desc": null,
         "level": 2,
         "values": [
-          9000,
+          8000,
           2330300,
           0,
           0,
@@ -111405,7 +111151,7 @@
         "desc": null,
         "level": 4,
         "values": [
-          7000,
+          8000,
           2330300,
           0,
           0,
@@ -111423,7 +111169,7 @@
         "desc": null,
         "level": 5,
         "values": [
-          6000,
+          8000,
           2330300,
           0,
           0,
@@ -111515,7 +111261,7 @@
         "desc": null,
         "level": 1,
         "values": [
-          200,
+          600,
           100,
           0,
           0,
@@ -111533,7 +111279,7 @@
         "desc": null,
         "level": 2,
         "values": [
-          400,
+          600,
           200,
           0,
           0,
@@ -111569,7 +111315,7 @@
         "desc": null,
         "level": 4,
         "values": [
-          800,
+          600,
           400,
           0,
           0,
@@ -111587,7 +111333,7 @@
         "desc": null,
         "level": 5,
         "values": [
-          1000,
+          600,
           500,
           0,
           0,
@@ -112324,6 +112070,950 @@
     "isEngrave": false,
     "isPenalty": false
   },
+  "220500000": {
+    "id": 0,
+    "name": null,
+    "icon": null,
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": [
+          15000,
+          220500000,
+          0,
+          0,
+          0,
+          2050931,
+          0,
+          220500000,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "2": {
+        "desc": null,
+        "level": 2,
+        "values": [
+          15000,
+          220500000,
+          220500100,
+          0,
+          0,
+          2050931,
+          0,
+          220500000,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "3": {
+        "desc": null,
+        "level": 3,
+        "values": [
+          15000,
+          220500000,
+          220500100,
+          6000,
+          220500110,
+          2050931,
+          0,
+          220500000,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "4": {
+        "desc": null,
+        "level": 4,
+        "values": [
+          15000,
+          220500000,
+          220500100,
+          6000,
+          220500110,
+          2050931,
+          0,
+          220500000,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "5": {
+        "desc": null,
+        "level": 5,
+        "values": [
+          15000,
+          220500000,
+          220500100,
+          6000,
+          220500110,
+          2050931,
+          0,
+          220500000,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "6": {
+        "desc": null,
+        "level": 6,
+        "values": [
+          15000,
+          220500000,
+          220500100,
+          6000,
+          220500110,
+          2050931,
+          0,
+          220500000,
+          2050931,
+          2050932,
+          0
+        ],
+        "addons": null
+      },
+      "7": {
+        "desc": null,
+        "level": 7,
+        "values": [
+          15000,
+          220500000,
+          220500100,
+          6000,
+          220500110,
+          2050931,
+          0,
+          220500000,
+          2050931,
+          2050932,
+          0
+        ],
+        "addons": null
+      },
+      "8": {
+        "desc": null,
+        "level": 8,
+        "values": [
+          15000,
+          220500000,
+          220500100,
+          6000,
+          220500110,
+          2050931,
+          0,
+          220500000,
+          2050931,
+          2050932,
+          0
+        ],
+        "addons": null
+      }
+    },
+    "featureType": 355,
+    "isEngrave": false,
+    "isPenalty": false
+  },
+  "220500100": {
+    "id": 0,
+    "name": null,
+    "icon": null,
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": [
+          2050933,
+          2050934,
+          220500600,
+          220500601,
+          1200000,
+          180,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "2": {
+        "desc": null,
+        "level": 2,
+        "values": [
+          2050933,
+          2050934,
+          220500600,
+          220500601,
+          1200000,
+          180,
+          600,
+          0,
+          220501000,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "3": {
+        "desc": null,
+        "level": 3,
+        "values": [
+          2050933,
+          2050934,
+          220500600,
+          220500601,
+          1200000,
+          180,
+          1200,
+          0,
+          220501000,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "4": {
+        "desc": null,
+        "level": 4,
+        "values": [
+          2050933,
+          2050934,
+          220500600,
+          220500601,
+          1200000,
+          180,
+          1800,
+          0,
+          220501000,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "5": {
+        "desc": null,
+        "level": 5,
+        "values": [
+          2050933,
+          2050934,
+          220500602,
+          220500603,
+          1200000,
+          180,
+          1800,
+          0,
+          220501000,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "6": {
+        "desc": null,
+        "level": 6,
+        "values": [
+          2050933,
+          2050934,
+          220500602,
+          220500603,
+          1200000,
+          180,
+          1800,
+          0,
+          220501000,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "7": {
+        "desc": null,
+        "level": 7,
+        "values": [
+          2050933,
+          2050934,
+          220500602,
+          220500603,
+          1200000,
+          180,
+          1800,
+          0,
+          220501000,
+          0,
+          0
+        ],
+        "addons": null
+      }
+    },
+    "featureType": 356,
+    "isEngrave": false,
+    "isPenalty": false
+  },
+  "220501000": {
+    "id": 0,
+    "name": null,
+    "icon": null,
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": [
+          220501000,
+          220501000,
+          800,
+          220500604,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "2": {
+        "desc": null,
+        "level": 2,
+        "values": [
+          220501000,
+          220501000,
+          1600,
+          220500604,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "3": {
+        "desc": null,
+        "level": 3,
+        "values": [
+          220501000,
+          220501000,
+          2400,
+          220500604,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      }
+    },
+    "featureType": 357,
+    "isEngrave": false,
+    "isPenalty": false
+  },
+  "220510100": {
+    "id": 0,
+    "name": null,
+    "icon": null,
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": [
+          1000,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "2": {
+        "desc": null,
+        "level": 2,
+        "values": [
+          2000,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "3": {
+        "desc": null,
+        "level": 3,
+        "values": [
+          3000,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "4": {
+        "desc": null,
+        "level": 4,
+        "values": [
+          4000,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "5": {
+        "desc": null,
+        "level": 5,
+        "values": [
+          5000,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      }
+    },
+    "featureType": "ultimate_skill_charged_rage",
+    "isEngrave": false,
+    "isPenalty": false
+  },
+  "220510200": {
+    "id": 0,
+    "name": null,
+    "icon": null,
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "2": {
+        "desc": null,
+        "level": 2,
+        "values": [
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "3": {
+        "desc": null,
+        "level": 3,
+        "values": [
+          0,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      }
+    },
+    "featureType": "ap_awakening",
+    "isEngrave": false,
+    "isPenalty": false
+  },
+  "320500100": {
+    "id": 0,
+    "name": null,
+    "icon": null,
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": [
+          1,
+          0,
+          320500000,
+          320500100,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "2": {
+        "desc": null,
+        "level": 2,
+        "values": [
+          1,
+          0,
+          320500000,
+          320500101,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "3": {
+        "desc": null,
+        "level": 3,
+        "values": [
+          1,
+          0,
+          320500000,
+          320500102,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      }
+    },
+    "featureType": "ag_alpha_instant_skilleffect",
+    "isEngrave": false,
+    "isPenalty": false
+  },
+  "320500600": {
+    "id": 0,
+    "name": null,
+    "icon": null,
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": [
+          1,
+          0,
+          320500000,
+          320500601,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "2": {
+        "desc": null,
+        "level": 2,
+        "values": [
+          1,
+          0,
+          320500000,
+          320500602,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      }
+    },
+    "featureType": "ag_alpha_instant_skilleffect",
+    "isEngrave": false,
+    "isPenalty": false
+  },
+  "320501100": {
+    "id": 0,
+    "name": null,
+    "icon": null,
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": [
+          1,
+          0,
+          320500000,
+          320501100,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      }
+    },
+    "featureType": "ag_alpha_instant_skilleffect",
+    "isEngrave": false,
+    "isPenalty": false
+  },
+  "320501600": {
+    "id": 0,
+    "name": null,
+    "icon": null,
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": [
+          1,
+          0,
+          320500000,
+          320501600,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "2": {
+        "desc": null,
+        "level": 2,
+        "values": [
+          1,
+          0,
+          320500000,
+          320501601,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      },
+      "3": {
+        "desc": null,
+        "level": 3,
+        "values": [
+          1,
+          0,
+          320500000,
+          320501602,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      }
+    },
+    "featureType": "ag_alpha_instant_skilleffect",
+    "isEngrave": false,
+    "isPenalty": false
+  },
+  "320502100": {
+    "id": 0,
+    "name": null,
+    "icon": null,
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": [
+          1,
+          0,
+          320500000,
+          320502100,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      }
+    },
+    "featureType": "ag_alpha_instant_skilleffect",
+    "isEngrave": false,
+    "isPenalty": false
+  },
+  "320502600": {
+    "id": 0,
+    "name": null,
+    "icon": null,
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": [
+          1,
+          0,
+          320502600,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      }
+    },
+    "featureType": "ag_alpha_instant_skilleffect",
+    "isEngrave": false,
+    "isPenalty": false
+  },
+  "320503100": {
+    "id": 0,
+    "name": null,
+    "icon": null,
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": [
+          1,
+          2050250,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      }
+    },
+    "featureType": "ag_beta_use_skill",
+    "isEngrave": false,
+    "isPenalty": false
+  },
+  "320503600": {
+    "id": 0,
+    "name": null,
+    "icon": null,
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": [
+          1,
+          2050160,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      }
+    },
+    "featureType": "ag_beta_use_skill",
+    "isEngrave": false,
+    "isPenalty": false
+  },
+  "320504100": {
+    "id": 0,
+    "name": null,
+    "icon": null,
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": [
+          1,
+          2050930,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      }
+    },
+    "featureType": "ag_beta_use_skill",
+    "isEngrave": false,
+    "isPenalty": false
+  },
+  "320504600": {
+    "id": 0,
+    "name": null,
+    "icon": null,
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": [
+          1,
+          2050933,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      }
+    },
+    "featureType": "ag_beta_use_skill",
+    "isEngrave": false,
+    "isPenalty": false
+  },
+  "320505100": {
+    "id": 0,
+    "name": null,
+    "icon": null,
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": [
+          1,
+          2050933,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      }
+    },
+    "featureType": "ag_beta_use_skill",
+    "isEngrave": false,
+    "isPenalty": false
+  },
+  "320505600": {
+    "id": 0,
+    "name": null,
+    "icon": null,
+    "levels": {
+      "1": {
+        "desc": null,
+        "level": 1,
+        "values": [
+          1,
+          0,
+          320505600,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "addons": null
+      }
+    },
+    "featureType": "ag_beta_use_skill",
+    "isEngrave": false,
+    "isPenalty": false
+  },
   "2160000": {
     "id": 0,
     "name": null,
@@ -112441,7 +113131,7 @@
         "desc": null,
         "level": 7,
         "values": [
-          600,
+          800,
           10000,
           0,
           0,
@@ -112459,7 +113149,7 @@
         "desc": null,
         "level": 8,
         "values": [
-          1200,
+          1400,
           10000,
           0,
           0,
@@ -112477,7 +113167,7 @@
         "desc": null,
         "level": 9,
         "values": [
-          1800,
+          2000,
           10000,
           0,
           0,
@@ -115292,7 +115982,7 @@
           3162200,
           16640,
           0,
-          1300,
+          2000,
           0,
           0,
           0,
@@ -115320,7 +116010,7 @@
           3162300,
           16640,
           0,
-          1500,
+          2200,
           0,
           0,
           0,
@@ -115375,7 +116065,7 @@
         "values": [
           1,
           4,
-          1500,
+          2400,
           0,
           0,
           3162700,
@@ -115393,7 +116083,7 @@
         "values": [
           1,
           4,
-          1800,
+          2700,
           0,
           0,
           3162800,
@@ -118492,7 +119182,7 @@
           3451700,
           45730,
           0,
-          3600,
+          4000,
           3450001,
           1,
           0,
@@ -118510,7 +119200,7 @@
           3451800,
           45730,
           0,
-          4000,
+          4400,
           3450001,
           1,
           0,

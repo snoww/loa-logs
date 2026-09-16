@@ -3397,55 +3397,43 @@
       200
     ]
   },
-  "2250500": {
-    "id": 2250500,
-    "name": "블레이드_깨달음_4-2_버프부여_LV1",
+  "2250510": {
+    "id": 2250510,
+    "name": "블레이드_깨달음_4-2_레이어 변경",
     "desc": "",
     "skillId": 25038,
     "skillGroupId": 0,
-    "type": "add_chain_skill_effect",
+    "type": "change_layer",
     "target": "pc",
     "parameterType": "absolute",
     "parameters": [
-      254002,
-      1,
-      1,
-      2250500,
-      100
+      1
     ]
   },
-  "2250501": {
-    "id": 2250501,
-    "name": "블레이드_깨달음_4-2_버프부여_LV2",
+  "2250511": {
+    "id": 2250511,
+    "name": "블레이드_깨달음_4-2_브레이킹 문 쿨타임 증가",
     "desc": "",
-    "skillId": 25038,
+    "skillId": 25430,
     "skillGroupId": 0,
-    "type": "add_chain_skill_effect",
+    "type": "reduce_default_cooldown",
     "target": "pc",
     "parameterType": "absolute",
     "parameters": [
-      254002,
-      1,
-      1,
-      2250501,
-      100
+      540000
     ]
   },
-  "2250502": {
-    "id": 2250502,
-    "name": "블레이드_깨달음_4-2_버프부여_LV3",
+  "2250512": {
+    "id": 2250512,
+    "name": "블레이드_깨달음_4-2_데스 슬래쉬 쿨타임 감소",
     "desc": "",
-    "skillId": 25038,
+    "skillId": 25440,
     "skillGroupId": 0,
-    "type": "add_chain_skill_effect",
+    "type": "reduce_default_cooldown",
     "target": "pc",
     "parameterType": "absolute",
     "parameters": [
-      254002,
-      1,
-      1,
-      2250502,
-      100
+      -40000
     ]
   },
   "2251000": {
@@ -3742,6 +3730,19 @@
       30
     ]
   },
+  "2255700": {
+    "id": 2255700,
+    "name": "블레이드_도약_2-2_북타입 변경",
+    "desc": "",
+    "skillId": 25430,
+    "skillGroupId": 0,
+    "type": "change_skill_book_type",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      1
+    ]
+  },
   "2255800": {
     "id": 2255800,
     "name": "블레이드_도약_2-3_레이어변경",
@@ -3810,28 +3811,28 @@
   },
   "3253700": {
     "id": 3253700,
-    "name": "[블레이드][AG][베타-B-3] 일반 스킬 마나 소모 감소",
+    "name": "[블레이드][AG][베타-B-3] 데스 슬래쉬 시전속도 증가",
     "desc": "",
-    "skillId": 0,
-    "skillGroupId": 2250900,
-    "type": "change_cost",
+    "skillId": 25440,
+    "skillGroupId": 0,
+    "type": "change_attack_stage_speed",
     "target": "pc",
     "parameterType": "relative",
     "parameters": [
-      -20
+      10
     ]
   },
   "3253800": {
     "id": 3253800,
-    "name": "[블레이드][AG][베타-B-3.5] 일반 스킬 마나 소모 감소",
+    "name": "[블레이드][AG][베타-B-3.5] 데스 슬래쉬 시전속도 증가",
     "desc": "",
-    "skillId": 0,
-    "skillGroupId": 2250900,
-    "type": "change_cost",
+    "skillId": 25440,
+    "skillGroupId": 0,
+    "type": "change_attack_stage_speed",
     "target": "pc",
     "parameterType": "relative",
     "parameters": [
-      -20
+      10
     ]
   },
   "3254200": {
@@ -3899,6 +3900,46 @@
       -50
     ]
   },
+  "3256500": {
+    "id": 3256500,
+    "name": "[블레이드][AG][감마-B-1] 데스 슬래쉬 재사용 대기 시간 감소",
+    "desc": "",
+    "skillId": 25440,
+    "skillGroupId": 0,
+    "type": "reduce_default_cooldown",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      -2000
+    ]
+  },
+  "3256600": {
+    "id": 3256600,
+    "name": "[블레이드][AG][감마-B-2] 블레이드 댄스 재사용 대기 시간 증가",
+    "desc": "",
+    "skillId": 25100,
+    "skillGroupId": 0,
+    "type": "reduce_default_cooldown",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      6000
+    ]
+  },
+  "3256601": {
+    "id": 3256601,
+    "name": "[블레이드][AG][감마-B-2] 블레이드 댄스 피해량 증가",
+    "desc": "",
+    "skillId": 25100,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      90
+    ]
+  },
   "3257200": {
     "id": 3257200,
     "name": "[블레이드][AG][감마-C-3] 블리츠(올라운드) 피해 증가",
@@ -3910,7 +3951,7 @@
     "parameterType": "relative",
     "parameters": [
       0,
-      110
+      100
     ]
   },
   "3257300": {
@@ -3924,7 +3965,7 @@
     "parameterType": "relative",
     "parameters": [
       0,
-      120
+      108
     ]
   },
   "3258100": {
@@ -3938,7 +3979,7 @@
     "parameterType": "relative",
     "parameters": [
       0,
-      10
+      15
     ]
   },
   "3258200": {
@@ -3952,7 +3993,7 @@
     "parameterType": "relative",
     "parameters": [
       0,
-      12
+      20
     ]
   },
   "3258300": {
@@ -3966,7 +4007,7 @@
     "parameterType": "relative",
     "parameters": [
       0,
-      18
+      27
     ]
   },
   "3258600": {
@@ -4459,6 +4500,46 @@
       55,
       0,
       55
+    ]
+  },
+  "3263500": {
+    "id": 3263500,
+    "name": "[리퍼][AG][베타-B-1] 사일런트 스매셔 쿨감",
+    "desc": "",
+    "skillId": 26820,
+    "skillGroupId": 0,
+    "type": "reduce_default_cooldown",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      -6000
+    ]
+  },
+  "3266600": {
+    "id": 3266600,
+    "name": "[리퍼][AG][감마-B-2] 사일런트 스매셔 피증",
+    "desc": "",
+    "skillId": 26820,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      10
+    ]
+  },
+  "3266601": {
+    "id": 3266601,
+    "name": "[리퍼][AG][감마-B-2] 사일런트 스매셔 피면",
+    "desc": "",
+    "skillId": 26820,
+    "skillGroupId": 0,
+    "type": "add_skill_buff",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      3266601
     ]
   },
   "3267200": {
@@ -5957,7 +6038,7 @@
     "parameterType": "relative",
     "parameters": [
       0,
-      25
+      30
     ]
   },
   "3466800": {
@@ -5971,7 +6052,7 @@
     "parameterType": "relative",
     "parameters": [
       0,
-      25
+      30
     ]
   },
   "3467100": {
@@ -5998,7 +6079,7 @@
     "parameterType": "relative",
     "parameters": [
       0,
-      50
+      36
     ]
   },
   "3467300": {
@@ -6012,7 +6093,7 @@
     "parameterType": "relative",
     "parameters": [
       0,
-      50
+      36
     ]
   },
   "2490100": {
@@ -7039,20 +7120,162 @@
       100
     ]
   },
-  "2240900": {
-    "id": 2240900,
-    "name": "기공사_깨달음_4티어_2라인_내공 폭발",
+  "2240400": {
+    "id": 2240400,
+    "name": "기공사_깨달음_3티어_1라인_물아일체",
     "desc": "",
-    "skillId": 24022,
-    "skillGroupId": 0,
+    "skillId": 0,
+    "skillGroupId": 2240800,
     "type": "change_cost",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      0,
+      1,
+      100
+    ]
+  },
+  "2240401": {
+    "id": 2240401,
+    "name": "기공사_깨달음_3티어_1라인_물아일체",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2240800,
+    "type": "change_cost",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      0,
+      2,
+      100
+    ]
+  },
+  "2240402": {
+    "id": 2240402,
+    "name": "기공사_깨달음_3티어_1라인_물아일체",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2240800,
+    "type": "change_cost",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      0,
+      3,
+      100
+    ]
+  },
+  "2240403": {
+    "id": 2240403,
+    "name": "기공사_깨달음_3티어_1라인_물아일체",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2240800,
+    "type": "change_cost",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      0,
+      4,
+      100
+    ]
+  },
+  "2240404": {
+    "id": 2240404,
+    "name": "기공사_깨달음_3티어_1라인_물아일체",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2240800,
+    "type": "change_cost",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      0,
+      5,
+      100
+    ]
+  },
+  "2240500": {
+    "id": 2240500,
+    "name": "기공사_깨달음_3티어_2라인_삼화취정",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2240200,
+    "type": "add_skill_buff",
     "target": "pc",
     "parameterType": "absolute",
     "parameters": [
-      0,
-      10000,
-      0,
-      100
+      2240500
+    ]
+  },
+  "2240501": {
+    "id": 2240501,
+    "name": "기공사_깨달음_3티어_2라인_삼화취정",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2240200,
+    "type": "add_skill_buff",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      2240500
+    ]
+  },
+  "2240502": {
+    "id": 2240502,
+    "name": "기공사_깨달음_3티어_2라인_삼화취정",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2240200,
+    "type": "add_skill_buff",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      2240500
+    ]
+  },
+  "2240900": {
+    "id": 2240900,
+    "name": "기공사_깨달음_4티어_2라인_오기조원_연계",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2240900,
+    "type": "enable_notify",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      1
+    ]
+  },
+  "2240901": {
+    "id": 2240901,
+    "name": "기공사_깨달음_4티어_2라인_오기조원_연계",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2240900,
+    "type": "enable_notify",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      1
+    ]
+  },
+  "2240902": {
+    "id": 2240902,
+    "name": "기공사_깨달음_4티어_2라인_오기조원_연계",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2240900,
+    "type": "enable_notify",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      1
     ]
   },
   "2224100": {
@@ -8341,7 +8564,7 @@
     "parameterType": "relative",
     "parameters": [
       0,
-      20
+      30
     ]
   },
   "2245803": {
@@ -8355,7 +8578,7 @@
     "parameterType": "relative",
     "parameters": [
       0,
-      30
+      50
     ]
   },
   "2245900": {
@@ -9390,6 +9613,21 @@
       10000
     ]
   },
+  "3346600": {
+    "id": 3346600,
+    "name": "[창술사][AG][감마-B-2] 유성강천 '화력 조절' 시 가디언관통",
+    "desc": "",
+    "skillId": 34570,
+    "skillGroupId": 0,
+    "type": "change_stage_collision",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      2,
+      2,
+      3
+    ]
+  },
   "3347100": {
     "id": 3347100,
     "name": "[창술사][AG][감마-C-2] 맹룡열파 '우회 베기' 무력화 피해 증가",
@@ -9503,9 +9741,187 @@
       10
     ]
   },
+  "3241700": {
+    "id": 3241700,
+    "name": "[기공사][아크그리드] α-D타입-17 순보 쿨타임 감소",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 3242600,
+    "type": "reduce_default_cooldown",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      -20,
+      100
+    ]
+  },
+  "3241800": {
+    "id": 3241800,
+    "name": "[기공사][아크그리드] α-D타입-17+ 순보 쿨타임 감소",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 3242600,
+    "type": "reduce_default_cooldown",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      -20,
+      100
+    ]
+  },
   "3243700": {
     "id": 3243700,
-    "name": "[기공사][아크그리드] β-B타입-17,17+ 무공탄 사용 중 경직 면역",
+    "name": "[기공사][아크그리드] β-B타입-17 풍뢰,섬열,천류 시전속도",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 3240700,
+    "type": "change_attack_stage_speed",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      10
+    ]
+  },
+  "3243701": {
+    "id": 3243701,
+    "name": "[기공사][아크그리드] β-B타입-17 풍뢰,섬열,천류 피해량 증가",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 3240700,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      6
+    ]
+  },
+  "3243800": {
+    "id": 3243800,
+    "name": "[기공사][아크그리드] β-B타입-17+ 풍뢰,섬열,천류 시전속도",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 3240700,
+    "type": "change_attack_stage_speed",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      10
+    ]
+  },
+  "3243801": {
+    "id": 3243801,
+    "name": "[기공사][아크그리드] β-B타입-17+ 풍뢰,섬열,천류 피해량 증가",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 3240700,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      7
+    ]
+  },
+  "3246000": {
+    "id": 3246000,
+    "name": "[기공사][아크그리드] γ-A타입-10 천하섬멸옥 시전속도 증가",
+    "desc": "",
+    "skillId": 24050,
+    "skillGroupId": 0,
+    "type": "change_attack_stage_speed",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      20
+    ]
+  },
+  "3246100": {
+    "id": 3246100,
+    "name": "[기공사][아크그리드] γ-A타입-14 천하섬멸옥 사용 중 받는피해감소",
+    "desc": "",
+    "skillId": 24050,
+    "skillGroupId": 0,
+    "type": "add_skill_buff",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      3246100
+    ]
+  },
+  "3246200": {
+    "id": 3246200,
+    "name": "[기공사][아크그리드] γ-A타입-17 낙일멸천옥 쿨타임 감소",
+    "desc": "",
+    "skillId": 24300,
+    "skillGroupId": 0,
+    "type": "reduce_default_cooldown",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      -10,
+      100
+    ]
+  },
+  "3246300": {
+    "id": 3246300,
+    "name": "[기공사][아크그리드] γ-A타입-17+ 낙일멸천옥 쿨타임 감소",
+    "desc": "",
+    "skillId": 24300,
+    "skillGroupId": 0,
+    "type": "reduce_default_cooldown",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      -10,
+      100
+    ]
+  },
+  "3246600": {
+    "id": 3246600,
+    "name": "[기공사][아크그리드] γ-B타입-14 섬열파 혼신의일격 트포 적용시 피증",
+    "desc": "",
+    "skillId": 24040,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      12
+    ]
+  },
+  "3246700": {
+    "id": 3246700,
+    "name": "[기공사][아크그리드] γ-B타입-17 천류나선장 피해량 증가",
+    "desc": "",
+    "skillId": 24360,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      9
+    ]
+  },
+  "3246800": {
+    "id": 3246800,
+    "name": "[기공사][아크그리드] γ-B타입-17+ 천류나선장 피해량 증가",
+    "desc": "",
+    "skillId": 24360,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      13
+    ]
+  },
+  "3247000": {
+    "id": 3247000,
+    "name": "[기공사][아크그리드] γ-C타입-10 무공탄 사용 중 경직면역",
     "desc": "",
     "skillId": 24090,
     "skillGroupId": 0,
@@ -9513,274 +9929,33 @@
     "target": "pc",
     "parameterType": "absolute",
     "parameters": [
-      3243700
+      3247000
     ]
   },
-  "3246700": {
-    "id": 3246700,
-    "name": "[기공사][아크그리드] γ-B타입-17 섬열파 8번 피해량 증가",
+  "3248000": {
+    "id": 3248000,
+    "name": "[기공사][아크그리드] γ-E타입-10 금강신공 상태이상 면역효과",
     "desc": "",
-    "skillId": 24040,
-    "skillGroupId": 0,
-    "type": "change_dam_value",
-    "target": "pc",
-    "parameterType": "relative",
-    "parameters": [
-      0,
-      80
-    ]
-  },
-  "3246701": {
-    "id": 3246701,
-    "name": "[기공사][아크그리드] γ-B타입-17 섬열파 8번 쿨 증가",
-    "desc": "",
-    "skillId": 24040,
-    "skillGroupId": 0,
-    "type": "reduce_default_cooldown",
-    "target": "pc",
-    "parameterType": "absolute",
-    "parameters": [
-      30000,
-      100
-    ]
-  },
-  "3246702": {
-    "id": 3246702,
-    "name": "[기공사][아크그리드] γ-B타입-17 섬열파 8번 공속 증가",
-    "desc": "",
-    "skillId": 24040,
-    "skillGroupId": 0,
-    "type": "change_attack_stage_speed",
-    "target": "pc",
-    "parameterType": "relative",
-    "parameters": [
-      30
-    ]
-  },
-  "3246800": {
-    "id": 3246800,
-    "name": "[기공사][아크그리드] γ-B타입-17+ 섬열파 8번 피해량 증가",
-    "desc": "",
-    "skillId": 24040,
-    "skillGroupId": 0,
-    "type": "change_dam_value",
-    "target": "pc",
-    "parameterType": "relative",
-    "parameters": [
-      0,
-      84
-    ]
-  },
-  "3246801": {
-    "id": 3246801,
-    "name": "[기공사][아크그리드] γ-B타입-17+ 섬열파 8번 쿨 증가",
-    "desc": "",
-    "skillId": 24040,
-    "skillGroupId": 0,
-    "type": "reduce_default_cooldown",
-    "target": "pc",
-    "parameterType": "absolute",
-    "parameters": [
-      30000,
-      100
-    ]
-  },
-  "3246802": {
-    "id": 3246802,
-    "name": "[기공사][아크그리드] γ-B타입-17+ 섬열파 8번 공속 증가",
-    "desc": "",
-    "skillId": 24040,
-    "skillGroupId": 0,
-    "type": "change_attack_stage_speed",
-    "target": "pc",
-    "parameterType": "relative",
-    "parameters": [
-      30
-    ]
-  },
-  "3247100": {
-    "id": 3247100,
-    "name": "[기공사][아크그리드] γ-C타입-14 번천장 사용 중 피격이상 면역",
-    "desc": "",
-    "skillId": 24110,
-    "skillGroupId": 0,
+    "skillId": 0,
+    "skillGroupId": 3242700,
     "type": "add_skill_buff",
     "target": "pc",
     "parameterType": "absolute",
     "parameters": [
-      3247100
+      3248000
     ]
   },
-  "3247700": {
-    "id": 3247700,
-    "name": "[기공사][아크그리드] γ-D타입-17 벽력장 공속 증가",
+  "3248500": {
+    "id": 3248500,
+    "name": "[기공사][아크그리드] γ-F타입-10 음양신장 시전속도 증가",
     "desc": "",
-    "skillId": 24080,
+    "skillId": 24340,
     "skillGroupId": 0,
     "type": "change_attack_stage_speed",
     "target": "pc",
     "parameterType": "relative",
     "parameters": [
-      15
-    ]
-  },
-  "3247800": {
-    "id": 3247800,
-    "name": "[기공사][아크그리드] γ-D타입-17+ 벽력장 공속 증가",
-    "desc": "",
-    "skillId": 24080,
-    "skillGroupId": 0,
-    "type": "change_attack_stage_speed",
-    "target": "pc",
-    "parameterType": "relative",
-    "parameters": [
-      15
-    ]
-  },
-  "3245200": {
-    "id": 3245200,
-    "name": "[기공사][아크그리드] β-E타입-17 섭물진기 공속 증가",
-    "desc": "",
-    "skillId": 24140,
-    "skillGroupId": 0,
-    "type": "change_attack_stage_speed",
-    "target": "pc",
-    "parameterType": "relative",
-    "parameters": [
-      20
-    ]
-  },
-  "3245300": {
-    "id": 3245300,
-    "name": "[기공사][아크그리드] β-E타입-17+ 섭물진기 공속 증가",
-    "desc": "",
-    "skillId": 24140,
-    "skillGroupId": 0,
-    "type": "change_attack_stage_speed",
-    "target": "pc",
-    "parameterType": "relative",
-    "parameters": [
-      20
-    ]
-  },
-  "3248100": {
-    "id": 3248100,
-    "name": "[기공사][아크그리드] γ-E타입-14 환영격 시전속도 증가",
-    "desc": "",
-    "skillId": 24290,
-    "skillGroupId": 0,
-    "type": "change_attack_stage_speed",
-    "target": "pc",
-    "parameterType": "relative",
-    "parameters": [
-      15
-    ]
-  },
-  "3248200": {
-    "id": 3248200,
-    "name": "[기공사][아크그리드] γ-E타입-17 섭물진기 재사용 대기시간 증가",
-    "desc": "",
-    "skillId": 24140,
-    "skillGroupId": 0,
-    "type": "reduce_default_cooldown",
-    "target": "pc",
-    "parameterType": "absolute",
-    "parameters": [
-      16000
-    ]
-  },
-  "3248201": {
-    "id": 3248201,
-    "name": "[기공사][아크그리드] γ-E타입-17 섭물진기 재사용 피해량 증가",
-    "desc": "",
-    "skillId": 24140,
-    "skillGroupId": 0,
-    "type": "change_dam_value",
-    "target": "pc",
-    "parameterType": "relative",
-    "parameters": [
-      0,
-      165
-    ]
-  },
-  "3248300": {
-    "id": 3248300,
-    "name": "[기공사][아크그리드] γ-E타입-17+ 섭물진기 재사용 대기시간 증가",
-    "desc": "",
-    "skillId": 24140,
-    "skillGroupId": 0,
-    "type": "reduce_default_cooldown",
-    "target": "pc",
-    "parameterType": "absolute",
-    "parameters": [
-      16000
-    ]
-  },
-  "3248301": {
-    "id": 3248301,
-    "name": "[기공사][아크그리드] γ-E타입-17+ 섭물진기 재사용 피해량 증가",
-    "desc": "",
-    "skillId": 24140,
-    "skillGroupId": 0,
-    "type": "change_dam_value",
-    "target": "pc",
-    "parameterType": "relative",
-    "parameters": [
-      0,
-      180
-    ]
-  },
-  "3245700": {
-    "id": 3245700,
-    "name": "[기공사][아크그리드] β-F타입-17 파쇄장 시전속도 증가",
-    "desc": "",
-    "skillId": 24180,
-    "skillGroupId": 0,
-    "type": "change_attack_stage_speed",
-    "target": "pc",
-    "parameterType": "relative",
-    "parameters": [
-      15
-    ]
-  },
-  "3245800": {
-    "id": 3245800,
-    "name": "[기공사][아크그리드] β-F타입-17+ 파쇄장 시전속도 증가",
-    "desc": "",
-    "skillId": 24180,
-    "skillGroupId": 0,
-    "type": "change_attack_stage_speed",
-    "target": "pc",
-    "parameterType": "relative",
-    "parameters": [
-      15
-    ]
-  },
-  "3248600": {
-    "id": 3248600,
-    "name": "[기공사][아크그리드] γ-F타입-14 파쇄장 8번 피해량 증가",
-    "desc": "",
-    "skillId": 24180,
-    "skillGroupId": 0,
-    "type": "change_dam_value",
-    "target": "pc",
-    "parameterType": "relative",
-    "parameters": [
-      0,
-      220
-    ]
-  },
-  "3248601": {
-    "id": 3248601,
-    "name": "[기공사][아크그리드] γ-F타입-14 파쇄장 재사용 대기시간 증가",
-    "desc": "",
-    "skillId": 24180,
-    "skillGroupId": 0,
-    "type": "reduce_default_cooldown",
-    "target": "pc",
-    "parameterType": "absolute",
-    "parameters": [
-      7000
+      12
     ]
   },
   "2473200": {
@@ -9948,7 +10123,7 @@
     "parameterType": "relative",
     "parameters": [
       0,
-      30
+      33
     ]
   },
   "2390903": {
@@ -9962,7 +10137,7 @@
     "parameterType": "relative",
     "parameters": [
       0,
-      30
+      36
     ]
   },
   "2390904": {
@@ -11450,91 +11625,6 @@
       2
     ]
   },
-  "2294400": {
-    "id": 2294400,
-    "name": "데빌헌터_깨달음_4-4_빛나는 탄_슬롯연출체크_1",
-    "desc": "",
-    "skillId": 0,
-    "skillGroupId": 2293400,
-    "type": "change_skill_slot_visible_effect",
-    "target": "pc",
-    "parameterType": "absolute",
-    "parameters": [
-      0,
-      0,
-      1,
-      0,
-      2294401
-    ]
-  },
-  "2294401": {
-    "id": 2294401,
-    "name": "데빌헌터_깨달음_4-4_빛나는 탄_슬롯연출체크_2",
-    "desc": "",
-    "skillId": 0,
-    "skillGroupId": 2293400,
-    "type": "change_skill_slot_visible_effect",
-    "target": "pc",
-    "parameterType": "absolute",
-    "parameters": [
-      0,
-      0,
-      1,
-      0,
-      2294411
-    ]
-  },
-  "2294402": {
-    "id": 2294402,
-    "name": "데빌헌터_깨달음_4-4_빛나는 탄_슬롯연출체크_3",
-    "desc": "",
-    "skillId": 0,
-    "skillGroupId": 2293400,
-    "type": "change_skill_slot_visible_effect",
-    "target": "pc",
-    "parameterType": "absolute",
-    "parameters": [
-      0,
-      0,
-      1,
-      0,
-      2294421
-    ]
-  },
-  "2294403": {
-    "id": 2294403,
-    "name": "데빌헌터_깨달음_4-4_빛나는 탄_슬롯연출체크_4",
-    "desc": "",
-    "skillId": 0,
-    "skillGroupId": 2293400,
-    "type": "change_skill_slot_visible_effect",
-    "target": "pc",
-    "parameterType": "absolute",
-    "parameters": [
-      0,
-      0,
-      1,
-      0,
-      2294431
-    ]
-  },
-  "2294404": {
-    "id": 2294404,
-    "name": "데빌헌터_깨달음_4-4_빛나는 탄_슬롯연출체크_5",
-    "desc": "",
-    "skillId": 0,
-    "skillGroupId": 2293400,
-    "type": "change_skill_slot_visible_effect",
-    "target": "pc",
-    "parameterType": "absolute",
-    "parameters": [
-      0,
-      0,
-      1,
-      0,
-      2294441
-    ]
-  },
   "2295000": {
     "id": 2295000,
     "name": "데빌헌터_도약_1-1_초각성기 피해량 증가_1",
@@ -11842,6 +11932,21 @@
       30
     ]
   },
+  "3291100": {
+    "id": 3291100,
+    "name": "데빌헌터_AG_알파C_14_샷건 스킬 무력화 감소",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2294200,
+    "type": "change_skill_effect_ai_point",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      -12,
+      -12
+    ]
+  },
   "3293700": {
     "id": 3293700,
     "name": "데빌헌터_AG_베타B_17_심판의 날 '드래곤 브레스' 피해량 증가",
@@ -12117,59 +12222,7 @@
     "target": "pc",
     "parameterType": "relative",
     "parameters": [
-      2
-    ]
-  },
-  "2300401": {
-    "id": 2300401,
-    "name": "블래스터_깨달음_3-1_신속 포격_2_스테이지 공속 증가",
-    "desc": "",
-    "skillId": 0,
-    "skillGroupId": 2300400,
-    "type": "change_attack_stage_speed",
-    "target": "pc",
-    "parameterType": "relative",
-    "parameters": [
-      4
-    ]
-  },
-  "2300402": {
-    "id": 2300402,
-    "name": "블래스터_깨달음_3-1_신속 포격_3_스테이지 공속 증가",
-    "desc": "",
-    "skillId": 0,
-    "skillGroupId": 2300400,
-    "type": "change_attack_stage_speed",
-    "target": "pc",
-    "parameterType": "relative",
-    "parameters": [
-      6
-    ]
-  },
-  "2300403": {
-    "id": 2300403,
-    "name": "블래스터_깨달음_3-1_신속 포격_4_스테이지 공속 증가",
-    "desc": "",
-    "skillId": 0,
-    "skillGroupId": 2300400,
-    "type": "change_attack_stage_speed",
-    "target": "pc",
-    "parameterType": "relative",
-    "parameters": [
-      8
-    ]
-  },
-  "2300404": {
-    "id": 2300404,
-    "name": "블래스터_깨달음_3-1_신속 포격_5_스테이지 공속 증가",
-    "desc": "",
-    "skillId": 0,
-    "skillGroupId": 2300400,
-    "type": "change_attack_stage_speed",
-    "target": "pc",
-    "parameterType": "relative",
-    "parameters": [
-      10
+      5
     ]
   },
   "2300900": {
@@ -13532,6 +13585,22 @@
       100
     ]
   },
+  "3283700": {
+    "id": 3283700,
+    "name": "호크아이_베타_C_17_애로우 샤워 마나 소모량 감소",
+    "desc": "",
+    "skillId": 28080,
+    "skillGroupId": 0,
+    "type": "change_cost",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      -50,
+      0,
+      0,
+      100
+    ]
+  },
   "3285700": {
     "id": 3285700,
     "name": "호크아이_베타_F_17_래피드 샷 마나 소모량 감소",
@@ -13603,6 +13672,19 @@
       70
     ]
   },
+  "3287000": {
+    "id": 3287000,
+    "name": "호크아이_감마_C_10_샤프슈터 경면",
+    "desc": "",
+    "skillId": 28110,
+    "skillGroupId": 0,
+    "type": "add_skill_buff",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      3287000
+    ]
+  },
   "3287600": {
     "id": 3287600,
     "name": "호크아이_감마_D_14_호크샷 시전 속도 증가",
@@ -13618,16 +13700,15 @@
   },
   "3288100": {
     "id": 3288100,
-    "name": "호크아이_감마_E_14_차징 샷 쿨타임 증가",
+    "name": "호크아이_감마_E_14_차징 샷 피면 버프 추가",
     "desc": "",
     "skillId": 28090,
     "skillGroupId": 0,
-    "type": "reduce_default_cooldown",
+    "type": "add_skill_buff",
     "target": "pc",
     "parameterType": "absolute",
     "parameters": [
-      16000,
-      100
+      3288100
     ]
   },
   "3288200": {
@@ -13720,6 +13801,19 @@
     "parameterType": "relative",
     "parameters": [
       -12
+    ]
+  },
+  "2384400": {
+    "id": 2384400,
+    "name": "건슬링어_깨달음_4-4_라이플 스킬 시전속도 증가",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2512020,
+    "type": "change_attack_stage_speed",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      5
     ]
   },
   "2385000": {
@@ -16921,7 +17015,7 @@
     "target": "pc",
     "parameterType": "absolute",
     "parameters": [
-      25000,
+      20000,
       100
     ]
   },
@@ -16935,7 +17029,7 @@
     "target": "pc",
     "parameterType": "absolute",
     "parameters": [
-      25000,
+      20000,
       100
     ]
   },
@@ -16949,7 +17043,7 @@
     "target": "pc",
     "parameterType": "absolute",
     "parameters": [
-      25000,
+      20000,
       100
     ]
   },
@@ -16963,7 +17057,7 @@
     "target": "pc",
     "parameterType": "absolute",
     "parameters": [
-      25000,
+      20000,
       100
     ]
   },
@@ -16977,7 +17071,7 @@
     "target": "pc",
     "parameterType": "absolute",
     "parameters": [
-      25000,
+      20000,
       100
     ]
   },
@@ -17611,7 +17705,7 @@
     "parameterType": "relative",
     "parameters": [
       192011,
-      130
+      115
     ]
   },
   "3198100": {
@@ -17678,6 +17772,19 @@
       100
     ]
   },
+  "3370100": {
+    "id": 3370100,
+    "name": "[소서리스][AG] α-A타입-14 피면 해제용 버프",
+    "desc": "",
+    "skillId": 37400,
+    "skillGroupId": 0,
+    "type": "add_skill_buff",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      3370105
+    ]
+  },
   "3371100": {
     "id": 3371100,
     "name": "[소서리스][AG] α-C타입-14 종날 초기화",
@@ -17688,7 +17795,7 @@
     "target": "pc",
     "parameterType": "absolute",
     "parameters": [
-      6000,
+      4000,
       100
     ]
   },
@@ -17891,18 +17998,17 @@
       100
     ]
   },
-  "3378601": {
-    "id": 3378601,
-    "name": "[소서리스][AG] γ-F타입-14 라볼  쿨증 피증",
+  "3378700": {
+    "id": 3378700,
+    "name": "[소서리스][AG] γ-F타입-17 라볼 피면",
     "desc": "",
     "skillId": 37300,
     "skillGroupId": 0,
-    "type": "change_dam_value",
+    "type": "add_skill_buff",
     "target": "pc",
-    "parameterType": "relative",
+    "parameterType": "absolute",
     "parameters": [
-      0,
-      35
+      3378700
     ]
   },
   "3201101": {
@@ -17921,6 +18027,20 @@
       -90,
       -90,
       -90
+    ]
+  },
+  "3201200": {
+    "id": 3201200,
+    "name": "[서머너][AG] α-C타입-17 쏜살 바람새 강화",
+    "desc": "",
+    "skillId": 20060,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      15
     ]
   },
   "3204700": {
@@ -17949,6 +18069,20 @@
       10
     ]
   },
+  "3206000": {
+    "id": 3206000,
+    "name": "[서머너][AG] γ-A타입-10 물의 정령 스택",
+    "desc": "",
+    "skillId": 20250,
+    "skillGroupId": 0,
+    "type": "reduce_default_cooldown",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      -13000,
+      100
+    ]
+  },
   "3206500": {
     "id": 3206500,
     "name": "[서머너][AG] γ-B타입-10 슈르디 마나회복 피증",
@@ -17960,7 +18094,7 @@
     "parameterType": "relative",
     "parameters": [
       0,
-      55
+      65
     ]
   },
   "3207100": {
@@ -20136,6 +20270,19 @@
       20
     ]
   },
+  "3327701": {
+    "id": 3327701,
+    "name": "기상술사_감마 D-3 여우비 경면 버프 부여",
+    "desc": "",
+    "skillId": 32001,
+    "skillGroupId": 0,
+    "type": "add_skill_buff",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      3327701
+    ]
+  },
   "3328200": {
     "id": 3328200,
     "name": "기상술사_감마 E-3 소나기 낙뢰주의보 커마 피해량 증가",
@@ -20386,9 +20533,9 @@
     "skillGroupId": 2335400,
     "type": "change_stack_charge_time",
     "target": "pc",
-    "parameterType": "absolute",
+    "parameterType": "relative",
     "parameters": [
-      -500
+      -2
     ]
   },
   "2335411": {
@@ -20399,9 +20546,9 @@
     "skillGroupId": 2335400,
     "type": "change_stack_charge_time",
     "target": "pc",
-    "parameterType": "absolute",
+    "parameterType": "relative",
     "parameters": [
-      -1000
+      -4
     ]
   },
   "2335412": {
@@ -20412,9 +20559,9 @@
     "skillGroupId": 2335400,
     "type": "change_stack_charge_time",
     "target": "pc",
-    "parameterType": "absolute",
+    "parameterType": "relative",
     "parameters": [
-      -1500
+      -6
     ]
   },
   "2335413": {
@@ -20425,9 +20572,9 @@
     "skillGroupId": 2335400,
     "type": "change_stack_charge_time",
     "target": "pc",
-    "parameterType": "absolute",
+    "parameterType": "relative",
     "parameters": [
-      -2000
+      -8
     ]
   },
   "2335414": {
@@ -20438,9 +20585,9 @@
     "skillGroupId": 2335400,
     "type": "change_stack_charge_time",
     "target": "pc",
-    "parameterType": "absolute",
+    "parameterType": "relative",
     "parameters": [
-      -2500
+      -10
     ]
   },
   "2335500": {
@@ -20584,9 +20731,9 @@
     "skillGroupId": 0,
     "type": "change_stack_charge_time",
     "target": "pc",
-    "parameterType": "absolute",
+    "parameterType": "relative",
     "parameters": [
-      -25000
+      -50
     ]
   },
   "2335710": {
@@ -20915,6 +21062,608 @@
     "parameters": [
       0,
       69
+    ]
+  },
+  "220500100": {
+    "id": 220500100,
+    "name": "[차원술사][깨달음][1-3] 분침 스킬 기본 쿨타임 감소 - 건너 찌르기",
+    "desc": "",
+    "skillId": 2050160,
+    "skillGroupId": 0,
+    "type": "change_stack_charge_time",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      -40
+    ]
+  },
+  "220500101": {
+    "id": 220500101,
+    "name": "[차원술사][깨달음][1-3] 분침 스킬 마나 소모량 감소",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2050001,
+    "type": "change_cost",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      -45
+    ]
+  },
+  "220500400": {
+    "id": 220500400,
+    "name": "[차원술사][깨달음][3-1] 분리된 시간선 이탈 피면 버프 시간 증가",
+    "desc": "",
+    "skillId": 2050932,
+    "skillGroupId": 0,
+    "type": "change_buff_duration",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      0,
+      220500004,
+      1000
+    ]
+  },
+  "220510000": {
+    "id": 220510000,
+    "name": "[차원술사][도약]1-1_초월적인힘 - 초각성기 피증",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2050006,
+    "type": "change_awakening_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      2,
+      10
+    ]
+  },
+  "220510001": {
+    "id": 220510001,
+    "name": "[차원술사][도약]1-1_초월적인힘",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2050006,
+    "type": "change_awakening_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      2,
+      20
+    ]
+  },
+  "220510002": {
+    "id": 220510002,
+    "name": "[차원술사][도약]1-1_초월적인힘",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2050006,
+    "type": "change_awakening_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      2,
+      30
+    ]
+  },
+  "220510003": {
+    "id": 220510003,
+    "name": "[차원술사][도약]1-1_초월적인힘",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2050006,
+    "type": "change_awakening_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      2,
+      40
+    ]
+  },
+  "220510004": {
+    "id": 220510004,
+    "name": "[차원술사][도약]1-1_초월적인힘",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2050006,
+    "type": "change_awakening_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      2,
+      50
+    ]
+  },
+  "220510400": {
+    "id": 220510400,
+    "name": "[차원술사][도약]1-5_초각성스킬쿨감_LV1",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2050005,
+    "type": "reduce_default_cooldown",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      -2
+    ]
+  },
+  "220510401": {
+    "id": 220510401,
+    "name": "[차원술사][도약]1-5_초각성스킬쿨감_LV2",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2050005,
+    "type": "reduce_default_cooldown",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      -4
+    ]
+  },
+  "220510402": {
+    "id": 220510402,
+    "name": "[차원술사][도약]1-5_초각성스킬쿨감_LV3",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2050005,
+    "type": "reduce_default_cooldown",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      -6
+    ]
+  },
+  "220510403": {
+    "id": 220510403,
+    "name": "[차원술사][도약]1-5_초각성스킬쿨감_LV4",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2050005,
+    "type": "reduce_default_cooldown",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      -8
+    ]
+  },
+  "220510404": {
+    "id": 220510404,
+    "name": "[차원술사][도약]1-5_초각성스킬쿨감_LV5",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2050005,
+    "type": "reduce_default_cooldown",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      -10
+    ]
+  },
+  "220510500": {
+    "id": 220510500,
+    "name": "[차원술사][도약]1-6_마나감소_LV1",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2050005,
+    "type": "change_cost",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      -30
+    ]
+  },
+  "220510501": {
+    "id": 220510501,
+    "name": "[차원술사][도약]1-6_마나감소_LV2",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2050005,
+    "type": "change_cost",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      -60
+    ]
+  },
+  "220510502": {
+    "id": 220510502,
+    "name": "[차원술사][도약]1-6_마나감소_LV3",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2050005,
+    "type": "change_cost",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      -90
+    ]
+  },
+  "220510700": {
+    "id": 220510700,
+    "name": "[차원술사][도약][2-2] 업의 경계 아덴게이지 감소",
+    "desc": "",
+    "skillId": 2050500,
+    "skillGroupId": 0,
+    "type": "change_skill_effect_identity_proc_pvp_info",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      0,
+      84,
+      -50,
+      -50
+    ]
+  },
+  "220510800": {
+    "id": 220510800,
+    "name": "[차원술사][도약][2-3] 일념 레이어 변경",
+    "desc": "",
+    "skillId": 2050510,
+    "skillGroupId": 0,
+    "type": "change_layer",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      1
+    ]
+  },
+  "220510900": {
+    "id": 220510900,
+    "name": "[차원술사][도약][2-4] 일념 레이어 변경",
+    "desc": "",
+    "skillId": 2050510,
+    "skillGroupId": 0,
+    "type": "change_layer",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      2
+    ]
+  },
+  "320500600": {
+    "id": 320500600,
+    "name": "[차원술사][아크그리드][알파B][2단계] 차원의 틈 아덴게이지 감소",
+    "desc": "",
+    "skillId": 2050250,
+    "skillGroupId": 0,
+    "type": "change_skill_effect_identity_proc_pvp_info",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      0,
+      84,
+      -100,
+      -100
+    ]
+  },
+  "320502200": {
+    "id": 320502200,
+    "name": "[차원술사][아크그리드][알파E][3단계] 3중첩 시 하이라이트",
+    "desc": "",
+    "skillId": 2050190,
+    "skillGroupId": 0,
+    "type": "change_skill_slot_visible_effect",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      0,
+      0,
+      1,
+      0,
+      320502202
+    ]
+  },
+  "320502600": {
+    "id": 320502600,
+    "name": "[차원술사][아크그리드][알파F][2단계] 왜곡 버프 보유시 하이라이트",
+    "desc": "",
+    "skillId": 2050200,
+    "skillGroupId": 0,
+    "type": "change_skill_slot_visible_effect",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      0,
+      0,
+      1,
+      0,
+      320502602
+    ]
+  },
+  "320503200": {
+    "id": 320503200,
+    "name": "[차원술사][아크그리드][베타A][3단계] 결합 스킬 시전 속도 증가",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2050002,
+    "type": "change_attack_stage_speed",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      5
+    ]
+  },
+  "320503300": {
+    "id": 320503300,
+    "name": "[차원술사][아크그리드][베타A][3단계-고대] 결합 스킬 시전 속도 증가",
+    "desc": "",
+    "skillId": 0,
+    "skillGroupId": 2050002,
+    "type": "change_attack_stage_speed",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      5
+    ]
+  },
+  "320504700": {
+    "id": 320504700,
+    "name": "[차원술사][아크그리드][베타D][3단계] 공간 베기 중첩",
+    "desc": "",
+    "skillId": 2050150,
+    "skillGroupId": 0,
+    "type": "change_stack_charge_time",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      15000
+    ]
+  },
+  "320504800": {
+    "id": 320504800,
+    "name": "[차원술사][아크그리드][베타D][3단계-고대] 공간 베기 중첩",
+    "desc": "",
+    "skillId": 2050150,
+    "skillGroupId": 0,
+    "type": "change_stack_charge_time",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      15000
+    ]
+  },
+  "320506100": {
+    "id": 320506100,
+    "name": "[차원술사][아크그리드][감마A][2단계] 경계 돌파 시전 속도 증가",
+    "desc": "",
+    "skillId": 2050240,
+    "skillGroupId": 0,
+    "type": "change_attack_stage_speed",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      10
+    ]
+  },
+  "320506200": {
+    "id": 320506200,
+    "name": "[차원술사][아크그리드][감마A][3단계] 슈퍼아머",
+    "desc": "",
+    "skillId": 2050250,
+    "skillGroupId": 0,
+    "type": "enable_notify",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      1
+    ]
+  },
+  "320506300": {
+    "id": 320506300,
+    "name": "[차원술사][아크그리드][감마A][3단계-고대] 슈퍼아머",
+    "desc": "",
+    "skillId": 2050250,
+    "skillGroupId": 0,
+    "type": "enable_notify",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      1
+    ]
+  },
+  "320506500": {
+    "id": 320506500,
+    "name": "[차원술사][아크그리드][감마B][1단계] 건너 찌르기 충전 시간 감소",
+    "desc": "",
+    "skillId": 2050160,
+    "skillGroupId": 0,
+    "type": "change_stack_charge_time",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      -50
+    ]
+  },
+  "320506700": {
+    "id": 320506700,
+    "name": "[차원술사][아크그리드][감마B][3단계] 차원의 틈 피해량 증가",
+    "desc": "",
+    "skillId": 2050250,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      10
+    ]
+  },
+  "320506800": {
+    "id": 320506800,
+    "name": "[차원술사][아크그리드][감마B][3단계-고대] 차원의 틈 피해량 증가",
+    "desc": "",
+    "skillId": 2050250,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      13
+    ]
+  },
+  "320507100": {
+    "id": 320507100,
+    "name": "[차원술사][아크그리드][감마C][2단계] 시간 분쇄 피해량 증가",
+    "desc": "",
+    "skillId": 2050230,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      25
+    ]
+  },
+  "320507600": {
+    "id": 320507600,
+    "name": "[차원술사][아크그리드][감마D][2단계] 너머 베기 시전 속도 증가",
+    "desc": "",
+    "skillId": 2050180,
+    "skillGroupId": 0,
+    "type": "change_attack_stage_speed",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      10
+    ]
+  },
+  "320507700": {
+    "id": 320507700,
+    "name": "[차원술사][아크그리드][감마D][3단계] 슈퍼아머",
+    "desc": "",
+    "skillId": 2050210,
+    "skillGroupId": 0,
+    "type": "enable_notify",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      1
+    ]
+  },
+  "320507800": {
+    "id": 320507800,
+    "name": "[차원술사][아크그리드][감마D][3단계-고대] 슈퍼아머",
+    "desc": "",
+    "skillId": 2050210,
+    "skillGroupId": 0,
+    "type": "enable_notify",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      1
+    ]
+  },
+  "320508000": {
+    "id": 320508000,
+    "name": "[차원술사][아크그리드][감마E][1단계] 전방 찌르기 마나 소모량 감소",
+    "desc": "",
+    "skillId": 2050140,
+    "skillGroupId": 0,
+    "type": "change_cost",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      -60
+    ]
+  },
+  "320508200": {
+    "id": 320508200,
+    "name": "[차원술사][아크그리드][감마E][3단계] 진공 피해 증가",
+    "desc": "",
+    "skillId": 2050190,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      16
+    ]
+  },
+  "320508201": {
+    "id": 320508201,
+    "name": "[차원술사][아크그리드][감마E][3단계] 진공 시전 속도 증가",
+    "desc": "",
+    "skillId": 2050190,
+    "skillGroupId": 0,
+    "type": "change_attack_stage_speed",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      15
+    ]
+  },
+  "320508300": {
+    "id": 320508300,
+    "name": "[차원술사][아크그리드][감마E][3단계-고대] 진공 피해 증가",
+    "desc": "",
+    "skillId": 2050190,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      21
+    ]
+  },
+  "320508301": {
+    "id": 320508301,
+    "name": "[차원술사][아크그리드][감마E][3단계-고대] 진공 시전 속도 증가",
+    "desc": "",
+    "skillId": 2050190,
+    "skillGroupId": 0,
+    "type": "change_attack_stage_speed",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      15
+    ]
+  },
+  "320508600": {
+    "id": 320508600,
+    "name": "[차원술사][아크그리드][감마F][2단계] 공간 절단 중첩",
+    "desc": "",
+    "skillId": 2050200,
+    "skillGroupId": 0,
+    "type": "change_stack_charge_time",
+    "target": "pc",
+    "parameterType": "absolute",
+    "parameters": [
+      36000
+    ]
+  },
+  "320508700": {
+    "id": 320508700,
+    "name": "[차원술사][아크그리드][감마F][3단계] 공간 절단 피해 증가",
+    "desc": "",
+    "skillId": 2050200,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      14
+    ]
+  },
+  "320508800": {
+    "id": 320508800,
+    "name": "[차원술사][아크그리드][감마F][3단계-고대] 공간 절단 피해 증가",
+    "desc": "",
+    "skillId": 2050200,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      16
     ]
   },
   "2160000": {
@@ -22552,6 +23301,21 @@
     "parameters": [
       -35,
       100
+    ]
+  },
+  "3160110": {
+    "id": 3160110,
+    "name": "버서커 알파 I : 2단계",
+    "desc": "파브 무력화 피해 감소",
+    "skillId": 16030,
+    "skillGroupId": 0,
+    "type": "change_skill_effect_ai_point",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      -40,
+      -40
     ]
   },
   "3164500": {
@@ -24358,7 +25122,21 @@
   "3453200": {
     "id": 3453200,
     "name": "슬레이어 베타 I : 3단계",
-    "desc": "길로틴 분노의 일격 피증",
+    "desc": "길로틴 피해증가",
+    "skillId": 45720,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      20
+    ]
+  },
+  "3453300": {
+    "id": 3453300,
+    "name": "슬레이어 베타 I : 3단계 (고대)",
+    "desc": "길로틴 피해증가",
     "skillId": 45720,
     "skillGroupId": 0,
     "type": "change_dam_value",
@@ -24367,20 +25145,6 @@
     "parameters": [
       0,
       25
-    ]
-  },
-  "3453300": {
-    "id": 3453300,
-    "name": "슬레이어 베타 I : 3단계 (고대)",
-    "desc": "길로틴 분노의 일격 피증",
-    "skillId": 45720,
-    "skillGroupId": 0,
-    "type": "change_dam_value",
-    "target": "pc",
-    "parameterType": "relative",
-    "parameters": [
-      0,
-      30
     ]
   },
   "3456000": {
@@ -24407,6 +25171,34 @@
     "parameterType": "relative",
     "parameters": [
       -30
+    ]
+  },
+  "3456200": {
+    "id": 3456200,
+    "name": "슬레이어 감마 I : 3단계",
+    "desc": "길로틴 분노의 일격 피증",
+    "skillId": 45720,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      20
+    ]
+  },
+  "3456300": {
+    "id": 3456300,
+    "name": "슬레이어 감마 I : 3단계 (고대)",
+    "desc": "길로틴 분노의 일격 피증",
+    "skillId": 45720,
+    "skillGroupId": 0,
+    "type": "change_dam_value",
+    "target": "pc",
+    "parameterType": "relative",
+    "parameters": [
+      0,
+      25
     ]
   },
   "3456500": {
@@ -24582,7 +25374,7 @@
     "parameterType": "relative",
     "parameters": [
       0,
-      10
+      12
     ]
   },
   "70000020": {

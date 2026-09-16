@@ -99,6 +99,46 @@
     "staggerPoints": 6500,
     "balanceLevel": 50
   },
+  "500200": {
+    "id": 500200,
+    "name": "Creature Construct",
+    "grade": "underling",
+    "type": "monster",
+    "species": "substance",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1660
+  },
+  "500201": {
+    "id": 500201,
+    "name": "Golden Warrior",
+    "grade": "normal",
+    "type": "monster",
+    "species": "substance",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1660
+  },
+  "500202": {
+    "id": 500202,
+    "name": "Shining Knight",
+    "grade": "named",
+    "type": "monster",
+    "species": "humanoid",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1660
+  },
+  "500203": {
+    "id": 500203,
+    "name": "Golden Gatekeeper",
+    "grade": "seed",
+    "type": "monster",
+    "species": "substance",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1660
+  },
   "512500": {
     "id": 512500,
     "name": null,
@@ -4079,6 +4119,26 @@
     "staggerPoints": 0,
     "balanceLevel": 0
   },
+  "695011": {
+    "id": 695011,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "wild_beast",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "695012": {
+    "id": 695012,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "wild_beast",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
   "691101": {
     "id": 691101,
     "name": "Pongpong Rabbit",
@@ -4341,7 +4401,7 @@
   },
   "690503": {
     "id": 690503,
-    "name": "<FONT COLOR='#00B5FF'>Oreha Rabbit</FONT>",
+    "name": "<FONT COLOR='#00B5FF'>Papika Rabbit</FONT>",
     "grade": "normal",
     "type": "monster",
     "species": "wild_beast",
@@ -4381,7 +4441,7 @@
   },
   "690513": {
     "id": 690513,
-    "name": "<FONT COLOR='#00B5FF'>Splendid Oreha Rabbit</FONT>",
+    "name": "<FONT COLOR='#00B5FF'>Splendid Papika Rabbit</FONT>",
     "grade": "normal",
     "type": "monster",
     "species": "wild_beast",
@@ -19407,7 +19467,7 @@
     "species": "ancient",
     "hpBars": 100,
     "staggerPoints": 40000,
-    "balanceLevel": 805
+    "balanceLevel": 1580
   },
   "620141": {
     "id": 620141,
@@ -19417,7 +19477,7 @@
     "species": "ancient",
     "hpBars": 1,
     "staggerPoints": 0,
-    "balanceLevel": 805
+    "balanceLevel": 1580
   },
   "620142": {
     "id": 620142,
@@ -19427,7 +19487,7 @@
     "species": "ancient",
     "hpBars": 1,
     "staggerPoints": 0,
-    "balanceLevel": 805
+    "balanceLevel": 1580
   },
   "620150": {
     "id": 620150,
@@ -19957,7 +20017,7 @@
     "species": "ancient",
     "hpBars": 1,
     "staggerPoints": 0,
-    "balanceLevel": 805
+    "balanceLevel": 1580
   },
   "630710": {
     "id": 630710,
@@ -20217,7 +20277,7 @@
     "species": "ancient",
     "hpBars": 100,
     "staggerPoints": 40000,
-    "balanceLevel": 1250
+    "balanceLevel": 1580
   },
   "620230": {
     "id": 620230,
@@ -20227,7 +20287,7 @@
     "species": "ancient",
     "hpBars": 100,
     "staggerPoints": 40000,
-    "balanceLevel": 1250
+    "balanceLevel": 1580
   },
   "620231": {
     "id": 620231,
@@ -20237,7 +20297,7 @@
     "species": "substance",
     "hpBars": 1,
     "staggerPoints": 0,
-    "balanceLevel": 1250
+    "balanceLevel": 1580
   },
   "620232": {
     "id": 620232,
@@ -20247,7 +20307,7 @@
     "species": "substance",
     "hpBars": 1,
     "staggerPoints": 0,
-    "balanceLevel": 1250
+    "balanceLevel": 1580
   },
   "620237": {
     "id": 620237,
@@ -21057,7 +21117,7 @@
     "species": "ancient",
     "hpBars": 100,
     "staggerPoints": 40000,
-    "balanceLevel": 960
+    "balanceLevel": 1580
   },
   "62024000": {
     "id": 62024000,
@@ -21067,7 +21127,7 @@
     "species": "spirit",
     "hpBars": 1,
     "staggerPoints": 0,
-    "balanceLevel": 960
+    "balanceLevel": 1580
   },
   "720190": {
     "id": 720190,
@@ -22327,7 +22387,7 @@
     "species": "wild_beast",
     "hpBars": 100,
     "staggerPoints": 40000,
-    "balanceLevel": 1415
+    "balanceLevel": 1580
   },
   "620270": {
     "id": 620270,
@@ -22417,7 +22477,7 @@
     "species": "ancient",
     "hpBars": 100,
     "staggerPoints": 40000,
-    "balanceLevel": 1415
+    "balanceLevel": 1580
   },
   "620281": {
     "id": 620281,
@@ -22477,7 +22537,7 @@
     "species": "ancient",
     "hpBars": 100,
     "staggerPoints": 40000,
-    "balanceLevel": 1415
+    "balanceLevel": 1580
   },
   "620291": {
     "id": 620291,
@@ -22487,7 +22547,7 @@
     "species": "none",
     "hpBars": 1,
     "staggerPoints": 0,
-    "balanceLevel": 1415
+    "balanceLevel": 1580
   },
   "620292": {
     "id": 620292,
@@ -22497,7 +22557,7 @@
     "species": "substance",
     "hpBars": 1,
     "staggerPoints": 0,
-    "balanceLevel": 1415
+    "balanceLevel": 1580
   },
   "620295": {
     "id": 620295,
@@ -23181,7 +23241,7 @@
   },
   "870032": {
     "id": 870032,
-    "name": "Clock Hand of Coordination",
+    "name": "Dial Hand of Coordination",
     "grade": "normal",
     "type": "monster",
     "species": "none",
@@ -23431,7 +23491,7 @@
   },
   "870057": {
     "id": 870057,
-    "name": "Clock Hand of Coordination",
+    "name": "Dial Hand of Coordination",
     "grade": "normal",
     "type": "monster",
     "species": "none",
@@ -23441,7 +23501,7 @@
   },
   "870058": {
     "id": 870058,
-    "name": "Clock Hand of Coordination",
+    "name": "Dial Hand of Coordination",
     "grade": "normal",
     "type": "monster",
     "species": "none",
@@ -23498,6 +23558,46 @@
     "hpBars": 1,
     "staggerPoints": 0,
     "balanceLevel": 1640
+  },
+  "522001": {
+    "id": 522001,
+    "name": null,
+    "grade": "raid",
+    "type": "monster",
+    "species": "wild_beast",
+    "hpBars": 1,
+    "staggerPoints": 10000,
+    "balanceLevel": 250
+  },
+  "522010": {
+    "id": 522010,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "substance",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "522011": {
+    "id": 522011,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "substance",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "522012": {
+    "id": 522012,
+    "name": null,
+    "grade": "lucky",
+    "type": "monster",
+    "species": "substance",
+    "hpBars": 1,
+    "staggerPoints": 10000,
+    "balanceLevel": 250
   },
   "480500": {
     "id": 480500,
@@ -43702,7 +43802,7 @@
   "570911": {
     "id": 570911,
     "name": "Mokoko Splash",
-    "grade": "normal",
+    "grade": "boss",
     "type": "monster",
     "species": "none",
     "hpBars": 0,
@@ -43762,7 +43862,7 @@
   "570932": {
     "id": 570932,
     "name": "Mokoko Splash",
-    "grade": "normal",
+    "grade": "boss",
     "type": "monster",
     "species": "none",
     "hpBars": 0,
@@ -43772,7 +43872,7 @@
   "570933": {
     "id": 570933,
     "name": "Mokoko Splash",
-    "grade": "normal",
+    "grade": "boss",
     "type": "monster",
     "species": "none",
     "hpBars": 0,
@@ -43782,7 +43882,7 @@
   "570934": {
     "id": 570934,
     "name": "Mokoko Splash",
-    "grade": "normal",
+    "grade": "boss",
     "type": "monster",
     "species": "none",
     "hpBars": 0,
@@ -43792,7 +43892,7 @@
   "570935": {
     "id": 570935,
     "name": "Mokoko Splash",
-    "grade": "normal",
+    "grade": "boss",
     "type": "monster",
     "species": "none",
     "hpBars": 0,
@@ -46272,7 +46372,7 @@
   "572623": {
     "id": 572623,
     "name": null,
-    "grade": "normal",
+    "grade": "boss",
     "type": "monster",
     "species": "none",
     "hpBars": 0,
@@ -46282,7 +46382,7 @@
   "572624": {
     "id": 572624,
     "name": null,
-    "grade": "normal",
+    "grade": "boss",
     "type": "monster",
     "species": "none",
     "hpBars": 0,
@@ -48099,6 +48199,876 @@
     "staggerPoints": 0,
     "balanceLevel": 0
   },
+  "595300": {
+    "id": 595300,
+    "name": "Suspicious Devotee",
+    "grade": "normal",
+    "type": "monster",
+    "species": "humanoid",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "595301": {
+    "id": 595301,
+    "name": "Armen",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "595302": {
+    "id": 595302,
+    "name": "Thanatos",
+    "grade": "boss",
+    "type": "monster",
+    "species": "devil",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "595303": {
+    "id": 595303,
+    "name": "Thirain",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "595304": {
+    "id": 595304,
+    "name": "Valtan",
+    "grade": "boss",
+    "type": "monster",
+    "species": "devil",
+    "hpBars": 10,
+    "staggerPoints": 1000,
+    "balanceLevel": 500
+  },
+  "595305": {
+    "id": 595305,
+    "name": "Lady Hari",
+    "grade": "normal",
+    "type": "monster",
+    "species": "humanoid",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "595306": {
+    "id": 595306,
+    "name": "Manpo",
+    "grade": "normal",
+    "type": "monster",
+    "species": "humanoid",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "595307": {
+    "id": 595307,
+    "name": "Miru",
+    "grade": "normal",
+    "type": "monster",
+    "species": "devil",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "595308": {
+    "id": 595308,
+    "name": "Onehand",
+    "grade": "normal",
+    "type": "monster",
+    "species": "humanoid",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "595309": {
+    "id": 595309,
+    "name": "Hodon",
+    "grade": "normal",
+    "type": "monster",
+    "species": "humanoid",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "595310": {
+    "id": 595310,
+    "name": "Wonpho",
+    "grade": "normal",
+    "type": "monster",
+    "species": "humanoid",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "595311": {
+    "id": 595311,
+    "name": "Shapeshifter Gildal",
+    "grade": "normal",
+    "type": "monster",
+    "species": "humanoid",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "595312": {
+    "id": 595312,
+    "name": "Gumga",
+    "grade": "normal",
+    "type": "monster",
+    "species": "humanoid",
+    "hpBars": 5,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "595313": {
+    "id": 595313,
+    "name": "Scientist Mari",
+    "grade": "normal",
+    "type": "monster",
+    "species": "mechanic",
+    "hpBars": 3,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "595314": {
+    "id": 595314,
+    "name": "Vrad",
+    "grade": "lucky",
+    "type": "monster",
+    "species": "humanoid",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "595315": {
+    "id": 595315,
+    "name": "Chaotic Zaika",
+    "grade": "boss",
+    "type": "townsfolk",
+    "species": "devil",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "595316": {
+    "id": 595316,
+    "name": "Solar Knights",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "595317": {
+    "id": 595317,
+    "name": "Demon Dog",
+    "grade": "normal",
+    "type": "monster",
+    "species": "devil",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "595318": {
+    "id": 595318,
+    "name": "Demon Dog",
+    "grade": "normal",
+    "type": "monster",
+    "species": "devil",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "595319": {
+    "id": 595319,
+    "name": "Brelshaza",
+    "grade": "normal",
+    "type": "monster",
+    "species": "devil",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "595320": {
+    "id": 595320,
+    "name": "Black Knights Soldier",
+    "grade": "normal",
+    "type": "monster",
+    "species": "humanoid",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "595321": {
+    "id": 595321,
+    "name": "Black Knights Commander",
+    "grade": "normal",
+    "type": "monster",
+    "species": "humanoid",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "595322": {
+    "id": 595322,
+    "name": "Homunculus",
+    "grade": "boss",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "595323": {
+    "id": 595323,
+    "name": "Abyssal Remnant",
+    "grade": "normal",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "595324": {
+    "id": 595324,
+    "name": "Abyssal Being",
+    "grade": "normal",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "595325": {
+    "id": 595325,
+    "name": null,
+    "grade": "boss",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "595326": {
+    "id": 595326,
+    "name": "Shapeshifter Gildal",
+    "grade": "normal",
+    "type": "monster",
+    "species": "wild_beast",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "595327": {
+    "id": 595327,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "595328": {
+    "id": 595328,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "595329": {
+    "id": 595329,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "573700": {
+    "id": 573700,
+    "name": "Strange Treasure Chest",
+    "grade": "boss",
+    "type": "monster",
+    "species": "substance",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "573701": {
+    "id": 573701,
+    "name": "Water Bomb",
+    "grade": "normal",
+    "type": "monster",
+    "species": "humanoid",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "573702": {
+    "id": 573702,
+    "name": "Water Bomb",
+    "grade": "normal",
+    "type": "monster",
+    "species": "humanoid",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "573703": {
+    "id": 573703,
+    "name": "Water Bomb",
+    "grade": "normal",
+    "type": "monster",
+    "species": "humanoid",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "573704": {
+    "id": 573704,
+    "name": "Mokoko Splash",
+    "grade": "normal",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "573705": {
+    "id": 573705,
+    "name": "Hellspawn Banda",
+    "grade": "boss",
+    "type": "monster",
+    "species": "humanoid",
+    "hpBars": 100,
+    "staggerPoints": 4000,
+    "balanceLevel": 1670
+  },
+  "573706": {
+    "id": 573706,
+    "name": "Hanumatan",
+    "grade": "raid",
+    "type": "monster",
+    "species": "ancient",
+    "hpBars": 100,
+    "staggerPoints": 10000,
+    "balanceLevel": 1680
+  },
+  "573707": {
+    "id": 573707,
+    "name": "Armoche, Sentinel of the Abyss",
+    "grade": "commander",
+    "type": "monster",
+    "species": "ancient",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "573708": {
+    "id": 573708,
+    "name": "Mokoko Splash",
+    "grade": "normal",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "573709": {
+    "id": 573709,
+    "name": "Dancing Maharaka",
+    "grade": "boss",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 500
+  },
+  "596800": {
+    "id": 596800,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596801": {
+    "id": 596801,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596802": {
+    "id": 596802,
+    "name": null,
+    "grade": "boss",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596803": {
+    "id": 596803,
+    "name": null,
+    "grade": "boss",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596804": {
+    "id": 596804,
+    "name": null,
+    "grade": "boss",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596805": {
+    "id": 596805,
+    "name": null,
+    "grade": "boss",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596806": {
+    "id": 596806,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596807": {
+    "id": 596807,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596808": {
+    "id": 596808,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596809": {
+    "id": 596809,
+    "name": null,
+    "grade": "boss",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596810": {
+    "id": 596810,
+    "name": null,
+    "grade": "boss",
+    "type": "monster",
+    "species": "wild_beast",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596811": {
+    "id": 596811,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "wild_beast",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596812": {
+    "id": 596812,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596813": {
+    "id": 596813,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596814": {
+    "id": 596814,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596815": {
+    "id": 596815,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596816": {
+    "id": 596816,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596817": {
+    "id": 596817,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596818": {
+    "id": 596818,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596819": {
+    "id": 596819,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596820": {
+    "id": 596820,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596821": {
+    "id": 596821,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596822": {
+    "id": 596822,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596823": {
+    "id": 596823,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596824": {
+    "id": 596824,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596825": {
+    "id": 596825,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596826": {
+    "id": 596826,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596827": {
+    "id": 596827,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596828": {
+    "id": 596828,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596829": {
+    "id": 596829,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596830": {
+    "id": 596830,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596831": {
+    "id": 596831,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596832": {
+    "id": 596832,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596833": {
+    "id": 596833,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596834": {
+    "id": 596834,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596835": {
+    "id": 596835,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596836": {
+    "id": 596836,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596837": {
+    "id": 596837,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596838": {
+    "id": 596838,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596839": {
+    "id": 596839,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596840": {
+    "id": 596840,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596841": {
+    "id": 596841,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596842": {
+    "id": 596842,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596843": {
+    "id": 596843,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596844": {
+    "id": 596844,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596845": {
+    "id": 596845,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "596846": {
+    "id": 596846,
+    "name": null,
+    "grade": "elite",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
   "990371": {
     "id": 990371,
     "name": null,
@@ -48394,7 +49364,7 @@
     "name": null,
     "grade": "normal",
     "type": "townsfolk",
-    "species": "spirit",
+    "species": "none",
     "hpBars": 0,
     "staggerPoints": 0,
     "balanceLevel": 0
@@ -48515,6 +49485,26 @@
     "grade": "normal",
     "type": "monster",
     "species": "plant",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "520705": {
+    "id": 520705,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "520706": {
+    "id": 520706,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
     "hpBars": 0,
     "staggerPoints": 0,
     "balanceLevel": 0
@@ -48679,6 +49669,76 @@
     "staggerPoints": 0,
     "balanceLevel": 0
   },
+  "520102": {
+    "id": 520102,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "520103": {
+    "id": 520103,
+    "name": null,
+    "grade": "lucky",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "520104": {
+    "id": 520104,
+    "name": null,
+    "grade": "lucky",
+    "type": "monster",
+    "species": "substance",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "520105": {
+    "id": 520105,
+    "name": null,
+    "grade": "lucky",
+    "type": "monster",
+    "species": "substance",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "520106": {
+    "id": 520106,
+    "name": null,
+    "grade": "lucky",
+    "type": "monster",
+    "species": "substance",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "520420": {
+    "id": 520420,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "520430": {
+    "id": 520430,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
   "520450": {
     "id": 520450,
     "name": null,
@@ -48749,15 +49809,25 @@
     "staggerPoints": 0,
     "balanceLevel": 0
   },
+  "520473": {
+    "id": 520473,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
   "520301": {
     "id": 520301,
     "name": null,
     "grade": "boss",
     "type": "monster",
     "species": "humanoid",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
+    "hpBars": 5,
+    "staggerPoints": 1901,
+    "balanceLevel": 1700
   },
   "520302": {
     "id": 520302,
@@ -48765,9 +49835,9 @@
     "grade": "boss",
     "type": "monster",
     "species": "devil",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
+    "hpBars": 5,
+    "staggerPoints": 1901,
+    "balanceLevel": 1700
   },
   "520303": {
     "id": 520303,
@@ -48775,9 +49845,9 @@
     "grade": "named",
     "type": "monster",
     "species": "devil",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
+    "hpBars": 4,
+    "staggerPoints": 950,
+    "balanceLevel": 1700
   },
   "520304": {
     "id": 520304,
@@ -48785,9 +49855,9 @@
     "grade": "normal",
     "type": "monster",
     "species": "undead",
-    "hpBars": 0,
+    "hpBars": 1,
     "staggerPoints": 0,
-    "balanceLevel": 0
+    "balanceLevel": 1700
   },
   "520305": {
     "id": 520305,
@@ -48795,9 +49865,9 @@
     "grade": "normal",
     "type": "monster",
     "species": "undead",
-    "hpBars": 0,
+    "hpBars": 1,
     "staggerPoints": 0,
-    "balanceLevel": 0
+    "balanceLevel": 1700
   },
   "520306": {
     "id": 520306,
@@ -48805,9 +49875,9 @@
     "grade": "normal",
     "type": "monster",
     "species": "humanoid",
-    "hpBars": 0,
+    "hpBars": 1,
     "staggerPoints": 0,
-    "balanceLevel": 0
+    "balanceLevel": 1700
   },
   "520307": {
     "id": 520307,
@@ -48815,9 +49885,9 @@
     "grade": "normal",
     "type": "monster",
     "species": "devil",
-    "hpBars": 0,
+    "hpBars": 1,
     "staggerPoints": 0,
-    "balanceLevel": 0
+    "balanceLevel": 1700
   },
   "520308": {
     "id": 520308,
@@ -48825,9 +49895,9 @@
     "grade": "normal",
     "type": "monster",
     "species": "undead",
-    "hpBars": 0,
+    "hpBars": 1,
     "staggerPoints": 0,
-    "balanceLevel": 0
+    "balanceLevel": 1700
   },
   "520309": {
     "id": 520309,
@@ -48835,9 +49905,9 @@
     "grade": "named",
     "type": "monster",
     "species": "undead",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
+    "hpBars": 4,
+    "staggerPoints": 950,
+    "balanceLevel": 1700
   },
   "520310": {
     "id": 520310,
@@ -48845,9 +49915,9 @@
     "grade": "boss",
     "type": "monster",
     "species": "none",
-    "hpBars": 0,
+    "hpBars": 1,
     "staggerPoints": 0,
-    "balanceLevel": 0
+    "balanceLevel": 1700
   },
   "520311": {
     "id": 520311,
@@ -48855,9 +49925,9 @@
     "grade": "boss",
     "type": "monster",
     "species": "humanoid",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
+    "hpBars": 5,
+    "staggerPoints": 1901,
+    "balanceLevel": 1700
   },
   "520312": {
     "id": 520312,
@@ -48865,9 +49935,9 @@
     "grade": "normal",
     "type": "monster",
     "species": "none",
-    "hpBars": 0,
+    "hpBars": 1,
     "staggerPoints": 0,
-    "balanceLevel": 0
+    "balanceLevel": 1700
   },
   "520313": {
     "id": 520313,
@@ -48875,9 +49945,9 @@
     "grade": "boss",
     "type": "monster",
     "species": "devil",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
+    "hpBars": 5,
+    "staggerPoints": 1901,
+    "balanceLevel": 1700
   },
   "520314": {
     "id": 520314,
@@ -48885,9 +49955,9 @@
     "grade": "normal",
     "type": "monster",
     "species": "undead",
-    "hpBars": 0,
+    "hpBars": 1,
     "staggerPoints": 0,
-    "balanceLevel": 0
+    "balanceLevel": 1700
   },
   "520315": {
     "id": 520315,
@@ -48895,9 +49965,9 @@
     "grade": "normal",
     "type": "monster",
     "species": "undead",
-    "hpBars": 0,
+    "hpBars": 1,
     "staggerPoints": 0,
-    "balanceLevel": 0
+    "balanceLevel": 1700
   },
   "520316": {
     "id": 520316,
@@ -48905,9 +49975,9 @@
     "grade": "normal",
     "type": "monster",
     "species": "humanoid",
-    "hpBars": 0,
+    "hpBars": 1,
     "staggerPoints": 0,
-    "balanceLevel": 0
+    "balanceLevel": 1700
   },
   "520317": {
     "id": 520317,
@@ -48915,9 +49985,9 @@
     "grade": "boss",
     "type": "monster",
     "species": "humanoid",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
+    "hpBars": 5,
+    "staggerPoints": 1901,
+    "balanceLevel": 1700
   },
   "520318": {
     "id": 520318,
@@ -48925,9 +49995,9 @@
     "grade": "normal",
     "type": "monster",
     "species": "undead",
-    "hpBars": 0,
+    "hpBars": 1,
     "staggerPoints": 0,
-    "balanceLevel": 0
+    "balanceLevel": 1700
   },
   "520319": {
     "id": 520319,
@@ -48935,9 +50005,9 @@
     "grade": "normal",
     "type": "monster",
     "species": "undead",
-    "hpBars": 0,
+    "hpBars": 1,
     "staggerPoints": 0,
-    "balanceLevel": 0
+    "balanceLevel": 1700
   },
   "520320": {
     "id": 520320,
@@ -48945,9 +50015,9 @@
     "grade": "normal",
     "type": "monster",
     "species": "humanoid",
-    "hpBars": 0,
+    "hpBars": 1,
     "staggerPoints": 0,
-    "balanceLevel": 0
+    "balanceLevel": 1700
   },
   "520321": {
     "id": 520321,
@@ -48955,12 +50025,92 @@
     "grade": "normal",
     "type": "monster",
     "species": "undead",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1700
+  },
+  "520322": {
+    "id": 520322,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "undead",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1700
+  },
+  "520323": {
+    "id": 520323,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "humanoid",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1700
+  },
+  "520324": {
+    "id": 520324,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1700
+  },
+  "520325": {
+    "id": 520325,
+    "name": null,
+    "grade": "boss",
+    "type": "monster",
+    "species": "none",
     "hpBars": 0,
     "staggerPoints": 0,
     "balanceLevel": 0
   },
-  "520322": {
-    "id": 520322,
+  "520326": {
+    "id": 520326,
+    "name": null,
+    "grade": "boss",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "520327": {
+    "id": 520327,
+    "name": null,
+    "grade": "boss",
+    "type": "monster",
+    "species": "humanoid",
+    "hpBars": 5,
+    "staggerPoints": 1901,
+    "balanceLevel": 1700
+  },
+  "520328": {
+    "id": 520328,
+    "name": null,
+    "grade": "boss",
+    "type": "monster",
+    "species": "devil",
+    "hpBars": 5,
+    "staggerPoints": 1901,
+    "balanceLevel": 1700
+  },
+  "521800": {
+    "id": 521800,
+    "name": null,
+    "grade": "lucky",
+    "type": "monster",
+    "species": "plant",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "520801": {
+    "id": 520801,
     "name": null,
     "grade": "normal",
     "type": "monster",
@@ -48969,18 +50119,68 @@
     "staggerPoints": 0,
     "balanceLevel": 0
   },
-  "520323": {
-    "id": 520323,
+  "520802": {
+    "id": 520802,
     "name": null,
     "grade": "normal",
     "type": "monster",
-    "species": "humanoid",
+    "species": "devil",
     "hpBars": 0,
     "staggerPoints": 0,
     "balanceLevel": 0
   },
-  "520324": {
-    "id": 520324,
+  "520803": {
+    "id": 520803,
+    "name": null,
+    "grade": "named",
+    "type": "monster",
+    "species": "devil",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "520804": {
+    "id": 520804,
+    "name": null,
+    "grade": "named",
+    "type": "monster",
+    "species": "devil",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "520805": {
+    "id": 520805,
+    "name": null,
+    "grade": "named",
+    "type": "monster",
+    "species": "substance",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "520806": {
+    "id": 520806,
+    "name": null,
+    "grade": "named",
+    "type": "monster",
+    "species": "devil",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "520807": {
+    "id": 520807,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "wild_beast",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "520808": {
+    "id": 520808,
     "name": null,
     "grade": "normal",
     "type": "monster",
@@ -48989,12 +50189,102 @@
     "staggerPoints": 0,
     "balanceLevel": 0
   },
-  "521800": {
-    "id": 521800,
+  "520809": {
+    "id": 520809,
     "name": null,
     "grade": "boss",
     "type": "monster",
-    "species": "plant",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "522201": {
+    "id": 522201,
+    "name": null,
+    "grade": "boss",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "521501": {
+    "id": 521501,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "521502": {
+    "id": 521502,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "521503": {
+    "id": 521503,
+    "name": null,
+    "grade": "underling",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "521504": {
+    "id": 521504,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "521505": {
+    "id": 521505,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "521506": {
+    "id": 521506,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "521507": {
+    "id": 521507,
+    "name": null,
+    "grade": "seed",
+    "type": "monster",
+    "species": "mechanic",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "521508": {
+    "id": 521508,
+    "name": null,
+    "grade": "normal",
+    "type": "monster",
+    "species": "none",
     "hpBars": 0,
     "staggerPoints": 0,
     "balanceLevel": 0
@@ -54139,6 +55429,66 @@
     "staggerPoints": 0,
     "balanceLevel": 1710
   },
+  "486197": {
+    "id": 486197,
+    "name": null,
+    "grade": "boss",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1710
+  },
+  "486198": {
+    "id": 486198,
+    "name": null,
+    "grade": "boss",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1710
+  },
+  "486199": {
+    "id": 486199,
+    "name": null,
+    "grade": "boss",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1710
+  },
+  "485990": {
+    "id": 485990,
+    "name": null,
+    "grade": "boss",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1710
+  },
+  "485991": {
+    "id": 485991,
+    "name": null,
+    "grade": "boss",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1710
+  },
+  "485992": {
+    "id": 485992,
+    "name": null,
+    "grade": "boss",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1710
+  },
   "486200": {
     "id": 486200,
     "name": null,
@@ -54893,6 +56243,46 @@
     "id": 486399,
     "name": "Death Incarnate Kazeros",
     "grade": "normal",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "486350": {
+    "id": 486350,
+    "name": null,
+    "grade": "boss",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "486351": {
+    "id": 486351,
+    "name": null,
+    "grade": "boss",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "486352": {
+    "id": 486352,
+    "name": null,
+    "grade": "boss",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "486353": {
+    "id": 486353,
+    "name": null,
+    "grade": "boss",
     "type": "monster",
     "species": "none",
     "hpBars": 0,
@@ -133319,6 +134709,16 @@
     "staggerPoints": 0,
     "balanceLevel": 1580
   },
+  "11111059": {
+    "id": 11111059,
+    "name": null,
+    "grade": "boss",
+    "type": "monster_pc_form",
+    "species": "humanoid",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1580
+  },
   "11111110": {
     "id": 11111110,
     "name": null,
@@ -133609,6 +135009,16 @@
     "staggerPoints": 0,
     "balanceLevel": 1520
   },
+  "11111139": {
+    "id": 11111139,
+    "name": null,
+    "grade": "boss",
+    "type": "monster_pc_form",
+    "species": "humanoid",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1520
+  },
   "11111210": {
     "id": 11111210,
     "name": null,
@@ -133891,6 +135301,16 @@
   },
   "11111238": {
     "id": 11111238,
+    "name": null,
+    "grade": "boss",
+    "type": "monster_pc_form",
+    "species": "humanoid",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1610
+  },
+  "11111239": {
+    "id": 11111239,
     "name": null,
     "grade": "boss",
     "type": "monster_pc_form",
@@ -137019,6 +138439,16 @@
     "staggerPoints": 0,
     "balanceLevel": 0
   },
+  "900037": {
+    "id": 900037,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
   "859011": {
     "id": 859011,
     "name": null,
@@ -137178,6 +138608,486 @@
     "hpBars": 1,
     "staggerPoints": 0,
     "balanceLevel": 1640
+  },
+  "86455": {
+    "id": 86455,
+    "name": "<FONT color=\"#00B5FF\">Comrade</FONT>, that's not how you do it",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86456": {
+    "id": 86456,
+    "name": "<img src='emoticon_extreme_honor01' size='130' vspace='-7'></img><FONT color=\"#FE9600\">Lord of Hellfire</FONT> BerserkerSpirit",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86457": {
+    "id": 86457,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86458": {
+    "id": 86458,
+    "name": "<FONT color=\"#FE9600\">Doloris</FONT> DoctorCommanderPioneerTeacherMaster",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86459": {
+    "id": 86459,
+    "name": "<FONT color=\"#91FE02\">Bard</FONT> Allegro",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86460": {
+    "id": 86460,
+    "name": "<FONT color=\"#91FE02\">Tasty Zombie</FONT> Can't resist anything tasty",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86461": {
+    "id": 86461,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86462": {
+    "id": 86462,
+    "name": "Greatsword Picker At First Birthday",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86463": {
+    "id": 86463,
+    "name": "MintChocoLasagna",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86464": {
+    "id": 86464,
+    "name": "<FONT color=\"#00B5FF\">This is</FONT> the Ex-Boyfriend Toast",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86465": {
+    "id": 86465,
+    "name": "<FONT color=\"#91FE02\">It's me,</FONT> Perilla Oil",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86466": {
+    "id": 86466,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86467": {
+    "id": 86467,
+    "name": "<FONT color=\"#91FE02\">Beautiful</FONT> land of splendid rivers and mountains, Grandfather Dangun",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86468": {
+    "id": 86468,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86469": {
+    "id": 86469,
+    "name": "<img src='emoticon_Kazeroth_firstevent_4' size='130' vspace='-7'></img><FONT color=\"#FE9600\">Lord of the Abyss</FONT> Nail Claw Chainsaw",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86470": {
+    "id": 86470,
+    "name": "<FONT color=\"#91FE02\">Treasure of the Sea</FONT> If Bard Heals Then Bard",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86471": {
+    "id": 86471,
+    "name": "<FONT color=\"#91FE02\">Vairgrys's Rainbow Reflection!</FONT> Super Long Nickname Twelve Chars",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86472": {
+    "id": 86472,
+    "name": "<FONT color=\"#00B5FF\">That's Me</FONT> Pick a Card",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86473": {
+    "id": 86473,
+    "name": "<FONT color=\"#00B5FF\">Shadow of Agony</FONT> Not Lightning Tiger Strike Punching",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86474": {
+    "id": 86474,
+    "name": "<FONT color=\"#FE9600\">Radiant</FONT> Where Did My Head Go",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86475": {
+    "id": 86475,
+    "name": "<FONT color=\"#FE9600\">Perfectly Argos</FONT> Perfectly Ignoros",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86476": {
+    "id": 86476,
+    "name": "<FONT color=\"#FE9600\">Attraction Commander</FONT> Sansansan",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86477": {
+    "id": 86477,
+    "name": "<FONT color=\"#91FE02\">Hoodwinker</FONT> Sakura? It's Sakura.",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86478": {
+    "id": 86478,
+    "name": "<img src='emoticon_anniversary_Cake' size='130' vspace='-7'></img><FONT color=\"#00B5FF\">Together for a Year</FONT> Super Cute Girl Aman",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86479": {
+    "id": 86479,
+    "name": "<FONT color=\"#91FE02\">Child</FONT> Child, go on living like that",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86480": {
+    "id": 86480,
+    "name": "<FONT color=\"#00B5FF\">You're here</FONT> Tomato Thorny",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86481": {
+    "id": 86481,
+    "name": "Have you tried eating litmus paper?",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86482": {
+    "id": 86482,
+    "name": "<FONT color=\"#00B5FF\">Is this real?</FONT> There's no way this is real",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86483": {
+    "id": 86483,
+    "name": "<FONT color=\"#91FE02\">Ark of Lost Ark</FONT> Lacks tenacity",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86484": {
+    "id": 86484,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86485": {
+    "id": 86485,
+    "name": "<img src='emoticon_extreme_honor02' size='130' vspace='-7'></img><FONT color=\"#FE9600\">Lord of the Bitter Cold</FONT> Zypegaza",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86486": {
+    "id": 86486,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86487": {
+    "id": 86487,
+    "name": "<FONT color=\"#91FE02\">Legend of Legends</FONT> Legendary Legend",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86488": {
+    "id": 86488,
+    "name": "<img src='emoticon_kamen_firstenvent_4' size='130' vspace='-7'></img><FONT color=\"#FE9600\">Eclipse</FONT> No No Foxtail Grass",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86489": {
+    "id": 86489,
+    "name": "<img src='emoticon_icon_AchievementGrade_4' size='130' vspace='-7'></img><FONT color=\"#FE9600\">All There Is</FONT> I Want To Raise a Cat",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86498": {
+    "id": 86498,
+    "name": "<FONT color=\"#00B5FF\">Here is</FONT> Eggdelivery",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86497": {
+    "id": 86497,
+    "name": "<FONT color=\"#00B5FF\">I Am the</FONT> Unavoidable",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86496": {
+    "id": 86496,
+    "name": "<FONT color=\"#FE9600\">Dolores</FONT> JustOneHitPlz",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86495": {
+    "id": 86495,
+    "name": "PowerPassPowerUser",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86494": {
+    "id": 86494,
+    "name": "HowLongCanCharacterNamesBe",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86505": {
+    "id": 86505,
+    "name": "HoningStartsTomorrow",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86506": {
+    "id": 86506,
+    "name": "WildAdventurer",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86493": {
+    "id": 86493,
+    "name": "VincentVanCough",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86507": {
+    "id": 86507,
+    "name": "MyNewMain",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86491": {
+    "id": 86491,
+    "name": "IsThisFun",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86492": {
+    "id": 86492,
+    "name": "SkywardBound",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "520474": {
+    "id": 520474,
+    "name": null,
+    "grade": "named",
+    "type": "monster_pc_form",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "520475": {
+    "id": 520475,
+    "name": null,
+    "grade": "named",
+    "type": "monster_pc_form",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
   },
   "44400": {
     "id": 44400,
@@ -169047,7 +170957,7 @@
     "species": "humanoid",
     "hpBars": 1,
     "staggerPoints": 0,
-    "balanceLevel": 805
+    "balanceLevel": 1580
   },
   "53956400": {
     "id": 53956400,
@@ -171291,6 +173201,16 @@
   },
   "990302": {
     "id": 990302,
+    "name": null,
+    "grade": "boss",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "990469": {
+    "id": 990469,
     "name": null,
     "grade": "boss",
     "type": "monster",
@@ -180949,6 +182869,186 @@
     "staggerPoints": 0,
     "balanceLevel": 0
   },
+  "10005000": {
+    "id": 10005000,
+    "name": "Pure Momo",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005001": {
+    "id": 10005001,
+    "name": "Calm Neemo",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005002": {
+    "id": 10005002,
+    "name": "Melancholy Mimo",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005003": {
+    "id": 10005003,
+    "name": "Pure Momo",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005004": {
+    "id": 10005004,
+    "name": "Calm Neemo",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005005": {
+    "id": 10005005,
+    "name": "Melancholy Mimo",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005010": {
+    "id": 10005010,
+    "name": "Pure Momo",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005011": {
+    "id": 10005011,
+    "name": "Calm Neemo",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005012": {
+    "id": 10005012,
+    "name": "Melancholy Mimo",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005013": {
+    "id": 10005013,
+    "name": "Pure Momo",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005014": {
+    "id": 10005014,
+    "name": "Calm Neemo",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005015": {
+    "id": 10005015,
+    "name": "Melancholy Mimo",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005300": {
+    "id": 10005300,
+    "name": "Sodacahni",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005301": {
+    "id": 10005301,
+    "name": "Berrycahni",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005302": {
+    "id": 10005302,
+    "name": "Chocahni",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005310": {
+    "id": 10005310,
+    "name": "Sodacahni",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005311": {
+    "id": 10005311,
+    "name": "Berrycahni",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005312": {
+    "id": 10005312,
+    "name": "Chocahni",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
   "10005400": {
     "id": 10005400,
     "name": "Mokoranger Red",
@@ -188531,6 +190631,16 @@
   },
   "959700001": {
     "id": 959700001,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "959800001": {
+    "id": 959800001,
     "name": null,
     "grade": "normal",
     "type": "townsfolk",
@@ -289809,9 +291919,879 @@
     "staggerPoints": 0,
     "balanceLevel": 0
   },
-  "86432": {
-    "id": 86432,
-    "name": "Nunet",
+  "85850": {
+    "id": 85850,
+    "name": "Resident",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85851": {
+    "id": 85851,
+    "name": "Resident",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85852": {
+    "id": 85852,
+    "name": "Resident",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85853": {
+    "id": 85853,
+    "name": "Varut",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85854": {
+    "id": 85854,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85855": {
+    "id": 85855,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85856": {
+    "id": 85856,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85857": {
+    "id": 85857,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85859": {
+    "id": 85859,
+    "name": "Luterran Soldier",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85861": {
+    "id": 85861,
+    "name": "Thirain",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85862": {
+    "id": 85862,
+    "name": "Armen",
+    "grade": "seed",
+    "type": "townsfolk",
+    "species": "devil",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85863": {
+    "id": 85863,
+    "name": "Armen",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85864": {
+    "id": 85864,
+    "name": "Sasha",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85865": {
+    "id": 85865,
+    "name": "Bastian",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85867": {
+    "id": 85867,
+    "name": "Sian",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85868": {
+    "id": 85868,
+    "name": "Madnick",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85869": {
+    "id": 85869,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85870": {
+    "id": 85870,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85871": {
+    "id": 85871,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85872": {
+    "id": 85872,
+    "name": "Azena",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85873": {
+    "id": 85873,
+    "name": "Balthorr",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85874": {
+    "id": 85874,
+    "name": "Dansorr",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85875": {
+    "id": 85875,
+    "name": "Leadurr",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85876": {
+    "id": 85876,
+    "name": "Vocalizurr",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85877": {
+    "id": 85877,
+    "name": "Hotoneurr",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85878": {
+    "id": 85878,
+    "name": "Rappurr",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85880": {
+    "id": 85880,
+    "name": "Nia",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85881": {
+    "id": 85881,
+    "name": "Albion",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "ancient",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85882": {
+    "id": 85882,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85883": {
+    "id": 85883,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85885": {
+    "id": 85885,
+    "name": "Nineveh",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85886": {
+    "id": 85886,
+    "name": "Zeherade",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85887": {
+    "id": 85887,
+    "name": "Zeherade",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85888": {
+    "id": 85888,
+    "name": "Homunculus",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85889": {
+    "id": 85889,
+    "name": "Yonfay",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85890": {
+    "id": 85890,
+    "name": "Pahu",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85891": {
+    "id": 85891,
+    "name": "Yaruz",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85892": {
+    "id": 85892,
+    "name": "Shandi",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85893": {
+    "id": 85893,
+    "name": "Wei",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85894": {
+    "id": 85894,
+    "name": "Inanna",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85895": {
+    "id": 85895,
+    "name": "Kadan",
+    "grade": "none",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85896": {
+    "id": 85896,
+    "name": "Gumga",
+    "grade": "seed",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85897": {
+    "id": 85897,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85898": {
+    "id": 85898,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85899": {
+    "id": 85899,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85901": {
+    "id": 85901,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85902": {
+    "id": 85902,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85903": {
+    "id": 85903,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85904": {
+    "id": 85904,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85905": {
+    "id": 85905,
+    "name": "Suspicious Cube",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "substance",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85906": {
+    "id": 85906,
+    "name": "Suspicious Cube",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "substance",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85907": {
+    "id": 85907,
+    "name": "Belomet",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85908": {
+    "id": 85908,
+    "name": "Euclid",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85909": {
+    "id": 85909,
+    "name": "Kirke",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85956": {
+    "id": 85956,
+    "name": "Kharmine",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "archefiend",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85958": {
+    "id": 85958,
+    "name": "Resident",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85959": {
+    "id": 85959,
+    "name": "Resident",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85960": {
+    "id": 85960,
+    "name": "Child",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85961": {
+    "id": 85961,
+    "name": "Resident",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85962": {
+    "id": 85962,
+    "name": "Light",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85963": {
+    "id": 85963,
+    "name": "Luterran Soldier",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85964": {
+    "id": 85964,
+    "name": "Luterran Resident",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85965": {
+    "id": 85965,
+    "name": "Luterran Resident",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85966": {
+    "id": 85966,
+    "name": "Luterran Resident",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85967": {
+    "id": 85967,
+    "name": "Luterran Resident",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85968": {
+    "id": 85968,
+    "name": "Luterran Resident",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85969": {
+    "id": 85969,
+    "name": "Meehan",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85970": {
+    "id": 85970,
+    "name": "Sacria",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85971": {
+    "id": 85971,
+    "name": "Sacria",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85972": {
+    "id": 85972,
+    "name": "Executor Solas",
+    "grade": "boss",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85973": {
+    "id": 85973,
+    "name": "Seria",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85974": {
+    "id": 85974,
+    "name": "Child",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85975": {
+    "id": 85975,
+    "name": "Resident",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85976": {
+    "id": 85976,
+    "name": "Resident",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85977": {
+    "id": 85977,
+    "name": "Resident",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85978": {
+    "id": 85978,
+    "name": "Someone's Voice",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85979": {
+    "id": 85979,
+    "name": "Vrad",
+    "grade": "named",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85980": {
+    "id": 85980,
+    "name": "Resolution",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85981": {
+    "id": 85981,
+    "name": "Armen",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85982": {
+    "id": 85982,
+    "name": "Totoma",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85983": {
+    "id": 85983,
+    "name": "Mokamoka",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85984": {
+    "id": 85984,
+    "name": "Totoiki",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "substance",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85985": {
+    "id": 85985,
+    "name": "Totoiki",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "substance",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85986": {
+    "id": 85986,
+    "name": "Totoiki",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "substance",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85987": {
+    "id": 85987,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85988": {
+    "id": 85988,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85989": {
+    "id": 85989,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85858": {
+    "id": 85858,
+    "name": "Mokoko",
     "grade": "normal",
     "type": "townsfolk",
     "species": "none",
@@ -289819,12 +292799,1502 @@
     "staggerPoints": 0,
     "balanceLevel": 0
   },
-  "86433": {
-    "id": 86433,
-    "name": "Mirror of Eternity",
+  "85990": {
+    "id": 85990,
+    "name": "Mokoko",
     "grade": "normal",
     "type": "townsfolk",
-    "species": "plant",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85991": {
+    "id": 85991,
+    "name": "Mokoko",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "85992": {
+    "id": 85992,
+    "name": "Mokoko",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86055": {
+    "id": 86055,
+    "name": "Shandi",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86056": {
+    "id": 86056,
+    "name": "Yonfay",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86168": {
+    "id": 86168,
+    "name": "Yaruz",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86169": {
+    "id": 86169,
+    "name": "Pahu",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86170": {
+    "id": 86170,
+    "name": "Goulding",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86171": {
+    "id": 86171,
+    "name": "Levi",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86172": {
+    "id": 86172,
+    "name": "Kaldor",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86173": {
+    "id": 86173,
+    "name": "Jederico",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86174": {
+    "id": 86174,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86175": {
+    "id": 86175,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86176": {
+    "id": 86176,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86177": {
+    "id": 86177,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86178": {
+    "id": 86178,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86179": {
+    "id": 86179,
+    "name": null,
+    "grade": "named",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86180": {
+    "id": 86180,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86181": {
+    "id": 86181,
+    "name": "Shana",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86182": {
+    "id": 86182,
+    "name": "Jahara",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86183": {
+    "id": 86183,
+    "name": "Nagi",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86184": {
+    "id": 86184,
+    "name": "Liru",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86185": {
+    "id": 86185,
+    "name": "Select",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86186": {
+    "id": 86186,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "wild_beast",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86187": {
+    "id": 86187,
+    "name": "Cahni Herder Phamiz",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86188": {
+    "id": 86188,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86189": {
+    "id": 86189,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86231": {
+    "id": 86231,
+    "name": "Sylperion",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86232": {
+    "id": 86232,
+    "name": "Ephernia",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "spirit",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86233": {
+    "id": 86233,
+    "name": "Undart",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86234": {
+    "id": 86234,
+    "name": "Gnosis",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86235": {
+    "id": 86235,
+    "name": "Mariu",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86310": {
+    "id": 86310,
+    "name": "Lauriel",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86340": {
+    "id": 86340,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86341": {
+    "id": 86341,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86342": {
+    "id": 86342,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86343": {
+    "id": 86343,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86344": {
+    "id": 86344,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86345": {
+    "id": 86345,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86346": {
+    "id": 86346,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86434": {
+    "id": 86434,
+    "name": "Karil",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86435": {
+    "id": 86435,
+    "name": "Cador",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86436": {
+    "id": 86436,
+    "name": "Grail",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86437": {
+    "id": 86437,
+    "name": "Sella",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86438": {
+    "id": 86438,
+    "name": "Rihanna",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86439": {
+    "id": 86439,
+    "name": "Theorn",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86440": {
+    "id": 86440,
+    "name": "Kanmor",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86441": {
+    "id": 86441,
+    "name": "Nora",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86442": {
+    "id": 86442,
+    "name": "Ebris",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86443": {
+    "id": 86443,
+    "name": "Karmel",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86444": {
+    "id": 86444,
+    "name": "Elan",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86445": {
+    "id": 86445,
+    "name": "Tanara",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86446": {
+    "id": 86446,
+    "name": "Viola",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86447": {
+    "id": 86447,
+    "name": "Marin",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86448": {
+    "id": 86448,
+    "name": "Keira",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86449": {
+    "id": 86449,
+    "name": "Buchi",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86450": {
+    "id": 86450,
+    "name": "Pip",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86451": {
+    "id": 86451,
+    "name": "Lilia",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86452": {
+    "id": 86452,
+    "name": "Korina",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86453": {
+    "id": 86453,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86454": {
+    "id": 86454,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86499": {
+    "id": 86499,
+    "name": "<FONT color=\"#FE9600\">Doloris</FONT> Ugotztalent",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86500": {
+    "id": 86500,
+    "name": "TryTry",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86501": {
+    "id": 86501,
+    "name": "ManWithFlowers",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86502": {
+    "id": 86502,
+    "name": "FatedEncounter",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86503": {
+    "id": 86503,
+    "name": "Bartender",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86504": {
+    "id": 86504,
+    "name": "Diceslinger",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86508": {
+    "id": 86508,
+    "name": "Fasthands",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86509": {
+    "id": 86509,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86510": {
+    "id": 86510,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86511": {
+    "id": 86511,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86512": {
+    "id": 86512,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86513": {
+    "id": 86513,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86514": {
+    "id": 86514,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86515": {
+    "id": 86515,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86516": {
+    "id": 86516,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86517": {
+    "id": 86517,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86518": {
+    "id": 86518,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86519": {
+    "id": 86519,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86520": {
+    "id": 86520,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86521": {
+    "id": 86521,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86522": {
+    "id": 86522,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86523": {
+    "id": 86523,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86524": {
+    "id": 86524,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86525": {
+    "id": 86525,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86526": {
+    "id": 86526,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86527": {
+    "id": 86527,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86528": {
+    "id": 86528,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86529": {
+    "id": 86529,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86530": {
+    "id": 86530,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86531": {
+    "id": 86531,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86532": {
+    "id": 86532,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86533": {
+    "id": 86533,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86534": {
+    "id": 86534,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86535": {
+    "id": 86535,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86536": {
+    "id": 86536,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86537": {
+    "id": 86537,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86538": {
+    "id": 86538,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86539": {
+    "id": 86539,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86540": {
+    "id": 86540,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86541": {
+    "id": 86541,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86542": {
+    "id": 86542,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86543": {
+    "id": 86543,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86544": {
+    "id": 86544,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86545": {
+    "id": 86545,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86546": {
+    "id": 86546,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86547": {
+    "id": 86547,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86548": {
+    "id": 86548,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86549": {
+    "id": 86549,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86550": {
+    "id": 86550,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86551": {
+    "id": 86551,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86552": {
+    "id": 86552,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86553": {
+    "id": 86553,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86554": {
+    "id": 86554,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86555": {
+    "id": 86555,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86556": {
+    "id": 86556,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86557": {
+    "id": 86557,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86558": {
+    "id": 86558,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86559": {
+    "id": 86559,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86560": {
+    "id": 86560,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86561": {
+    "id": 86561,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86562": {
+    "id": 86562,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86563": {
+    "id": 86563,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86564": {
+    "id": 86564,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86565": {
+    "id": 86565,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86566": {
+    "id": 86566,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86567": {
+    "id": 86567,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86568": {
+    "id": 86568,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86569": {
+    "id": 86569,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86570": {
+    "id": 86570,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86571": {
+    "id": 86571,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86572": {
+    "id": 86572,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86573": {
+    "id": 86573,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86574": {
+    "id": 86574,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86575": {
+    "id": 86575,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86576": {
+    "id": 86576,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86577": {
+    "id": 86577,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86578": {
+    "id": 86578,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86579": {
+    "id": 86579,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86580": {
+    "id": 86580,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86581": {
+    "id": 86581,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86582": {
+    "id": 86582,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86583": {
+    "id": 86583,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86584": {
+    "id": 86584,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86585": {
+    "id": 86585,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86586": {
+    "id": 86586,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86587": {
+    "id": 86587,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86588": {
+    "id": 86588,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86590": {
+    "id": 86590,
+    "name": "Verona",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86591": {
+    "id": 86591,
+    "name": "Riff",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
     "hpBars": 0,
     "staggerPoints": 0,
     "balanceLevel": 0
@@ -368581,6 +373051,106 @@
   },
   "27752": {
     "id": 27752,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "40351": {
+    "id": 40351,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "40352": {
+    "id": 40352,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "40354": {
+    "id": 40354,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "40355": {
+    "id": 40355,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "40356": {
+    "id": 40356,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "40357": {
+    "id": 40357,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "40358": {
+    "id": 40358,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "40359": {
+    "id": 40359,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "40360": {
+    "id": 40360,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "40383": {
+    "id": 40383,
     "name": null,
     "grade": "normal",
     "type": "townsfolk",

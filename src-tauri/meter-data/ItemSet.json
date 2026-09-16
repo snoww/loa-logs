@@ -1055,7 +1055,7 @@
               ]
             },
             "5": {
-              "desc": "Increases Move Speed by <FONT COLOR='#99FF99'>20%</FONT> for <FONT COLOR='#ffff99'>20</FONT>s when attacking Boss monsters or above. If the buff lasts its full duration then Atk. Speed will increase by <FONT COLOR='#99FF99'>15%</FONT> and deal <FONT COLOR='#99FF99'>20%</FONT> additional Damage for <FONT COLOR='#ffff99'>10</FONT>s. The buff will be removed if attacked. (Cooldown: <FONT COLOR='#ffff99'>30</FONT>s)",
+              "desc": "Increases Move Speed by <FONT COLOR='#99FF99'>20%</FONT> for <FONT COLOR='#ffff99'>20</FONT>s when attacking Boss monsters or above. If the buff lasts its full duration then Atk. Speed will increase by <FONT COLOR='#99FF99'>15%</FONT> and inflict <FONT COLOR='#99FF99'>20%</FONT> additional Damage for <FONT COLOR='#ffff99'>10</FONT>s. The buff will be removed if attacked. (Cooldown: <FONT COLOR='#ffff99'>30</FONT>s)",
               "options": [
                 {
                   "type": "combat_effect",
@@ -1128,7 +1128,7 @@
               ]
             },
             "5": {
-              "desc": "Increases Move Speed by <FONT COLOR='#99FF99'>30%</FONT> for <FONT COLOR='#ffff99'>20</FONT>s when attacking monsters Boss rank or above. If the buff lasts its full duration, Atk. Speed will increase by <FONT COLOR='#99FF99'>30%</FONT> and deal <FONT COLOR='#99FF99'>20%</FONT> additional Damage for <FONT COLOR='#ffff99'>10</FONT>s. The buff will be removed if attacked. (Cooldown: <FONT COLOR='#ffff99'>30</FONT>s)",
+              "desc": "Increases Move Speed by <FONT COLOR='#99FF99'>30%</FONT> for <FONT COLOR='#ffff99'>20</FONT>s when attacking monsters Boss rank or above. If the buff lasts its full duration, Atk. Speed will increase by <FONT COLOR='#99FF99'>30%</FONT> and inflict <FONT COLOR='#99FF99'>20%</FONT> additional Damage for <FONT COLOR='#ffff99'>10</FONT>s. The buff will be removed if attacked. (Cooldown: <FONT COLOR='#ffff99'>30</FONT>s)",
               "options": [
                 {
                   "type": "combat_effect",
@@ -5045,7 +5045,7 @@
         "value": {
           "setCountDatas": {
             "2": {
-              "desc": "On successful hit, gain a chance to trigger an Electric Attack, which applies Flame Vulnerability. (Cooldown: <FONT COLOR='#99ff99'>0.5s</FONT>)\nThis Damage decreases by up to <FONT COLOR='#ff9999'>80%</FONT> when striking multiple foes.\nFlame Vulnerability: + additional Flame Damage when dealing Flame Damage. This additional Flame Damage does not give Electric Vulnerability.",
+              "desc": "On successful hit, gain a chance to trigger an Electric Attack, which applies Flame Vulnerability. (Cooldown: <FONT COLOR='#99ff99'>0.5s</FONT>)\nThis Damage decreases by up to <FONT COLOR='#ff9999'>80%</FONT> when striking multiple foes.\nFlame Vulnerability: + additional Flame Damage when inflicting Flame Damage. This additional Flame Damage does not give Electric Vulnerability.",
               "options": [
                 {
                   "type": "combat_effect",
@@ -5074,7 +5074,7 @@
               ]
             },
             "4": {
-              "desc": "On successful hit, gain a chance to trigger a Flame Attack, which applies Electric Vulnerability. (Cooldown: <FONT COLOR='#99ff99'>0.5s</FONT>)\nThis Damage decreases by up to <FONT COLOR='#ff9999'>80%</FONT> when striking multiple foes.\nElectric Vulnerability: + additional Electric Damage when dealing Electric Damage. This additional Electric Damage does not give Flame Vulnerability.",
+              "desc": "On successful hit, gain a chance to trigger a Flame Attack, which applies Electric Vulnerability. (Cooldown: <FONT COLOR='#99ff99'>0.5s</FONT>)\nThis Damage decreases by up to <FONT COLOR='#ff9999'>80%</FONT> when striking multiple foes.\nElectric Vulnerability: + additional Electric Damage when inflicting Electric Damage. This additional Electric Damage does not give Flame Vulnerability.",
               "options": [
                 {
                   "type": "combat_effect",
@@ -5249,7 +5249,7 @@
         "value": {
           "setCountDatas": {
             "2": {
-              "desc": "On successful hit, gain a chance to trigger a powerful Electric Attack, which applies Flame Vulnerability. (Cooldown: <FONT COLOR='#99ff99'>0.5s</FONT>)\nThis Damage decreases by up to <FONT COLOR='#ff9999'>80%</FONT> when striking multiple foes.\nFlame Vulnerability: + additional Flame Damage when dealing Flame Damage. This additional Flame Damage does not give Electric Vulnerability.",
+              "desc": "On successful hit, gain a chance to trigger a powerful Electric Attack, which applies Flame Vulnerability. (Cooldown: <FONT COLOR='#99ff99'>0.5s</FONT>)\nThis Damage decreases by up to <FONT COLOR='#ff9999'>80%</FONT> when striking multiple foes.\nFlame Vulnerability: + additional Flame Damage when inflicting Flame Damage. This additional Flame Damage does not give Electric Vulnerability.",
               "options": [
                 {
                   "type": "combat_effect",
@@ -5278,7 +5278,7 @@
               ]
             },
             "4": {
-              "desc": "On successful hit, gain a chance to trigger a powerful Flame Attack, which applies Electric Vulnerability. (Cooldown: <FONT COLOR='#99ff99'>0.5s</FONT>)\nThis Damage decreases by up to <FONT COLOR='#ff9999'>80%</FONT> when striking multiple foes.\nElectric Vulnerablity: + additional Electric Damage when dealing Electric Damage. This additional Electric Damage does not give Flame Vulnerability.",
+              "desc": "On successful hit, gain a chance to trigger a powerful Flame Attack, which applies Electric Vulnerability. (Cooldown: <FONT COLOR='#99ff99'>0.5s</FONT>)\nThis Damage decreases by up to <FONT COLOR='#ff9999'>80%</FONT> when striking multiple foes.\nElectric Vulnerablity: + additional Electric Damage when inflicting Electric Damage. This additional Electric Damage does not give Flame Vulnerability.",
               "options": [
                 {
                   "type": "combat_effect",
@@ -5453,7 +5453,7 @@
         "value": {
           "setCountDatas": {
             "2": {
-              "desc": "On successful hit, gain a chance to trigger an even more powerful Electric Attack, which applies Flame Vulnerability. (Cooldown: <FONT COLOR='#99ff99'>0.5s</FONT>)\nThis Damage decreases by up to <FONT COLOR='#ff9999'>80%</FONT> when striking multiple foes.\nFlame Vulnerability: + additional Flame Damage when dealing Flame Damage. This additional Flame Damage does not give Electric Vulnerability.",
+              "desc": "On successful hit, gain a chance to trigger an even more powerful Electric Attack, which applies Flame Vulnerability. (Cooldown: <FONT COLOR='#99ff99'>0.5s</FONT>)\nThis Damage decreases by up to <FONT COLOR='#ff9999'>80%</FONT> when striking multiple foes.\nFlame Vulnerability: + additional Flame Damage when inflicting Flame Damage. This additional Flame Damage does not give Electric Vulnerability.",
               "options": [
                 {
                   "type": "combat_effect",
@@ -5482,7 +5482,7 @@
               ]
             },
             "4": {
-              "desc": "On successful hit, gain a chance to trigger an even more powerful Flame Attack, which applies Electric Vulnerability. (Cooldown: <FONT COLOR='#99ff99'>0.5s</FONT>)\nThis Damage decreases by up to <FONT COLOR='#ff9999'>80%</FONT> when striking multiple foes.\nElectric Vulnerablity: + additional Electric Damage when dealing Electric Damage. This additional Electric Damage does not give Flame Vulnerability.",
+              "desc": "On successful hit, gain a chance to trigger an even more powerful Flame Attack, which applies Electric Vulnerability. (Cooldown: <FONT COLOR='#99ff99'>0.5s</FONT>)\nThis Damage decreases by up to <FONT COLOR='#ff9999'>80%</FONT> when striking multiple foes.\nElectric Vulnerablity: + additional Electric Damage when inflicting Electric Damage. This additional Electric Damage does not give Flame Vulnerability.",
               "options": [
                 {
                   "type": "combat_effect",
@@ -6276,7 +6276,15 @@
           114438112,
           114438113,
           114438114,
-          114438115
+          114438115,
+          900000163,
+          900000164,
+          900000165,
+          900000166,
+          900000167,
+          900000168,
+          900000171,
+          900000430
         ],
         "value": {
           "setCountDatas": {
@@ -6480,7 +6488,15 @@
           114438112,
           114438113,
           114438114,
-          114438115
+          114438115,
+          900000163,
+          900000164,
+          900000165,
+          900000166,
+          900000167,
+          900000168,
+          900000171,
+          900000430
         ],
         "value": {
           "setCountDatas": {
@@ -6684,7 +6700,15 @@
           114438112,
           114438113,
           114438114,
-          114438115
+          114438115,
+          900000163,
+          900000164,
+          900000165,
+          900000166,
+          900000167,
+          900000168,
+          900000171,
+          900000430
         ],
         "value": {
           "setCountDatas": {
