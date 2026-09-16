@@ -1,15 +1,15 @@
 {
-  "version": "v1.49.2",
-  "notes": "### v1.49.2 - August 18th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Luterra\n- **Administrator** on Ratik\n- **Poont** on Giena\n\n### Note: ExitLag users must check the ExitLag Compatibility setting\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed extreme raid filter not filtering extreme nightmare/hard/normal raids\n- raid prog stats:\n  - added group selection to narrow down stats for a specific prog group\n",
-  "pub_date": "2026-08-17T04:20:08.001Z",
+  "version": "v1.50.0",
+  "notes": "### v1.50.0 - September 16th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Vairgrys\n- **Administrator** on Elpon\n- **Poont** on Arcturus\n\n### Note: ExitLag users must check the ExitLag Compatibility setting\n\n#### NEW FEATURES\n\n- updated meter for dimensionalist class release\n- raid mechanic damage bonuses (e.g. rumble, cathedral stagger, etc.) are now excluded from ndps\n- added more stats relating to domination, broken bone, and atropines\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed ndps for hyperawakening and paradise orbs not showing correctly\n- fixed bugs relating to ark passives\n- fixed defense tracking w.r.t. spec scaling and tripods\n- fixed artist infinite awakening duration exploit handling\n",
+  "pub_date": "2026-09-16T10:20:08.001Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.49.2/LOA.Logs_1.49.2_x64-setup.exe",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlNSTXlZbjlBcWdsUzdmNkJWVzR2bUhTZUpldDkxTStFYmwrQVQvR0Q5VDBJc0RVOXVjenRvdUFZb1BiME9CbnhsZHY5R25jVjRxMkR4bnd6MDNQTmdFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg3MDA5NTA3CWZpbGU6TE9BIExvZ3NfMS40OS4yX3g2NC1zZXR1cC5leGUKcDA3NDgrSGY3bDRJVDhYMlQrSDFrUXI5ZFAxM3ZtakRvQXFQVHNGQ29BYi9MUVV4NVJ6YjZPSVkxMWhrZndRN200WlJ2M1QrV1h4RmRBbUlXVStBRGc9PQo="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.50.0/LOA.Logs_1.50.0_x64-setup.exe",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmVMTXFYR29iNVpkNndvT1JRbWYvSnZjM1QyMnBtN2hGSGdXcUdVWnlqVTBObjJ4d2M2ZEJJRWU5cWI2ZElHRjJpZDBBNHFEVFpEbVI4M3Vuekpua2dRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5NTY5NjUwCWZpbGU6TE9BIExvZ3NfMS41MC4wX3g2NC1zZXR1cC5leGUKdXFBVHdseS9Sc1B1Z3YwS21Vd1VyZ1JJZ2tjdDZLNDNTSmZOVWxVT29LWVQvelZJc25WMkNGYXJuZW9USTNwUWJqNVNvVkZhMGhtdWtWajYrQ2IxQUE9PQo="
     },
     "linux-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.49.2/LOA.Logs_1.49.2_amd64.AppImage",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmZHd0dURlVyNUYxWFY1VUl4WHR0N2owYWJNeW4vNE9aZklqN0JKNTFYZnlsSTUwY2dRZHlUbkxsZy83emhZcWtOSEU5MmI1VmMvaitOZEJEajYyaUFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg3MDA5ODEyCWZpbGU6TE9BIExvZ3NfMS40OS4yX2FtZDY0LkFwcEltYWdlCjhXTFJuVU5vY0VYdnVWY3doa25Qd0l0VTBKS2RhOHNZK2pEMjVQdTdZMm82bC9WcWp4dGtmOWFxZUlzREdXOFBaSTRld2VJTkpTYXVaZ21pSG9OekR3PT0K"
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.50.0/LOA.Logs_1.50.0_amd64.AppImage",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYllTQ0szblRlM1duTFZhcnVXQmlPNW9qWjk4Wllwa0JGTm1heE9uUU82UndBSkJGMFdiYnA0cGZCWlJaTjJ0enVLc1BVSi9pbG9VYjgrWnZsNEI0WUFzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5NTY5MjE1CWZpbGU6TE9BIExvZ3NfMS41MC4wX2FtZDY0LkFwcEltYWdlClpmZ2N0TkxVRjhMc2RlTzBxL3U0NitTTCtkbXVvMU40M05EeFhzenp6eXVaeURXSjlLSnVoNjBMMzFvb0wrT2lKT1BMMHFzWG5MMG9tTFpWSzh4TERRPT0K"
     }
   }
 }
