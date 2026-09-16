@@ -1,15 +1,15 @@
 {
-  "version": "v1.50.0",
-  "notes": "### v1.50.0 - September 16th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Vairgrys\n- **Administrator** on Elpon\n- **Poont** on Arcturus\n\n### Note: ExitLag users must check the ExitLag Compatibility setting\n\n#### NEW FEATURES\n\n- updated meter for dimensionalist class release\n- raid mechanic damage bonuses (e.g. rumble, cathedral stagger, etc.) are now excluded from ndps\n- added more stats relating to domination, broken bone, and atropines\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed ndps for hyperawakening and paradise orbs not showing correctly\n- fixed bugs relating to ark passives\n- fixed defense tracking w.r.t. spec scaling and tripods\n- fixed artist infinite awakening duration exploit handling\n",
+  "version": "v1.50.1",
+  "notes": "### v1.50.1 - September 16th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Vairgrys\n- **Administrator** on Elpon\n- **Poont** on Arcturus\n\n### Note: ExitLag users must check the ExitLag Compatibility setting\n\n#### NEW FEATURES\n\n- updated meter for dimensionalist class release\n- raid mechanic damage bonuses (e.g. rumble, cathedral stagger, etc.) are now excluded from ndps\n- added more stats relating to domination, broken bone, and atropines\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed ndps for hyperawakening and paradise orbs not showing correctly\n- fixed bugs relating to ark passives\n- fixed defense tracking w.r.t. spec scaling and tripods\n- fixed artist infinite awakening duration exploit handling\n- fixed rdps contribution breakdown stats not working\n",
   "pub_date": "2026-09-16T10:20:08.001Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.50.0/LOA.Logs_1.50.0_x64-setup.exe",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmVMTXFYR29iNVpkNndvT1JRbWYvSnZjM1QyMnBtN2hGSGdXcUdVWnlqVTBObjJ4d2M2ZEJJRWU5cWI2ZElHRjJpZDBBNHFEVFpEbVI4M3Vuekpua2dRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5NTY5NjUwCWZpbGU6TE9BIExvZ3NfMS41MC4wX3g2NC1zZXR1cC5leGUKdXFBVHdseS9Sc1B1Z3YwS21Vd1VyZ1JJZ2tjdDZLNDNTSmZOVWxVT29LWVQvelZJc25WMkNGYXJuZW9USTNwUWJqNVNvVkZhMGhtdWtWajYrQ2IxQUE9PQo="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.50.1/LOA.Logs_1.50.1_x64-setup.exe",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlg1UW4vSUd6YTN3R2hCL0hQVDF5ZUNIR0V5dldiQUZNOWZ4bTIxYm9DeC9UWjY0RUtVWFR5eGtFRVR6K280Um84RENPcmNkcVZIK3hmNnRLMG9UWFFRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5NTc5MjQyCWZpbGU6TE9BIExvZ3NfMS41MC4xX3g2NC1zZXR1cC5leGUKK0lJcGkvK2VtNm10M3dOQmNFaGRNcjBka2MvaURTWVY0Y29LYlNuUnh2bTZGbHprUmpZYVBnOUd3c2R2Znlpd0hwNFo2alpWVEx2R1ZEVUFMOTJqQkE9PQo="
     },
     "linux-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.50.0/LOA.Logs_1.50.0_amd64.AppImage",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYllTQ0szblRlM1duTFZhcnVXQmlPNW9qWjk4Wllwa0JGTm1heE9uUU82UndBSkJGMFdiYnA0cGZCWlJaTjJ0enVLc1BVSi9pbG9VYjgrWnZsNEI0WUFzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5NTY5MjE1CWZpbGU6TE9BIExvZ3NfMS41MC4wX2FtZDY0LkFwcEltYWdlClpmZ2N0TkxVRjhMc2RlTzBxL3U0NitTTCtkbXVvMU40M05EeFhzenp6eXVaeURXSjlLSnVoNjBMMzFvb0wrT2lKT1BMMHFzWG5MMG9tTFpWSzh4TERRPT0K"
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.50.1/LOA.Logs_1.50.1_amd64.AppImage",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmI0V0R0UWlMNnBzRERLUUNwL2Vnc0JQOWlUNTRHYW5LUlk0ZTlXd0NTSVpZMnNwNnc3WWxBVVg3WHJYWFo3eXhyS0xHU2lzSWIvMFlJeWV2bmgwU0FnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5NTc4Njk2CWZpbGU6TE9BIExvZ3NfMS41MC4xX2FtZDY0LkFwcEltYWdlClhNZllwamRWZ1h0V3VNdDVJa2pjQmJNMFVKanMyamRTdmZTcjVrN21vOEZCd2JWbVU0Y1JQV2xrbnBlekpSb3NVZ2VHQmVTZFVCYWhEM2lzUlZCQUJRPT0K"
     }
   }
 }

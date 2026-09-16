@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.50.0 - September 16th, 2026
+    v1.50.1 - September 16th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -27,3 +27,4 @@
 - fixed bugs relating to ark passives
 - fixed defense tracking w.r.t. spec scaling and tripods
 - fixed artist infinite awakening duration exploit handling
+- fixed rdps contribution breakdown stats not working
