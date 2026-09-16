@@ -6,6 +6,14 @@ import { type FormattedString } from "./formatted";
 export type ArkGridAstrogem = [string, number];
 
 export const ArkGridAstrogem: Record<number, ArkGridAstrogem> = {
+  40621112: ["Order Astrogem: Stability", 2200],
+  40621113: ["Order Astrogem: Stability", 2300],
+  40621114: ["Chaos Astrogem: Corrosion", 2213],
+  40621115: ["Chaos Astrogem: Corrosion", 2313],
+  40621173: ["Order Astrogem: Stability", 2400],
+  40621174: ["Order Astrogem: Stability", 2500],
+  40621175: ["Chaos Astrogem: Corrosion", 2413],
+  40621176: ["Chaos Astrogem: Corrosion", 2513],
   67401024: ["Order Astrogem: Stability", 1000],
   67401025: ["Order Astrogem: Stability", 1000],
   67401026: ["Order Astrogem: Stability", 1000],
@@ -812,7 +820,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673000133: ["<font color='{0}'>Bombardment</font>", 504, 673000136, 2300900],
   673000163: ["<font color='{0}'>Eye of the Tigress</font>", 512, 673000166, 2380900],
   673000203: ["<font color='{0}'>Shock Burst</font>", 303, 673000206, 2231000],
-  673000213: ["<font color='{0}'>Bolstering Melody</font>", 304, 673000216, 2241000],
+  673000213: ["<font color='{0}'>Sky Shattering Strike</font>", 304, 673000216, 2241000],
   673000223: ["<font color='{0}'>Smite Barrage</font>", 302, 673000226, 2220900],
   673000233: ["<font color='{0}'>Red Dragon Energy</font>", 305, 673000236, 2341000],
   673000263: ["<font color='{0}'>Tiger's Roar</font>", 312, 673000266, 2391000],
@@ -829,6 +837,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673000513: ["<font color='{0}'>Unstoppable Force</font>", 602, 673000516, 2311000],
   673000523: ["<font color='{0}'>Shapeshifter!</font>", 604, 673000526, 2330900],
   673000603: ["<font color='{0}'>Finisher</font>", 702, 673000606, 2490900],
+  673000703: ["<font color='{0}'>Timekeeper</font>", 612, 673000706, 220500900],
   673001003: ["<font color='{0}'>Overpower</font>", 102, 673001006, 2160090],
   673001013: ["<font color='{0}'>Dimensional Collapse</font>", 103, 673001016, 2180090],
   673001023: ["<font color='{0}'>Spear Arts</font>", 104, 673001026, 2170090],
@@ -841,7 +850,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673001133: ["<font color='{0}'>Shoot & Scoot</font>", 504, 673001136, 2300900],
   673001163: ["<font color='{0}'>Echoes of the Banquet</font>", 512, 673001166, 2380900],
   673001203: ["<font color='{0}'>Shockwave</font>", 303, 673001206, 2231000],
-  673001213: ["<font color='{0}'>Current Shot</font>", 304, 673001216, 2241000],
+  673001213: ["<font color='{0}'>Brilliant Rush</font>", 304, 673001216, 2241000],
   673001223: ["<font color='{0}'>Enlightened Origin</font>", 302, 673001226, 2220900],
   673001233: ["<font color='{0}'>Red Dragon Barrage</font>", 305, 673001236, 2341000],
   673001263: ["<font color='{0}'>Utter Carnage</font>", 312, 673001266, 2391000],
@@ -850,14 +859,15 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673001313: ["<font color='{0}'>Infinity Deck</font>", 202, 673001316, 2190900],
   673001323: ["<font color='{0}'>Tempest Refrain</font>", 204, 673001326, 2211000],
   673001333: ["<font color='{0}'>Incomplete Combustion</font>", 205, 673001336, 2370900],
-  673001403: ["<font color='{0}'>Sword Reset</font>", 402, 673001406, 2250500],
+  673001403: ["<font color='{0}'>Slaughter Spectacle</font>", 402, 673001406, 2250500],
   673001413: ["<font color='{0}'>Eternal Blood</font>", 403, 673001416, 2270500],
-  673001423: ["<font color='{0}'>Lunar Nightmare</font>", 404, 673001426, 2260500],
+  673001423: ["<font color='{0}'>Falling Moon</font>", 404, 673001426, 2260500],
   673001433: ["<font color='{0}'>Swift Demise</font>", 405, 673001436, 2460500],
   673001503: ["<font color='{0}'>Current Control</font>", 603, 673001506, 2320500],
   673001513: ["<font color='{0}'>Single Stroke</font>", 602, 673001516, 2311000],
   673001523: ["<font color='{0}'>Bear Frenzy</font>", 604, 673001526, 2330900],
   673001603: ["<font color='{0}'>Manifest</font>", 702, 673001606, 2490900],
+  673001703: ["<font color='{0}'>Twisted Timeline</font>", 612, 673001706, 220500900],
   673002003: ["<font color='{0}'>Power Core</font>", 102, 673002006, 2160090],
   673002013: ["<font color='{0}'>Earth Wave</font>", 103, 673002016, 2180090],
   673002023: ["<font color='{0}'>End of War</font>", 104, 673002026, 2170090],
@@ -870,7 +880,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673002133: ["<font color='{0}'>Bombardier Tank</font>", 504, 673002136, 2300900],
   673002163: ["<font color='{0}'>True Aim</font>", 512, 673002166, 2380900],
   673002203: ["<font color='{0}'>Shock Suppression</font>", 303, 673002206, 2231000],
-  673002213: ["<font color='{0}'>Onslaught</font>", 304, 673002216, 2241000],
+  673002213: ["<font color='{0}'>Hundred Chain Strike</font>", 304, 673002216, 2241000],
   673002223: ["<font color='{0}'>Opening Three Gates</font>", 302, 673002226, 2220900],
   673002233: ["<font color='{0}'>Yeon-Style Spear Technique</font>", 305, 673002236, 2341000],
   673002263: ["<font color='{0}'>Lightning Tiger</font>", 312, 673002266, 2391000],
@@ -887,6 +897,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673002513: ["<font color='{0}'>Inkbloom</font>", 602, 673002516, 2311000],
   673002523: ["<font color='{0}'>Fox-To-Be!</font>", 604, 673002526, 2330900],
   673002603: ["<font color='{0}'>Red Wings</font>", 702, 673002606, 2490900],
+  673002703: ["<font color='{0}'>Dimensional Annihilation</font>", 612, 673002706, 220500900],
   673003003: ["<font color='{0}'>Dark Power</font>", 102, 673003006, 2160100],
   673003013: ["<font color='{0}'>Gravity Reversal</font>", 103, 673003016, 2180100],
   673003023: ["<font color='{0}'>Shield Combo</font>", 104, 673003026, 2170100],
@@ -899,7 +910,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673003133: ["<font color='{0}'>Ammo Collector</font>", 504, 673003136, 2301000],
   673003163: ["<font color='{0}'>Midnight Rose</font>", 512, 673003166, 2381000],
   673003203: ["<font color='{0}'>Earth Collapse</font>", 303, 673003206, 2230900],
-  673003213: ["<font color='{0}'>Meridian Surge</font>", 304, 673003216, 2240900],
+  673003213: ["<font color='{0}'>Shadowless</font>", 304, 673003216, 2240900],
   673003223: ["<font color='{0}'>Undefeated Overlord</font>", 302, 673003226, 2221000],
   673003233: ["<font color='{0}'>Galewind Barrage</font>", 305, 673003236, 2340900],
   673003263: ["<font color='{0}'>Speed of Light</font>", 312, 673003266, 2390900],
@@ -916,6 +927,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673003513: ["<font color='{0}'>Sun's Embrace</font>", 602, 673003516, 2310500],
   673003523: ["<font color='{0}'>Infinite Awakening</font>", 604, 673003526, 2331000],
   673003603: ["<font color='{0}'>Charge Enhancement</font>", 702, 673003606, 2491000],
+  673003703: ["<font color='{0}'>Spatial Swordcraft</font>", 612, 673003706, 220501000],
   673004003: ["<font color='{0}'>Power Drive</font>", 102, 673004006, 2160100],
   673004013: ["<font color='{0}'>Gravity Destruction</font>", 103, 673004016, 2180100],
   673004023: ["<font color='{0}'>Chain Charge</font>", 104, 673004026, 2170100],
@@ -928,7 +940,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673004133: ["<font color='{0}'>Demon Fire</font>", 504, 673004136, 2301000],
   673004163: ["<font color='{0}'>Lawless Land</font>", 512, 673004166, 2381000],
   673004203: ["<font color='{0}'>Repeated Leap</font>", 303, 673004206, 2230900],
-  673004213: ["<font color='{0}'>Grand Cycle</font>", 304, 673004216, 2240900],
+  673004213: ["<font color='{0}'>Supreme Connection</font>", 304, 673004216, 2240900],
   673004223: ["<font color='{0}'>Undying Fire Dragon</font>", 302, 673004226, 2221000],
   673004233: ["<font color='{0}'>Yeon-Style Slash</font>", 305, 673004236, 2340900],
   673004263: ["<font color='{0}'>Lord of Tigers</font>", 312, 673004266, 2390900],
@@ -945,6 +957,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673004513: ["<font color='{0}'>Unspeakably Soft</font>", 602, 673004516, 2310500],
   673004523: ["<font color='{0}'>Bear Fist</font>", 604, 673004526, 2331000],
   673004603: ["<font color='{0}'>Brandish</font>", 702, 673004606, 2491000],
+  673004703: ["<font color='{0}'>Master Impaler</font>", 612, 673004706, 220501000],
   673005003: ["<font color='{0}'>Holding Edge</font>", 102, 673005006, 2160100],
   673005013: ["<font color='{0}'>Gravity Core</font>", 103, 673005016, 2180100],
   673005023: ["<font color='{0}'>Thunder</font>", 104, 673005026, 2170100],
@@ -957,7 +970,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673005133: ["<font color='{0}'>Jumper</font>", 504, 673005136, 2301000],
   673005163: ["<font color='{0}'>Black Belt</font>", 512, 673005166, 2381000],
   673005203: ["<font color='{0}'>Tenacity Suppression</font>", 303, 673005206, 2230900],
-  673005213: ["<font color='{0}'>Bare Knuckle</font>", 304, 673005216, 2240900],
+  673005213: ["<font color='{0}'>Force Cycle</font>", 304, 673005216, 2240900],
   673005223: ["<font color='{0}'>Quintuple Resilience</font>", 302, 673005226, 2221000],
   673005233: ["<font color='{0}'>Raging Dragon Quintuple Strike</font>", 305, 673005236, 2340900],
   673005263: ["<font color='{0}'>External Power</font>", 312, 673005266, 2390900],
@@ -974,6 +987,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673005513: ["<font color='{0}'>Sun's Protection</font>", 602, 673005516, 2310500],
   673005523: ["<font color='{0}'>Crow King</font>", 604, 673005526, 2331000],
   673005603: ["<font color='{0}'>Apex</font>", 702, 673005606, 2491000],
+  673005703: ["<font color='{0}'>Severed Dimension</font>", 612, 673005706, 220501000],
   673010003: ["<font color='{0}'>Blood Circulation</font>", 102, 673010006, 2160090],
   673010013: ["<font color='{0}'>Absolute Control</font>", 103, 673010016, 2180090],
   673010023: ["<font color='{0}'>Defense Tactics</font>", 104, 673010026, 2170090],
@@ -986,7 +1000,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673010133: ["<font color='{0}'>Rapid Tank</font>", 504, 673010136, 2300900],
   673010163: ["<font color='{0}'>Jack-of-All-Trades</font>", 512, 673010166, 2380900],
   673010203: ["<font color='{0}'>Shock Enhancement</font>", 303, 673010206, 2231000],
-  673010213: ["<font color='{0}'>Adamantine Body</font>", 304, 673010216, 2241000],
+  673010213: ["<font color='{0}'>Chain Annihilation</font>", 304, 673010216, 2241000],
   673010223: ["<font color='{0}'>Mighty Wind Kick</font>", 302, 673010226, 2220900],
   673010233: ["<font color='{0}'>Pinpoint Focus</font>", 305, 673010236, 2341000],
   673010263: ["<font color='{0}'>Storm's Roar</font>", 312, 673010266, 2391000],
@@ -1003,6 +1017,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673010513: ["<font color='{0}'>Perfect Harmony</font>", 602, 673010516, 2311000],
   673010523: ["<font color='{0}'>Forbidden Sorcery</font>", 604, 673010526, 2330900],
   673010603: ["<font color='{0}'>Nova Flame</font>", 702, 673010606, 2490900],
+  673010703: ["<font color='{0}'>Combine Weapon</font>", 612, 673010706, 220500900],
   673011003: ["<font color='{0}'>Over Surge</font>", 102, 673011006, 2160090],
   673011013: ["<font color='{0}'>Gravity Enhancement</font>", 103, 673011016, 2180090],
   673011023: ["<font color='{0}'>Strike Point</font>", 104, 673011026, 2170090],
@@ -1015,7 +1030,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673011133: ["<font color='{0}'>Overheated Shell</font>", 504, 673011136, 2300900],
   673011163: ["<font color='{0}'>Weapon Switch</font>", 512, 673011166, 2380900],
   673011203: ["<font color='{0}'>Earth Combo</font>", 303, 673011206, 2231000],
-  673011213: ["<font color='{0}'>Wavebreak Herald</font>", 304, 673011216, 2241000],
+  673011213: ["<font color='{0}'>Heavenly Squall</font>", 304, 673011216, 2241000],
   673011223: ["<font color='{0}'>Origin State</font>", 302, 673011226, 2220900],
   673011233: ["<font color='{0}'>Focus Enhancement</font>", 305, 673011236, 2341000],
   673011263: ["<font color='{0}'>Roaring Formation</font>", 312, 673011266, 2391000],
@@ -1024,14 +1039,15 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673011313: ["<font color='{0}'>Chain Draw</font>", 202, 673011316, 2190900],
   673011323: ["<font color='{0}'>Second Impact</font>", 204, 673011326, 2211000],
   673011333: ["<font color='{0}'>Burn Acceleration</font>", 205, 673011336, 2370900],
-  673011403: ["<font color='{0}'>Destiny Core</font>", 402, 673011406, 2250500],
+  673011403: ["<font color='{0}'>Twin Swords Dance</font>", 402, 673011406, 2250500],
   673011413: ["<font color='{0}'>Gore Bleeding</font>", 403, 673011416, 2270500],
-  673011423: ["<font color='{0}'>Nightmare</font>", 404, 673011426, 2260500],
+  673011423: ["<font color='{0}'>Silent</font>", 404, 673011426, 2260500],
   673011433: ["<font color='{0}'>Eternal One</font>", 405, 673011436, 2460500],
   673011503: ["<font color='{0}'>Upward Current</font>", 603, 673011506, 2320500],
   673011513: ["<font color='{0}'>Master Calligrapher</font>", 602, 673011516, 2311000],
   673011523: ["<font color='{0}'>Strong Bear</font>", 604, 673011526, 2330900],
   673011603: ["<font color='{0}'>Liberation</font>", 702, 673011606, 2490900],
+  673011703: ["<font color='{0}'>Timeline</font>", 612, 673011706, 220500900],
   673012003: ["<font color='{0}'>Break Dash</font>", 102, 673012006, 2160090],
   673012013: ["<font color='{0}'>Gravity Run</font>", 103, 673012016, 2180090],
   673012023: ["<font color='{0}'>Gunlance Charge</font>", 104, 673012026, 2170090],
@@ -1044,7 +1060,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673012133: ["<font color='{0}'>Safehouse</font>", 504, 673012136, 2300900],
   673012163: ["<font color='{0}'>Shield Targeting</font>", 512, 673012166, 2380900],
   673012203: ["<font color='{0}'>Stamina Conservation</font>", 303, 673012206, 2231000],
-  673012213: ["<font color='{0}'>Heavenshaker</font>", 304, 673012216, 2241000],
+  673012213: ["<font color='{0}'>Recovery Bullet</font>", 304, 673012216, 2241000],
   673012223: ["<font color='{0}'>Hypercirculation</font>", 302, 673012226, 2220900],
   673012233: ["<font color='{0}'>Azure Dragon Energy</font>", 305, 673012236, 2341000],
   673012263: ["<font color='{0}'>Thunderclap Strike</font>", 312, 673012266, 2391000],
@@ -1061,6 +1077,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673012513: ["<font color='{0}'>Wolf Moon</font>", 602, 673012516, 2311000],
   673012523: ["<font color='{0}'>Strong Fox</font>", 604, 673012526, 2330900],
   673012603: ["<font color='{0}'>Avenger</font>", 702, 673012606, 2490900],
+  673012703: ["<font color='{0}'>Minute Tempo</font>", 612, 673012706, 220500900],
   673013003: ["<font color='{0}'>Dark Torrent</font>", 102, 673013006, 2160100],
   673013013: ["<font color='{0}'>Event Horizon</font>", 103, 673013016, 2180100],
   673013023: ["<font color='{0}'>Shield Arts</font>", 104, 673013026, 2170100],
@@ -1073,7 +1090,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673013133: ["<font color='{0}'>Galewind Artillerist</font>", 504, 673013136, 2301000],
   673013163: ["<font color='{0}'>Armor-Piercing Shell</font>", 512, 673013166, 2381000],
   673013203: ["<font color='{0}'>Fighting Spirit Enhancement</font>", 303, 673013206, 2230900],
-  673013213: ["<font color='{0}'>Circulating Melody</font>", 304, 673013216, 2240900],
+  673013213: ["<font color='{0}'>True Rising Fist</font>", 304, 673013216, 2240900],
   673013223: ["<font color='{0}'>Way of the Overlord</font>", 302, 673013226, 2221000],
   673013233: ["<font color='{0}'>Raging Dragon Energy</font>", 305, 673013236, 2340900],
   673013263: ["<font color='{0}'>Storm Step</font>", 312, 673013266, 2390900],
@@ -1090,6 +1107,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673013513: ["<font color='{0}'>Sun's Warmth</font>", 602, 673013516, 2310500],
   673013523: ["<font color='{0}'>Phantom Beast Liberation</font>", 604, 673013526, 2331000],
   673013603: ["<font color='{0}'>Overwhelm</font>", 702, 673013606, 2491000],
+  673013703: ["<font color='{0}'>Swordcraft Enhancement</font>", 612, 673013706, 220501000],
   673014003: ["<font color='{0}'>Rapid Slash</font>", 102, 673014006, 2160100],
   673014013: ["<font color='{0}'>Gravitational Circulation</font>", 103, 673014016, 2180100],
   673014023: ["<font color='{0}'>War Cry Charge</font>", 104, 673014026, 2170100],
@@ -1102,7 +1120,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673014133: ["<font color='{0}'>Infinite Combustion</font>", 504, 673014136, 2301000],
   673014163: ["<font color='{0}'>Bullet Blitz</font>", 512, 673014166, 2381000],
   673014203: ["<font color='{0}'>Fatal Leap</font>", 303, 673014206, 2230900],
-  673014213: ["<font color='{0}'>Internal Flow</font>", 304, 673014216, 2240900],
+  673014213: ["<font color='{0}'>Divine Extermination</font>", 304, 673014216, 2240900],
   673014223: ["<font color='{0}'>Fire Dragon Skyshaker</font>", 302, 673014226, 2221000],
   673014233: ["<font color='{0}'>Apotheosis</font>", 305, 673014236, 2340900],
   673014263: ["<font color='{0}'>Lightning Tiger Break</font>", 312, 673014266, 2390900],
@@ -1119,6 +1137,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673014513: ["<font color='{0}'>Illusory Door</font>", 602, 673014516, 2310500],
   673014523: ["<font color='{0}'>Spiral</font>", 604, 673014526, 2331000],
   673014603: ["<font color='{0}'>Flourish</font>", 702, 673014606, 2491000],
+  673014703: ["<font color='{0}'>Point Attack</font>", 612, 673014706, 220501000],
   673015003: ["<font color='{0}'>Cyclone Slash</font>", 102, 673015006, 2160100],
   673015013: ["<font color='{0}'>Gravitational Rush</font>", 103, 673015016, 2180100],
   673015023: ["<font color='{0}'>Lightning Storm</font>", 104, 673015026, 2170100],
@@ -1131,7 +1150,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673015133: ["<font color='{0}'>Momentous Leap</font>", 504, 673015136, 2301000],
   673015163: ["<font color='{0}'>Way of the Gun</font>", 512, 673015166, 2381000],
   673015203: ["<font color='{0}'>Continuous Enhancement</font>", 303, 673015206, 2230900],
-  673015213: ["<font color='{0}'>Instant Step</font>", 304, 673015216, 2240900],
+  673015213: ["<font color='{0}'>Protective Cycle</font>", 304, 673015216, 2240900],
   673015223: ["<font color='{0}'>Third Eye</font>", 302, 673015226, 2221000],
   673015233: ["<font color='{0}'>Chain Hit</font>", 305, 673015236, 2340900],
   673015263: ["<font color='{0}'>Void Ascension</font>", 312, 673015266, 2390900],
@@ -1148,6 +1167,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673015513: ["<font color='{0}'>Lunar Prophecy</font>", 602, 673015516, 2310500],
   673015523: ["<font color='{0}'>Crow's Descent</font>", 604, 673015526, 2331000],
   673015603: ["<font color='{0}'>Dominant</font>", 702, 673015606, 2491000],
+  673015703: ["<font color='{0}'>Precise Control</font>", 612, 673015706, 220501000],
   673020003: ["<font color='{0}'>Crushing Storm</font>", 102, 673020006, 2160090],
   673020013: ["<font color='{0}'>Broken Chains</font>", 103, 673020016, 2180090],
   673020023: ["<font color='{0}'>Defensive Barrage</font>", 104, 673020026, 2170090],
@@ -1160,7 +1180,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673020133: ["<font color='{0}'>Sea of Fire</font>", 504, 673020136, 2300900],
   673020163: ["<font color='{0}'>All-Rounder</font>", 512, 673020166, 2380900],
   673020203: ["<font color='{0}'>Orb Explosion</font>", 303, 673020206, 2231000],
-  673020213: ["<font color='{0}'>Dance of Heavenly Flowers</font>", 304, 673020216, 2241000],
+  673020213: ["<font color='{0}'>Blinding Obliteration</font>", 304, 673020216, 2241000],
   673020223: ["<font color='{0}'>Ultimate Wind Kick</font>", 302, 673020226, 2220900],
   673020233: ["<font color='{0}'>Evolution's End</font>", 305, 673020236, 2341000],
   673020263: ["<font color='{0}'>Lightning Tiger Fist</font>", 312, 673020266, 2391000],
@@ -1177,6 +1197,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673020513: ["<font color='{0}'>Endless Shattering Strike</font>", 602, 673020516, 2311000],
   673020523: ["<font color='{0}'>Tandem Charge</font>", 604, 673020526, 2330900],
   673020603: ["<font color='{0}'>Last Stand</font>", 702, 673020606, 2490900],
+  673020703: ["<font color='{0}'>Fusion Enhancement</font>", 612, 673020706, 220500900],
   673021003: ["<font color='{0}'>Overflow</font>", 102, 673021006, 2160090],
   673021013: ["<font color='{0}'>Turbulent Release</font>", 103, 673021016, 2180090],
   673021023: ["<font color='{0}'>Confirmed Attack</font>", 104, 673021026, 2170090],
@@ -1189,7 +1210,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673021133: ["<font color='{0}'>Time on Target</font>", 504, 673021136, 2300900],
   673021163: ["<font color='{0}'>Blowback</font>", 512, 673021166, 2380900],
   673021203: ["<font color='{0}'>Ground Smasher</font>", 303, 673021206, 2231000],
-  673021213: ["<font color='{0}'>Culminating Blast</font>", 304, 673021216, 2241000],
+  673021213: ["<font color='{0}'>Piercing Spiral</font>", 304, 673021216, 2241000],
   673021223: ["<font color='{0}'>Heaven Splitter</font>", 302, 673021226, 2220900],
   673021233: ["<font color='{0}'>Single Point Breakthrough</font>", 305, 673021236, 2341000],
   673021263: ["<font color='{0}'>Dual Berserk Circle</font>", 312, 673021266, 2391000],
@@ -1206,6 +1227,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673021513: ["<font color='{0}'>Swift Brush</font>", 602, 673021516, 2311000],
   673021523: ["<font color='{0}'>Deadly Bear</font>", 604, 673021526, 2330900],
   673021603: ["<font color='{0}'>Executioner</font>", 702, 673021606, 2490900],
+  673021703: ["<font color='{0}'>Distortion</font>", 612, 673021706, 220500900],
   673022003: ["<font color='{0}'>Break Out</font>", 102, 673022006, 2160090],
   673022013: ["<font color='{0}'>Reckless Blow</font>", 103, 673022016, 2180090],
   673022023: ["<font color='{0}'>Cross Gunlance</font>", 104, 673022026, 2170090],
@@ -1213,12 +1235,12 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673022063: ["<font color='{0}'>Deliberate Smite</font>", 112, 673022066, 2450090],
   673022073: ["<font color='{0}'>Greater Justice</font>", 113, 673022076, 2480900],
   673022103: ["<font color='{0}'>Dominator Shell</font>", 503, 673022106, 2290900],
-  673022113: ["<font color='{0}'>HSU-31 Blast</font>", 502, 673022116, 2280900],
+  673022113: ["<font color='{0}'>HSU-36 Dot Sight</font>", 502, 673022116, 2280900],
   673022123: ["<font color='{0}'>Accelerated Burst</font>", 505, 673022126, 2351000],
   673022133: ["<font color='{0}'>Vanquish</font>", 504, 673022136, 2300900],
   673022163: ["<font color='{0}'>Pinpoint</font>", 512, 673022166, 2380900],
   673022203: ["<font color='{0}'>Counter Burst</font>", 303, 673022206, 2231000],
-  673022213: ["<font color='{0}'>Palm Burst Renewal</font>", 304, 673022216, 2241000],
+  673022213: ["<font color='{0}'>Energy Burst</font>", 304, 673022216, 2241000],
   673022223: ["<font color='{0}'>Dragon Style Enhancement</font>", 302, 673022226, 2220900],
   673022233: ["<font color='{0}'>Raging Dragon Slash</font>", 305, 673022236, 2341000],
   673022263: ["<font color='{0}'>Thunderflash Strike</font>", 312, 673022266, 2391000],
@@ -1235,6 +1257,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673022513: ["<font color='{0}'>Torrent of Cranes</font>", 602, 673022516, 2311000],
   673022523: ["<font color='{0}'>Starlight Fox</font>", 604, 673022526, 2330900],
   673022603: ["<font color='{0}'>Start Pursuit</font>", 702, 673022606, 2490900],
+  673022703: ["<font color='{0}'>Conversion</font>", 612, 673022706, 220500900],
   673023003: ["<font color='{0}'>Frenzy</font>", 102, 673023006, 2160100],
   673023013: ["<font color='{0}'>Collapse</font>", 103, 673023016, 2180100],
   673023023: ["<font color='{0}'>Shield Strike</font>", 104, 673023026, 2170100],
@@ -1247,7 +1270,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673023133: ["<font color='{0}'>Iron Rain</font>", 504, 673023136, 2301000],
   673023163: ["<font color='{0}'>Precision Fire</font>", 512, 673023166, 2381000],
   673023203: ["<font color='{0}'>Ground-Breaker</font>", 303, 673023206, 2230900],
-  673023213: ["<font color='{0}'>Wallbreaker</font>", 304, 673023216, 2240900],
+  673023213: ["<font color='{0}'>Annihilating Void</font>", 304, 673023216, 2240900],
   673023223: ["<font color='{0}'>Ultimate Azure Gale</font>", 302, 673023226, 2221000],
   673023233: ["<font color='{0}'>Dual Technique</font>", 305, 673023236, 2340900],
   673023263: ["<font color='{0}'>Divine King's Manifestation</font>", 312, 673023266, 2390900],
@@ -1264,6 +1287,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673023513: ["<font color='{0}'>Bouncing Brushwork</font>", 602, 673023516, 2310500],
   673023523: ["<font color='{0}'>Illusory Bear</font>", 604, 673023526, 2331000],
   673023603: ["<font color='{0}'>Grand Finale</font>", 702, 673023606, 2491000],
+  673023703: ["<font color='{0}'>Minute Hand Calibration</font>", 612, 673023706, 220501000],
   673024003: ["<font color='{0}'>Chain Slash</font>", 102, 673024006, 2160100],
   673024013: ["<font color='{0}'>Rock Blade</font>", 103, 673024016, 2180100],
   673024023: ["<font color='{0}'>Chariot Charge</font>", 104, 673024026, 2170100],
@@ -1276,7 +1300,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673024133: ["<font color='{0}'>Absolutely Cooking</font>", 504, 673024136, 2301000],
   673024163: ["<font color='{0}'>Full Magazine</font>", 512, 673024166, 2381000],
   673024203: ["<font color='{0}'>Black Dragon's Leap</font>", 303, 673024206, 2230900],
-  673024213: ["<font color='{0}'>Energy Blow-Up</font>", 304, 673024216, 2240900],
+  673024213: ["<font color='{0}'>Shadowsweep</font>", 304, 673024216, 2240900],
   673024223: ["<font color='{0}'>Rising Fiery Dragon</font>", 302, 673024226, 2221000],
   673024233: ["<font color='{0}'>Illusion</font>", 305, 673024236, 2340900],
   673024263: ["<font color='{0}'>Cloudburst Barrage</font>", 312, 673024266, 2390900],
@@ -1293,6 +1317,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673024513: ["<font color='{0}'>Dimensional Gate</font>", 602, 673024516, 2310500],
   673024523: ["<font color='{0}'>Boom Boom Punch</font>", 604, 673024526, 2331000],
   673024603: ["<font color='{0}'>Army of One</font>", 702, 673024606, 2491000],
+  673024703: ["<font color='{0}'>Chain Thrust</font>", 612, 673024706, 220501000],
   673025003: ["<font color='{0}'>Hell Flip</font>", 102, 673025006, 2160100],
   673025013: ["<font color='{0}'>Shattered Earth</font>", 103, 673025016, 2180100],
   673025023: ["<font color='{0}'>Resounding Thunder</font>", 104, 673025026, 2170100],
@@ -1305,7 +1330,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673025133: ["<font color='{0}'>Auto Lock-On</font>", 504, 673025136, 2301000],
   673025163: ["<font color='{0}'>Heel Strike</font>", 512, 673025166, 2381000],
   673025203: ["<font color='{0}'>Barrage</font>", 303, 673025206, 2230900],
-  673025213: ["<font color='{0}'>Twin Strike Barrage</font>", 304, 673025216, 2240900],
+  673025213: ["<font color='{0}'>Yin Yang Technique</font>", 304, 673025216, 2240900],
   673025223: ["<font color='{0}'>Supreme Fist</font>", 302, 673025226, 2221000],
   673025233: ["<font color='{0}'>Wild Barrage</font>", 305, 673025236, 2340900],
   673025263: ["<font color='{0}'>Limit Smasher</font>", 312, 673025266, 2390900],
@@ -1322,6 +1347,7 @@ export const ArkGridCoreGroup: Record<number, ArkGridCoreGroup> = {
   673025513: ["<font color='{0}'>Ink Spray</font>", 602, 673025516, 2310500],
   673025523: ["<font color='{0}'>Crow Brawl</font>", 604, 673025526, 2331000],
   673025603: ["<font color='{0}'>Destruction</font>", 702, 673025606, 2491000],
+  673025703: ["<font color='{0}'>Multislash</font>", 612, 673025706, 220501000],
   673100003: ["<font color='{0}'>Flashy Attack</font>", 0, 673100006, 0],
   673101003: ["<font color='{0}'>Stable Attack</font>", 0, 673101006, 0],
   673102003: ["<font color='{0}'>Swift Attack</font>", 0, 673102006, 0],
@@ -1586,10 +1612,10 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3230000, 3230100, 3230300, 3230400, 3230401, 3230402],
     303
   ],
-  673000213: ["Order Sun Core: Bolstering Melody", 0, 0, 673000213, 0, [3240000], 304],
-  673000214: ["Order Sun Core: Bolstering Melody", 0, 0, 673000213, 1, [3240000, 3240100], 304],
+  673000213: ["Order Sun Core: Sky Shattering Strike", 0, 0, 673000213, 0, [3240000], 304],
+  673000214: ["Order Sun Core: Sky Shattering Strike", 0, 0, 673000213, 1, [3240000, 3240100], 304],
   673000215: [
-    "Order Sun Core: Bolstering Melody",
+    "Order Sun Core: Sky Shattering Strike",
     0,
     0,
     673000213,
@@ -1598,7 +1624,7 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     304
   ],
   673000216: [
-    "Order Sun Core: Bolstering Melody",
+    "Order Sun Core: Sky Shattering Strike",
     0,
     0,
     673000213,
@@ -1926,6 +1952,26 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3490000, 3490100, 3490300, 3490400, 3490401, 3490402],
     702
   ],
+  673000703: ["Order Sun Core: Timekeeper", 0, 0, 673000703, 0, [320500000], 612],
+  673000704: ["Order Sun Core: Timekeeper", 0, 0, 673000703, 1, [320500000, 320500100], 612],
+  673000705: [
+    "Order Sun Core: Timekeeper",
+    0,
+    0,
+    673000703,
+    2,
+    [320500000, 320500100, 320500200, 320500400, 320500401, 320500402],
+    612
+  ],
+  673000706: [
+    "Order Sun Core: Timekeeper",
+    0,
+    0,
+    673000703,
+    3,
+    [320500000, 320500100, 320500300, 320500400, 320500401, 320500402],
+    612
+  ],
   673001003: ["Order Sun Core: Overpower", 0, 0, 673001003, 0, [3160500], 102],
   673001004: ["Order Sun Core: Overpower", 0, 0, 673001003, 1, [3160500, 3160600], 102],
   673001005: [
@@ -2166,10 +2212,10 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3230500, 3230600, 3230800, 3230900, 3230901, 3230902],
     303
   ],
-  673001213: ["Order Sun Core: Current Shot", 0, 0, 673001213, 0, [3240500], 304],
-  673001214: ["Order Sun Core: Current Shot", 0, 0, 673001213, 1, [3240500, 3240600], 304],
+  673001213: ["Order Sun Core: Brilliant Rush", 0, 0, 673001213, 0, [3240500], 304],
+  673001214: ["Order Sun Core: Brilliant Rush", 0, 0, 673001213, 1, [3240500, 3240600], 304],
   673001215: [
-    "Order Sun Core: Current Shot",
+    "Order Sun Core: Brilliant Rush",
     0,
     0,
     673001213,
@@ -2178,7 +2224,7 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     304
   ],
   673001216: [
-    "Order Sun Core: Current Shot",
+    "Order Sun Core: Brilliant Rush",
     0,
     0,
     673001213,
@@ -2346,10 +2392,10 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3370500, 3370600, 3370800, 3370900, 3370901, 3370902],
     205
   ],
-  673001403: ["Order Sun Core: Sword Reset", 0, 0, 673001403, 0, [3250500], 402],
-  673001404: ["Order Sun Core: Sword Reset", 0, 0, 673001403, 1, [3250500, 3250600], 402],
+  673001403: ["Order Sun Core: Slaughter Spectacle", 0, 0, 673001403, 0, [3250500], 402],
+  673001404: ["Order Sun Core: Slaughter Spectacle", 0, 0, 673001403, 1, [3250500, 3250600], 402],
   673001405: [
-    "Order Sun Core: Sword Reset",
+    "Order Sun Core: Slaughter Spectacle",
     0,
     0,
     673001403,
@@ -2358,7 +2404,7 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     402
   ],
   673001406: [
-    "Order Sun Core: Sword Reset",
+    "Order Sun Core: Slaughter Spectacle",
     0,
     0,
     673001403,
@@ -2386,10 +2432,10 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3270500, 3270600, 3270800, 3270900, 3270901, 3270902],
     403
   ],
-  673001423: ["Order Sun Core: Lunar Nightmare", 0, 0, 673001423, 0, [3260500], 404],
-  673001424: ["Order Sun Core: Lunar Nightmare", 0, 0, 673001423, 1, [3260500, 3260600], 404],
+  673001423: ["Order Sun Core: Falling Moon", 0, 0, 673001423, 0, [3260500], 404],
+  673001424: ["Order Sun Core: Falling Moon", 0, 0, 673001423, 1, [3260500, 3260600], 404],
   673001425: [
-    "Order Sun Core: Lunar Nightmare",
+    "Order Sun Core: Falling Moon",
     0,
     0,
     673001423,
@@ -2398,7 +2444,7 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     404
   ],
   673001426: [
-    "Order Sun Core: Lunar Nightmare",
+    "Order Sun Core: Falling Moon",
     0,
     0,
     673001423,
@@ -2505,6 +2551,26 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     3,
     [3490500, 3490600, 3490800, 3490900, 3490901, 3490902],
     702
+  ],
+  673001703: ["Order Sun Core: Twisted Timeline", 0, 0, 673001703, 0, [320500500], 612],
+  673001704: ["Order Sun Core: Twisted Timeline", 0, 0, 673001703, 1, [320500500, 320500600], 612],
+  673001705: [
+    "Order Sun Core: Twisted Timeline",
+    0,
+    0,
+    673001703,
+    2,
+    [320500500, 320500600, 320500700, 320500900, 320500901, 320500902],
+    612
+  ],
+  673001706: [
+    "Order Sun Core: Twisted Timeline",
+    0,
+    0,
+    673001703,
+    3,
+    [320500500, 320500600, 320500800, 320500900, 320500901, 320500902],
+    612
   ],
   673002003: ["Order Sun Core: Power Core", 0, 0, 673002003, 0, [3161000], 102],
   673002004: ["Order Sun Core: Power Core", 0, 0, 673002003, 1, [3161000, 3161100], 102],
@@ -2746,10 +2812,10 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3231000, 3231100, 3231300, 3231400, 3231401, 3231402],
     303
   ],
-  673002213: ["Order Sun Core: Onslaught", 0, 0, 673002213, 0, [3241000], 304],
-  673002214: ["Order Sun Core: Onslaught", 0, 0, 673002213, 1, [3241000, 3241100], 304],
+  673002213: ["Order Sun Core: Hundred Chain Strike", 0, 0, 673002213, 0, [3241000], 304],
+  673002214: ["Order Sun Core: Hundred Chain Strike", 0, 0, 673002213, 1, [3241000, 3241100], 304],
   673002215: [
-    "Order Sun Core: Onslaught",
+    "Order Sun Core: Hundred Chain Strike",
     0,
     0,
     673002213,
@@ -2758,7 +2824,7 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     304
   ],
   673002216: [
-    "Order Sun Core: Onslaught",
+    "Order Sun Core: Hundred Chain Strike",
     0,
     0,
     673002213,
@@ -3086,6 +3152,26 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3491000, 3491100, 3491300, 3491400, 3491401, 3491402],
     702
   ],
+  673002703: ["Order Sun Core: Dimensional Annihilation", 0, 0, 673002703, 0, [320501000], 612],
+  673002704: ["Order Sun Core: Dimensional Annihilation", 0, 0, 673002703, 1, [320501000, 320501100], 612],
+  673002705: [
+    "Order Sun Core: Dimensional Annihilation",
+    0,
+    0,
+    673002703,
+    2,
+    [320501000, 320501100, 320501200, 320501400, 320501401, 320501402],
+    612
+  ],
+  673002706: [
+    "Order Sun Core: Dimensional Annihilation",
+    0,
+    0,
+    673002703,
+    3,
+    [320501000, 320501100, 320501300, 320501400, 320501401, 320501402],
+    612
+  ],
   673003003: ["Order Sun Core: Dark Power", 0, 0, 673003003, 0, [3161500], 102],
   673003004: ["Order Sun Core: Dark Power", 0, 0, 673003003, 1, [3161500, 3161600], 102],
   673003005: [
@@ -3326,10 +3412,10 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3231500, 3231600, 3231800, 3231900, 3231901, 3231902],
     303
   ],
-  673003213: ["Order Sun Core: Meridian Surge", 0, 0, 673003213, 0, [3241500], 304],
-  673003214: ["Order Sun Core: Meridian Surge", 0, 0, 673003213, 1, [3241500, 3241600], 304],
+  673003213: ["Order Sun Core: Shadowless", 0, 0, 673003213, 0, [3241500], 304],
+  673003214: ["Order Sun Core: Shadowless", 0, 0, 673003213, 1, [3241500, 3241600], 304],
   673003215: [
-    "Order Sun Core: Meridian Surge",
+    "Order Sun Core: Shadowless",
     0,
     0,
     673003213,
@@ -3338,7 +3424,7 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     304
   ],
   673003216: [
-    "Order Sun Core: Meridian Surge",
+    "Order Sun Core: Shadowless",
     0,
     0,
     673003213,
@@ -3650,6 +3736,26 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3491500, 3491600, 3491800, 3491900, 3491901, 3491902],
     702
   ],
+  673003703: ["Order Sun Core: Spatial Swordcraft", 0, 0, 673003703, 0, [320501500], 612],
+  673003704: ["Order Sun Core: Spatial Swordcraft", 0, 0, 673003703, 1, [320501500, 320501600], 612],
+  673003705: [
+    "Order Sun Core: Spatial Swordcraft",
+    0,
+    0,
+    673003703,
+    2,
+    [320501500, 320501600, 320501700, 320501900, 320501901, 320501902],
+    612
+  ],
+  673003706: [
+    "Order Sun Core: Spatial Swordcraft",
+    0,
+    0,
+    673003703,
+    3,
+    [320501500, 320501600, 320501800, 320501900, 320501901, 320501902],
+    612
+  ],
   673004003: ["Order Sun Core: Power Drive", 0, 0, 673004003, 0, [3162000], 102],
   673004004: ["Order Sun Core: Power Drive", 0, 0, 673004003, 1, [3162000, 3162100], 102],
   673004005: [
@@ -3890,10 +3996,10 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3232000, 3232100, 3232300, 3232400, 3232401, 3232402],
     303
   ],
-  673004213: ["Order Sun Core: Grand Cycle", 0, 0, 673004213, 0, [3242000], 304],
-  673004214: ["Order Sun Core: Grand Cycle", 0, 0, 673004213, 1, [3242000, 3242100], 304],
+  673004213: ["Order Sun Core: Supreme Connection", 0, 0, 673004213, 0, [3242000], 304],
+  673004214: ["Order Sun Core: Supreme Connection", 0, 0, 673004213, 1, [3242000, 3242100], 304],
   673004215: [
-    "Order Sun Core: Grand Cycle",
+    "Order Sun Core: Supreme Connection",
     0,
     0,
     673004213,
@@ -3902,7 +4008,7 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     304
   ],
   673004216: [
-    "Order Sun Core: Grand Cycle",
+    "Order Sun Core: Supreme Connection",
     0,
     0,
     673004213,
@@ -4230,6 +4336,26 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3492000, 3492100, 3492300, 3492400, 3492401, 3492402],
     702
   ],
+  673004703: ["Order Sun Core: Master Impaler", 0, 0, 673004703, 0, [320502000], 612],
+  673004704: ["Order Sun Core: Master Impaler", 0, 0, 673004703, 1, [320502000, 320502100], 612],
+  673004705: [
+    "Order Sun Core: Master Impaler",
+    0,
+    0,
+    673004703,
+    2,
+    [320502000, 320502100, 320502200, 320502400, 320502401, 320502402],
+    612
+  ],
+  673004706: [
+    "Order Sun Core: Master Impaler",
+    0,
+    0,
+    673004703,
+    3,
+    [320502000, 320502100, 320502300, 320502400, 320502401, 320502402],
+    612
+  ],
   673005003: ["Order Sun Core: Holding Edge", 0, 0, 673005003, 0, [3162500], 102],
   673005004: ["Order Sun Core: Holding Edge", 0, 0, 673005003, 1, [3162500, 3162600], 102],
   673005005: [
@@ -4470,10 +4596,10 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3232500, 3232600, 3232800, 3232900, 3232901, 3232902],
     303
   ],
-  673005213: ["Order Sun Core: Bare Knuckle", 0, 0, 673005213, 0, [3242500], 304],
-  673005214: ["Order Sun Core: Bare Knuckle", 0, 0, 673005213, 1, [3242500, 3242600], 304],
+  673005213: ["Order Sun Core: Force Cycle", 0, 0, 673005213, 0, [3242500], 304],
+  673005214: ["Order Sun Core: Force Cycle", 0, 0, 673005213, 1, [3242500, 3242600], 304],
   673005215: [
-    "Order Sun Core: Bare Knuckle",
+    "Order Sun Core: Force Cycle",
     0,
     0,
     673005213,
@@ -4482,7 +4608,7 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     304
   ],
   673005216: [
-    "Order Sun Core: Bare Knuckle",
+    "Order Sun Core: Force Cycle",
     0,
     0,
     673005213,
@@ -4794,6 +4920,26 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
   673005604: ["Order Sun Core: Apex", 0, 0, 673005603, 1, [3492500, 3492600], 702],
   673005605: ["Order Sun Core: Apex", 0, 0, 673005603, 2, [3492500, 3492600, 3492700, 3492900, 3492901, 3492902], 702],
   673005606: ["Order Sun Core: Apex", 0, 0, 673005603, 3, [3492500, 3492600, 3492800, 3492900, 3492901, 3492902], 702],
+  673005703: ["Order Sun Core: Severed Dimension", 0, 0, 673005703, 0, [320502500], 612],
+  673005704: ["Order Sun Core: Severed Dimension", 0, 0, 673005703, 1, [320502500, 320502600], 612],
+  673005705: [
+    "Order Sun Core: Severed Dimension",
+    0,
+    0,
+    673005703,
+    2,
+    [320502500, 320502600, 320502700, 320502900, 320502901, 320502902],
+    612
+  ],
+  673005706: [
+    "Order Sun Core: Severed Dimension",
+    0,
+    0,
+    673005703,
+    3,
+    [320502500, 320502600, 320502800, 320502900, 320502901, 320502902],
+    612
+  ],
   673010003: ["Order Moon Core: Blood Circulation", 0, 1, 673010003, 0, [3163000], 102],
   673010004: ["Order Moon Core: Blood Circulation", 0, 1, 673010003, 1, [3163000, 3163100], 102],
   673010005: [
@@ -5034,10 +5180,10 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3233000, 3233100, 3233300, 3233400, 3233401, 3233402],
     303
   ],
-  673010213: ["Order Moon Core: Adamantine Body", 0, 1, 673010213, 0, [3243000], 304],
-  673010214: ["Order Moon Core: Adamantine Body", 0, 1, 673010213, 1, [3243000, 3243100], 304],
+  673010213: ["Order Moon Core: Chain Annihilation", 0, 1, 673010213, 0, [3243000], 304],
+  673010214: ["Order Moon Core: Chain Annihilation", 0, 1, 673010213, 1, [3243000, 3243100], 304],
   673010215: [
-    "Order Moon Core: Adamantine Body",
+    "Order Moon Core: Chain Annihilation",
     0,
     1,
     673010213,
@@ -5046,7 +5192,7 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     304
   ],
   673010216: [
-    "Order Moon Core: Adamantine Body",
+    "Order Moon Core: Chain Annihilation",
     0,
     1,
     673010213,
@@ -5374,6 +5520,26 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3493000, 3493100, 3493300, 3493400, 3493401, 3493402],
     702
   ],
+  673010703: ["Order Moon Core: Combine Weapon", 0, 1, 673010703, 0, [320503000], 612],
+  673010704: ["Order Moon Core: Combine Weapon", 0, 1, 673010703, 1, [320503000, 320503100], 612],
+  673010705: [
+    "Order Moon Core: Combine Weapon",
+    0,
+    1,
+    673010703,
+    2,
+    [320503000, 320503100, 320503200, 320503400, 320503401, 320503402],
+    612
+  ],
+  673010706: [
+    "Order Moon Core: Combine Weapon",
+    0,
+    1,
+    673010703,
+    3,
+    [320503000, 320503100, 320503300, 320503400, 320503401, 320503402],
+    612
+  ],
   673011003: ["Order Moon Core: Over Surge", 0, 1, 673011003, 0, [3163500], 102],
   673011004: ["Order Moon Core: Over Surge", 0, 1, 673011003, 1, [3163500, 3163600], 102],
   673011005: [
@@ -5614,10 +5780,10 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3233500, 3233600, 3233800, 3233900, 3233901, 3233902],
     303
   ],
-  673011213: ["Order Moon Core: Wavebreak Herald", 0, 1, 673011213, 0, [3243500], 304],
-  673011214: ["Order Moon Core: Wavebreak Herald", 0, 1, 673011213, 1, [3243500, 3243600], 304],
+  673011213: ["Order Moon Core: Heavenly Squall", 0, 1, 673011213, 0, [3243500], 304],
+  673011214: ["Order Moon Core: Heavenly Squall", 0, 1, 673011213, 1, [3243500, 3243600], 304],
   673011215: [
-    "Order Moon Core: Wavebreak Herald",
+    "Order Moon Core: Heavenly Squall",
     0,
     1,
     673011213,
@@ -5626,7 +5792,7 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     304
   ],
   673011216: [
-    "Order Moon Core: Wavebreak Herald",
+    "Order Moon Core: Heavenly Squall",
     0,
     1,
     673011213,
@@ -5794,10 +5960,10 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3373500, 3373600, 3373800, 3373900, 3373901, 3373902],
     205
   ],
-  673011403: ["Order Moon Core: Destiny Core", 0, 1, 673011403, 0, [3253500], 402],
-  673011404: ["Order Moon Core: Destiny Core", 0, 1, 673011403, 1, [3253500, 3253600], 402],
+  673011403: ["Order Moon Core: Twin Swords Dance", 0, 1, 673011403, 0, [3253500], 402],
+  673011404: ["Order Moon Core: Twin Swords Dance", 0, 1, 673011403, 1, [3253500, 3253600], 402],
   673011405: [
-    "Order Moon Core: Destiny Core",
+    "Order Moon Core: Twin Swords Dance",
     0,
     1,
     673011403,
@@ -5806,7 +5972,7 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     402
   ],
   673011406: [
-    "Order Moon Core: Destiny Core",
+    "Order Moon Core: Twin Swords Dance",
     0,
     1,
     673011403,
@@ -5834,10 +6000,10 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3273500, 3273600, 3273800, 3273900, 3273901, 3273902],
     403
   ],
-  673011423: ["Order Moon Core: Nightmare", 0, 1, 673011423, 0, [3263500], 404],
-  673011424: ["Order Moon Core: Nightmare", 0, 1, 673011423, 1, [3263500, 3263600], 404],
+  673011423: ["Order Moon Core: Silent", 0, 1, 673011423, 0, [3263500], 404],
+  673011424: ["Order Moon Core: Silent", 0, 1, 673011423, 1, [3263500, 3263600], 404],
   673011425: [
-    "Order Moon Core: Nightmare",
+    "Order Moon Core: Silent",
     0,
     1,
     673011423,
@@ -5846,7 +6012,7 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     404
   ],
   673011426: [
-    "Order Moon Core: Nightmare",
+    "Order Moon Core: Silent",
     0,
     1,
     673011423,
@@ -5953,6 +6119,26 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     3,
     [3493500, 3493600, 3493800, 3493900, 3493901, 3493902],
     702
+  ],
+  673011703: ["Order Moon Core: Timeline", 0, 1, 673011703, 0, [320503500], 612],
+  673011704: ["Order Moon Core: Timeline", 0, 1, 673011703, 1, [320503500, 320503600], 612],
+  673011705: [
+    "Order Moon Core: Timeline",
+    0,
+    1,
+    673011703,
+    2,
+    [320503500, 320503600, 320503700, 320503900, 320503901, 320503902],
+    612
+  ],
+  673011706: [
+    "Order Moon Core: Timeline",
+    0,
+    1,
+    673011703,
+    3,
+    [320503500, 320503600, 320503800, 320503900, 320503901, 320503902],
+    612
   ],
   673012003: ["Order Moon Core: Break Dash", 0, 1, 673012003, 0, [3164000], 102],
   673012004: ["Order Moon Core: Break Dash", 0, 1, 673012003, 1, [3164000, 3164100], 102],
@@ -6194,10 +6380,10 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3234000, 3234100, 3234300, 3234400, 3234401, 3234402],
     303
   ],
-  673012213: ["Order Moon Core: Heavenshaker", 0, 1, 673012213, 0, [3244000], 304],
-  673012214: ["Order Moon Core: Heavenshaker", 0, 1, 673012213, 1, [3244000, 3244100], 304],
+  673012213: ["Order Moon Core: Recovery Bullet", 0, 1, 673012213, 0, [3244000], 304],
+  673012214: ["Order Moon Core: Recovery Bullet", 0, 1, 673012213, 1, [3244000, 3244100], 304],
   673012215: [
-    "Order Moon Core: Heavenshaker",
+    "Order Moon Core: Recovery Bullet",
     0,
     1,
     673012213,
@@ -6206,7 +6392,7 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     304
   ],
   673012216: [
-    "Order Moon Core: Heavenshaker",
+    "Order Moon Core: Recovery Bullet",
     0,
     1,
     673012213,
@@ -6534,6 +6720,26 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3494000, 3494100, 3494300, 3494400, 3494401, 3494402],
     702
   ],
+  673012703: ["Order Moon Core: Minute Tempo", 0, 1, 673012703, 0, [320504000], 612],
+  673012704: ["Order Moon Core: Minute Tempo", 0, 1, 673012703, 1, [320504000, 320504100], 612],
+  673012705: [
+    "Order Moon Core: Minute Tempo",
+    0,
+    1,
+    673012703,
+    2,
+    [320504000, 320504100, 320504200, 320504400, 320504401, 320504402],
+    612
+  ],
+  673012706: [
+    "Order Moon Core: Minute Tempo",
+    0,
+    1,
+    673012703,
+    3,
+    [320504000, 320504100, 320504300, 320504400, 320504401, 320504402],
+    612
+  ],
   673013003: ["Order Moon Core: Dark Torrent", 0, 1, 673013003, 0, [3164500], 102],
   673013004: ["Order Moon Core: Dark Torrent", 0, 1, 673013003, 1, [3164500, 3164600], 102],
   673013005: [
@@ -6774,10 +6980,10 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3234500, 3234600, 3234800, 3234900, 3234901, 3234902],
     303
   ],
-  673013213: ["Order Moon Core: Circulating Melody", 0, 1, 673013213, 0, [3244500], 304],
-  673013214: ["Order Moon Core: Circulating Melody", 0, 1, 673013213, 1, [3244500, 3244600], 304],
+  673013213: ["Order Moon Core: True Rising Fist", 0, 1, 673013213, 0, [3244500], 304],
+  673013214: ["Order Moon Core: True Rising Fist", 0, 1, 673013213, 1, [3244500, 3244600], 304],
   673013215: [
-    "Order Moon Core: Circulating Melody",
+    "Order Moon Core: True Rising Fist",
     0,
     1,
     673013213,
@@ -6786,7 +6992,7 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     304
   ],
   673013216: [
-    "Order Moon Core: Circulating Melody",
+    "Order Moon Core: True Rising Fist",
     0,
     1,
     673013213,
@@ -7114,6 +7320,26 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3494500, 3494600, 3494800, 3494900, 3494901, 3494902],
     702
   ],
+  673013703: ["Order Moon Core: Swordcraft Enhancement", 0, 1, 673013703, 0, [320504500], 612],
+  673013704: ["Order Moon Core: Swordcraft Enhancement", 0, 1, 673013703, 1, [320504500, 320504600], 612],
+  673013705: [
+    "Order Moon Core: Swordcraft Enhancement",
+    0,
+    1,
+    673013703,
+    2,
+    [320504500, 320504600, 320504700, 320504900, 320504901, 320504902],
+    612
+  ],
+  673013706: [
+    "Order Moon Core: Swordcraft Enhancement",
+    0,
+    1,
+    673013703,
+    3,
+    [320504500, 320504600, 320504800, 320504900, 320504901, 320504902],
+    612
+  ],
   673014003: ["Order Moon Core: Rapid Slash", 0, 1, 673014003, 0, [3165000], 102],
   673014004: ["Order Moon Core: Rapid Slash", 0, 1, 673014003, 1, [3165000, 3165100], 102],
   673014005: [
@@ -7354,10 +7580,10 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3235000, 3235100, 3235300, 3235400, 3235401, 3235402],
     303
   ],
-  673014213: ["Order Moon Core: Internal Flow", 0, 1, 673014213, 0, [3245000], 304],
-  673014214: ["Order Moon Core: Internal Flow", 0, 1, 673014213, 1, [3245000, 3245100], 304],
+  673014213: ["Order Moon Core: Divine Extermination", 0, 1, 673014213, 0, [3245000], 304],
+  673014214: ["Order Moon Core: Divine Extermination", 0, 1, 673014213, 1, [3245000, 3245100], 304],
   673014215: [
-    "Order Moon Core: Internal Flow",
+    "Order Moon Core: Divine Extermination",
     0,
     1,
     673014213,
@@ -7366,7 +7592,7 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     304
   ],
   673014216: [
-    "Order Moon Core: Internal Flow",
+    "Order Moon Core: Divine Extermination",
     0,
     1,
     673014213,
@@ -7694,6 +7920,26 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3495000, 3495100, 3495300, 3495400, 3495401, 3495402],
     702
   ],
+  673014703: ["Order Moon Core: Point Attack", 0, 1, 673014703, 0, [320505000], 612],
+  673014704: ["Order Moon Core: Point Attack", 0, 1, 673014703, 1, [320505000, 320505100], 612],
+  673014705: [
+    "Order Moon Core: Point Attack",
+    0,
+    1,
+    673014703,
+    2,
+    [320505000, 320505100, 320505200, 320505400, 320505401, 320505402],
+    612
+  ],
+  673014706: [
+    "Order Moon Core: Point Attack",
+    0,
+    1,
+    673014703,
+    3,
+    [320505000, 320505100, 320505300, 320505400, 320505401, 320505402],
+    612
+  ],
   673015003: ["Order Moon Core: Cyclone Slash", 0, 1, 673015003, 0, [3165500], 102],
   673015004: ["Order Moon Core: Cyclone Slash", 0, 1, 673015003, 1, [3165500, 3165600], 102],
   673015005: [
@@ -7934,10 +8180,10 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3235500, 3235600, 3235800, 3235900, 3235901, 3235902],
     303
   ],
-  673015213: ["Order Moon Core: Instant Step", 0, 1, 673015213, 0, [3245500], 304],
-  673015214: ["Order Moon Core: Instant Step", 0, 1, 673015213, 1, [3245500, 3245600], 304],
+  673015213: ["Order Moon Core: Protective Cycle", 0, 1, 673015213, 0, [3245500], 304],
+  673015214: ["Order Moon Core: Protective Cycle", 0, 1, 673015213, 1, [3245500, 3245600], 304],
   673015215: [
-    "Order Moon Core: Instant Step",
+    "Order Moon Core: Protective Cycle",
     0,
     1,
     673015213,
@@ -7946,7 +8192,7 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     304
   ],
   673015216: [
-    "Order Moon Core: Instant Step",
+    "Order Moon Core: Protective Cycle",
     0,
     1,
     673015213,
@@ -8274,6 +8520,26 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3495500, 3495600, 3495800, 3495900, 3495901, 3495902],
     702
   ],
+  673015703: ["Order Moon Core: Precise Control", 0, 1, 673015703, 0, [320505500], 612],
+  673015704: ["Order Moon Core: Precise Control", 0, 1, 673015703, 1, [320505500, 320505600], 612],
+  673015705: [
+    "Order Moon Core: Precise Control",
+    0,
+    1,
+    673015703,
+    2,
+    [320505500, 320505600, 320505700, 320505900, 320505901, 320505902],
+    612
+  ],
+  673015706: [
+    "Order Moon Core: Precise Control",
+    0,
+    1,
+    673015703,
+    3,
+    [320505500, 320505600, 320505800, 320505900, 320505901, 320505902],
+    612
+  ],
   673020003: ["Order Star Core: Crushing Storm", 0, 2, 673020003, 0, [3166000], 102],
   673020004: ["Order Star Core: Crushing Storm", 0, 2, 673020003, 1, [3166000, 3166100], 102],
   673020005: [
@@ -8514,10 +8780,10 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3236000, 3236100, 3236300, 3236400, 3236401, 3236402],
     303
   ],
-  673020213: ["Order Star Core: Dance of Heavenly Flowers", 0, 2, 673020213, 0, [3246000], 304],
-  673020214: ["Order Star Core: Dance of Heavenly Flowers", 0, 2, 673020213, 1, [3246000, 3246100], 304],
+  673020213: ["Order Star Core: Blinding Obliteration", 0, 2, 673020213, 0, [3246000], 304],
+  673020214: ["Order Star Core: Blinding Obliteration", 0, 2, 673020213, 1, [3246000, 3246100], 304],
   673020215: [
-    "Order Star Core: Dance of Heavenly Flowers",
+    "Order Star Core: Blinding Obliteration",
     0,
     2,
     673020213,
@@ -8526,7 +8792,7 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     304
   ],
   673020216: [
-    "Order Star Core: Dance of Heavenly Flowers",
+    "Order Star Core: Blinding Obliteration",
     0,
     2,
     673020213,
@@ -8854,6 +9120,26 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3496000, 3496100, 3496300, 3496400, 3496401, 3496402],
     702
   ],
+  673020703: ["Order Star Core: Fusion Enhancement", 0, 2, 673020703, 0, [320506000], 612],
+  673020704: ["Order Star Core: Fusion Enhancement", 0, 2, 673020703, 1, [320506000, 320506100], 612],
+  673020705: [
+    "Order Star Core: Fusion Enhancement",
+    0,
+    2,
+    673020703,
+    2,
+    [320506000, 320506100, 320506200, 320506400, 320506401, 320506402],
+    612
+  ],
+  673020706: [
+    "Order Star Core: Fusion Enhancement",
+    0,
+    2,
+    673020703,
+    3,
+    [320506000, 320506100, 320506300, 320506400, 320506401, 320506402],
+    612
+  ],
   673021003: ["Order Star Core: Overflow", 0, 2, 673021003, 0, [3166500], 102],
   673021004: ["Order Star Core: Overflow", 0, 2, 673021003, 1, [3166500, 3166600], 102],
   673021005: [
@@ -9094,10 +9380,10 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3236500, 3236600, 3236800, 3236900, 3236901, 3236902],
     303
   ],
-  673021213: ["Order Star Core: Culminating Blast", 0, 2, 673021213, 0, [3246500], 304],
-  673021214: ["Order Star Core: Culminating Blast", 0, 2, 673021213, 1, [3246500, 3246600], 304],
+  673021213: ["Order Star Core: Piercing Spiral", 0, 2, 673021213, 0, [3246500], 304],
+  673021214: ["Order Star Core: Piercing Spiral", 0, 2, 673021213, 1, [3246500, 3246600], 304],
   673021215: [
-    "Order Star Core: Culminating Blast",
+    "Order Star Core: Piercing Spiral",
     0,
     2,
     673021213,
@@ -9106,7 +9392,7 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     304
   ],
   673021216: [
-    "Order Star Core: Culminating Blast",
+    "Order Star Core: Piercing Spiral",
     0,
     2,
     673021213,
@@ -9434,6 +9720,26 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3496500, 3496600, 3496800, 3496900, 3496901, 3496902],
     702
   ],
+  673021703: ["Order Star Core: Distortion", 0, 2, 673021703, 0, [320506500], 612],
+  673021704: ["Order Star Core: Distortion", 0, 2, 673021703, 1, [320506500, 320506600], 612],
+  673021705: [
+    "Order Star Core: Distortion",
+    0,
+    2,
+    673021703,
+    2,
+    [320506500, 320506600, 320506700, 320506900, 320506901, 320506902],
+    612
+  ],
+  673021706: [
+    "Order Star Core: Distortion",
+    0,
+    2,
+    673021703,
+    3,
+    [320506500, 320506600, 320506800, 320506900, 320506901, 320506902],
+    612
+  ],
   673022003: ["Order Star Core: Break Out", 0, 2, 673022003, 0, [3167000], 102],
   673022004: ["Order Star Core: Break Out", 0, 2, 673022003, 1, [3167000, 3167100], 102],
   673022005: [
@@ -9574,10 +9880,10 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3297000, 3297100, 3297300, 3297400, 3297401, 3297402],
     503
   ],
-  673022113: ["Order Star Core: HSU-31 Blast", 0, 2, 673022113, 0, [3287000], 502],
-  673022114: ["Order Star Core: HSU-31 Blast", 0, 2, 673022113, 1, [3287000, 3287100], 502],
+  673022113: ["Order Star Core: HSU-36 Dot Sight", 0, 2, 673022113, 0, [3287000], 502],
+  673022114: ["Order Star Core: HSU-36 Dot Sight", 0, 2, 673022113, 1, [3287000, 3287100], 502],
   673022115: [
-    "Order Star Core: HSU-31 Blast",
+    "Order Star Core: HSU-36 Dot Sight",
     0,
     2,
     673022113,
@@ -9586,7 +9892,7 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     502
   ],
   673022116: [
-    "Order Star Core: HSU-31 Blast",
+    "Order Star Core: HSU-36 Dot Sight",
     0,
     2,
     673022113,
@@ -9674,10 +9980,10 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3237000, 3237100, 3237300, 3237400, 3237401, 3237402],
     303
   ],
-  673022213: ["Order Star Core: Palm Burst Renewal", 0, 2, 673022213, 0, [3247000], 304],
-  673022214: ["Order Star Core: Palm Burst Renewal", 0, 2, 673022213, 1, [3247000, 3247100], 304],
+  673022213: ["Order Star Core: Energy Burst", 0, 2, 673022213, 0, [3247000], 304],
+  673022214: ["Order Star Core: Energy Burst", 0, 2, 673022213, 1, [3247000, 3247100], 304],
   673022215: [
-    "Order Star Core: Palm Burst Renewal",
+    "Order Star Core: Energy Burst",
     0,
     2,
     673022213,
@@ -9686,7 +9992,7 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     304
   ],
   673022216: [
-    "Order Star Core: Palm Burst Renewal",
+    "Order Star Core: Energy Burst",
     0,
     2,
     673022213,
@@ -10014,6 +10320,26 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3497000, 3497100, 3497300, 3497400, 3497401, 3497402],
     702
   ],
+  673022703: ["Order Star Core: Conversion", 0, 2, 673022703, 0, [320507000], 612],
+  673022704: ["Order Star Core: Conversion", 0, 2, 673022703, 1, [320507000, 320507100], 612],
+  673022705: [
+    "Order Star Core: Conversion",
+    0,
+    2,
+    673022703,
+    2,
+    [320507000, 320507100, 320507200, 320507400, 320507401, 320507402],
+    612
+  ],
+  673022706: [
+    "Order Star Core: Conversion",
+    0,
+    2,
+    673022703,
+    3,
+    [320507000, 320507100, 320507300, 320507400, 320507401, 320507402],
+    612
+  ],
   673023003: ["Order Star Core: Frenzy", 0, 2, 673023003, 0, [3167500], 102],
   673023004: ["Order Star Core: Frenzy", 0, 2, 673023003, 1, [3167500, 3167600], 102],
   673023005: [
@@ -10254,10 +10580,10 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3237500, 3237600, 3237800, 3237900, 3237901, 3237902],
     303
   ],
-  673023213: ["Order Star Core: Wallbreaker", 0, 2, 673023213, 0, [3247500], 304],
-  673023214: ["Order Star Core: Wallbreaker", 0, 2, 673023213, 1, [3247500, 3247600], 304],
+  673023213: ["Order Star Core: Annihilating Void", 0, 2, 673023213, 0, [3247500], 304],
+  673023214: ["Order Star Core: Annihilating Void", 0, 2, 673023213, 1, [3247500, 3247600], 304],
   673023215: [
-    "Order Star Core: Wallbreaker",
+    "Order Star Core: Annihilating Void",
     0,
     2,
     673023213,
@@ -10266,7 +10592,7 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     304
   ],
   673023216: [
-    "Order Star Core: Wallbreaker",
+    "Order Star Core: Annihilating Void",
     0,
     2,
     673023213,
@@ -10594,6 +10920,26 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3497500, 3497600, 3497800, 3497900, 3497901, 3497902],
     702
   ],
+  673023703: ["Order Star Core: Minute Hand Calibration", 0, 2, 673023703, 0, [320507500], 612],
+  673023704: ["Order Star Core: Minute Hand Calibration", 0, 2, 673023703, 1, [320507500, 320507600], 612],
+  673023705: [
+    "Order Star Core: Minute Hand Calibration",
+    0,
+    2,
+    673023703,
+    2,
+    [320507500, 320507600, 320507700, 320507900, 320507901, 320507902],
+    612
+  ],
+  673023706: [
+    "Order Star Core: Minute Hand Calibration",
+    0,
+    2,
+    673023703,
+    3,
+    [320507500, 320507600, 320507800, 320507900, 320507901, 320507902],
+    612
+  ],
   673024003: ["Order Star Core: Chain Slash", 0, 2, 673024003, 0, [3168000], 102],
   673024004: ["Order Star Core: Chain Slash", 0, 2, 673024003, 1, [3168000, 3168100], 102],
   673024005: [
@@ -10834,10 +11180,10 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3238000, 3238100, 3238300, 3238400, 3238401, 3238402],
     303
   ],
-  673024213: ["Order Star Core: Energy Blow-Up", 0, 2, 673024213, 0, [3248000], 304],
-  673024214: ["Order Star Core: Energy Blow-Up", 0, 2, 673024213, 1, [3248000, 3248100], 304],
+  673024213: ["Order Star Core: Shadowsweep", 0, 2, 673024213, 0, [3248000], 304],
+  673024214: ["Order Star Core: Shadowsweep", 0, 2, 673024213, 1, [3248000, 3248100], 304],
   673024215: [
-    "Order Star Core: Energy Blow-Up",
+    "Order Star Core: Shadowsweep",
     0,
     2,
     673024213,
@@ -10846,7 +11192,7 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     304
   ],
   673024216: [
-    "Order Star Core: Energy Blow-Up",
+    "Order Star Core: Shadowsweep",
     0,
     2,
     673024213,
@@ -11174,6 +11520,26 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3498000, 3498100, 3498300, 3498400, 3498401, 3498402],
     702
   ],
+  673024703: ["Order Star Core: Chain Thrust", 0, 2, 673024703, 0, [320508000], 612],
+  673024704: ["Order Star Core: Chain Thrust", 0, 2, 673024703, 1, [320508000, 320508100], 612],
+  673024705: [
+    "Order Star Core: Chain Thrust",
+    0,
+    2,
+    673024703,
+    2,
+    [320508000, 320508100, 320508200, 320508400, 320508401, 320508402],
+    612
+  ],
+  673024706: [
+    "Order Star Core: Chain Thrust",
+    0,
+    2,
+    673024703,
+    3,
+    [320508000, 320508100, 320508300, 320508400, 320508401, 320508402],
+    612
+  ],
   673025003: ["Order Star Core: Hell Flip", 0, 2, 673025003, 0, [3168500], 102],
   673025004: ["Order Star Core: Hell Flip", 0, 2, 673025003, 1, [3168500, 3168600], 102],
   673025005: [
@@ -11414,10 +11780,10 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     [3238500, 3238600, 3238800, 3238900, 3238901, 3238902],
     303
   ],
-  673025213: ["Order Star Core: Twin Strike Barrage", 0, 2, 673025213, 0, [3248500], 304],
-  673025214: ["Order Star Core: Twin Strike Barrage", 0, 2, 673025213, 1, [3248500, 3248600], 304],
+  673025213: ["Order Star Core: Yin Yang Technique", 0, 2, 673025213, 0, [3248500], 304],
+  673025214: ["Order Star Core: Yin Yang Technique", 0, 2, 673025213, 1, [3248500, 3248600], 304],
   673025215: [
-    "Order Star Core: Twin Strike Barrage",
+    "Order Star Core: Yin Yang Technique",
     0,
     2,
     673025213,
@@ -11426,7 +11792,7 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     304
   ],
   673025216: [
-    "Order Star Core: Twin Strike Barrage",
+    "Order Star Core: Yin Yang Technique",
     0,
     2,
     673025213,
@@ -11753,6 +12119,26 @@ export const ArkGridCore: Record<number, ArkGridCore> = {
     3,
     [3498500, 3498600, 3498800, 3498900, 3498901, 3498902],
     702
+  ],
+  673025703: ["Order Star Core: Multislash", 0, 2, 673025703, 0, [320508500], 612],
+  673025704: ["Order Star Core: Multislash", 0, 2, 673025703, 1, [320508500, 320508600], 612],
+  673025705: [
+    "Order Star Core: Multislash",
+    0,
+    2,
+    673025703,
+    2,
+    [320508500, 320508600, 320508700, 320508900, 320508901, 320508902],
+    612
+  ],
+  673025706: [
+    "Order Star Core: Multislash",
+    0,
+    2,
+    673025703,
+    3,
+    [320508500, 320508600, 320508800, 320508900, 320508901, 320508902],
+    612
   ],
   673100003: ["Chaos Sun Core: Flashy Attack", 1, 0, 673100003, 0, [3150000], 0],
   673100004: ["Chaos Sun Core: Flashy Attack", 1, 0, 673100003, 1, [3150000, 3150100], 0],
@@ -12432,6 +12818,8 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         [2, "#ff9999", ["30.0%"]],
         ". Cooldown -",
         [2, "#99ff99", ["35%"]],
+        ". Power Break Stagger Damage Bonus -",
+        [2, "#ff9999", ["40.0%"]],
         ".\nEach time ",
         [2, "#bf9ef6", ["Destiny"]],
         " activates, Power Break cooldown -",
@@ -12644,7 +13032,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         " stacks.\n",
         [2, "#bf9ef6", ["Destiny: Power Drive"]],
         ": Overdrive Damage +",
-        [2, "#99ff99", ["13.0%"]],
+        [2, "#99ff99", ["20.0%"]],
         " per stack. Removed when Overdrive is used."
       ]
     ]
@@ -12663,7 +13051,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         " stacks.\n",
         [2, "#bf9ef6", ["Destiny: Power Drive"]],
         ": Overdrive Damage +",
-        [2, "#99ff99", ["15.0%"]],
+        [2, "#99ff99", ["22.0%"]],
         " per stack. Removed when Overdrive is used."
       ]
     ]
@@ -12699,7 +13087,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         " effect.\n",
         [2, "#bf9ef6", ["Destiny: Holding Edge"]],
         ": Holding Skill Damage +",
-        [2, "#99ff99", ["15.0%"]],
+        [2, "#99ff99", ["24.0%"]],
         ". This effect disappears after one use."
       ]
     ]
@@ -12714,14 +13102,14 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         " effect.\n",
         [2, "#bf9ef6", ["Destiny: Holding Edge"]],
         ": Holding Skill Damage +",
-        [2, "#99ff99", ["18.0%"]],
+        [2, "#99ff99", ["27.0%"]],
         ". This effect disappears after one use."
       ]
     ]
   ],
-  3162900: [[["Holding Skill Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
-  3162901: [[["Holding Skill Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
-  3162902: [[["Holding Skill Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
+  3162900: [[["Holding Skill Damage +", [2, "#99ff99", ["0.6%"]], "."]]],
+  3162901: [[["Holding Skill Damage +", [2, "#99ff99", ["0.6%"]], "."]]],
+  3162902: [[["Holding Skill Damage +", [2, "#99ff99", ["0.6%"]], "."]]],
   3163000: [[["Normal Skill Damage (excluding Hyper Awakening Techniques) +", [2, "#99ff99", ["4.0%"]], "."]]],
   3163100: [[["Using Bloody Rush activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
   3163200: [
@@ -12842,9 +13230,9 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3165800: [
     [["Whirlwind Cooldown -", [2, "#99ff99", ["30%"]], ". Hell Blade Damage +", [2, "#99ff99", ["20.0%"]], "."]]
   ],
-  3165900: [[["Holding Skill Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
-  3165901: [[["Holding Skill Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
-  3165902: [[["Holding Skill Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
+  3165900: [[["Holding Skill Damage +", [2, "#99ff99", ["0.6%"]], "."]]],
+  3165901: [[["Holding Skill Damage +", [2, "#99ff99", ["0.6%"]], "."]]],
+  3165902: [[["Holding Skill Damage +", [2, "#99ff99", ["0.6%"]], "."]]],
   3166000: [[["MP Cost of Power Break and Tempest Slash -", [2, "#99ff99", ["70.0%"]], "."]]],
   3166100: [[["Power Break Damage +", [2, "#99ff99", ["18.0%"]], "."]]],
   3166200: [[["With Power Break's Spiral Tempest, Damage +", [2, "#99ff99", ["24.0%"]], "."]]],
@@ -12927,7 +13315,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3168401: [[["Overdrive Damage +", [2, "#99ff99", ["0.8%"]], "."]]],
   3168402: [[["Overdrive Damage +", [2, "#99ff99", ["0.8%"]], "."]]],
   3168500: [[["Casting Speed of Whirlwind and Hell Blade +", [2, "#99ff99", ["20.0%"]], "."]]],
-  3168600: [[["Whirlwind Damage +", [2, "#99ff99", ["10.0%"]], ". Move Speed +", [2, "#99ff99", ["30%"]], "."]]],
+  3168600: [[["Whirlwind Damage +", [2, "#99ff99", ["40.0%"]], ". Move Speed +", [2, "#99ff99", ["30%"]], "."]]],
   3168700: [
     [
       [
@@ -12946,9 +13334,9 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
       ]
     ]
   ],
-  3168900: [[["Whirlwind Damage +", [2, "#99ff99", ["0.8%"]], "."]]],
-  3168901: [[["Whirlwind Damage +", [2, "#99ff99", ["0.8%"]], "."]]],
-  3168902: [[["Whirlwind Damage +", [2, "#99ff99", ["0.8%"]], "."]]],
+  3168900: [[["Whirlwind Damage +", [2, "#99ff99", ["1.6%"]], "."]]],
+  3168901: [[["Whirlwind Damage +", [2, "#99ff99", ["1.6%"]], "."]]],
+  3168902: [[["Whirlwind Damage +", [2, "#99ff99", ["1.6%"]], "."]]],
   3170000: [[["Gunlance Skill Damage +", [2, "#99ff99", ["1.6%"]], "."]]],
   3170100: [
     [
@@ -13921,7 +14309,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         " stacks obtained changes to ",
         [2, "#ffff99", ["5"]],
         ". Ruin Skill Damage Bonus is now ",
-        [2, "#99ff99", ["10.0%"]],
+        [2, "#99ff99", ["13.0%"]],
         "."
       ]
     ]
@@ -13934,7 +14322,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         " stacks obtained changes to ",
         [2, "#ffff99", ["5"]],
         ". Ruin Skill Damage Bonus is now ",
-        [2, "#99ff99", ["11.0%"]],
+        [2, "#99ff99", ["14.5%"]],
         "."
       ]
     ]
@@ -14161,8 +14549,8 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3193902: [[["Ruin Skill Damage +", [2, "#99ff99", ["0.15%"]], "."]]],
   3194000: [[["Ruin Skill Damage (excluding Hyper Awakening Techniques) +", [2, "#99ff99", ["2.8%"]], "."]]],
   3194100: [[["On ", [2, "#ffff99", ["4"]], " Ruin Skill hits, ", [2, "#bf9ef6", ["Destiny"]], " activates."]]],
-  3194200: [[["MP-consuming Skills Damage +", [2, "#99ff99", ["3.5%"]], "."]]],
-  3194300: [[["MP-consuming Skills Damage +", [2, "#99ff99", ["4.5%"]], "."]]],
+  3194200: [[["MP-consuming Skills Damage +", [2, "#99ff99", ["4.5%"]], "."]]],
+  3194300: [[["MP-consuming Skills Damage +", [2, "#99ff99", ["5.5%"]], "."]]],
   3194400: [[["Ruin Skill Damage (excluding Hyper Awakening Techniques) +", [2, "#99ff99", ["0.3%"]], "."]]],
   3194401: [[["Ruin Skill Damage (excluding Hyper Awakening Techniques) +", [2, "#99ff99", ["0.3%"]], "."]]],
   3194402: [[["Ruin Skill Damage (excluding Hyper Awakening Techniques) +", [2, "#99ff99", ["0.3%"]], "."]]],
@@ -14187,8 +14575,8 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3195100: [
     [["Using Specialty Card ", [2, "#ffff99", ["2"]], " time(s) activates ", [2, "#bf9ef6", ["Destiny"]], "."]]
   ],
-  3195200: [[["Normal Skill Damage to foes with Stacking stacks +", [2, "#99ff99", ["3.8%"]], "."]]],
-  3195300: [[["Normal Skill Damage to foes with Stacking stacks +", [2, "#99ff99", ["5.0%"]], "."]]],
+  3195200: [[["Normal Skill Damage to foes with Stacking stacks +", [2, "#99ff99", ["3.0%"]], "."]]],
+  3195300: [[["Normal Skill Damage to foes with Stacking stacks +", [2, "#99ff99", ["4.0%"]], "."]]],
   3195400: [[["Normal Skill Damage +", [2, "#99ff99", ["0.16%"]], "."]]],
   3195401: [[["Normal Skill Damage +", [2, "#99ff99", ["0.16%"]], "."]]],
   3195402: [[["Normal Skill Damage +", [2, "#99ff99", ["0.16%"]], "."]]],
@@ -14255,7 +14643,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
     [
       [
         "With Fake Flip, Dancing of Spineflower Fatal Thorn Damage +",
-        [2, "#99ff99", ["130.0%"]],
+        [2, "#99ff99", ["115.0%"]],
         ". Cooldown +",
         [2, "#ff9999", ["20.0s"]],
         "."
@@ -14276,10 +14664,10 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
     ]
   ],
   3198200: [
-    [["Unlimited Shuffle Damage +", [2, "#99ff99", ["90.0%"]], ". Cooldown +", [2, "#ff9999", ["20.0s"]], "."]]
+    [["Unlimited Shuffle Damage +", [2, "#99ff99", ["80.0%"]], ". Cooldown +", [2, "#ff9999", ["20.0s"]], "."]]
   ],
   3198300: [
-    [["Unlimited Shuffle Damage +", [2, "#99ff99", ["100.0%"]], ". Cooldown +", [2, "#ff9999", ["20.0s"]], "."]]
+    [["Unlimited Shuffle Damage +", [2, "#99ff99", ["90.0%"]], ". Cooldown +", [2, "#ff9999", ["20.0s"]], "."]]
   ],
   3198400: [[["Dancing of Spineflower Damage +", [2, "#99ff99", ["1.6%"]], "."]]],
   3198401: [[["Dancing of Spineflower Damage +", [2, "#99ff99", ["1.6%"]], "."]]],
@@ -14340,16 +14728,24 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3200600: [
     [
       [
-        "If Akir Burst is active upon ",
+        "On ",
+        [2, "#bf9ef6", ["Destiny"]],
+        " activation, gain the ",
+        [2, "#bf9ef6", ["Destiny: Burst Rebound"]],
+        " effect for ",
+        [2, "#ffff99", ["40.0s"]],
+        ".\n",
+        [2, "#bf9ef6", ["Destiny: Burst Rebound"]],
+        ": Ancient Energy gain -",
+        [2, "#ff9999", ["100.0%"]],
+        ". Fully recovers Elemental Orbs upon expiration.\nIf Akir Burst is active upon ",
         [2, "#bf9ef6", ["Destiny"]],
         " activation, gain the ",
         [2, "#bf9ef6", ["Destiny: Enhanced Burst"]],
         " effect.\n",
         [2, "#bf9ef6", ["Destiny: Enhanced Burst"]],
-        ": Ancient Energy gain -",
-        [2, "#ff9999", ["100.0%"]],
-        ". Summon Skill Damage +",
-        [2, "#99ff99", ["35.0%"]],
+        ": Summon Skill Damage +",
+        [2, "#99ff99", ["12.0%"]],
         ". Removed when Akir Burst ends."
       ]
     ]
@@ -14360,7 +14756,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "Changes Summon Skill Damage Bonus of ",
         [2, "#bf9ef6", ["Destiny: Enhanced Burst"]],
         " to ",
-        [2, "#99ff99", ["47.0%"]],
+        [2, "#99ff99", ["20.0%"]],
         "."
       ]
     ]
@@ -14371,7 +14767,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "Changes Summon Skill Damage Bonus of ",
         [2, "#bf9ef6", ["Destiny: Enhanced Burst"]],
         " to ",
-        [2, "#99ff99", ["50.0%"]],
+        [2, "#99ff99", ["22.5%"]],
         "."
       ]
     ]
@@ -14402,7 +14798,9 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3201200: [
     [
       [
-        "For every ",
+        "Fleeting Gale Bird Damage +",
+        [2, "#99ff99", ["15.0%"]],
+        ". For every ",
         [2, "#ffff99", ["6"]],
         " Basic Attack hit landed with Companions other than Kelsion, Fleeting Gale Bird cooldown -",
         [2, "#99ff99", ["20.0%"]],
@@ -14413,7 +14811,9 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3201300: [
     [
       [
-        "For every ",
+        "Fleeting Gale Bird Damage +",
+        [2, "#99ff99", ["15.0%"]],
+        ". For every ",
         [2, "#ffff99", ["6"]],
         " Basic Attack hit landed with Companions other than Kelsion, Fleeting Gale Bird cooldown -",
         [2, "#99ff99", ["25.0%"]],
@@ -14484,7 +14884,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         ": On Ancient Spear use, consume ",
         [2, "#bf9ef6", ["Destiny: Ancient Legacy"]],
         " to increase Damage by ",
-        [2, "#99ff99", ["25.0%"]],
+        [2, "#99ff99", ["30.0%"]],
         "."
       ]
     ]
@@ -14495,7 +14895,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "Ancient Spear Damage Bonus of ",
         [2, "#bf9ef6", ["Destiny: Ancient Legacy"]],
         " increases to ",
-        [2, "#99ff99", ["45.0%"]],
+        [2, "#99ff99", ["55.0%"]],
         "."
       ]
     ]
@@ -14506,7 +14906,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "Ancient Spear Damage Bonus of ",
         [2, "#bf9ef6", ["Destiny: Ancient Legacy"]],
         " increases to ",
-        [2, "#99ff99", ["49.0%"]],
+        [2, "#99ff99", ["59.0%"]],
         "."
       ]
     ]
@@ -14527,7 +14927,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         " effect, which repeats the last used Ancient Elemental Skill with increased Damage.\n",
         [2, "#bf9ef6", ["Destiny: Ancient Elemental"]],
         ": Damage of Osh, Alimaji, Phoenix, Jahia & Ligheas, and Akir +",
-        [2, "#99ff99", ["125.0%"]],
+        [2, "#99ff99", ["145.0%"]],
         ", ",
         [2, "#99ff99", ["35.0%"]],
         ", ",
@@ -14550,15 +14950,15 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         ". Damage Bonus of ",
         [2, "#bf9ef6", ["Destiny: Ancient Elemental"]],
         " applied to Osh, Alimaji, Phoenix, Jahia & Ligheas, and Akir changes to ",
-        [2, "#99ff99", ["125.0%"]],
+        [2, "#99ff99", ["145.0%"]],
         ", ",
-        [2, "#99ff99", ["60.0%"]],
+        [2, "#99ff99", ["68.0%"]],
         ", ",
-        [2, "#99ff99", ["45.0%"]],
+        [2, "#99ff99", ["52.0%"]],
         ", ",
-        [2, "#99ff99", ["30.0%"]],
+        [2, "#99ff99", ["36.0%"]],
         ", ",
-        [2, "#99ff99", ["40.0%"]],
+        [2, "#99ff99", ["48.0%"]],
         " respectively."
       ]
     ]
@@ -14573,15 +14973,15 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         ". Damage Bonus of ",
         [2, "#bf9ef6", ["Destiny: Ancient Elemental"]],
         " applied to Osh, Alimaji, Phoenix, Jahia & Ligheas, and Akir changes to ",
-        [2, "#99ff99", ["135.0%"]],
+        [2, "#99ff99", ["155.0%"]],
         ", ",
-        [2, "#99ff99", ["60.0%"]],
+        [2, "#99ff99", ["68.0%"]],
         ", ",
-        [2, "#99ff99", ["45.0%"]],
+        [2, "#99ff99", ["52.0%"]],
         ", ",
-        [2, "#99ff99", ["30.0%"]],
+        [2, "#99ff99", ["36.0%"]],
         ", ",
-        [2, "#99ff99", ["48.0%"]],
+        [2, "#99ff99", ["56.0%"]],
         " respectively."
       ]
     ]
@@ -14590,7 +14990,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3202901: [[["Akir Damage +", [2, "#99ff99", ["1.3%"]], "."]]],
   3202902: [[["Akir Damage +", [2, "#99ff99", ["1.3%"]], "."]]],
   3203000: [[["Summon Skill Damage +", [2, "#99ff99", ["1.7%"]], "."]]],
-  3203100: [[["Using Shurdi activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
+  3203100: [[["Using Winged Spirit activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
   3203200: [[["Summon Skill Damage +", [2, "#99ff99", ["3.8%"]], "."]]],
   3203300: [[["Summon Skill Damage +", [2, "#99ff99", ["4.8%"]], "."]]],
   3203400: [[["Summon Skill Damage +", [2, "#99ff99", ["0.18%"]], "."]]],
@@ -14604,7 +15004,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "During Akir Burst, Ancient Energy gain -",
         [2, "#ff9999", ["70.0%"]],
         ", but Damage to foes +",
-        [2, "#99ff99", ["3.4%"]],
+        [2, "#99ff99", ["9.0%"]],
         "."
       ]
     ]
@@ -14615,7 +15015,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "During Akir Burst, Ancient Energy gain -",
         [2, "#ff9999", ["70.0%"]],
         ", but Damage to foes +",
-        [2, "#99ff99", ["4.3%"]],
+        [2, "#99ff99", ["11.5%"]],
         "."
       ]
     ]
@@ -14624,9 +15024,9 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3203901: [[["Shurdi Damage +", [2, "#99ff99", ["3.0%"]], "."]]],
   3203902: [[["Shurdi Damage +", [2, "#99ff99", ["3.0%"]], "."]]],
   3204000: [[["Pauru Damage +", [2, "#99ff99", ["9.0%"]], "."]]],
-  3204100: [[["Using Elcid activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
-  3204200: [[["Fleeting Gale Bird Damage +", [2, "#99ff99", ["30.0%"]], "."]]],
-  3204300: [[["Fleeting Gale Bird Damage +", [2, "#99ff99", ["40.0%"]], "."]]],
+  3204100: [[["Using Akir Burst activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
+  3204200: [[["Fleeting Gale Bird Damage +", [2, "#99ff99", ["35.0%"]], "."]]],
+  3204300: [[["Fleeting Gale Bird Damage +", [2, "#99ff99", ["45.0%"]], "."]]],
   3204400: [[["Pauru Damage +", [2, "#99ff99", ["1.0%"]], "."]]],
   3204401: [[["Pauru Damage +", [2, "#99ff99", ["1.0%"]], "."]]],
   3204402: [[["Pauru Damage +", [2, "#99ff99", ["1.0%"]], "."]]],
@@ -14636,7 +15036,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
     [
       [
         "While using Sticky Moss Swamp, gain Paralysis Immunity, Mariposa, Phoenix, and Akir Damage +",
-        [2, "#99ff99", ["10.0%"]],
+        [2, "#99ff99", ["12.0%"]],
         "."
       ]
     ]
@@ -14645,7 +15045,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
     [
       [
         "While using Sticky Moss Swamp, gain Paralysis Immunity, Mariposa, Phoenix, and Akir Damage +",
-        [2, "#99ff99", ["12.0%"]],
+        [2, "#99ff99", ["14.0%"]],
         "."
       ]
     ]
@@ -14710,7 +15110,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "Ancient Elemental Skill Casting Speed +",
         [2, "#99ff99", ["10.0%"]],
         " and Damage +",
-        [2, "#99ff99", ["7.0%"]],
+        [2, "#99ff99", ["10.0%"]],
         " (excluding Hyper Awakening Techniques)."
       ]
     ]
@@ -14721,7 +15121,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "Ancient Elemental Skill Casting Speed +",
         [2, "#99ff99", ["10.0%"]],
         " and Damage +",
-        [2, "#99ff99", ["9.0%"]],
+        [2, "#99ff99", ["12.0%"]],
         " (excluding Hyper Awakening Techniques)."
       ]
     ]
@@ -14729,14 +15129,14 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3205900: [[["Akir Damage +", [2, "#99ff99", ["1.3%"]], "."]]],
   3205901: [[["Akir Damage +", [2, "#99ff99", ["1.3%"]], "."]]],
   3205902: [[["Akir Damage +", [2, "#99ff99", ["1.3%"]], "."]]],
-  3206000: [[["Summon Skill Damage +", [2, "#99ff99", ["1.1%"]], "."]]],
-  3206100: [[["Winged Spirit Damage +", [2, "#99ff99", ["17.0%"]], "."]]],
-  3206200: [[["Steed Charge Damage +", [2, "#99ff99", ["24.0%"]], "."]]],
-  3206300: [[["Steed Charge Damage +", [2, "#99ff99", ["35.0%"]], "."]]],
+  3206000: [[["Water Elemental becomes stackable up to ", [2, "#ffff99", ["2"]], " times."]]],
+  3206100: [[["Winged Spirit Damage +", [2, "#99ff99", ["40.0%"]], "."]]],
+  3206200: [[["Steed Charge Damage +", [2, "#99ff99", ["45.0%"]], "."]]],
+  3206300: [[["Steed Charge Damage +", [2, "#99ff99", ["55.0%"]], "."]]],
   3206400: [[["Damage from attacks that are not a Back Attack or Frontal Attack +", [2, "#99ff99", ["0.16%"]], "."]]],
   3206401: [[["Damage from attacks that are not a Back Attack or Frontal Attack +", [2, "#99ff99", ["0.16%"]], "."]]],
   3206402: [[["Damage from attacks that are not a Back Attack or Frontal Attack +", [2, "#99ff99", ["0.16%"]], "."]]],
-  3206500: [[["With MP Recovery, Shurdi Damage +", [2, "#99ff99", ["55.0%"]], "."]]],
+  3206500: [[["With MP Recovery, Shurdi Damage +", [2, "#99ff99", ["65.0%"]], "."]]],
   3206600: [[["With Blue Flame Pauru, Pauru's Command Skill Damage +", [2, "#99ff99", ["17.0%"]], "."]]],
   3206700: [[["With Charge Command, Maririn's Command Skill Damage +", [2, "#99ff99", ["30.0%"]], "."]]],
   3206800: [[["With Charge Command, Maririn's Command Skill Damage +", [2, "#99ff99", ["42.0%"]], "."]]],
@@ -14761,7 +15161,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "With Stagger Command, Maririn inflicts Stagger [High] but Stagger Command Damage -",
         [2, "#ff9999", ["90.0%"]],
         ". Maririn's Basic Attack Damage +",
-        [2, "#99ff99", ["125.0%"]],
+        [2, "#99ff99", ["110.0%"]],
         "."
       ]
     ]
@@ -14772,7 +15172,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "With Stagger Command, Maririn inflicts Stagger [High] but Stagger Command Damage -",
         [2, "#ff9999", ["90.0%"]],
         ". Maririn's Basic Attack Damage +",
-        [2, "#99ff99", ["135.0%"]],
+        [2, "#99ff99", ["120.0%"]],
         "."
       ]
     ]
@@ -15392,7 +15792,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         ".\n",
         [2, "#bf9ef6", ["Destiny: Enlightened Origin"]],
         ": Damage to foes +",
-        [2, "#99ff99", ["12.0%"]],
+        [2, "#99ff99", ["9.0%"]],
         "."
       ]
     ]
@@ -15409,7 +15809,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         ".\n",
         [2, "#bf9ef6", ["Destiny: Enlightened Origin"]],
         ": Damage to foes +",
-        [2, "#99ff99", ["13.5%"]],
+        [2, "#99ff99", ["10.5%"]],
         "."
       ]
     ]
@@ -15674,7 +16074,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         [2, "#ffff99", [[2, "#ffff99", ["3.0"]], "s"]],
         "."
       ],
-      { v0: ["combateffect_sk", [13, 0]] }
+      { v0: ["combateffect_sk", [17, 0]] }
     ]
   ],
   3223800: [
@@ -15686,7 +16086,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         [2, "#ffff99", [[2, "#ffff99", ["3.0"]], "s"]],
         "."
       ],
-      { v0: ["combateffect_sk", [14.5, 0]] }
+      { v0: ["combateffect_sk", [18.5, 0]] }
     ]
   ],
   3223900: [[["Normal Skill Damage +", [2, "#99ff99", ["0.16%"]], "."]]],
@@ -15870,7 +16270,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         ".\n",
         [2, "#bf9ef6", ["Destiny: Shock Burst"]],
         ": Damage of skills that consume all Shock Meter +",
-        [2, "#99ff99", ["8.0%"]],
+        [2, "#99ff99", ["10.0%"]],
         "."
       ]
     ]
@@ -15885,7 +16285,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         ", Shock Skill Crit Rate +",
         [2, "#99ff99", ["5.0%"]],
         ", and Shock Skill Damage +",
-        [2, "#99ff99", ["8.0%"]],
+        [2, "#99ff99", ["10.0%"]],
         "."
       ]
     ]
@@ -15900,7 +16300,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         ", Shock Skill Crit Rate +",
         [2, "#99ff99", ["5.0%"]],
         ", and Shock Skill Damage +",
-        [2, "#99ff99", ["9.0%"]],
+        [2, "#99ff99", ["11.0%"]],
         "."
       ]
     ]
@@ -15949,7 +16349,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         [2, "#99ff99", [[4, "v1", 1], "%"]],
         "."
       ],
-      { v0: ["combateffect_sk", [100, 32307.010000000002]], v1: ["combateffect_sk", [45, 0]] }
+      { v0: ["combateffect_sk", [100, 32307.010000000002]], v1: ["combateffect_sk", [47, 0]] }
     ]
   ],
   3230800: [
@@ -15967,7 +16367,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         [2, "#99ff99", [[4, "v1", 1], "%"]],
         "."
       ],
-      { v0: ["combateffect_sk", [100, 32308.010000000002]], v1: ["combateffect_sk", [48, 0]] }
+      { v0: ["combateffect_sk", [100, 32308.010000000002]], v1: ["combateffect_sk", [50, 0]] }
     ]
   ],
   3230900: [[["Shock Skill Crit Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
@@ -16044,7 +16444,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         ". (Max 3 stacks)\n",
         [2, "#bf9ef6", ["Destiny: Earth Collapse"]],
         ": Earth Rend Damage +",
-        [2, "#99ff99", ["8.0%"]],
+        [2, "#99ff99", ["7.0%"]],
         " per stack."
       ]
     ]
@@ -16055,7 +16455,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "While ",
         [2, "#bf9ef6", ["Destiny: Condensed Stamina"]],
         " is active, Damage of Battering Fists, Iron Cannon Blow, and Explosive Fist +",
-        [2, "#99ff99", ["30.0%"]],
+        [2, "#99ff99", ["25.0%"]],
         " in Tenacity Release status. On Tenacity Release end, recover ",
         [2, "#99ff99", ["9"]],
         " Tenacious Power per Battering Fists, Iron Cannon Blow, or Explosive Fist use. (Max ",
@@ -16070,7 +16470,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "While ",
         [2, "#bf9ef6", ["Destiny: Condensed Stamina"]],
         " is active, Damage of Battering Fists, Iron Cannon Blow, and Explosive Fist +",
-        [2, "#99ff99", ["34.0%"]],
+        [2, "#99ff99", ["28.0%"]],
         " in Tenacity Release status. On Tenacity Release end, recover ",
         [2, "#99ff99", ["9"]],
         " Tenacious Power per Battering Fists, Iron Cannon Blow, or Explosive Fist use. (Max ",
@@ -16213,18 +16613,18 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3232902: [[["Stamina Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
   3233000: [[["Shock Skill Damage +", [2, "#99ff99", ["1.5%"]], "."]]],
   3233100: [[["Using Tenacity Release activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
-  3233200: [[["Shock Skill Crit Damage +", [2, "#99ff99", ["14.0%"]], "."]]],
-  3233300: [[["Shock Skill Crit Damage +", [2, "#99ff99", ["18.0%"]], "."]]],
+  3233200: [[["Shock Skill Crit Damage +", [2, "#99ff99", ["18.0%"]], "."]]],
+  3233300: [[["Shock Skill Crit Damage +", [2, "#99ff99", ["21.0%"]], "."]]],
   3233400: [[["Shock Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
   3233401: [[["Shock Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
   3233402: [[["Shock Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
   3233500: [[["Shock Skill Damage +", [2, "#99ff99", ["1.5%"]], "."]]],
   3233600: [[["Using Tenacity Release activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
   3233700: [
-    [["Chain Destruction Fist Damage +", [2, "#99ff99", ["5.0%"]], ". Cooldown -", [2, "#99ff99", ["6.0s"]], "."]]
+    [["Chain Destruction Fist Damage +", [2, "#99ff99", ["10.0%"]], ". Cooldown -", [2, "#99ff99", ["6.0s"]], "."]]
   ],
   3233800: [
-    [["Chain Destruction Fist Damage +", [2, "#99ff99", ["9.0%"]], ". Cooldown -", [2, "#99ff99", ["6.0s"]], "."]]
+    [["Chain Destruction Fist Damage +", [2, "#99ff99", ["12.0%"]], ". Cooldown -", [2, "#99ff99", ["6.0s"]], "."]]
   ],
   3233900: [[["On Shock Skill Crit Hit, Damage +", [2, "#99ff99", ["0.3%"]], "."]]],
   3233901: [[["On Shock Skill Crit Hit, Damage +", [2, "#99ff99", ["0.3%"]], "."]]],
@@ -16258,8 +16658,8 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3234402: [[["Shock Skill Crit Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
   3234500: [[["Stamina Skill Damage +", [2, "#99ff99", ["1.5%"]], "."]]],
   3234600: [[["Using Tenacity Release activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
-  3234700: [[["During Tenacity Release, Stamina Skill Damage +", [2, "#99ff99", ["10.0%"]], "."]]],
-  3234800: [[["During Tenacity Release, Stamina Skill Damage +", [2, "#99ff99", ["12.0%"]], "."]]],
+  3234700: [[["During Tenacity Release, Stamina Skill Damage +", [2, "#99ff99", ["9.0%"]], "."]]],
+  3234800: [[["During Tenacity Release, Stamina Skill Damage +", [2, "#99ff99", ["11.0%"]], "."]]],
   3234900: [[["Stamina Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
   3234901: [[["Stamina Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
   3234902: [[["Stamina Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
@@ -16278,9 +16678,9 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3235901: [[["On Stamina Skill Crit Hit, Damage +", [2, "#99ff99", ["0.3%"]], "."]]],
   3235902: [[["On Stamina Skill Crit Hit, Damage +", [2, "#99ff99", ["0.3%"]], "."]]],
   3236000: [[["Fist of the Wind God Damage +", [2, "#99ff99", ["8.0%"]], "."]]],
-  3236100: [[["Death Rattle Damage +", [2, "#99ff99", ["8.0%"]], "."]]],
-  3236200: [[["Shredding Strike Damage +", [2, "#99ff99", ["9.0%"]], "."]]],
-  3236300: [[["Shredding Strike Damage +", [2, "#99ff99", ["10.0%"]], "."]]],
+  3236100: [[["Death Rattle Damage +", [2, "#99ff99", ["10.0%"]], "."]]],
+  3236200: [[["Shredding Strike Damage +", [2, "#99ff99", ["10.0%"]], "."]]],
+  3236300: [[["Shredding Strike Damage +", [2, "#99ff99", ["15.0%"]], "."]]],
   3236400: [[["Shock Skill Crit Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
   3236401: [[["Shock Skill Crit Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
   3236402: [[["Shock Skill Crit Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
@@ -16312,8 +16712,8 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3237402: [[["Shock Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
   3237500: [[["Battering Fists Damage +", [2, "#99ff99", ["7.0%"]], "."]]],
   3237600: [[["Iron Cannon Blow Damage +", [2, "#99ff99", ["11.0%"]], "."]]],
-  3237700: [[["Earth Rend Damage ", [2, "#99ff99", ["+9.0%"]], "."]]],
-  3237800: [[["Earth Rend Damage ", [2, "#99ff99", ["+13.0%"]], "."]]],
+  3237700: [[["Earth Rend Damage ", [2, "#99ff99", ["+8.0%"]], "."]]],
+  3237800: [[["Earth Rend Damage ", [2, "#99ff99", ["+12.0%"]], "."]]],
   3237900: [[["Stamina Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
   3237901: [[["Stamina Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
   3237902: [[["Stamina Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
@@ -16338,15 +16738,15 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "On ",
         [2, "#bf9ef6", ["Destiny"]],
         " activation, gain the ",
-        [2, "#bf9ef6", ["Destiny: Energy Focus"]],
+        [2, "#bf9ef6", ["Destiny: Decimation"]],
         " effect for ",
-        [2, "#ffff99", ["10.0s"]],
+        [2, "#ffff99", ["30.0s"]],
         ".\n",
-        [2, "#bf9ef6", ["Destiny: Energy Focus"]],
-        ": Upon use, Energy Release cooldown -",
-        [2, "#99ff99", ["0.3s"]],
-        ". Damage +",
-        [2, "#99ff99", ["5.0%"]],
+        [2, "#bf9ef6", ["Destiny: Decimation"]],
+        ": While in Hype Mode, World Decimation Skill Damage +",
+        [2, "#99ff99", ["20.0%"]],
+        ". World Decimation and Falling Sun cooldown -",
+        [2, "#99ff99", ["20.0%"]],
         "."
       ]
     ]
@@ -16354,16 +16754,10 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3240200: [
     [
       [
-        "On ",
-        [2, "#bf9ef6", ["Destiny"]],
-        " activation, gain the ",
-        [2, "#bf9ef6", ["Destiny: Instant Focus"]],
-        " for ",
-        [2, "#ffff99", ["10.0s"]],
-        ".\n",
-        [2, "#bf9ef6", ["Destiny: Instant Focus"]],
-        ": Next Merciless Pummel Damage ",
-        [2, "#99ff99", ["40.0%"]],
+        "While ",
+        [2, "#bf9ef6", ["Destiny: Decimation"]],
+        " is active, Force Skill Damage +",
+        [2, "#99ff99", ["4.5%"]],
         "."
       ]
     ]
@@ -16371,39 +16765,31 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3240300: [
     [
       [
-        "On ",
-        [2, "#bf9ef6", ["Destiny"]],
-        " activation, gain the ",
-        [2, "#bf9ef6", ["Destiny: Instant Focus"]],
-        " for ",
-        [2, "#ffff99", ["10.0s"]],
-        ".\n",
-        [2, "#bf9ef6", ["Destiny: Instant Focus"]],
-        ": Next Merciless Pummel Damage ",
-        [2, "#99ff99", ["45.0%"]],
+        "While ",
+        [2, "#bf9ef6", ["Destiny: Decimation"]],
+        " is active, Force Skill Damage +",
+        [2, "#99ff99", ["6.0%"]],
         "."
       ]
     ]
   ],
-  3240400: [[["Crit Damage +", [2, "#99ff99", ["0.42%"]], "."]]],
-  3240401: [[["Crit Damage +", [2, "#99ff99", ["0.42%"]], "."]]],
-  3240402: [[["Crit Damage +", [2, "#99ff99", ["0.42%"]], "."]]],
-  3240500: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], "."]]],
+  3240400: [[["World Decimation Damage +", [2, "#99ff99", ["0.80%"]], "."]]],
+  3240401: [[["World Decimation Damage +", [2, "#99ff99", ["0.80%"]], "."]]],
+  3240402: [[["World Decimation Damage +", [2, "#99ff99", ["0.80%"]], "."]]],
+  3240500: [[["Force Skill Damage +", [2, "#99ff99", ["1.6%"]], "."]]],
   3240600: [
     [
       [
         "On ",
         [2, "#bf9ef6", ["Destiny"]],
         " activation, gain the ",
-        [2, "#bf9ef6", ["Destiny: Unleashed Force"]],
+        [2, "#bf9ef6", ["Destiny: Unleashed Energy"]],
         " effect for ",
-        [2, "#ffff99", ["20.0s"]],
+        [2, "#ffff99", ["30.0s"]],
         ".\n",
-        [2, "#bf9ef6", ["Destiny: Unleashed Force"]],
-        ": Damage of Merciless Pummel, Lightning Palm, and Illusion Strike -",
-        [2, "#ff9999", ["30.0%"]],
-        ". Damage of Energy Bullet, Tempest Blast, Energy Blast, Celestial Palm, and Force Orb +",
-        [2, "#99ff99", ["30.0%"]],
+        [2, "#bf9ef6", ["Destiny: Unleashed Energy"]],
+        ": On using Martial Art Skills (other than Hyper Awakening Technique) in Hype Mode, cooldown of Tempest Blast, Energy Blast, and Heavenly Spiral Palm -",
+        [2, "#99ff99", ["0.5s"]],
         "."
       ]
     ]
@@ -16412,70 +16798,58 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
     [
       [
         "While ",
-        [2, "#bf9ef6", ["Destiny: Unleashed Force"]],
-        " is active, Energy Blast cooldown -",
-        [2, "#99ff99", ["0.5s"]],
-        " on Normal Skill use, and Damage +",
-        [2, "#99ff99", [[4, "v0", 1], "%"]],
+        [2, "#bf9ef6", ["Destiny: Unleashed Energy"]],
+        " is active, Tempest Blast, Energy Blast, Heavenly Spiral Palm Damage +",
+        [2, "#99ff99", ["6.0%"]],
         "."
-      ],
-      { v0: ["combateffect_sk", [15, 32407]] }
+      ]
     ]
   ],
   3240800: [
     [
       [
         "While ",
-        [2, "#bf9ef6", ["Destiny: Unleashed Force"]],
-        " is active, Energy Blast cooldown -",
-        [2, "#99ff99", ["0.5s"]],
-        " on Normal Skill use, and Damage +",
-        [2, "#99ff99", [[4, "v0", 1], "%"]],
+        [2, "#bf9ef6", ["Destiny: Unleashed Energy"]],
+        " is active, Tempest Blast, Energy Blast, Heavenly Spiral Palm Damage +",
+        [2, "#99ff99", ["7.0%"]],
         "."
-      ],
-      { v0: ["combateffect_sk", [18, 32408]] }
+      ]
     ]
   ],
-  3240900: [[["On Crit Hit, Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
-  3240901: [[["On Crit Hit, Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
-  3240902: [[["On Crit Hit, Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
-  3241000: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], "."]]],
+  3240900: [[["Energy Blast Damage +", [2, "#99ff99", ["0.60%"]], "."]]],
+  3240901: [[["Energy Blast Damage +", [2, "#99ff99", ["0.60%"]], "."]]],
+  3240902: [[["Energy Blast Damage +", [2, "#99ff99", ["0.60%"]], "."]]],
+  3241000: [[["Force Skill Damage +", [2, "#99ff99", ["1.6%"]], "."]]],
   3241100: [
     [
       [
         "On ",
         [2, "#bf9ef6", ["Destiny"]],
-        " activation, gain the ",
-        [2, "#bf9ef6", ["Destiny: Onslaught"]],
+        " activation, recovers ",
+        [2, "#99ff99", ["500"]],
+        " Energy. Gain the ",
+        [2, "#bf9ef6", ["Destiny: Force"]],
         " effect for ",
-        [2, "#ffff99", ["8.0s"]],
+        [2, "#ffff99", ["10.0s"]],
         ".\n",
-        [2, "#bf9ef6", ["Destiny: Onslaught"]],
-        ": Atk. Power +",
-        [2, "#99ff99", ["55.6%"]],
-        ". Does not stack with the effects of Ready Attack on Energy Release. On Palm Burst use, Normal Skill Cooldown (excluding Palm Burst and Hyper Awakening Techniques) -",
-        [2, "#99ff99", ["15.0%"]],
-        ". On Normal Skill use (excluding Palm Burst), gain the ",
-        [2, "#bf9ef6", ["Destiny: Burst Adept"]],
-        " effect for ",
-        [2, "#ffff99", ["8.0s"]],
-        ".\n",
-        [2, "#bf9ef6", ["Destiny: Burst Adept"]],
-        ": Palm Burst Damage +",
-        [2, "#99ff99", ["5.0%"]],
-        " per stack. Stacks up to ",
-        [2, "#ffff99", ["7"]],
-        " times. Effect ends when Palm Burst is used."
+        [2, "#bf9ef6", ["Destiny: Force"]],
+        ": Force Skill Damage +",
+        [2, "#99ff99", ["4.5%"]],
+        "."
       ]
     ]
   ],
   3241200: [
     [
       [
-        "While ",
-        [2, "#bf9ef6", ["Destiny: Onslaught"]],
-        " is active, Normal Skill (excluding Hyper Awakening Techniques) Damage +",
-        [2, "#99ff99", ["3.0%"]],
+        "Energy Bullet Damage +",
+        [2, "#99ff99", ["25.0%"]],
+        ". Force Orb Damage +",
+        [2, "#99ff99", ["8.0%"]],
+        ". On ",
+        [2, "#bf9ef6", ["Destiny"]],
+        " activation, Force Orb cooldown -",
+        [2, "#99ff99", ["1.5s"]],
         "."
       ]
     ]
@@ -16483,17 +16857,21 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3241300: [
     [
       [
-        "While ",
-        [2, "#bf9ef6", ["Destiny: Onslaught"]],
-        " is active, Normal Skill (excluding Hyper Awakening Techniques) Damage +",
-        [2, "#99ff99", ["4.0%"]],
+        "Energy Bullet Damage +",
+        [2, "#99ff99", ["25.0%"]],
+        ". Force Orb Damage +",
+        [2, "#99ff99", ["12.5%"]],
+        ". On ",
+        [2, "#bf9ef6", ["Destiny"]],
+        " activation, Force Orb cooldown -",
+        [2, "#99ff99", ["1.5s"]],
         "."
       ]
     ]
   ],
-  3241400: [[["Crit Damage +", [2, "#99ff99", ["0.42%"]], "."]]],
-  3241401: [[["Crit Damage +", [2, "#99ff99", ["0.42%"]], "."]]],
-  3241402: [[["Crit Damage +", [2, "#99ff99", ["0.42%"]], "."]]],
+  3241400: [[["Force Orb Skill Damage +", [2, "#99ff99", ["0.60%"]], "."]]],
+  3241401: [[["Force Orb Skill Damage +", [2, "#99ff99", ["0.60%"]], "."]]],
+  3241402: [[["Force Orb Skill Damage +", [2, "#99ff99", ["0.60%"]], "."]]],
   3241500: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], "."]]],
   3241600: [
     [
@@ -16501,19 +16879,13 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "On ",
         [2, "#bf9ef6", ["Destiny"]],
         " activation, gain the ",
-        [2, "#bf9ef6", ["Destiny: Autonomic Circulation"]],
+        [2, "#bf9ef6", ["Destiny: Supreme"]],
         " effect for ",
-        [2, "#ffff99", ["15.0s"]],
+        [2, "#ffff99", ["20.0s"]],
         ".\n",
-        [2, "#bf9ef6", ["Destiny: Autonomic Circulation"]],
-        ": On Energy Release use, gain the ",
-        [2, "#bf9ef6", ["Destiny: Somatic Circulation"]],
-        " effect for ",
-        [2, "#ffff99", ["15.0s"]],
-        ".\n",
-        [2, "#bf9ef6", ["Destiny: Somatic Circulation"]],
-        ": Damage to foes +",
-        [2, "#99ff99", ["5.0%"]],
+        [2, "#bf9ef6", ["Destiny: Supreme"]],
+        ": Martial Art Skill Damage +",
+        [2, "#99ff99", ["10.0%"]],
         "."
       ]
     ]
@@ -16521,12 +16893,12 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3241700: [
     [
       [
-        "While ",
-        [2, "#bf9ef6", ["Destiny: Somatic Circulation"]],
-        " is active, Atk. Speed +",
-        [2, "#99ff99", ["10.0%"]],
-        " and Damage Bonus +",
-        [2, "#99ff99", ["8.0%"]],
+        "Flash Step Cooldown -",
+        [2, "#99ff99", ["20.0%"]],
+        ". While ",
+        [2, "#bf9ef6", ["Destiny: Supreme"]],
+        " is active, Supreme Art Form Damage +",
+        [2, "#99ff99", ["12.5%"]],
         "."
       ]
     ]
@@ -16534,161 +16906,132 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3241800: [
     [
       [
-        "While ",
-        [2, "#bf9ef6", ["Destiny: Somatic Circulation"]],
-        " is active, Atk. Speed +",
-        [2, "#99ff99", ["10.0%"]],
-        " and Damage Bonus +",
-        [2, "#99ff99", ["9.0%"]],
+        "Flash Step Cooldown -",
+        [2, "#99ff99", ["20.0%"]],
+        ". While ",
+        [2, "#bf9ef6", ["Destiny: Supreme"]],
+        " is active, Supreme Art Form Damage +",
+        [2, "#99ff99", ["15.5%"]],
         "."
       ]
     ]
   ],
-  3241900: [[["Crit Damage +", [2, "#99ff99", ["0.42%"]], "."]]],
-  3241901: [[["Crit Damage +", [2, "#99ff99", ["0.42%"]], "."]]],
-  3241902: [[["Crit Damage +", [2, "#99ff99", ["0.42%"]], "."]]],
-  3242000: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], "."]]],
+  3241900: [[["Martial Art Skill Damage +", [2, "#99ff99", ["0.18%"]], "."]]],
+  3241901: [[["Martial Art Skill Damage +", [2, "#99ff99", ["0.18%"]], "."]]],
+  3241902: [[["Martial Art Skill Damage +", [2, "#99ff99", ["0.18%"]], "."]]],
+  3242000: [[["Supreme Technique Damage +", [2, "#99ff99", ["15.0%"]], "."]]],
   3242100: [
     [
       [
         "On ",
         [2, "#bf9ef6", ["Destiny"]],
         " activation, gain the ",
-        [2, "#bf9ef6", ["Destiny: Grand Cycle"]],
+        [2, "#bf9ef6", ["Destiny: Supreme Energy"]],
         " effect for ",
-        [2, "#ffff99", ["60.0s"]],
-        ".\n",
-        [2, "#bf9ef6", ["Destiny: Grand Cycle"]],
-        ": Upon entering Level 3 Hype, this effect is consumed to grant the ",
-        [2, "#bf9ef6", ["Destiny: Illusion"]],
-        " effect for ",
-        [2, "#ffff99", ["20.0s"]],
-        ".\n",
-        [2, "#bf9ef6", ["Destiny: Illusion"]],
-        ": Illusion Strike Damage +",
-        [2, "#99ff99", ["20.0%"]],
-        ". Consumed upon using Illusion Strike, granting the ",
-        [2, "#bf9ef6", ["Destiny: Barrier Pull"]],
-        " effect for ",
-        [2, "#ffff99", ["20.0s"]],
-        ".\n",
-        [2, "#bf9ef6", ["Destiny: Barrier Pull"]],
-        ": Crippling Barrier Damage +",
-        [2, "#99ff99", ["60.0%"]],
-        ". Consumed upon using Crippling Barrier."
-      ]
+        [2, "#ffff99", ["8.0s"]],
+        ". (Max 3 stacks)\n",
+        [2, "#bf9ef6", ["Destiny: Supreme Energy"]],
+        ": Supreme Art Form Damage +",
+        [2, "#99ff99", ["6.0%"]],
+        " per stack. Martial Art Skill Damage -",
+        [2, "#ff9999", [[4, "v0", 1], "%"]],
+        ".\nWhen Supreme Godfist ends, ",
+        [2, "#bf9ef6", ["Destiny: Supreme Energy"]],
+        " is removed."
+      ],
+      { v0: ["combateffect_sk", [-80, 32422.07]] }
     ]
   ],
   3242200: [
     [
       [
-        "While ",
-        [2, "#bf9ef6", ["Destiny: Barrier Pull"]],
-        " is active, Crippling Barrier Damage +",
-        [2, "#99ff99", [[4, "v0", 1], "%"]],
-        " during Spirit Recovery."
-      ],
-      { v0: ["combateffect_sk", [95, 32422.010000000002]] }
+        "On using a Martial Art Skill, cooldown of all other Martial Art Skills -",
+        [2, "#99ff99", ["5%"]],
+        ". (Excluding Hyper Awakening Technique)"
+      ]
     ]
   ],
   3242300: [
     [
       [
-        "While ",
-        [2, "#bf9ef6", ["Destiny: Barrier Pull"]],
-        " is active, Crippling Barrier Damage +",
+        "On using a Martial Art Skill, cooldown of all other Martial Art Skills -",
+        [2, "#99ff99", ["5%"]],
+        ". (Excluding Hyper Awakening Technique)\nSupreme Art Form Damage +",
         [2, "#99ff99", [[4, "v0", 1], "%"]],
-        " during Spirit Recovery."
+        "."
       ],
-      { v0: ["combateffect_sk", [100, 32423.010000000002]] }
+      { v0: ["combateffect_sk", [2, 32423.08]] }
     ]
   ],
-  3242400: [[["On Crit Hit, Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
-  3242401: [[["On Crit Hit, Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
-  3242402: [[["On Crit Hit, Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
-  3242500: [[["Damage to foes +", [2, "#99ff99", ["19.0%"]], " while in Normal Mode."]]],
+  3242400: [[["Supreme Technique Damage +", [2, "#99ff99", ["1.40%"]], "."]]],
+  3242401: [[["Supreme Technique Damage +", [2, "#99ff99", ["1.40%"]], "."]]],
+  3242402: [[["Supreme Technique Damage +", [2, "#99ff99", ["1.40%"]], "."]]],
+  3242500: [[["Martial Art Skill Damage +", [2, "#99ff99", ["2.0%"]], "."]]],
   3242600: [
     [
       [
         "On ",
         [2, "#bf9ef6", ["Destiny"]],
         " activation, gain the ",
-        [2, "#bf9ef6", ["Destiny: Bare Knuckle"]],
+        [2, "#bf9ef6", ["Destiny: Pinpoint Focus"]],
         " effect for ",
-        [2, "#ffff99", ["30.0s"]],
+        [2, "#ffff99", ["12.0s"]],
         ".\n",
-        [2, "#bf9ef6", ["Destiny: Bare Knuckle"]],
-        ": Atk. Speed and Move Speed +",
-        [2, "#99ff99", ["12.0%"]],
-        ". While in Hype Mode, Damage to foes -",
-        [2, "#ff9999", ["80.0%"]],
-        ". Using Flash Step grants the ",
-        [2, "#bf9ef6", ["Destiny: Strike"]],
-        " effect for ",
-        [2, "#ffff99", ["20.0s"]],
-        ", and using Hype grants the ",
-        [2, "#bf9ef6", ["Destiny: Self Defense"]],
-        " effect for ",
-        [2, "#ffff99", ["3.0s"]],
-        ".\n",
-        [2, "#bf9ef6", ["Destiny: Strike"]],
-        ": Atk. Power +",
-        [2, "#99ff99", ["55.6%"]],
-        ". Does not stack with the effects of Ready Attack on Energy Release. Bolting Crash Damage +",
-        [2, "#99ff99", [[4, "v0", 1], "%"]],
-        ". Pulverizing Palm Damage +",
-        [2, "#99ff99", ["100%"]],
-        ".\n",
-        [2, "#bf9ef6", ["Destiny: Self Defense"]],
-        ": Absorbs Damage equal to ",
-        [2, "#99ff99", ["10.0%"]],
-        " of Max HP."
-      ],
-      { v0: ["combateffect_sk", [100, 100, 32411.030000000002]] }
+        [2, "#bf9ef6", ["Destiny: Pinpoint Focus"]],
+        ": Yin Yang Palm Damage +",
+        [2, "#99ff99", ["8.0%"]],
+        ". On using Supreme Art Form, Yin Yang Palm cooldown -",
+        [2, "#99ff99", ["50.0%"]],
+        "."
+      ]
     ]
   ],
   3242700: [
     [
       [
         "While ",
-        [2, "#bf9ef6", ["Destiny: Strike"]],
-        " is active, Normal Skill cooldown (excluding Hyper Awakening Techniques) -",
-        [2, "#99ff99", ["0.1s"]],
-        " on Normal Skill use, and Damage of Merciless Pummel, Bolting Crash, and Pulverizing Palm +",
-        [2, "#99ff99", [[4, "v0", 1], "%"]],
+        [2, "#bf9ef6", ["Destiny: Pinpoint Focus"]],
+        " is active, gain the ",
+        [2, "#bf9ef6", ["Destiny: Force Cycle"]],
+        " effect with Yin Yang Palm hits for ",
+        [2, "#ffff99", ["12.0s"]],
+        ".\n",
+        [2, "#bf9ef6", ["Destiny: Force Cycle"]],
+        ": Supreme Art Form Damage +",
+        [2, "#99ff99", ["13.0%"]],
         "."
-      ],
-      { v0: ["combateffect_sk", [12, 12, 12, 32427]] }
+      ]
     ]
   ],
   3242800: [
     [
       [
         "While ",
-        [2, "#bf9ef6", ["Destiny: Strike"]],
-        " is active, Normal Skill cooldown (excluding Hyper Awakening Techniques) -",
-        [2, "#99ff99", ["0.1s"]],
-        " on Normal Skill use, and Damage of Merciless Pummel, Bolting Crash, and Pulverizing Palm +",
-        [2, "#99ff99", [[4, "v0", 1], "%"]],
+        [2, "#bf9ef6", ["Destiny: Pinpoint Focus"]],
+        " is active, gain the ",
+        [2, "#bf9ef6", ["Destiny: Force Cycle"]],
+        " effect with Yin Yang Palm hits for ",
+        [2, "#ffff99", ["12.0s"]],
+        ".\n",
+        [2, "#bf9ef6", ["Destiny: Force Cycle"]],
+        ": Supreme Art Form Damage +",
+        [2, "#99ff99", ["17.0%"]],
         "."
-      ],
-      { v0: ["combateffect_sk", [15, 15, 15, 32428]] }
+      ]
     ]
   ],
-  3242900: [[["Damage to foes +", [2, "#99ff99", ["0.16%"]], " while in Normal Mode."]]],
-  3242901: [[["Damage to foes +", [2, "#99ff99", ["0.16%"]], " while in Normal Mode."]]],
-  3242902: [[["Damage to foes +", [2, "#99ff99", ["0.16%"]], " while in Normal Mode."]]],
+  3242900: [[["Yin Yang Palm Damage +", [2, "#99ff99", ["0.60%"]], "."]]],
+  3242901: [[["Yin Yang Palm Damage +", [2, "#99ff99", ["0.60%"]], "."]]],
+  3242902: [[["Yin Yang Palm Damage +", [2, "#99ff99", ["0.60%"]], "."]]],
   3243000: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], "."]]],
-  3243100: [[["Using Energy Release activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
+  3243100: [[["Using Hype activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
   3243200: [
     [
       [
-        "On Energy Release use, Atk. Speed +",
-        [2, "#99ff99", ["10.0%"]],
-        " and Damage to foes +",
-        [2, "#99ff99", ["3.0%"]],
-        " for ",
-        [2, "#ffff99", ["6.0s"]],
+        "World Decimation Damage +",
+        [2, "#99ff99", ["35.0%"]],
+        ". Skill use count for World Decimation and Decimation Ray +",
+        [2, "#99ff99", ["5"]],
         "."
       ]
     ]
@@ -16696,28 +17039,26 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3243300: [
     [
       [
-        "On Energy Release use, Atk. Speed +",
-        [2, "#99ff99", ["10.0%"]],
-        " and Damage to foes +",
-        [2, "#99ff99", ["4.0%"]],
-        " for ",
-        [2, "#ffff99", ["6.0s"]],
+        "World Decimation Damage +",
+        [2, "#99ff99", ["42.0%"]],
+        ". Skill use count for World Decimation and Decimation Ray +",
+        [2, "#99ff99", ["5"]],
         "."
       ]
     ]
   ],
-  3243400: [[["On Crit Hit, Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
-  3243401: [[["On Crit Hit, Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
-  3243402: [[["On Crit Hit, Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
-  3243500: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], "."]]],
+  3243400: [[["World Decimation Damage +", [2, "#99ff99", ["0.80%"]], "."]]],
+  3243401: [[["World Decimation Damage +", [2, "#99ff99", ["0.80%"]], "."]]],
+  3243402: [[["World Decimation Damage +", [2, "#99ff99", ["0.80%"]], "."]]],
+  3243500: [[["Force Skill Damage +", [2, "#99ff99", ["1.6%"]], "."]]],
   3243600: [[["Using Hype activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
   3243700: [
     [
       [
-        "On Energy Bullet use, gain Paralysis Immunity. On Energy Bullet use, Energy Blast cooldown -",
-        [2, "#99ff99", ["2.5s"]],
-        " and Energy Bullet Damage +",
-        [2, "#99ff99", ["80.0%"]],
+        "Casting Speed of Tempest Blast, Energy Blast, and Heavenly Spiral Palm +",
+        [2, "#99ff99", ["10.0%"]],
+        ". Damage +",
+        [2, "#99ff99", ["6.0%"]],
         "."
       ]
     ]
@@ -16725,171 +17066,205 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3243800: [
     [
       [
-        "On Energy Bullet use, gain Paralysis Immunity. On Energy Bullet use, Energy Blast cooldown -",
-        [2, "#99ff99", ["2.5s"]],
-        " and Energy Bullet Damage +",
-        [2, "#99ff99", ["100.0%"]],
+        "Casting Speed of Tempest Blast, Energy Blast, and Heavenly Spiral Palm +",
+        [2, "#99ff99", ["10.0%"]],
+        ". Damage +",
+        [2, "#99ff99", ["7.0%"]],
         "."
       ]
     ]
   ],
-  3243900: [[["Crit Damage +", [2, "#99ff99", ["0.42%"]], "."]]],
-  3243901: [[["Crit Damage +", [2, "#99ff99", ["0.42%"]], "."]]],
-  3243902: [[["Crit Damage +", [2, "#99ff99", ["0.42%"]], "."]]],
-  3244000: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], "."]]],
-  3244100: [[["Using Bolting Crash activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
-  3244200: [[["Palm Burst Damage +", [2, "#99ff99", ["18.0%"]], "."]]],
-  3244300: [[["Palm Burst Damage +", [2, "#99ff99", ["21.0%"]], "."]]],
-  3244400: [[["Damage to foes +", [2, "#99ff99", ["0.16%"]], "."]]],
-  3244401: [[["Damage to foes +", [2, "#99ff99", ["0.16%"]], "."]]],
-  3244402: [[["Damage to foes +", [2, "#99ff99", ["0.16%"]], "."]]],
-  3244500: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], "."]]],
-  3244600: [[["Using Hype activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
-  3244700: [[["Damage to foes +", [2, "#99ff99", ["3.0%"]], "."]]],
-  3244800: [[["Damage to foes +", [2, "#99ff99", ["4.0%"]], "."]]],
-  3244900: [[["On Crit Hit, Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
-  3244901: [[["On Crit Hit, Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
-  3244902: [[["On Crit Hit, Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
-  3245000: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], "."]]],
-  3245100: [[["Using Crippling Barrier activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
-  3245200: [
+  3243900: [[["Tempest Blast Damage +", [2, "#99ff99", ["0.70%"]], "."]]],
+  3243901: [[["Tempest Blast Damage +", [2, "#99ff99", ["0.70%"]], "."]]],
+  3243902: [[["Tempest Blast Damage +", [2, "#99ff99", ["0.70%"]], "."]]],
+  3244000: [[["Force Skill Damage +", [2, "#99ff99", ["1.6%"]], "."]]],
+  3244100: [[["Using Force Skills ", [2, "#ffff99", ["2"]], " time(s) activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
+  3244200: [
     [
       [
-        "Crippling Barrier Casting Speed +",
-        [2, "#99ff99", ["20.0%"]],
-        ". During Spirit Recovery, Crippling Barrier Damage +",
+        "Energy Bullet Damage +",
         [2, "#99ff99", ["70.0%"]],
+        ". Each Energy Bullet hit restores ",
+        [2, "#99ff99", ["3s"]],
+        " of Hype duration, and reduces Flash Step cooldown by ",
+        [2, "#99ff99", ["0.4s"]],
         "."
       ]
     ]
+  ],
+  3244300: [
+    [
+      [
+        "Energy Bullet Damage +",
+        [2, "#99ff99", ["84.0%"]],
+        ". Each Energy Bullet hit restores ",
+        [2, "#99ff99", ["3s"]],
+        " of Hype duration, and reduces Flash Step cooldown by ",
+        [2, "#99ff99", ["0.4s"]],
+        "."
+      ]
+    ]
+  ],
+  3244400: [[["Force Orb Skill Damage +", [2, "#99ff99", ["0.60%"]], "."]]],
+  3244401: [[["Force Orb Skill Damage +", [2, "#99ff99", ["0.60%"]], "."]]],
+  3244402: [[["Force Orb Skill Damage +", [2, "#99ff99", ["0.60%"]], "."]]],
+  3244500: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], "."]]],
+  3244600: [[["Using Supreme Art Form skills activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
+  3244700: [
+    [
+      [
+        "Using Supreme Technique/Supreme Palm recovers ",
+        [2, "#99ff99", ["750"]],
+        " Inner Force. Martial Art Skill Damage +",
+        [2, "#99ff99", [[4, "v0", 1], "%"]],
+        "."
+      ],
+      { v0: ["combateffect_sk", [5, 32447]] }
+    ]
+  ],
+  3244800: [
+    [
+      [
+        "Using Supreme Technique/Supreme Palm recovers ",
+        [2, "#99ff99", ["750"]],
+        " Inner Force. Martial Art Skill Damage +",
+        [2, "#99ff99", [[4, "v0", 1], "%"]],
+        "."
+      ],
+      { v0: ["combateffect_sk", [6.5, 32448]] }
+    ]
+  ],
+  3244900: [[["Martial Art Skill Damage +", [2, "#99ff99", ["0.18%"]], "."]]],
+  3244901: [[["Martial Art Skill Damage +", [2, "#99ff99", ["0.18%"]], "."]]],
+  3244902: [[["Martial Art Skill Damage +", [2, "#99ff99", ["0.18%"]], "."]]],
+  3245000: [[["Supreme Palm +", [2, "#99ff99", ["14.0%"]], "."]]],
+  3245100: [[["Using Supreme Art Form skills activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
+  3245200: [
+    [["When Supreme Art is at Third Form or above, Supreme Art Form Damage +", [2, "#99ff99", ["10.0%"]], "."]]
   ],
   3245300: [
+    [["When Supreme Art is at Third Form or above, Supreme Art Form Damage +", [2, "#99ff99", ["12.5%"]], "."]]
+  ],
+  3245400: [[["Supreme Palm +", [2, "#99ff99", ["1.20%"]], "."]]],
+  3245401: [[["Supreme Palm +", [2, "#99ff99", ["1.20%"]], "."]]],
+  3245402: [[["Supreme Palm +", [2, "#99ff99", ["1.20%"]], "."]]],
+  3245500: [[["Martial Art Skill Damage +", [2, "#99ff99", ["2.0%"]], "."]]],
+  3245600: [
+    [["Using Martial Art Skills ", [2, "#ffff99", ["5"]], " time(s) activates ", [2, "#bf9ef6", ["Destiny"]], "."]]
+  ],
+  3245700: [
     [
       [
-        "Crippling Barrier Casting Speed +",
-        [2, "#99ff99", ["20.0%"]],
-        ". During Spirit Recovery, Crippling Barrier Damage +",
-        [2, "#99ff99", ["75.0%"]],
+        "On using Supreme Technique, next Yin Yang Palm Damage +",
+        [2, "#99ff99", ["30.0%"]],
+        ". On using Supreme Palm, next Yin Yang Palm Skill Damage +",
+        [2, "#99ff99", ["45.0%"]],
         "."
       ]
     ]
-  ],
-  3245400: [[["Crit Damage +", [2, "#99ff99", ["0.42%"]], "."]]],
-  3245401: [[["Crit Damage +", [2, "#99ff99", ["0.42%"]], "."]]],
-  3245402: [[["Crit Damage +", [2, "#99ff99", ["0.42%"]], "."]]],
-  3245500: [[["Damage to foes +", [2, "#99ff99", ["19.0%"]], " while in Normal Mode."]]],
-  3245600: [[["Using Flash Step activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
-  3245700: [
-    [["Pulverizing Palm Casting Speed +", [2, "#99ff99", ["15.0%"]], ". Damage +", [2, "#99ff99", ["30.0%"]], "."]]
   ],
   3245800: [
-    [["Pulverizing Palm Casting Speed +", [2, "#99ff99", ["15.0%"]], ". Damage +", [2, "#99ff99", ["35.0%"]], "."]]
-  ],
-  3245900: [[["On Crit Hit while in Normal Mode, Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
-  3245901: [[["On Crit Hit while in Normal Mode, Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
-  3245902: [[["On Crit Hit while in Normal Mode, Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
-  3246000: [[["Illusion Strike Damage +", [2, "#99ff99", ["15.0%"]], "."]]],
-  3246100: [[["Tempest Blast Damage +", [2, "#99ff99", ["10.0%"]], "."]]],
-  3246200: [[["Merciless Pummel Damage +", [2, "#99ff99", ["10.0%"]], "."]]],
-  3246300: [[["Merciless Pummel Damage +", [2, "#99ff99", ["15.0%"]], "."]]],
-  3246400: [[["Damage to foes +", [2, "#99ff99", ["0.16%"]], "."]]],
-  3246401: [[["Damage to foes +", [2, "#99ff99", ["0.16%"]], "."]]],
-  3246402: [[["Damage to foes +", [2, "#99ff99", ["0.16%"]], "."]]],
-  3246500: [[["Force Orb Damage +", [2, "#99ff99", ["10.0%"]], "."]]],
-  3246600: [[["Energy Blast Damage +", [2, "#99ff99", ["5.0%"]], "."]]],
-  3246700: [
     [
       [
-        "With Barrage of Blows, Energy Blast Casting Speed +",
-        [2, "#99ff99", ["30.0%"]],
-        " and Damage +",
-        [2, "#99ff99", ["80.0%"]],
-        ". Cooldown +",
-        [2, "#ff9999", ["30.0s"]],
+        "On using Supreme Technique, next Yin Yang Palm Damage +",
+        [2, "#99ff99", ["35.0%"]],
+        ". On using Supreme Palm, next Yin Yang Palm Skill Damage +",
+        [2, "#99ff99", ["52.5%"]],
         "."
       ]
     ]
   ],
-  3246800: [
+  3245900: [[["Yin Yang Palm Damage +", [2, "#99ff99", ["0.60%"]], "."]]],
+  3245901: [[["Yin Yang Palm Damage +", [2, "#99ff99", ["0.60%"]], "."]]],
+  3245902: [[["Yin Yang Palm Damage +", [2, "#99ff99", ["0.60%"]], "."]]],
+  3246000: [
+    [["World Decimation Casting Speed +", [2, "#99ff99", ["20.0%"]], ". Crit Damage +", [2, "#99ff99", ["24.0%"]], "."]]
+  ],
+  3246100: [
     [
       [
-        "With Barrage of Blows, Energy Blast Casting Speed +",
+        "While using World Decimation, all incoming Damage -",
         [2, "#99ff99", ["30.0%"]],
-        " and Damage +",
-        [2, "#99ff99", ["84.0%"]],
-        ". Cooldown +",
-        [2, "#ff9999", ["30.0s"]],
+        ". Damage + ",
+        [2, "#99ff99", ["13.0%"]],
         "."
       ]
     ]
   ],
-  3246900: [[["Damage to foes +", [2, "#99ff99", ["0.16%"]], "."]]],
-  3246901: [[["Damage to foes +", [2, "#99ff99", ["0.16%"]], "."]]],
-  3246902: [[["Damage to foes +", [2, "#99ff99", ["0.16%"]], "."]]],
-  3247000: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], "."]]],
-  3247100: [[["Palm Burst Damage +", [2, "#99ff99", ["8.0%"]], ". On skill use, grants Push Immunity."]]],
-  3247200: [[["Palm Burst Damage +", [2, "#99ff99", ["12.0%"]], "."]]],
-  3247300: [[["Palm Burst Damage +", [2, "#99ff99", ["15.0%"]], "."]]],
-  3247400: [[["On Crit Hit, Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
-  3247401: [[["On Crit Hit, Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
-  3247402: [[["On Crit Hit, Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
-  3247500: [[["Shadowbreaker Damage ", [2, "#99ff99", ["+8.0%"]], "."]]],
-  3247600: [[["Merciless Pummel Damage +", [2, "#99ff99", ["8.0%"]], "."]]],
-  3247700: [
-    [["Lightning Palm Casting Speed +", [2, "#99ff99", ["15.0%"]], ". Damage +", [2, "#99ff99", ["15.0%"]], "."]]
+  3246200: [
+    [
+      [
+        "World Decimation/Falling Sun cooldown -",
+        [2, "#99ff99", ["10.0%"]],
+        ".\nWorld Decimation Damage +",
+        [2, "#99ff99", ["8.0%"]],
+        "."
+      ]
+    ]
   ],
-  3247800: [
-    [["Lightning Palm Casting Speed +", [2, "#99ff99", ["15.0%"]], ". Damage +", [2, "#99ff99", ["21.0%"]], "."]]
+  3246300: [
+    [
+      [
+        "World Decimation/Falling Sun cooldown -",
+        [2, "#99ff99", ["10.0%"]],
+        ".\nWorld Decimation Damage +",
+        [2, "#99ff99", ["14.0%"]],
+        "."
+      ]
+    ]
   ],
-  3247900: [[["Damage to foes +", [2, "#99ff99", ["0.16%"]], "."]]],
-  3247901: [[["Damage to foes +", [2, "#99ff99", ["0.16%"]], "."]]],
-  3247902: [[["Damage to foes +", [2, "#99ff99", ["0.16%"]], "."]]],
-  3248000: [[["Illusion Strike Damage +", [2, "#99ff99", ["10.0%"]], "."]]],
-  3248100: [
-    [["Illusion Strike Casting Speed +", [2, "#99ff99", ["15.0%"]], ". Damage +", [2, "#99ff99", ["15.0%"]], "."]]
+  3246400: [[["World Decimation Damage +", [2, "#99ff99", ["0.80%"]], "."]]],
+  3246401: [[["World Decimation Damage +", [2, "#99ff99", ["0.80%"]], "."]]],
+  3246402: [[["World Decimation Damage +", [2, "#99ff99", ["0.80%"]], "."]]],
+  3246500: [[["Tempest Blast Damage +", [2, "#99ff99", ["8.0%"]], "."]]],
+  3246600: [[["With Gravitational Blow, Energy Blast Damage +", [2, "#99ff99", ["12.0%"]], "."]]],
+  3246700: [[["Heavenly Spiral Palm Damage +", [2, "#99ff99", ["9.0%"]], "."]]],
+  3246800: [[["Heavenly Spiral Palm Damage +", [2, "#99ff99", ["13.0%"]], "."]]],
+  3246900: [[["Heavenly Spiral Palm Damage +", [2, "#99ff99", ["0.60%"]], "."]]],
+  3246901: [[["Heavenly Spiral Palm Damage +", [2, "#99ff99", ["0.60%"]], "."]]],
+  3246902: [[["Heavenly Spiral Palm Damage +", [2, "#99ff99", ["0.60%"]], "."]]],
+  3247000: [
+    [
+      [
+        "With Trance, Energy Bullet grants Paralysis Immunity during use. Energy Bullet becomes stackable up to ",
+        [2, "#ffff99", ["2"]],
+        " times.\nEnergy Bullet Damage +",
+        [2, "#99ff99", ["20.0%"]],
+        "."
+      ]
+    ]
   ],
+  3247100: [[["Force Orb Skill Crit Damage +", [2, "#99ff99", ["20.0%"]], "."]]],
+  3247200: [[["Force Orb Skill Damage +", [2, "#99ff99", ["10.0%"]], "."]]],
+  3247300: [[["Force Orb Skill Damage +", [2, "#99ff99", ["14.0%"]], "."]]],
+  3247400: [[["Force Orb Skill Damage +", [2, "#99ff99", ["0.60%"]], "."]]],
+  3247401: [[["Force Orb Skill Damage +", [2, "#99ff99", ["0.60%"]], "."]]],
+  3247402: [[["Force Orb Skill Damage +", [2, "#99ff99", ["0.60%"]], "."]]],
+  3247500: [[["Celestial Palm Damage +", [2, "#99ff99", ["22.0%"]], "."]]],
+  3247600: [[["Skysplitting Fist Damage +", [2, "#99ff99", ["10.0%"]], "."]]],
+  3247700: [[["Supreme Godfist Damage +", [2, "#99ff99", ["15.0%"]], "."]]],
+  3247800: [[["Supreme Godfist Damage +", [2, "#99ff99", ["23.0%"]], "."]]],
+  3247900: [[["Martial Art Skill Damage +", [2, "#99ff99", ["0.18%"]], "."]]],
+  3247901: [[["Martial Art Skill Damage +", [2, "#99ff99", ["0.18%"]], "."]]],
+  3247902: [[["Martial Art Skill Damage +", [2, "#99ff99", ["0.18%"]], "."]]],
+  3248000: [[["Using Supreme Art Form grants Status Ailment Immunity."]]],
+  3248100: [[["Supreme Art Form Damage +", [2, "#99ff99", ["4.5%"]], "."]]],
   3248200: [
-    [
-      [
-        "With Crippling Barrier's Tenacity, Cooldown +",
-        [2, "#ff9999", ["16.0s"]],
-        ". Damage +",
-        [2, "#99ff99", ["165.0%"]],
-        "."
-      ]
-    ]
+    [["Supreme Godfist Damage +", [2, "#99ff99", ["10.0%"]], ". Crit Damage +", [2, "#99ff99", ["20.0%"]], "."]]
   ],
   3248300: [
-    [
-      [
-        "With Crippling Barrier's Tenacity, Cooldown +",
-        [2, "#ff9999", ["16.0s"]],
-        ". Damage +",
-        [2, "#99ff99", ["180.0%"]],
-        "."
-      ]
-    ]
+    [["Supreme Godfist Damage +", [2, "#99ff99", ["16.0%"]], ". Crit Damage +", [2, "#99ff99", ["20.0%"]], "."]]
   ],
-  3248400: [[["Damage to foes +", [2, "#99ff99", ["0.16%"]], "."]]],
-  3248401: [[["Damage to foes +", [2, "#99ff99", ["0.16%"]], "."]]],
-  3248402: [[["Damage to foes +", [2, "#99ff99", ["0.16%"]], "."]]],
-  3248500: [[["Pulverizing Palm Damage +", [2, "#99ff99", ["15.0%"]], "."]]],
-  3248600: [
-    [
-      [
-        "With Pulverizing Palm's Unavoidable Blow, Cooldown +",
-        [2, "#ff9999", ["7.0"]],
-        "s. Damage +",
-        [2, "#99ff99", ["220.0%"]],
-        "."
-      ]
-    ]
-  ],
-  3248700: [[["Bolting Crash Damage +", [2, "#99ff99", ["25.0%"]], "."]]],
-  3248800: [[["Bolting Crash Damage +", [2, "#99ff99", ["31.0%"]], "."]]],
-  3248900: [[["Crit Damage +", [2, "#99ff99", ["0.42%"]], "."]]],
-  3248901: [[["Crit Damage +", [2, "#99ff99", ["0.42%"]], "."]]],
-  3248902: [[["Crit Damage +", [2, "#99ff99", ["0.42%"]], "."]]],
+  3248400: [[["Supreme Godfist Damage +", [2, "#99ff99", ["1.00%"]], "."]]],
+  3248401: [[["Supreme Godfist Damage +", [2, "#99ff99", ["1.00%"]], "."]]],
+  3248402: [[["Supreme Godfist Damage +", [2, "#99ff99", ["1.00%"]], "."]]],
+  3248500: [[["Yin Yang Palm Casting Speed +", [2, "#99ff99", ["12.0%"]], "."]]],
+  3248600: [[["Yin Yang Palm Crit Damage +", [2, "#99ff99", ["30.0%"]], "."]]],
+  3248700: [[["Yin Yang Palm Damage +", [2, "#99ff99", ["14.0%"]], "."]]],
+  3248800: [[["Yin Yang Palm Damage +", [2, "#99ff99", ["18.0%"]], "."]]],
+  3248900: [[["Yin Yang Palm Damage +", [2, "#99ff99", ["0.60%"]], "."]]],
+  3248901: [[["Yin Yang Palm Damage +", [2, "#99ff99", ["0.60%"]], "."]]],
+  3248902: [[["Yin Yang Palm Damage +", [2, "#99ff99", ["0.60%"]], "."]]],
   3250000: [[["Deathblade Surge Damage +", [2, "#99ff99", ["2.5%"]], "."]]],
   3250100: [
     [
@@ -16899,7 +17274,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         " activation, Damage to foes +",
         [2, "#99ff99", ["5.0%"]],
         " for ",
-        [2, "#ffff99", ["15.0s"]],
+        [2, "#ffff99", ["30.0s"]],
         "."
       ]
     ]
@@ -16933,51 +17308,65 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3250400: [[["Deathblade Surge Damage +", [2, "#99ff99", ["0.25%"]], "."]]],
   3250401: [[["Deathblade Surge Damage +", [2, "#99ff99", ["0.25%"]], "."]]],
   3250402: [[["Deathblade Surge Damage +", [2, "#99ff99", ["0.25%"]], "."]]],
-  3250500: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], "."]]],
+  3250500: [[["Normal Skill Damage +", [2, "#99ff99", ["3.0%"]], "."]]],
   3250600: [
     [
       [
         "On ",
         [2, "#bf9ef6", ["Destiny"]],
-        " activation, next Normal Skill Damage +",
-        [2, "#99ff99", ["15.0%"]],
-        " for ",
-        [2, "#ffff99", ["3"]],
-        " time(s)."
+        " activation, gain the ",
+        [2, "#bf9ef6", ["Destiny: Slaughter Spectacle"]],
+        " effect.\n",
+        [2, "#bf9ef6", ["Destiny: Slaughter Spectacle"]],
+        ": On Deathly Slash use, consume the ",
+        [2, "#bf9ef6", ["Destiny: Slaughter Spectacle"]],
+        " effect. Damage +",
+        [2, "#99ff99", ["30.0%"]],
+        "."
       ]
     ]
   ],
   3250700: [
     [
       [
-        "On ",
-        [2, "#bf9ef6", ["Destiny"]],
-        " activation, gain the ",
-        [2, "#bf9ef6", ["Destiny: Sword Reset"]],
-        " effect.\n",
-        [2, "#bf9ef6", ["Destiny: Sword Reset"]],
-        ": Using a Sword Reset Skill resets the cooldown of one Sword Reset Skill.\nSword Reset Skills: Surprise Attack, Spincutter, Wind Cut, Blade Dance, Deathly Slash."
+        "While ",
+        [2, "#bf9ef6", ["Destiny: Slaughter Spectacle"]],
+        " is active, using a Normal Skill other than Deathly Slash grants the ",
+        [2, "#bf9ef6", ["Destiny: Enhanced Sharpness"]],
+        " effect, stackable up to ",
+        [2, "#ffff99", ["5"]],
+        " times.\n",
+        [2, "#bf9ef6", ["Destiny: Enhanced Sharpness"]],
+        ": On Deathly Slash use, consume the ",
+        [2, "#bf9ef6", ["Destiny: Enhanced Sharpness"]],
+        " effect. Damage +",
+        [2, "#99ff99", ["4.0%"]],
+        " per stack."
       ]
     ]
   ],
   3250800: [
     [
       [
-        "On ",
-        [2, "#bf9ef6", ["Destiny"]],
-        " activation, gain the ",
-        [2, "#bf9ef6", ["Destiny: Sword Reset"]],
-        " effect.\n",
-        [2, "#bf9ef6", ["Destiny: Sword Reset"]],
-        ": Using a Sword Reset Skill resets the cooldown of one Sword Reset Skill.\nSword Reset Skills: Surprise Attack, Spincutter, Wind Cut, Blade Dance, Deathly Slash.\nDamage to foes +",
-        [2, "#99ff99", ["1.0%"]],
-        "."
+        "While ",
+        [2, "#bf9ef6", ["Destiny: Slaughter Spectacle"]],
+        " is active, using a Normal Skill other than Deathly Slash grants the ",
+        [2, "#bf9ef6", ["Destiny: Enhanced Sharpness"]],
+        " effect, stackable up to ",
+        [2, "#ffff99", ["5"]],
+        " times.\n",
+        [2, "#bf9ef6", ["Destiny: Enhanced Sharpness"]],
+        ": On Deathly Slash use, consume the ",
+        [2, "#bf9ef6", ["Destiny: Enhanced Sharpness"]],
+        " effect. Damage +",
+        [2, "#99ff99", ["5.0%"]],
+        " per stack."
       ]
     ]
   ],
-  3250900: [[["Damage to foes +", [2, "#99ff99", ["0.15%"]], "."]]],
-  3250901: [[["Damage to foes +", [2, "#99ff99", ["0.15%"]], "."]]],
-  3250902: [[["Damage to foes +", [2, "#99ff99", ["0.15%"]], "."]]],
+  3250900: [[["Normal Skill Damage +", [2, "#99ff99", ["0.3%"]], "."]]],
+  3250901: [[["Normal Skill Damage +", [2, "#99ff99", ["0.3%"]], "."]]],
+  3250902: [[["Normal Skill Damage +", [2, "#99ff99", ["0.3%"]], "."]]],
   3251000: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], "."]]],
   3251100: [[["Activating ", [2, "#bf9ef6", ["Destiny"]], " resets the cooldown of Blitz Rush."]]],
   3251200: [
@@ -16986,7 +17375,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "On ",
         [2, "#bf9ef6", ["Destiny"]],
         " activation, next Blitz Rush Damage +",
-        [2, "#99ff99", ["35.0%"]],
+        [2, "#99ff99", ["26.0%"]],
         " for ",
         [2, "#ffff99", ["1"]],
         " time(s)."
@@ -16999,7 +17388,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "On ",
         [2, "#bf9ef6", ["Destiny"]],
         " activation, next Blitz Rush Damage +",
-        [2, "#99ff99", ["45.0%"]],
+        [2, "#99ff99", ["34.0%"]],
         " for ",
         [2, "#ffff99", ["1"]],
         " time(s)."
@@ -17029,7 +17418,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "On ",
         [2, "#bf9ef6", ["Destiny"]],
         " activation, Damage of next Twin Shadows, Turning Slash, and Death Sentence +",
-        [2, "#99ff99", ["12.0%"]],
+        [2, "#99ff99", ["16.0%"]],
         " for ",
         [2, "#ffff99", ["3"]],
         " time(s)."
@@ -17042,7 +17431,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "On ",
         [2, "#bf9ef6", ["Destiny"]],
         " activation, Damage of next Twin Shadows, Turning Slash, and Death Sentence +",
-        [2, "#99ff99", ["16.0%"]],
+        [2, "#99ff99", ["20.0%"]],
         " for ",
         [2, "#ffff99", ["3"]],
         " time(s)."
@@ -17074,7 +17463,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "On ",
         [2, "#bf9ef6", ["Destiny"]],
         " activation, Charge-type skill Damage +",
-        [2, "#99ff99", ["7.5%"]],
+        [2, "#99ff99", ["10.0%"]],
         " for ",
         [2, "#ffff99", ["15.0s"]],
         ".\nOn Darkaxel hit, inflict Open Weakness for ",
@@ -17089,7 +17478,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "On ",
         [2, "#bf9ef6", ["Destiny"]],
         " activation, Charge-type skill Damage +",
-        [2, "#99ff99", ["9.0%"]],
+        [2, "#99ff99", ["12.0%"]],
         " for ",
         [2, "#ffff99", ["15.0s"]],
         ".\nOn Darkaxel hit, inflict Open Weakness for ",
@@ -17131,12 +17520,12 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3252901: [[["Normal Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
   3252902: [[["Normal Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
   3253000: [[["Deathblade Surge Damage +", [2, "#99ff99", ["2.5%"]], "."]]],
-  3253100: [[["Using Deathblade Surge activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
+  3253100: [[["Using Death Trance activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
   3253200: [
     [
       [
         "Damage to foes +",
-        [2, "#99ff99", ["3.5%"]],
+        [2, "#99ff99", ["4.0%"]],
         ". Earth Cleaver becomes stackable up to ",
         [2, "#ffff99", ["2"]],
         " times."
@@ -17147,7 +17536,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
     [
       [
         "Damage to foes +",
-        [2, "#99ff99", ["4.5%"]],
+        [2, "#99ff99", ["5.0%"]],
         ". Earth Cleaver becomes stackable up to ",
         [2, "#ffff99", ["2"]],
         " times."
@@ -17157,17 +17546,33 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3253400: [[["Deathblade Surge Damage +", [2, "#99ff99", ["0.25%"]], "."]]],
   3253401: [[["Deathblade Surge Damage +", [2, "#99ff99", ["0.25%"]], "."]]],
   3253402: [[["Deathblade Surge Damage +", [2, "#99ff99", ["0.25%"]], "."]]],
-  3253500: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], "."]]],
-  3253600: [[["Using Turning Slash activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
+  3253500: [[["Normal Skill Damage +", [2, "#99ff99", ["3.0%"]], "."]]],
+  3253600: [[["Using Death Trance activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
   3253700: [
-    [["Damage to foes +", [2, "#99ff99", ["3.0%"]], ". Normal Skill MP Cost -", [2, "#99ff99", ["20.0%"]], "."]]
+    [
+      [
+        "Casting Speed of Blade Dance and Deathly Slash +",
+        [2, "#99ff99", ["10.0%"]],
+        ". Damage +",
+        [2, "#99ff99", ["12.0%"]],
+        "."
+      ]
+    ]
   ],
   3253800: [
-    [["Damage to foes +", [2, "#99ff99", ["4.0%"]], ". Normal Skill MP Cost -", [2, "#99ff99", ["20.0%"]], "."]]
+    [
+      [
+        "Casting Speed of Blade Dance and Deathly Slash +",
+        [2, "#99ff99", ["10.0%"]],
+        ". Damage +",
+        [2, "#99ff99", ["15.0%"]],
+        "."
+      ]
+    ]
   ],
-  3253900: [[["Damage to foes +", [2, "#99ff99", ["0.15%"]], "."]]],
-  3253901: [[["Damage to foes +", [2, "#99ff99", ["0.15%"]], "."]]],
-  3253902: [[["Damage to foes +", [2, "#99ff99", ["0.15%"]], "."]]],
+  3253900: [[["Normal Skill Damage +", [2, "#99ff99", ["0.3%"]], "."]]],
+  3253901: [[["Normal Skill Damage +", [2, "#99ff99", ["0.3%"]], "."]]],
+  3253902: [[["Normal Skill Damage +", [2, "#99ff99", ["0.3%"]], "."]]],
   3254000: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], "."]]],
   3254100: [[["Using Turning Slash activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
   3254200: [
@@ -17176,9 +17581,9 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "Blitz Rush Casting Speed +",
         [2, "#99ff99", ["20.0%"]],
         ". Damage +",
-        [2, "#99ff99", ["20.0%"]],
+        [2, "#99ff99", ["16.0%"]],
         ". MP Cost -",
-        [2, "#99ff99", ["50.0%"]],
+        [2, "#99ff99", ["50%"]],
         "."
       ]
     ]
@@ -17189,9 +17594,9 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "Blitz Rush Casting Speed +",
         [2, "#99ff99", ["20.0%"]],
         ". Damage +",
-        [2, "#99ff99", ["25.0%"]],
+        [2, "#99ff99", ["20.0%"]],
         ". MP Cost -",
-        [2, "#99ff99", ["50.0%"]],
+        [2, "#99ff99", ["50%"]],
         "."
       ]
     ]
@@ -17207,7 +17612,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "Casting Speed of Twin Shadows, Turning Slash, and Death Sentence +",
         [2, "#99ff99", ["15.0%"]],
         ". Normal Skill Damage +",
-        [2, "#99ff99", ["4.0%"]],
+        [2, "#99ff99", ["5.0%"]],
         "."
       ]
     ]
@@ -17218,7 +17623,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "Casting Speed of Twin Shadows, Turning Slash, and Death Sentence +",
         [2, "#99ff99", ["15.0%"]],
         ". Normal Skill Damage +",
-        [2, "#99ff99", ["5.0%"]],
+        [2, "#99ff99", ["6.0%"]],
         "."
       ]
     ]
@@ -17228,8 +17633,8 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3254902: [[["Damage to foes +", [2, "#99ff99", ["0.15%"]], "."]]],
   3255000: [[["Normal Skill Damage +", [2, "#99ff99", ["2.0%"]], "."]]],
   3255100: [[["Using Maelstrom activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
-  3255200: [[["Charge-type skill Damage +", [2, "#99ff99", ["7.5%"]], "."]]],
-  3255300: [[["Charge-type skill Damage +", [2, "#99ff99", ["9.0%"]], "."]]],
+  3255200: [[["Charge-type skill Damage +", [2, "#99ff99", ["9.0%"]], "."]]],
+  3255300: [[["Charge-type skill Damage +", [2, "#99ff99", ["11.0%"]], "."]]],
   3255400: [[["Normal Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
   3255401: [[["Normal Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
   3255402: [[["Normal Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
@@ -17265,27 +17670,37 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3255901: [[["Normal Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
   3255902: [[["Normal Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
   3256000: [[["Deathblade Surge Damage +", [2, "#99ff99", ["1.5%"]], "."]]],
-  3256100: [[["Turning Slash Damage +", [2, "#99ff99", ["30.0%"]], "."]]],
+  3256100: [[["Breaking Moon Damage +", [2, "#99ff99", ["30.0%"]], "."]]],
   3256200: [
-    [["Damage to foes +", [2, "#99ff99", ["1.0%"]], ". Deathblade Surge Damage +", [2, "#99ff99", ["1.5%"]], "."]]
+    [["Damage to foes +", [2, "#99ff99", ["1.0%"]], ". Deathblade Surge Damage +", [2, "#99ff99", ["2.0%"]], "."]]
   ],
   3256300: [
-    [["Damage to foes +", [2, "#99ff99", ["2.0%"]], ". Deathblade Surge Damage +", [2, "#99ff99", ["1.5%"]], "."]]
+    [["Damage to foes +", [2, "#99ff99", ["2.0%"]], ". Deathblade Surge Damage +", [2, "#99ff99", ["2.0%"]], "."]]
   ],
   3256400: [[["Deathblade Surge Damage +", [2, "#99ff99", ["0.25%"]], "."]]],
   3256401: [[["Deathblade Surge Damage +", [2, "#99ff99", ["0.25%"]], "."]]],
   3256402: [[["Deathblade Surge Damage +", [2, "#99ff99", ["0.25%"]], "."]]],
-  3256500: [[["Damage to foes +", [2, "#99ff99", ["1.0%"]], "."]]],
-  3256600: [[["Blade Dance Damage +", [2, "#99ff99", ["25.0%"]], "."]]],
-  3256700: [[["Damage to foes +", [2, "#99ff99", ["1.0%"]], ". Wind Cut Damage +", [2, "#99ff99", ["50.0%"]], "."]]],
-  3256800: [[["Damage to foes +", [2, "#99ff99", ["2.0%"]], ". Wind Cut Damage +", [2, "#99ff99", ["50.0%"]], "."]]],
-  3256900: [[["Damage to foes +", [2, "#99ff99", ["0.15%"]], "."]]],
-  3256901: [[["Damage to foes +", [2, "#99ff99", ["0.15%"]], "."]]],
-  3256902: [[["Damage to foes +", [2, "#99ff99", ["0.15%"]], "."]]],
+  3256500: [[["Deathly Slash cooldown -", [2, "#99ff99", ["2.0s"]], "."]]],
+  3256600: [
+    [
+      [
+        "With Quick Prep, Blade Dance Damage +",
+        [2, "#99ff99", ["90.0%"]],
+        ". Cooldown +",
+        [2, "#ff9999", ["6.0s"]],
+        "."
+      ]
+    ]
+  ],
+  3256700: [[["Deathly Slash Damage +", [2, "#99ff99", ["15.0%"]], "."]]],
+  3256800: [[["Deathly Slash Damage +", [2, "#99ff99", ["20.0%"]], "."]]],
+  3256900: [[["Normal Skill Damage +", [2, "#99ff99", ["0.3%"]], "."]]],
+  3256901: [[["Normal Skill Damage +", [2, "#99ff99", ["0.3%"]], "."]]],
+  3256902: [[["Normal Skill Damage +", [2, "#99ff99", ["0.3%"]], "."]]],
   3257000: [[["Damage to foes +", [2, "#99ff99", ["1.0%"]], "."]]],
-  3257100: [[["Blitz Rush Damage +", [2, "#99ff99", ["8.0%"]], "."]]],
-  3257200: [[["With All-round, Blitz Rush Damage +", [2, "#99ff99", ["110.0%"]], "."]]],
-  3257300: [[["With All-round, Blitz Rush Damage +", [2, "#99ff99", ["120.0%"]], "."]]],
+  3257100: [[["Blitz Rush Damage +", [2, "#99ff99", ["7.0%"]], "."]]],
+  3257200: [[["With All-round, Blitz Rush Damage +", [2, "#99ff99", ["100.0%"]], "."]]],
+  3257300: [[["With All-round, Blitz Rush Damage +", [2, "#99ff99", ["108.0%"]], "."]]],
   3257400: [[["Blitz Rush Damage +", [2, "#99ff99", ["0.6%"]], "."]]],
   3257401: [[["Blitz Rush Damage +", [2, "#99ff99", ["0.6%"]], "."]]],
   3257402: [[["Blitz Rush Damage +", [2, "#99ff99", ["0.6%"]], "."]]],
@@ -17297,9 +17712,9 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3257901: [[["Damage to foes +", [2, "#99ff99", ["0.15%"]], "."]]],
   3257902: [[["Damage to foes +", [2, "#99ff99", ["0.15%"]], "."]]],
   3258000: [[["Blitz Rush Damage +", [2, "#99ff99", ["8.0%"]], "."]]],
-  3258100: [[["With Over Slash, Void Strike Damage +", [2, "#99ff99", ["10.0%"]], "."]]],
-  3258200: [[["With Halve, Soul Absorber Damage +", [2, "#99ff99", ["12.0%"]], "."]]],
-  3258300: [[["With Halve, Soul Absorber Damage +", [2, "#99ff99", ["18.0%"]], "."]]],
+  3258100: [[["With Over Slash, Void Strike Damage +", [2, "#99ff99", ["15.0%"]], "."]]],
+  3258200: [[["With Halve, Soul Absorber Damage +", [2, "#99ff99", ["20.0%"]], "."]]],
+  3258300: [[["With Halve, Soul Absorber Damage +", [2, "#99ff99", ["27.0%"]], "."]]],
   3258400: [[["Normal Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
   3258401: [[["Normal Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
   3258402: [[["Normal Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
@@ -17359,33 +17774,41 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3260400: [[["Swoop Skill Damage +", [2, "#99ff99", ["0.17%"]], "."]]],
   3260401: [[["Swoop Skill Damage +", [2, "#99ff99", ["0.17%"]], "."]]],
   3260402: [[["Swoop Skill Damage +", [2, "#99ff99", ["0.17%"]], "."]]],
-  3260500: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], "."]]],
+  3260500: [
+    [
+      [
+        "Rage Spear and Dance of Fury Damage -",
+        [2, "#ff9999", ["50.0%"]],
+        ". Silent Rage and Glowing Brand Damage +",
+        [2, "#99ff99", ["8.0%"]],
+        "."
+      ]
+    ]
+  ],
   3260600: [
     [
       [
-        "Upon activating ",
+        "On ",
         [2, "#bf9ef6", ["Destiny"]],
-        " ",
-        [2, "#ffff99", ["3"]],
-        " times, gain the ",
-        [2, "#bf9ef6", ["Destiny: Lunar Nightmare"]],
-        " effect.\n",
-        [2, "#bf9ef6", ["Destiny: Lunar Nightmare"]],
-        ": Damage of next Nightmare's downward attack +",
-        [2, "#99ff99", ["200.0%"]],
-        ". Crit Rate +",
-        [2, "#99ff99", ["30.0%"]],
-        ". Cooldown resets on downward attack hit."
+        " activation, Silent Rage and Glowing Brand Cooldown -",
+        [2, "#99ff99", ["4.0s"]],
+        "."
       ]
     ]
   ],
   3260700: [
     [
       [
-        "Damage bonus from ",
-        [2, "#bf9ef6", ["Destiny: Lunar Nightmare"]],
-        " for Nightmare's downward attack +",
-        [2, "#99ff99", ["500.0%"]],
+        "On ",
+        [2, "#bf9ef6", ["Destiny"]],
+        " activation, gain the ",
+        [2, "#bf9ef6", ["Destiny: Falling Moon"]],
+        " for ",
+        [2, "#ffff99", ["10.0s"]],
+        ".\n",
+        [2, "#bf9ef6", ["Destiny: Falling Moon"]],
+        ": Silent Rage and Glowing Brand Damage +",
+        [2, "#99ff99", ["10.0%"]],
         "."
       ]
     ]
@@ -17393,19 +17816,23 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3260800: [
     [
       [
-        "Damage to foes +",
-        [2, "#99ff99", ["1.0%"]],
-        ". Damage bonus from ",
-        [2, "#bf9ef6", ["Destiny: Lunar Nightmare"]],
-        " for Nightmare's downward attack +",
-        [2, "#99ff99", ["500.0%"]],
+        "On ",
+        [2, "#bf9ef6", ["Destiny"]],
+        " activation, gain the ",
+        [2, "#bf9ef6", ["Destiny: Falling Moon"]],
+        " for ",
+        [2, "#ffff99", ["10.0s"]],
+        ".\n",
+        [2, "#bf9ef6", ["Destiny: Falling Moon"]],
+        ": Silent Rage and Glowing Brand Damage +",
+        [2, "#99ff99", ["12.0%"]],
         "."
       ]
     ]
   ],
-  3260900: [[["Swoop Skill Damage +", [2, "#99ff99", ["0.17%"]], "."]]],
-  3260901: [[["Swoop Skill Damage +", [2, "#99ff99", ["0.17%"]], "."]]],
-  3260902: [[["Swoop Skill Damage +", [2, "#99ff99", ["0.17%"]], "."]]],
+  3260900: [[["While in Persona Mode, Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  3260901: [[["While in Persona Mode, Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  3260902: [[["While in Persona Mode, Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
   3261000: [[["Swoop Skill Damage +", [2, "#99ff99", ["1.6%"]], "."]]],
   3261100: [
     [
@@ -17615,13 +18042,23 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3263400: [[["Swoop Skill Damage +", [2, "#99ff99", ["0.17%"]], "."]]],
   3263401: [[["Swoop Skill Damage +", [2, "#99ff99", ["0.17%"]], "."]]],
   3263402: [[["Swoop Skill Damage +", [2, "#99ff99", ["0.17%"]], "."]]],
-  3263500: [[["Damage to foes +", [2, "#99ff99", ["1.6%"]], "."]]],
-  3263600: [[["Using Swoop Skills ", [2, "#ffff99", ["1"]], " time(s) activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
-  3263700: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], ".\nNightmare Damage +", [2, "#99ff99", ["66.0%"]], "."]]],
-  3263800: [[["Damage to foes +", [2, "#99ff99", ["2.5%"]], ".\nNightmare Damage +", [2, "#99ff99", ["66.0%"]], "."]]],
-  3263900: [[["Swoop Skill Damage +", [2, "#99ff99", ["0.17%"]], "."]]],
-  3263901: [[["Swoop Skill Damage +", [2, "#99ff99", ["0.17%"]], "."]]],
-  3263902: [[["Swoop Skill Damage +", [2, "#99ff99", ["0.17%"]], "."]]],
+  3263500: [[["Silent Rage cooldown -", [2, "#99ff99", ["6.0s"]], "."]]],
+  3263600: [
+    [
+      [
+        "Using Silent Rage or Glowing Brand ",
+        [2, "#ffff99", ["1"]],
+        " time(s) in Persona Mode activates ",
+        [2, "#bf9ef6", ["Destiny"]],
+        "."
+      ]
+    ]
+  ],
+  3263700: [[["In Persona Mode, Silent Rage Damage +", [2, "#99ff99", ["10.0%"]], "."]]],
+  3263800: [[["In Persona Mode, Silent Rage Damage +", [2, "#99ff99", ["13.0%"]], "."]]],
+  3263900: [[["While in Persona Mode, Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  3263901: [[["In Persona Mode, Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  3263902: [[["In Persona Mode, Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
   3264000: [[["Swoop Skill Damage +", [2, "#99ff99", ["1.6%"]], "."]]],
   3264100: [[["Using Glowing Brand ", [2, "#ffff99", ["1"]], " time(s) activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
   3264200: [
@@ -17691,13 +18128,25 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3266400: [[["Swoop Skill Damage +", [2, "#99ff99", ["0.17%"]], "."]]],
   3266401: [[["Swoop Skill Damage +", [2, "#99ff99", ["0.17%"]], "."]]],
   3266402: [[["Swoop Skill Damage +", [2, "#99ff99", ["0.17%"]], "."]]],
-  3266500: [[["Nightmare Damage +", [2, "#99ff99", ["33.0%"]], "."]]],
-  3266600: [[["Swoop Skill Damage +", [2, "#99ff99", ["1.5%"]], "."]]],
-  3266700: [[["Damage to foes +", [2, "#99ff99", ["1.0%"]], ".\nNightmare Damage +", [2, "#99ff99", ["33.0%"]], "."]]],
-  3266800: [[["Damage to foes +", [2, "#99ff99", ["2.0%"]], ".\nNightmare Damage +", [2, "#99ff99", ["33.0%"]], "."]]],
-  3266900: [[["Swoop Skill Damage +", [2, "#99ff99", ["0.17%"]], "."]]],
-  3266901: [[["Swoop Skill Damage +", [2, "#99ff99", ["0.17%"]], "."]]],
-  3266902: [[["Swoop Skill Damage +", [2, "#99ff99", ["0.17%"]], "."]]],
+  3266500: [
+    [
+      [
+        "In Persona Mode, Finishing Step Crit Rate -",
+        [2, "#ff9999", ["10.0%"]],
+        ". Damage +",
+        [2, "#99ff99", ["10.0%"]],
+        "."
+      ]
+    ]
+  ],
+  3266600: [
+    [["With Shadow Afterimage, Silent Rage grants Push Immunity during use. Damage +", [2, "#99ff99", ["10.0%"]], "."]]
+  ],
+  3266700: [[["Glowing Brand Damage +", [2, "#99ff99", ["10.0%"]], "."]]],
+  3266800: [[["Glowing Brand Damage +", [2, "#99ff99", ["13.0%"]], "."]]],
+  3266900: [[["In Persona Mode, Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  3266901: [[["In Persona Mode, Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  3266902: [[["In Persona Mode, Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
   3267000: [[["Glowing Brand Damage +", [2, "#99ff99", ["6.0%"]], "."]]],
   3267100: [[["Rage Spear Damage +", [2, "#99ff99", ["7.0%"]], "."]]],
   3267200: [[["With Testament, Glowing Brand Damage +", [2, "#99ff99", ["10.0%"]], "."]]],
@@ -18323,7 +18772,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         " stacks, changes to the ",
         [2, "#bf9ef6", ["Destiny: Deadly Downpour"]],
         " effect lasting ",
-        [2, "#ffff99", ["10.0s"]],
+        [2, "#ffff99", ["20.0s"]],
         ".\n",
         [2, "#bf9ef6", ["Destiny: Deadly Downpour"]],
         ": Incoming Damage from Sharpshooter +",
@@ -18356,7 +18805,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         " stacks, changes to the ",
         [2, "#bf9ef6", ["Destiny: Deadly Downpour"]],
         " effect lasting ",
-        [2, "#ffff99", ["10.0s"]],
+        [2, "#ffff99", ["20.0s"]],
         ".\n",
         [2, "#bf9ef6", ["Destiny: Deadly Downpour"]],
         ": Incoming Damage from Sharpshooter +",
@@ -18418,9 +18867,9 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
       ]
     ]
   ],
-  3281400: [[["Claymore Mine Damage +", [2, "#99ff99", ["1.4%"]], "."]]],
-  3281401: [[["Claymore Mine Damage +", [2, "#99ff99", ["1.4%"]], "."]]],
-  3281402: [[["Claymore Mine Damage +", [2, "#99ff99", ["1.4%"]], "."]]],
+  3281400: [[["Damage to foes +", [2, "#99ff99", ["0.15%"]], "."]]],
+  3281401: [[["Damage to foes +", [2, "#99ff99", ["0.15%"]], "."]]],
+  3281402: [[["Damage to foes +", [2, "#99ff99", ["0.15%"]], "."]]],
   3281500: [[["Wings of Storm, Silverhawk Basic Attack Damage +", [2, "#99ff99", ["10.0%"]], "."]]],
   3281600: [
     [
@@ -18558,11 +19007,11 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         [2, "#ffff99", ["1"]],
         " stack to reset Rapid Shot cooldown. Rapid Shot Damage +",
         [2, "#99ff99", [[4, "v0", 1], "%"]],
-        ".\nWhile ",
+        ". (",
         [2, "#bf9ef6", ["Destiny: Rapid Rage"]],
-        " is active, cannot gain ",
-        [2, "#bf9ef6", ["Destiny: Max Tension"]],
-        ".\nWhen the ",
+        " can only stack up to ",
+        [2, "#ffff99", ["3"]],
+        " times).\nWhen the ",
         [2, "#bf9ef6", ["Destiny: ATB-19 Rapidfire"]],
         " effect ends, the ",
         [2, "#bf9ef6", ["Destiny: Max Tension"]],
@@ -18582,7 +19031,11 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         [2, "#ffff99", ["1"]],
         " additional stack. Rapid Shot Damage Increase changed to ",
         [2, "#99ff99", [[4, "v0", 1], "%"]],
-        "."
+        ". (",
+        [2, "#bf9ef6", ["Destiny: Rapid Rage"]],
+        " can only stack up to ",
+        [2, "#ffff99", ["4"]],
+        " times.)"
       ],
       { v0: ["combateffect_sk", [24, 32826.23, 0, 0, 32827.22, 32827.32, 32826.24]] }
     ]
@@ -18596,7 +19049,11 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         [2, "#ffff99", ["1"]],
         " additional stack. Rapid Shot Damage Increase changed to ",
         [2, "#99ff99", [[4, "v0", 1], "%"]],
-        "."
+        ". (",
+        [2, "#bf9ef6", ["Destiny: Rapid Rage"]],
+        " can only stack up to ",
+        [2, "#ffff99", ["4"]],
+        " times.)"
       ],
       { v0: ["combateffect_sk", [30, 32826.23, 0, 0, 32828.22, 32828.32, 32826.24]] }
     ]
@@ -18613,8 +19070,28 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3283402: [[["Silverhawk Assault Damage +", [2, "#99ff99", ["0.6%"]], "."]]],
   3283500: [[["Normal Skill Damage +", [2, "#99ff99", ["2.0%"]], "."]]],
   3283600: [[["Using Silverhawk Assault activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
-  3283700: [[["Paralysis Immunity is applied during Arrow Shower. Damage +", [2, "#99ff99", ["28.0%"]], "."]]],
-  3283800: [[["Paralysis Immunity is applied during Arrow Shower. Damage +", [2, "#99ff99", ["34.0%"]], "."]]],
+  3283700: [
+    [
+      [
+        "Paralysis Immunity is applied during Arrow Shower. Damage +",
+        [2, "#99ff99", ["28.0%"]],
+        ". MP Cost -",
+        [2, "#99ff99", ["50.0%"]],
+        "."
+      ]
+    ]
+  ],
+  3283800: [
+    [
+      [
+        "Paralysis Immunity is applied during Arrow Shower. Damage +",
+        [2, "#99ff99", ["34.0%"]],
+        ". MP Cost -",
+        [2, "#99ff99", ["50.0%"]],
+        "."
+      ]
+    ]
+  ],
   3283900: [[["Arrow Shower Damage +", [2, "#99ff99", ["1.0%"]], "."]]],
   3283901: [[["Arrow Shower Damage +", [2, "#99ff99", ["1.0%"]], "."]]],
   3283902: [[["Arrow Shower Damage +", [2, "#99ff99", ["1.0%"]], "."]]],
@@ -18642,9 +19119,9 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
       ]
     ]
   ],
-  3284400: [[["Claymore Mine Damage +", [2, "#99ff99", ["1.4%"]], "."]]],
-  3284401: [[["Claymore Mine Damage +", [2, "#99ff99", ["1.4%"]], "."]]],
-  3284402: [[["Claymore Mine Damage +", [2, "#99ff99", ["1.4%"]], "."]]],
+  3284400: [[["Damage to foes +", [2, "#99ff99", ["0.15%"]], "."]]],
+  3284401: [[["Damage to foes +", [2, "#99ff99", ["0.15%"]], "."]]],
+  3284402: [[["Damage to foes +", [2, "#99ff99", ["0.15%"]], "."]]],
   3284500: [[["Wings of Storm, Silverhawk Basic Attack Damage +", [2, "#99ff99", ["10.0%"]], "."]]],
   3284600: [[["Using Wings of Storm activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
   3284700: [[["Wings of Storm Damage +", [2, "#99ff99", ["24.0%"]], "."]]],
@@ -18700,13 +19177,13 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3286900: [[["Arrow Shower Damage +", [2, "#99ff99", ["1.0%"]], "."]]],
   3286901: [[["Arrow Shower Damage +", [2, "#99ff99", ["1.0%"]], "."]]],
   3286902: [[["Arrow Shower Damage +", [2, "#99ff99", ["1.0%"]], "."]]],
-  3287000: [[["Claymore Mine Damage +", [2, "#99ff99", ["10.0%"]], "."]]],
-  3287100: [[["Atomic Arrow Damage +", [2, "#99ff99", ["100.0%"]], "."]]],
-  3287200: [[["Claymore Mine Damage +", [2, "#99ff99", ["20.0%"]], "."]]],
-  3287300: [[["Claymore Mine Damage +", [2, "#99ff99", ["30.0%"]], "."]]],
-  3287400: [[["Atomic Arrow Damage +", [2, "#99ff99", ["5.0%"]], "."]]],
-  3287401: [[["Atomic Arrow Damage +", [2, "#99ff99", ["5.0%"]], "."]]],
-  3287402: [[["Atomic Arrow Damage +", [2, "#99ff99", ["5.0%"]], "."]]],
+  3287000: [[["Sharpshooter grants Paralysis Immunity. Casting Speed ", [2, "#99ff99", ["15.0%"]], "."]]],
+  3287100: [[["Charged Shot/Sharpshooter Damage +", [2, "#99ff99", ["9.0%"]], "."]]],
+  3287200: [[["Silverhawk Assault Damage +", [2, "#99ff99", ["7.0%"]], "."]]],
+  3287300: [[["Silverhawk Assault Damage +", [2, "#99ff99", ["10.0%"]], "."]]],
+  3287400: [[["Damage to foes +", [2, "#99ff99", ["0.15%"]], "."]]],
+  3287401: [[["Damage to foes +", [2, "#99ff99", ["0.15%"]], "."]]],
+  3287402: [[["Damage to foes +", [2, "#99ff99", ["0.15%"]], "."]]],
   3287500: [[["Snipe Damage +", [2, "#99ff99", ["6.0%"]], "."]]],
   3287600: [[["Hawk Shot Casting Speed +", [2, "#99ff99", ["15.0%"]], ". Damage +", [2, "#99ff99", ["20.0%"]], "."]]],
   3287700: [[["Snipe Damage +", [2, "#99ff99", ["12.0%"]], "."]]],
@@ -18715,7 +19192,17 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3287901: [[["Hawk Shot Damage +", [2, "#99ff99", ["1.4%"]], "."]]],
   3287902: [[["Hawk Shot Damage +", [2, "#99ff99", ["1.4%"]], "."]]],
   3288000: [[["Charged Shot Damage +", [2, "#99ff99", ["7.0%"]], "."]]],
-  3288100: [[["Charged Shot cooldown +", [2, "#ff9999", ["16.0s"]], ". Damage +", [2, "#99ff99", ["100.0%"]], "."]]],
+  3288100: [
+    [
+      [
+        "Charged Shot cooldown +",
+        [2, "#ff9999", ["16.0s"]],
+        ". Grants Push Immunity during use. Damage +",
+        [2, "#99ff99", ["100.0%"]],
+        "."
+      ]
+    ]
+  ],
   3288200: [
     [
       [
@@ -18763,7 +19250,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         ".\n",
         [2, "#bf9ef6", ["Destiny: Bloodhound"]],
         ": Damage to foes +",
-        [2, "#99ff99", ["5.0%"]],
+        [2, "#99ff99", ["7.0%"]],
         "."
       ]
     ]
@@ -18777,7 +19264,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         [2, "#99ff99", [[4, "v0", 1], "%"]],
         "."
       ],
-      { v0: ["combateffect_sk", [5, 32902.020000000004]] }
+      { v0: ["combateffect_sk", [8, 32902.020000000004]] }
     ]
   ],
   3290300: [
@@ -18789,7 +19276,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         [2, "#99ff99", [[4, "v0", 1], "%"]],
         "."
       ],
-      { v0: ["combateffect_sk", [7, 32902.020000000004]] }
+      { v0: ["combateffect_sk", [10, 32902.020000000004]] }
     ]
   ],
   3290400: [[["Shotgun Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
@@ -18880,9 +19367,11 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3291100: [
     [
       [
-        "On ",
+        "Stagger Damage of Shotgun Skills -",
+        [2, "#ff9999", ["12.0%"]],
+        ". On ",
         [2, "#bf9ef6", ["Destiny"]],
-        " activation, gain the ",
+        " activation, gain the",
         [2, "#bf9ef6", ["Destiny: Shotgun Overload effect"]],
         " for ",
         [2, "#ffff99", ["30.0s"]],
@@ -18890,9 +19379,9 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         [2, "#bf9ef6", ["Destiny: Shotgun Overload"]],
         ": Shotgun Skill Damage -",
         [2, "#ff9999", [[4, "v0", 1], "%"]],
-        ". On Shotgun Skill use, Shotgun Skill Cooldown -",
-        [2, "#99ff99", ["1.0"]],
-        "s (excluding Hyper Awakening Technique).\nShotgun Skills inflict Weakness Exposure on foes: Crit Resistance -",
+        " (excluding Hyper Awakening Technique). On Shotgun Skill use, Shotgun Skill Cooldown -",
+        [2, "#99ff99", ["1.0s"]],
+        " (excluding Hyper Awakening Technique).\nShotgun Skills inflict Weakness Exposure on foes: Crit Resistance ",
         [2, "#99ff99", ["10.0%"]],
         " against all ally attacks for ",
         [2, "#ffff99", ["5.0s"]],
@@ -19149,23 +19638,35 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3294402: [[["Shotgun Dominator Damage +", [2, "#99ff99", ["0.6%"]], "."]]],
   3294500: [[["Handgun Skill Damage +", [2, "#99ff99", ["1.6%"]], "."]]],
   3294600: [[["Using Desperado activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
-  3294700: [[["Desperado Damage +", [2, "#99ff99", ["21.0%"]], "."]]],
-  3294800: [[["Desperado Damage +", [2, "#99ff99", ["27.0%"]], "."]]],
+  3294700: [[["Desperado Damage +", [2, "#99ff99", ["45.0%"]], "."]]],
+  3294800: [[["Desperado Damage +", [2, "#99ff99", ["51.0%"]], "."]]],
   3294900: [[["Handgun Skill Damage +", [2, "#99ff99", ["0.16%"]], "."]]],
   3294901: [[["Handgun Skill Damage +", [2, "#99ff99", ["0.16%"]], "."]]],
   3294902: [[["Handgun Skill Damage +", [2, "#99ff99", ["0.16%"]], "."]]],
   3295000: [[["Handgun Skill Damage +", [2, "#99ff99", ["1.6%"]], "."]]],
   3295100: [[["Using Secret Weapon activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
-  3295200: [[["On Handgun Skill use, Secret Weapon cooldown -", [2, "#99ff99", ["0.5"]], "s"]]],
+  3295200: [
+    [
+      [
+        "On Handgun Skill use, Secret Weapon cooldown -",
+        [2, "#99ff99", ["0.5s"]],
+        ". Secret Weapon Damage +",
+        [2, "#99ff99", [[4, "v0", 1], "%"]],
+        "."
+      ],
+      { v0: ["combateffect_sk", [12, 32952]] }
+    ]
+  ],
   3295300: [
     [
       [
         "On Handgun Skill use, Secret Weapon cooldown -",
-        [2, "#99ff99", ["0.5"]],
-        "s. Damage to foes +",
-        [2, "#99ff99", ["1.0%"]],
+        [2, "#99ff99", ["0.5s"]],
+        ". Secret Weapon Damage +",
+        [2, "#99ff99", [[4, "v0", 1], "%"]],
         "."
-      ]
+      ],
+      { v0: ["combateffect_sk", [15, 32952]] }
     ]
   ],
   3295400: [[["Secret Weapon Damage +", [2, "#99ff99", ["0.5%"]], "."]]],
@@ -19173,8 +19674,26 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3295402: [[["Secret Weapon Damage +", [2, "#99ff99", ["0.5%"]], "."]]],
   3295500: [[["Handgun Skill Damage +", [2, "#99ff99", ["1.6%"]], "."]]],
   3295600: [[["Using Handgun Skill ", [2, "#ffff99", ["4"]], " times activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
-  3295700: [[["On Spiral Tracker Crit Hit, Damage to foes +", [2, "#99ff99", ["95.0%"]], "."]]],
-  3295800: [[["On Spiral Tracker Crit Hit, Damage to foes +", [2, "#99ff99", ["105.0%"]], "."]]],
+  3295700: [
+    [
+      [
+        "Spiral Tracker grants Paralysis Immunity during use. On Crit Hit, Damage +",
+        [2, "#99ff99", [[4, "v0", 1], "%"]],
+        "."
+      ],
+      { v0: ["combateffect_sk", [95, 0]] }
+    ]
+  ],
+  3295800: [
+    [
+      [
+        "Spiral Tracker grants Paralysis Immunity during use. On Crit Hit, Damage +",
+        [2, "#99ff99", [[4, "v0", 1], "%"]],
+        "."
+      ],
+      { v0: ["combateffect_sk", [105, 0]] }
+    ]
+  ],
   3295900: [[["Spiral Tracker Damage +", [2, "#99ff99", ["0.8%"]], "."]]],
   3295901: [[["Spiral Tracker Damage +", [2, "#99ff99", ["0.8%"]], "."]]],
   3295902: [[["Spiral Tracker Damage +", [2, "#99ff99", ["0.8%"]], "."]]],
@@ -19299,7 +19818,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
       [
         [2, "#bf9ef6", ["Destiny: Bombardment"]],
         " effect's Barrage Skill Damage Bonus changed to ",
-        [2, "#99ff99", ["12.0%"]],
+        [2, "#99ff99", ["14.5%"]],
         "."
       ]
     ]
@@ -19309,7 +19828,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
       [
         [2, "#bf9ef6", ["Destiny: Bombardment"]],
         " effect's Barrage Skill Damage Bonus changed to ",
-        [2, "#99ff99", ["13.5%"]],
+        [2, "#99ff99", ["16.0%"]],
         "."
       ]
     ]
@@ -19348,7 +19867,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "While the ",
         [2, "#bf9ef6", ["Destiny: Shoot & Scoot"]],
         " effect is active, A.C.T Damage +",
-        [2, "#99ff99", ["16%"]],
+        [2, "#99ff99", ["28.0%"]],
         "."
       ]
     ]
@@ -19359,7 +19878,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "While the ",
         [2, "#bf9ef6", ["Destiny: Shoot & Scoot"]],
         " effect is active, A.C.T Damage +",
-        [2, "#99ff99", ["20%"]],
+        [2, "#99ff99", ["32.0%"]],
         "."
       ]
     ]
@@ -20721,7 +21240,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         [2, "#99ff99", ["20.0%"]],
         ". Damage +",
         [2, "#99ff99", ["400.0%"]],
-        "."
+        ". Grants Paralysis Immunity during use."
       ]
     ]
   ],
@@ -20732,7 +21251,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         [2, "#99ff99", ["20.0%"]],
         ". Damage +",
         [2, "#99ff99", ["500.0%"]],
-        "."
+        ". Grants Paralysis Immunity during use."
       ]
     ]
   ],
@@ -20814,7 +21333,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
     [
       [
         "Forbidden Sorcery: Ripping Bear Damage +",
-        [2, "#99ff99", ["12.0%"]],
+        [2, "#99ff99", ["8.5%"]],
         ".\nOn ",
         [2, "#bf9ef6", ["Destiny"]],
         " activation, gain the ",
@@ -20833,7 +21352,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
     [
       [
         "Forbidden Sorcery: Ripping Bear Damage +",
-        [2, "#99ff99", ["14.0%"]],
+        [2, "#99ff99", ["10.5%"]],
         ".\nOn ",
         [2, "#bf9ef6", ["Destiny"]],
         " activation, gain the ",
@@ -21194,7 +21713,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "On ",
         [2, "#bf9ef6", ["Destiny"]],
         " activation, Damage to foes +",
-        [2, "#99ff99", ["4.0%"]],
+        [2, "#99ff99", ["5.0%"]],
         " for ",
         [2, "#ffff99", ["10.0s"]],
         "."
@@ -21244,6 +21763,12 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         [2, "#bf9ef6", ["Destiny"]],
         " activation, Focus Skill cooldown (excluding Hyper Awakening Techniques) -",
         [2, "#99ff99", ["60.0%"]],
+        ". Inflicts Target Weak Point effect on foes within a ",
+        [2, "#ffff99", ["4.8 meter"]],
+        " radius for ",
+        [2, "#ffff99", ["16.0s"]],
+        ".\nTarget Weak Point: On Crit Hit, Damage +",
+        [2, "#99ff99", ["8.0%"]],
         "."
       ]
     ]
@@ -21253,11 +21778,11 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
       [
         "On ",
         [2, "#bf9ef6", ["Destiny"]],
-        " activation, next Flurry or Focus Skill Damage +",
+        " activation, next Raging Dragon Slash, Half Moon Slash, Dragon's Rampage, Red Dragon's Horn, Deadly Red Dragon, Thrust of Destruction, and Starfall Pounce Damage +",
         [2, "#99ff99", ["5.0%"]],
         " for ",
         [2, "#ffff99", ["3"]],
-        " uses."
+        " times."
       ]
     ]
   ],
@@ -21266,11 +21791,11 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
       [
         "On ",
         [2, "#bf9ef6", ["Destiny"]],
-        " activation, next Flurry or Focus Skill Damage +",
+        " activation, next Raging Dragon Slash, Half Moon Slash, Dragon's Rampage, Red Dragon's Horn, Deadly Red Dragon, Thrust of Destruction, and Starfall Pounce Damage +",
         [2, "#99ff99", ["5.0%"]],
         " for ",
         [2, "#ffff99", ["3"]],
-        " uses. Focus Skill Damage +",
+        " times. Focus Skill Damage +",
         [2, "#99ff99", ["1.0%"]],
         "."
       ]
@@ -21309,7 +21834,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         " effect.\n",
         [2, "#bf9ef6", ["Destiny: Yeon-Style Flurry"]],
         ": Flurry Skill Damage +",
-        [2, "#99ff99", ["20.0%"]],
+        [2, "#99ff99", ["28.0%"]],
         " for ",
         [2, "#ffff99", ["30.0s"]],
         "."
@@ -21326,7 +21851,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         " effect.\n",
         [2, "#bf9ef6", ["Destiny: Yeon-Style Flurry"]],
         ": Flurry Skill Damage +",
-        [2, "#99ff99", ["25.0%"]],
+        [2, "#99ff99", ["34.0%"]],
         " for ",
         [2, "#ffff99", ["30.0s"]],
         "."
@@ -21479,8 +22004,8 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3343100: [
     [["Using Yeon-Style Encore ", [2, "#ffff99", ["1"]], " time(s) activates ", [2, "#bf9ef6", ["Destiny"]], "."]]
   ],
-  3343200: [[["Red Dragon's Horn Damage +", [2, "#99ff99", ["17.0%"]], "."]]],
-  3343300: [[["Red Dragon's Horn Damage +", [2, "#99ff99", ["20.0%"]], "."]]],
+  3343200: [[["Red Dragon's Horn Damage +", [2, "#99ff99", ["20.0%"]], "."]]],
+  3343300: [[["Red Dragon's Horn Damage +", [2, "#99ff99", ["23.0%"]], "."]]],
   3343400: [[["Damage to foes +", [2, "#99ff99", ["0.2%"]], "."]]],
   3343401: [[["Damage to foes +", [2, "#99ff99", ["0.2%"]], "."]]],
   3343402: [[["Damage to foes +", [2, "#99ff99", ["0.2%"]], "."]]],
@@ -21529,7 +22054,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "Flurry Skill Casting Speed +",
         [2, "#99ff99", ["10.0%"]],
         ". Focus Skill Damage +",
-        [2, "#99ff99", ["7.0%"]],
+        [2, "#99ff99", ["8.0%"]],
         "."
       ]
     ]
@@ -21540,7 +22065,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "Flurry Skill Casting Speed +",
         [2, "#99ff99", ["10.0%"]],
         ". Focus Skill Damage +",
-        [2, "#99ff99", ["9.0%"]],
+        [2, "#99ff99", ["10.0%"]],
         "."
       ]
     ]
@@ -21644,9 +22169,21 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3346500: [
     [["Flurry Skill Damage -", [2, "#ff9999", ["20.0%"]], ". Focus Skill Damage +", [2, "#99ff99", ["3.0%"]], "."]]
   ],
-  3346600: [[["4-Headed Dragon and Thrust of Destruction Damage +", [2, "#99ff99", ["7.0%"]], "."]]],
-  3346700: [[["Starfall Pounce, Red Dragon's Horn Damage +", [2, "#99ff99", ["5.0%"]], "."]]],
-  3346800: [[["Starfall Pounce, Red Dragon's Horn Damage +", [2, "#99ff99", ["8.0%"]], "."]]],
+  3346600: [
+    [
+      [
+        "With Firepower Control, Starfall Pounce Damage +",
+        [2, "#99ff99", ["7.0%"]],
+        ". Ignores collisions with Guardians."
+      ]
+    ]
+  ],
+  3346700: [
+    [["4-Headed Dragon, Thrust of Destruction, and Red Dragon's Horn Damage +", [2, "#99ff99", ["5.0%"]], "."]]
+  ],
+  3346800: [
+    [["4-Headed Dragon, Thrust of Destruction, and Red Dragon's Horn Damage +", [2, "#99ff99", ["7.0%"]], "."]]
+  ],
   3346900: [[["Damage to foes +", [2, "#99ff99", ["0.2%"]], "."]]],
   3346901: [[["Damage to foes +", [2, "#99ff99", ["0.2%"]], "."]]],
   3346902: [[["Damage to foes +", [2, "#99ff99", ["0.2%"]], "."]]],
@@ -21926,7 +22463,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
       [
         [2, "#bf9ef6", ["Destiny: Astral Suit"]],
         " effect is enhanced. Hypersync Skill Damage +",
-        [2, "#99ff99", ["20.0%"]],
+        [2, "#99ff99", ["18.0%"]],
         "."
       ]
     ]
@@ -21936,7 +22473,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
       [
         [2, "#bf9ef6", ["Destiny: Astral Suit"]],
         " effect is enhanced. Hypersync Skill Damage +",
-        [2, "#99ff99", ["22.0%"]],
+        [2, "#99ff99", ["20.0%"]],
         "."
       ]
     ]
@@ -21978,7 +22515,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         " stacks)\n",
         [2, "#bf9ef6", ["Destiny: Antimatter Beam"]],
         ": Consumed on Quantum Assembly Beam use, increasing Quantum Assembly Beam Damage +",
-        [2, "#99ff99", ["5.0%"]],
+        [2, "#99ff99", ["9.0%"]],
         " per stack."
       ]
     ]
@@ -21999,7 +22536,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         " stacks)\n",
         [2, "#bf9ef6", ["Destiny: Antimatter Beam"]],
         ": Consumed on Quantum Assembly Beam use, increasing Quantum Assembly Beam Damage +",
-        [2, "#99ff99", ["6.5%"]],
+        [2, "#99ff99", ["10.5%"]],
         " per stack."
       ]
     ]
@@ -22151,10 +22688,10 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3355500: [[["Sync-type Skill Damage +", [2, "#99ff99", ["1.5%"]], "."]]],
   3355600: [[["Using Comet Strike activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
   3355700: [
-    [["Sonic Impact Damage +", [2, "#99ff99", ["40.0%"]], ". Using Comet Strike enhances Laser Blade and Surge Blow."]]
+    [["Sonic Impact Damage +", [2, "#99ff99", ["22.0%"]], ". Using Comet Strike enhances Laser Blade and Surge Blow."]]
   ],
   3355800: [
-    [["Sonic Impact Damage +", [2, "#99ff99", ["45.0%"]], ". Using Comet Strike enhances Laser Blade and Surge Blow."]]
+    [["Sonic Impact Damage +", [2, "#99ff99", ["26.0%"]], ". Using Comet Strike enhances Laser Blade and Surge Blow."]]
   ],
   3355900: [[["Sonic Impact Damage +", [2, "#99ff99", ["0.9%"]], "."]]],
   3355901: [[["Sonic Impact Damage +", [2, "#99ff99", ["0.9%"]], "."]]],
@@ -22645,8 +23182,8 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         " effect that lasts for the duration of Arcane Torrent.\n",
         [2, "#bf9ef6", ["Destiny: Magick Catalyst"]],
         ": Skill Damage +",
-        [2, "#99ff99", ["12.0%"]],
-        " (excluding Awakening Skills)."
+        [2, "#99ff99", ["16.0%"]],
+        " (excluding Awakening Skills). Gain Push Immunity while using Casting Skills."
       ]
     ]
   ],
@@ -22735,7 +23272,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "On ",
         [2, "#bf9ef6", ["Destiny"]],
         " activation, resets Doomsday cooldown.\nDoomsday cooldown +",
-        [2, "#ff9999", ["6.0"]],
+        [2, "#ff9999", ["4.0"]],
         "s."
       ]
     ]
@@ -22849,8 +23386,8 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
       ]
     ]
   ],
-  3372700: [[[[2, "#bf9ef6", ["Destiny: Condense"]], " Damage Bonus +", [2, "#99ff99", ["72.0%"]], "."]]],
-  3372800: [[[[2, "#bf9ef6", ["Destiny: Condense"]], " Damage Bonus +", [2, "#99ff99", ["79.0%"]], "."]]],
+  3372700: [[[[2, "#bf9ef6", ["Destiny: Condense"]], " Damage Bonus +", [2, "#99ff99", ["78.0%"]], "."]]],
+  3372800: [[[[2, "#bf9ef6", ["Destiny: Condense"]], " Damage Bonus +", [2, "#99ff99", ["84.0%"]], "."]]],
   3372900: [[["Holding Skill Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
   3372901: [[["Holding Skill Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
   3372902: [[["Holding Skill Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
@@ -23044,10 +23581,14 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
     [["With Lightning Bolt's Stabilize, lightning unleash time decreases. Damage +", [2, "#99ff99", ["60.0%"]], "."]]
   ],
   3378600: [
-    [["Lightning Bolt's cooldown +", [2, "#ff9999", ["6.0"]], "s, but Damage +", [2, "#99ff99", ["35.0%"]], "."]]
+    [["Lightning Bolt's cooldown +", [2, "#ff9999", ["6.0"]], "s, but Damage +", [2, "#99ff99", ["38.0%"]], "."]]
   ],
-  3378700: [[["On Lightning Bolt Crit Hit, Damage +", [2, "#99ff99", ["15.0%"]], "."]]],
-  3378800: [[["On Lightning Bolt Crit Hit, Damage +", [2, "#99ff99", ["20.0%"]], "."]]],
+  3378700: [
+    [["Lightning Bolt grants Push Immunity during use. On Crit Hit, Damage +", [2, "#99ff99", ["15.0%"]], "."]]
+  ],
+  3378800: [
+    [["Lightning Bolt grants Push Immunity during use. On Crit Hit, Damage +", [2, "#99ff99", ["20.0%"]], "."]]
+  ],
   3378900: [[["Lightning Bolt Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
   3378901: [[["Lightning Bolt Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
   3378902: [[["Lightning Bolt Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
@@ -23064,7 +23605,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "s.\n",
         [2, "#bf9ef6", ["Destiny: Eye of the Tigress"]],
         ": Damage to foes +",
-        [2, "#99ff99", ["5.0%"]],
+        [2, "#99ff99", ["6.0%"]],
         ". Atk. Speed +",
         [2, "#99ff99", ["5.0%"]],
         "."
@@ -23077,7 +23618,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "While the ",
         [2, "#bf9ef6", ["Destiny: Eye of the Tigress"]],
         " effect is active, Focused Shot, Dual Buckshot, and Sharpshooter Damage +",
-        [2, "#99ff99", ["8.0%"]],
+        [2, "#99ff99", ["10.0%"]],
         "."
       ]
     ]
@@ -23088,7 +23629,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "While the ",
         [2, "#bf9ef6", ["Destiny: Eye of the Tigress"]],
         " effect is active, Focused Shot, Dual Buckshot, and Sharpshooter Damage +",
-        [2, "#99ff99", ["10.0%"]],
+        [2, "#99ff99", ["12.0%"]],
         "."
       ]
     ]
@@ -23230,7 +23771,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         [2, "#99ff99", ["2.0"]],
         "."
       ],
-      { v0: ["combateffect_sk", [3.5, 33816.1]] }
+      { v0: ["combateffect_sk", [6, 33816.1]] }
     ]
   ],
   3381700: [
@@ -23420,11 +23961,11 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
     [
       [
         "Handgun Skill Damage +",
-        [2, "#99ff99", ["5.0%"]],
+        [2, "#99ff99", ["5%"]],
         ", Shotgun Skill Damage +",
-        [2, "#99ff99", ["4.0%"]],
+        [2, "#99ff99", ["4%"]],
         ", Rifle Skill Damage +",
-        [2, "#99ff99", ["3.0%"]],
+        [2, "#99ff99", ["3%"]],
         "."
       ]
     ]
@@ -23433,11 +23974,11 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
     [
       [
         "Handgun Skill Damage +",
-        [2, "#99ff99", ["6.0%"]],
+        [2, "#99ff99", ["6%"]],
         ", Shotgun Skill Damage +",
-        [2, "#99ff99", ["5.0%"]],
+        [2, "#99ff99", ["5%"]],
         ", Rifle Skill Damage +",
-        [2, "#99ff99", ["4.0%"]],
+        [2, "#99ff99", ["4%"]],
         "."
       ]
     ]
@@ -23481,10 +24022,11 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
       [
         "When using Target Down, Incoming Damage -",
         [2, "#99ff99", ["20.0%"]],
-        ". Target Down Damage +",
-        [2, "#99ff99", ["25.0%"]],
+        ". Gain Push Immunity. Target Down Damage +",
+        [2, "#99ff99", [[4, "v0", 1], "%"]],
         "."
-      ]
+      ],
+      { v0: ["combateffect_sk", [25, 0]] }
     ]
   ],
   3384300: [
@@ -23492,10 +24034,11 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
       [
         "When using Target Down, Incoming Damage -",
         [2, "#99ff99", ["20.0%"]],
-        ". Target Down Damage +",
-        [2, "#99ff99", ["29.0%"]],
+        ". Gain Push Immunity. Target Down Damage +",
+        [2, "#99ff99", [[4, "v0", 1], "%"]],
         "."
-      ]
+      ],
+      { v0: ["combateffect_sk", [29, 0]] }
     ]
   ],
   3384400: [[["Target Down Damage +", [2, "#99ff99", ["0.6%"]], "."]]],
@@ -23584,7 +24127,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3387401: [[["Target Down Damage +", [2, "#99ff99", ["0.6%"]], "."]]],
   3387402: [[["Target Down Damage +", [2, "#99ff99", ["0.6%"]], "."]]],
   3387500: [[["Rifle Skill Damage +", [2, "#99ff99", ["1.3%"]], "."]]],
-  3387600: [[["Target Down Damage +", [2, "#99ff99", ["16.0%"]], "."]]],
+  3387600: [[["Target Down Damage +", [2, "#99ff99", ["20.0%"]], "."]]],
   3387700: [[["Rose Blossom Damage +", [2, "#99ff99", ["6.5%"]], "."]]],
   3387800: [[["Rose Blossom Damage +", [2, "#99ff99", ["9.0%"]], "."]]],
   3387900: [[["Rifle Skill Damage +", [2, "#99ff99", ["0.18%"]], "."]]],
@@ -23649,7 +24192,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         [2, "#99ff99", [[4, "v0", 1], "%"]],
         "."
       ],
-      { v0: ["combateffect_sk", [6, 33902.03]] }
+      { v0: ["combateffect_sk", [7, 33902.03]] }
     ]
   ],
   3390300: [
@@ -23667,7 +24210,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         [2, "#99ff99", [[4, "v0", 1], "%"]],
         "."
       ],
-      { v0: ["combateffect_sk", [7, 33903.03]] }
+      { v0: ["combateffect_sk", [8, 33903.03]] }
     ]
   ],
   3390400: [[["Esoteric Skill Crit Damage +", [2, "#99ff99", ["0.45%"]], "."]]],
@@ -23940,8 +24483,8 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3392902: [[["Normal Skill Crit Damage +", [2, "#99ff99", ["0.5%"]], "."]]],
   3393000: [[["Esoteric Skill Damage +", [2, "#99ff99", ["1.55%"]], "."]]],
   3393100: [[["Using Lightning Whisper activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
-  3393200: [[["Esoteric Skill Damage +", [2, "#99ff99", ["3.5%"]], "."]]],
-  3393300: [[["Esoteric Skill Damage +", [2, "#99ff99", ["4.5%"]], "."]]],
+  3393200: [[["Esoteric Skill Damage +", [2, "#99ff99", ["4.5%"]], "."]]],
+  3393300: [[["Esoteric Skill Damage +", [2, "#99ff99", ["5.5%"]], "."]]],
   3393400: [[["On Esoteric Skill Crit Hit, Damage to foes +", [2, "#99ff99", ["0.21%"]], "."]]],
   3393401: [[["On Esoteric Skill Crit Hit, Damage to foes +", [2, "#99ff99", ["0.21%"]], "."]]],
   3393402: [[["On Esoteric Skill Crit Hit, Damage to foes +", [2, "#99ff99", ["0.21%"]], "."]]],
@@ -24204,7 +24747,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         " effect. This effect disappears when Burst is ends.\n",
         [2, "#bf9ef6", ["Destiny: Condense"]],
         ": Charge Skill Crit Damage to foes +",
-        [2, "#99ff99", ["20.0%"]],
+        [2, "#99ff99", ["25.0%"]],
         "."
       ]
     ]
@@ -24220,9 +24763,9 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         ". This effect disappears when Burst ends.\n",
         [2, "#bf9ef6", ["Destiny: Compression"]],
         ": Charge Skill Crit Damage +",
-        [2, "#99ff99", ["20.0%"]],
+        [2, "#99ff99", ["25.0%"]],
         ". Charge Skill Damage +",
-        [2, "#99ff99", ["12.0%"]],
+        [2, "#99ff99", ["14.0%"]],
         "."
       ]
     ]
@@ -24238,9 +24781,9 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         ". This effect disappears when Burst ends.\n",
         [2, "#bf9ef6", ["Destiny: Compression"]],
         ": Charge Skill Crit Damage +",
-        [2, "#99ff99", ["20.0%"]],
+        [2, "#99ff99", ["25.0%"]],
         ". Charge Skill Damage +",
-        [2, "#99ff99", ["15.0%"]],
+        [2, "#99ff99", ["16.0%"]],
         "."
       ]
     ]
@@ -24312,7 +24855,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         " effect for the duration of Burst Mode.\n",
         [2, "#bf9ef6", ["Destiny: Pulverize"]],
         ": Crit Damage +",
-        [2, "#99ff99", ["18.0%"]],
+        [2, "#99ff99", ["25.0%"]],
         "."
       ]
     ]
@@ -24328,8 +24871,8 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         [2, "#bf9ef6", ["Destiny: Seething Fury"]],
         ": On Brutal Impact use, consumes ",
         [2, "#bf9ef6", ["Destiny: Seething Fury"]],
-        " to deal +",
-        [2, "#99ff99", ["36.0%"]],
+        " to inflict +",
+        [2, "#99ff99", ["40.0%"]],
         " Damage."
       ]
     ]
@@ -24345,15 +24888,15 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         [2, "#bf9ef6", ["Destiny: Seething Fury"]],
         ": On Brutal Impact use, consumes ",
         [2, "#bf9ef6", ["Destiny: Seething Fury"]],
-        " to deal +",
-        [2, "#99ff99", ["40.0%"]],
+        " to inflict +",
+        [2, "#99ff99", ["44.0%"]],
         " Damage."
       ]
     ]
   ],
-  3451900: [[["Brutal Impact Damage +", [2, "#99ff99", ["0.3%"]], "."]]],
-  3451901: [[["Brutal Impact Damage +", [2, "#99ff99", ["0.3%"]], "."]]],
-  3451902: [[["Brutal Impact Damage +", [2, "#99ff99", ["0.3%"]], "."]]],
+  3451900: [[["Brutal Impact Damage +", [2, "#99ff99", ["0.5%"]], "."]]],
+  3451901: [[["Brutal Impact Damage +", [2, "#99ff99", ["0.5%"]], "."]]],
+  3451902: [[["Brutal Impact Damage +", [2, "#99ff99", ["0.5%"]], "."]]],
   3452000: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], "."]]],
   3452100: [
     [
@@ -24422,7 +24965,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "s.\n",
         [2, "#bf9ef6", ["Destiny: Tornado"]],
         ": Hurricane Sword Crit Damage +",
-        [2, "#99ff99", ["50.0%"]],
+        [2, "#99ff99", ["60.0%"]],
         "."
       ]
     ]
@@ -24432,7 +24975,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
       [
         [2, "#bf9ef6", ["Destiny: Tornado"]],
         ": Effect is enhanced. Hurricane Sword Crit Damage +",
-        [2, "#99ff99", ["50.0%"]],
+        [2, "#99ff99", ["60.0%"]],
         ". Damage +",
         [2, "#99ff99", ["56.0%"]],
         "."
@@ -24444,7 +24987,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
       [
         [2, "#bf9ef6", ["Destiny: Tornado"]],
         ": Effect is enhanced. Hurricane Sword Crit Damage +",
-        [2, "#99ff99", ["50.0%"]],
+        [2, "#99ff99", ["60.0%"]],
         ". Damage +",
         [2, "#99ff99", ["60.0%"]],
         "."
@@ -24456,8 +24999,8 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3452902: [[["Hurricane Sword Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
   3453000: [[["Normal Skill Damage in Burst Mode +", [2, "#99ff99", ["1.5%"]], "."]]],
   3453100: [[["Using Guillotine while in Burst mode activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
-  3453200: [[["When Guillotine's Furious Blow Skill Tree is applied, Damage +", [2, "#99ff99", ["25.0%"]], "."]]],
-  3453300: [[["When Guillotine's Furious Blow Skill Tree is applied, Damage +", [2, "#99ff99", ["30.0%"]], "."]]],
+  3453200: [[["Guillotine MP Cost -", [2, "#99ff99", ["50.0%"]], ". Damage +", [2, "#99ff99", ["20%"]], "."]]],
+  3453300: [[["Guillotine MP Cost -", [2, "#99ff99", ["50.0%"]], ". Damage +", [2, "#99ff99", ["25%"]], "."]]],
   3453400: [[["Normal Skill Damage in Burst Mode +", [2, "#99ff99", ["0.3%"]], "."]]],
   3453401: [[["Normal Skill Damage in Burst Mode +", [2, "#99ff99", ["0.3%"]], "."]]],
   3453402: [[["Normal Skill Damage in Burst Mode +", [2, "#99ff99", ["0.3%"]], "."]]],
@@ -24487,11 +25030,11 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
       ]
     ]
   ],
-  3454700: [[["Brutal Impact Damage +", [2, "#99ff99", ["15.0%"]], "."]]],
-  3454800: [[["Brutal Impact Damage +", [2, "#99ff99", ["20.0%"]], "."]]],
-  3454900: [[["Brutal Impact Damage +", [2, "#99ff99", ["0.3%"]], "."]]],
-  3454901: [[["Brutal Impact Damage +", [2, "#99ff99", ["0.3%"]], "."]]],
-  3454902: [[["Brutal Impact Damage +", [2, "#99ff99", ["0.3%"]], "."]]],
+  3454700: [[["Brutal Impact Damage +", [2, "#99ff99", ["21.0%"]], "."]]],
+  3454800: [[["Brutal Impact Damage +", [2, "#99ff99", ["25.0%"]], "."]]],
+  3454900: [[["Brutal Impact Damage +", [2, "#99ff99", ["0.5%"]], "."]]],
+  3454901: [[["Brutal Impact Damage +", [2, "#99ff99", ["0.5%"]], "."]]],
+  3454902: [[["Brutal Impact Damage +", [2, "#99ff99", ["0.5%"]], "."]]],
   3455000: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], "."]]],
   3455100: [
     [
@@ -24538,12 +25081,12 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3455900: [[["Hurricane Sword Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
   3455901: [[["Hurricane Sword Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
   3455902: [[["Hurricane Sword Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
-  3456000: [[["Wild Stomp MP Cost -", [2, "#99ff99", ["30.0%"]], " and cooldown -", [2, "#99ff99", ["20.0%"]], "."]]],
+  3456000: [[["Wild Stomp MP Cost -", [2, "#99ff99", ["30.0%"]], " and cooldown -", [2, "#99ff99", ["20%"]], "."]]],
   3456100: [
     [["Punishing Draw MP Cost -", [2, "#99ff99", ["30.0%"]], ". On successful Counter, resets Skill Cooldown."]]
   ],
-  3456200: [[["Guillotine Crit Damage +", [2, "#99ff99", ["25.0%"]], "."]]],
-  3456300: [[["Guillotine Crit Damage +", [2, "#99ff99", ["28.0%"]], "."]]],
+  3456200: [[["With Furious Blow, Guillotine Damage +", [2, "#99ff99", ["20.0%"]], "."]]],
+  3456300: [[["With Furious Blow, Guillotine Damage +", [2, "#99ff99", ["25.0%"]], "."]]],
   3456400: [[["Guillotine Damage +", [2, "#99ff99", ["0.6%"]], "."]]],
   3456401: [[["Guillotine Damage +", [2, "#99ff99", ["0.6%"]], "."]]],
   3456402: [[["Guillotine Damage +", [2, "#99ff99", ["0.6%"]], "."]]],
@@ -24581,7 +25124,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3456901: [[["Guillotine and Brutal Impact Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
   3456902: [[["Guillotine and Brutal Impact Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
   3457000: [[["Brutal Impact Damage +", [2, "#99ff99", ["3.0%"]], "."]]],
-  3457100: [[["Brutal Impact cooldown +", [2, "#ff9999", ["10.0"]], "s. Damage +", [2, "#99ff99", ["20.0%"]], "."]]],
+  3457100: [[["Brutal Impact cooldown +", [2, "#ff9999", ["10.0"]], "s. Damage +", [2, "#99ff99", ["20%"]], "."]]],
   3457200: [[["Brutal Impact Crit Damage +", [2, "#99ff99", ["15.0%"]], "."]]],
   3457300: [[["Brutal Impact Crit Damage +", [2, "#99ff99", ["20.0%"]], "."]]],
   3457400: [[["Brutal Impact Damage +", [2, "#99ff99", ["0.3%"]], "."]]],
@@ -24609,10 +25152,10 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
     [["Hurricane Sword Casting Speed +", [2, "#99ff99", ["20.0%"]], ". Move Speed +", [2, "#99ff99", ["30%"]], "."]]
   ],
   3458600: [
-    [["When Hurricane Sword's Sustain Enhancement Skill Tree is applied, Damage +", [2, "#99ff99", ["10.0%"]], "."]]
+    [["When Hurricane Sword's Sustain Enhancement Skill Tree is applied, Damage +", [2, "#99ff99", ["12.0%"]], "."]]
   ],
-  3458700: [[["Hurricane Sword Damage +", [2, "#99ff99", ["10.0%"]], "."]]],
-  3458800: [[["Hurricane Sword Damage +", [2, "#99ff99", ["12.0%"]], "."]]],
+  3458700: [[["Hurricane Sword Damage +", [2, "#99ff99", ["13.0%"]], "."]]],
+  3458800: [[["Hurricane Sword Damage +", [2, "#99ff99", ["16.0%"]], "."]]],
   3458900: [[["Hurricane Sword Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
   3458901: [[["Hurricane Sword Damage ", [2, "#99ff99", ["+0.4%"]], "."]]],
   3458902: [[["Hurricane Sword Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
@@ -24646,7 +25189,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "On ",
         [2, "#bf9ef6", ["Destiny"]],
         " activation, Damage to foes +",
-        [2, "#99ff99", ["8.0%"]],
+        [2, "#99ff99", ["9.0%"]],
         " for ",
         [2, "#ffff99", ["10.0s"]],
         ". After using Deathlord Skill in Normal Mode, gain the ",
@@ -24722,7 +25265,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "s.\n",
         [2, "#bf9ef6", ["Destiny: Footsteps of the Dead"]],
         ": Stygian Skill Damage +",
-        [2, "#99ff99", ["70.0%"]],
+        [2, "#99ff99", ["54.0%"]],
         " for ",
         [2, "#ffff99", ["2"]],
         " time(s) in Deathlord Mode."
@@ -24741,7 +25284,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "s.\n",
         [2, "#bf9ef6", ["Destiny: Footsteps of the Dead"]],
         ": Stygian Skill Damage +",
-        [2, "#99ff99", ["80.0%"]],
+        [2, "#99ff99", ["64.0%"]],
         " for ",
         [2, "#ffff99", ["2"]],
         " time(s) in Deathlord Mode."
@@ -24820,7 +25363,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "On ",
         [2, "#bf9ef6", ["Destiny"]],
         " activation, next Deathlord Skill Damage +",
-        [2, "#99ff99", ["12.0%"]],
+        [2, "#99ff99", ["15.0%"]],
         " for ",
         [2, "#ffff99", ["2"]],
         " time(s)."
@@ -24833,7 +25376,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "On ",
         [2, "#bf9ef6", ["Destiny"]],
         " activation, next Deathlord Skill Damage +",
-        [2, "#99ff99", ["12.0%"]],
+        [2, "#99ff99", ["15.0%"]],
         " for ",
         [2, "#ffff99", ["2"]],
         " hit(s). Deathlord Skill Damage +",
@@ -24922,7 +25465,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "Using Fatal Finale activates ",
         [2, "#bf9ef6", ["Destiny"]],
         ". Deathlord Skill Damage +",
-        [2, "#99ff99", ["2.0%"]],
+        [2, "#99ff99", ["3.0%"]],
         "."
       ]
     ]
@@ -24933,7 +25476,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "Using Fatal Finale activates ",
         [2, "#bf9ef6", ["Destiny"]],
         ". Deathlord Skill Damage +",
-        [2, "#99ff99", ["3.0%"]],
+        [2, "#99ff99", ["4.2%"]],
         "."
       ]
     ]
@@ -24959,7 +25502,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "Deathlord Skill MP Cost -",
         [2, "#99ff99", ["15.0%"]],
         ". In Deathlord Mode, Damage to foes +",
-        [2, "#99ff99", ["3.0%"]],
+        [2, "#99ff99", ["5.0%"]],
         "."
       ]
     ]
@@ -24970,7 +25513,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         "Deathlord Skill MP Cost -",
         [2, "#99ff99", ["15.0%"]],
         ". In Deathlord Mode, Damage to foes +",
-        [2, "#99ff99", ["4.2%"]],
+        [2, "#99ff99", ["6.2%"]],
         "."
       ]
     ]
@@ -24988,7 +25531,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         ". MP Cost -",
         [2, "#99ff99", ["50.0%"]],
         ". In Deathlord Mode, Stygian Skill Damage +",
-        [2, "#99ff99", ["20.0%"]],
+        [2, "#99ff99", ["13.0%"]],
         "."
       ]
     ]
@@ -25001,7 +25544,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         ". MP Cost -",
         [2, "#99ff99", ["50.0%"]],
         ". In Deathlord Mode, Stygian Skill Damage +",
-        [2, "#99ff99", ["25.0%"]],
+        [2, "#99ff99", ["18.0%"]],
         "."
       ]
     ]
@@ -25077,10 +25620,10 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3465901: [[["Ghast Skill Damage +", [2, "#99ff99", ["0.3%"]], "."]]],
   3465902: [[["Ghast Skill Damage +", [2, "#99ff99", ["0.3%"]], "."]]],
   3466000: [
-    [["Reaper's Scythe cooldown +", [2, "#ff9999", ["10.0"]], "s, but Damage +", [2, "#99ff99", ["20.0%"]], "."]]
+    [["Reaper's Scythe cooldown +", [2, "#ff9999", ["10.0"]], "s, but Damage +", [2, "#99ff99", ["24.0%"]], "."]]
   ],
   3466100: [
-    [["Guillotine Swing cooldown +", [2, "#ff9999", ["6.0"]], "s, but Damage +", [2, "#99ff99", ["12.0%"]], "."]]
+    [["Guillotine Swing cooldown +", [2, "#ff9999", ["6.0"]], "s, but Damage +", [2, "#99ff99", ["15.0%"]], "."]]
   ],
   3466200: [
     [["With Otherworldly Monarch, Reaper's Scythe and Guillotine Swing Damage +", [2, "#99ff99", ["5.0%"]], "."]]
@@ -25092,15 +25635,15 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3466401: [[["Deathlord Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
   3466402: [[["Deathlord Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
   3466500: [[["Astaros Cooldown -", [2, "#99ff99", ["4.0s"]], "."]]],
-  3466600: [[["Reaper's Scythe Damage +", [2, "#99ff99", ["12.0%"]], "."]]],
-  3466700: [[["With Powerful Blow, Vestige Damage +", [2, "#99ff99", ["25.0%"]], "."]]],
+  3466600: [[["Reaper's Scythe Damage +", [2, "#99ff99", ["15.0%"]], "."]]],
+  3466700: [[["With Powerful Blow, Vestige Damage +", [2, "#99ff99", ["30.0%"]], "."]]],
   3466800: [
     [
       [
         "In Deathlord Mode, Damage to foes ",
         [2, "#99ff99", ["1.2%"]],
         ". With Powerful Blow, Vestige Damage +",
-        [2, "#99ff99", ["25.0%"]],
+        [2, "#99ff99", ["30.0%"]],
         "."
       ]
     ]
@@ -25108,18 +25651,18 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3466900: [[["Deathlord Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
   3466901: [[["Deathlord Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
   3466902: [[["Deathlord Skill Damage +", [2, "#99ff99", ["0.2%"]], "."]]],
-  3467000: [[["Astaros Damage +", [2, "#99ff99", ["20.0%"]], "."]]],
+  3467000: [[["Astaros Damage +", [2, "#99ff99", ["18.0%"]], "."]]],
   3467100: [
-    [["With Possession, grants Immunity during the Gluttony skill. Gluttony Damage +", [2, "#99ff99", ["180.0%"]], "."]]
+    [["With Possession, grants Immunity during the Gluttony skill. Gluttony Damage +", [2, "#99ff99", ["160.0%"]], "."]]
   ],
-  3467200: [[["With Possession, Astaros Damage +", [2, "#99ff99", ["50.0%"]], "."]]],
+  3467200: [[["With Possession, Astaros Damage +", [2, "#99ff99", ["36.0%"]], "."]]],
   3467300: [
     [
       [
         "Damage to foes +",
         [2, "#99ff99", ["1.0%"]],
         ". With Possession, Astaros Damage +",
-        [2, "#99ff99", ["50.0%"]],
+        [2, "#99ff99", ["36.0%"]],
         "."
       ]
     ]
@@ -25377,7 +25920,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
     [
       [
         "Asura War Basic Attack Damage +",
-        [2, "#99ff99", ["4.0%"]],
+        [2, "#99ff99", ["5.5%"]],
         ". On ",
         [2, "#bf9ef6", ["Destiny"]],
         " activation, gain the ",
@@ -25404,7 +25947,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         ".\n",
         [2, "#bf9ef6", ["Destiny: Eye of Asura"]],
         ": Asura War Basic Attack Damage +",
-        [2, "#99ff99", ["6.0%"]],
+        [2, "#99ff99", ["8.0%"]],
         "."
       ]
     ]
@@ -25421,7 +25964,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
         ".\n",
         [2, "#bf9ef6", ["Destiny: Eye of Asura"]],
         ": Asura War Basic Attack Damage +",
-        [2, "#99ff99", ["7.5%"]],
+        [2, "#99ff99", ["9.5%"]],
         "."
       ]
     ]
@@ -26006,7 +26549,7 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3484901: [[["Ally Damage Enhancement effect +", [2, "#99ff99", ["0.17%"]], "."]]],
   3484902: [[["Ally Damage Enhancement effect +", [2, "#99ff99", ["0.17%"]], "."]]],
   3485000: [[["Ally Damage Enhancement effect +", [2, "#99ff99", ["1.5%"]], "."]]],
-  3485100: [[["Using Grace of Salvation activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
+  3485100: [[["Using Blessing of Salvation activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
   3485200: [[["Release Light's Party Damage Enhancement effect +", [2, "#99ff99", ["6.5%"]], "."]]],
   3485300: [[["Release Light's Party Damage Enhancement effect +", [2, "#99ff99", ["10.0%"]], "."]]],
   3485400: [[["Ally Damage Enhancement effect +", [2, "#99ff99", ["0.17%"]], "."]]],
@@ -26611,5 +27154,503 @@ export const ArkGridCoreOption: Record<number, ArkGridCoreOption> = {
   3498800: [[["Quake Smash Damage +", [2, "#99ff99", ["20.0%"]], "."]]],
   3498900: [[["Quake Smash Damage +", [2, "#99ff99", ["0.9%"]]]]],
   3498901: [[["Quake Smash Damage +", [2, "#99ff99", ["0.9%"]], "."]]],
-  3498902: [[["Quake Smash Damage +", [2, "#99ff99", ["0.9%"]], "."]]]
+  3498902: [[["Quake Smash Damage +", [2, "#99ff99", ["0.9%"]], "."]]],
+  320500000: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], "."]]],
+  320500100: [
+    [
+      [
+        "Atk. Speed +",
+        [2, "#99ff99", ["10%"]],
+        ". On ",
+        [2, "#bf9ef6", ["Destiny"]],
+        " activation, gain the ",
+        [2, "#bf9ef6", ["Destiny: Timekeeper"]],
+        " effect for ",
+        [2, "#ffff99", ["60.0s"]],
+        ".\n",
+        [2, "#bf9ef6", ["Destiny: Timekeeper"]],
+        ": Crit Rate +",
+        [2, "#99ff99", ["6.0%"]],
+        "."
+      ]
+    ]
+  ],
+  320500200: [
+    [
+      [
+        "Enhanced effectiveness for ",
+        [2, "#bf9ef6", ["Destiny: Timekeeper"]],
+        ". Damage to foes +",
+        [2, "#99ff99", ["4.0%"]],
+        "."
+      ]
+    ]
+  ],
+  320500300: [
+    [
+      [
+        "Enhanced effectiveness for ",
+        [2, "#bf9ef6", ["Destiny: Timekeeper"]],
+        ". Damage to foes +",
+        [2, "#99ff99", ["5.0%"]],
+        "."
+      ]
+    ]
+  ],
+  320500400: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320500401: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320500402: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320500500: [[["Fusion Skill Damage +", [2, "#99ff99", ["1.6%"]], "."]]],
+  320500600: [
+    [
+      [
+        "During Split Timeline, Pinpoint Strike, Temporal Crush, and Boundary Break Damage -",
+        [2, "#ff9999", [[4, "v0", 1], "%"]],
+        ". Dimensional Break Damage -",
+        [2, "#ff9999", ["12%"]],
+        ". On Dimensional Break hits, Phase Dial does not accelerate. Each time ",
+        [2, "#bf9ef6", ["Destiny"]],
+        " activates, Dimensional Break cooldown -",
+        [2, "#99ff99", ["3.0s"]],
+        ". On using Fusion Skills, Cross Thrust cooldown -",
+        [2, "#99ff99", ["10.0s"]],
+        "."
+      ],
+      { v0: ["combateffect_sk", [-90, -90, -90, -12, 3205006]] }
+    ]
+  ],
+  320500700: [
+    [
+      [
+        [2, "#bf9ef6", ["Destiny"]],
+        " activation effect is enhanced. Each time ",
+        [2, "#bf9ef6", ["Destiny"]],
+        " activates, Dimensional Break cooldown -",
+        [2, "#99ff99", ["5.0s"]],
+        ". Dimensional Break Damage +",
+        [2, "#99ff99", ["10.0%"]],
+        "."
+      ]
+    ]
+  ],
+  320500800: [
+    [
+      [
+        [2, "#bf9ef6", ["Destiny"]],
+        " activation effect is enhanced. Each time ",
+        [2, "#bf9ef6", ["Destiny"]],
+        " activates, Dimensional Break cooldown -",
+        [2, "#99ff99", ["5.0s"]],
+        ". Dimensional Break Damage +",
+        [2, "#99ff99", ["13.5%"]],
+        "."
+      ]
+    ]
+  ],
+  320500900: [[["Dimensional Break Damage +", [2, "#99ff99", ["0.44%"]], "."]]],
+  320500901: [[["Dimensional Break Damage +", [2, "#99ff99", ["0.44%"]], "."]]],
+  320500902: [[["Dimensional Break Damage +", [2, "#99ff99", ["0.44%"]], "."]]],
+  320501000: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], "."]]],
+  320501100: [
+    [
+      [
+        "If Split Timeline is active on ",
+        [2, "#bf9ef6", ["Destiny"]],
+        " activation, gain the ",
+        [2, "#bf9ef6", ["Destiny: Tempered Parallel"]],
+        " effect until Split Timeline ends.\n",
+        [2, "#bf9ef6", ["Destiny: Tempered Parallel"]],
+        ": Atk. Speed +",
+        [2, "#99ff99", ["20.0%"]],
+        ". Split Timeline Damage to foes +",
+        [2, "#99ff99", ["3.5%"]],
+        "."
+      ]
+    ]
+  ],
+  320501200: [
+    [
+      [
+        "While ",
+        [2, "#bf9ef6", ["Destiny: Tempered Parallel"]],
+        " is active, using an Hour Hand/Minute Hand/Fusion Skill (excluding Specialty Skill) in Split Timeline activates the ",
+        [2, "#bf9ef6", ["Destiny: Dimensional Annihilation"]],
+        " effect. (Max ",
+        [2, "#ffff99", ["8"]],
+        " stacks)\n",
+        [2, "#bf9ef6", ["Destiny: Dimensional Annihilation"]],
+        ": Timeline Collapse Damage +",
+        [2, "#99ff99", ["1.0%"]],
+        " per stack. At max stacks, Timeline Collapse Damage +",
+        [2, "#99ff99", ["20.0%"]],
+        ".\nExpires upon returning to the Original Timeline."
+      ]
+    ]
+  ],
+  320501300: [
+    [
+      [
+        "While ",
+        [2, "#bf9ef6", ["Destiny: Tempered Parallel"]],
+        " is active, using an Hour Hand/Minute Hand/Fusion Skill (excluding Specialty Skill) in Split Timeline activates the ",
+        [2, "#bf9ef6", ["Destiny: Dimensional Annihilation"]],
+        " effect. (Max ",
+        [2, "#ffff99", ["8"]],
+        " stacks)\n",
+        [2, "#bf9ef6", ["Destiny: Dimensional Annihilation"]],
+        ": Timeline Collapse Damage +",
+        [2, "#99ff99", ["1.6%"]],
+        " per stack. At max stacks, Timeline Collapse Damage +",
+        [2, "#99ff99", ["20.0%"]],
+        ".\nExpires upon returning to the Original Timeline."
+      ]
+    ]
+  ],
+  320501400: [[["Timeline Collapse Damage +", [2, "#99ff99", ["0.5%"]], "."]]],
+  320501401: [[["Timeline Collapse Damage +", [2, "#99ff99", ["0.5%"]], "."]]],
+  320501402: [[["Timeline Collapse Damage +", [2, "#99ff99", ["0.5%"]], "."]]],
+  320501500: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], "."]]],
+  320501600: [
+    [
+      [
+        "Move Speed +",
+        [2, "#99ff99", ["15%"]],
+        ". On ",
+        [2, "#bf9ef6", ["Destiny"]],
+        " activation, gain the ",
+        [2, "#bf9ef6", ["Destiny: Spatial Swordcraft"]],
+        " effect for ",
+        [2, "#ffff99", ["20.0s"]],
+        ".\n",
+        [2, "#bf9ef6", ["Destiny: Spatial Swordcraft"]],
+        ": Crit Rate +",
+        [2, "#99ff99", ["6.0%"]],
+        "."
+      ]
+    ]
+  ],
+  320501700: [
+    [
+      [
+        "Enhanced effectiveness for ",
+        [2, "#bf9ef6", ["Destiny: Spatial Swordcraft"]],
+        ". Directional Attack Damage to foes +",
+        [2, "#99ff99", ["9.5%"]],
+        "."
+      ]
+    ]
+  ],
+  320501800: [
+    [
+      [
+        "Enhanced effectiveness for ",
+        [2, "#bf9ef6", ["Destiny: Spatial Swordcraft"]],
+        ". Directional Attack Damage to foes +",
+        [2, "#99ff99", ["10.5%"]],
+        "."
+      ]
+    ]
+  ],
+  320501900: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320501901: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320501902: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320502000: [[["Minute Hand Skill Damage +", [2, "#99ff99", ["1.6%"]], "."]]],
+  320502100: [
+    [
+      [
+        "On ",
+        [2, "#bf9ef6", ["Destiny"]],
+        " activation, gain the ",
+        [2, "#bf9ef6", ["Destiny: Master Impaler"]],
+        " effect for ",
+        [2, "#ffff99", ["30.0s"]],
+        ".\n",
+        [2, "#bf9ef6", ["Destiny: Master Impaler"]],
+        ": Forward Thrust and Retaliate Damage +",
+        [2, "#99ff99", ["40.0%"]],
+        "."
+      ]
+    ]
+  ],
+  320502200: [
+    [
+      [
+        "While ",
+        [2, "#bf9ef6", ["Destiny: Master Impaler"]],
+        " is active, using Forward Thrust or Retaliate grants the ",
+        [2, "#bf9ef6", ["Destiny: Dimensional Vacuum"]],
+        " effect for ",
+        [2, "#ffff99", ["60.0s"]],
+        ". (Max ",
+        [2, "#ffff99", ["3"]],
+        " stacks)\n",
+        [2, "#bf9ef6", ["Destiny: Dimensional Vacuum"]],
+        ": Consumed upon using Vacuum, Vacuum Damage +",
+        [2, "#99ff99", ["27.0%"]],
+        " per stack."
+      ]
+    ]
+  ],
+  320502300: [
+    [
+      [
+        "While ",
+        [2, "#bf9ef6", ["Destiny: Master Impaler"]],
+        " is active, using Forward Thrust or Retaliate grants the ",
+        [2, "#bf9ef6", ["Destiny: Dimensional Vacuum"]],
+        " effect for ",
+        [2, "#ffff99", ["60.0s"]],
+        ". (Max ",
+        [2, "#ffff99", ["3"]],
+        " stacks)\n",
+        [2, "#bf9ef6", ["Destiny: Dimensional Vacuum"]],
+        ": Consumed upon using Vacuum, Vacuum Damage +",
+        [2, "#99ff99", ["29.5%"]],
+        " per stack."
+      ]
+    ]
+  ],
+  320502400: [[["Vacuum Damage +", [2, "#99ff99", ["0.8%"]], "."]]],
+  320502401: [[["Vacuum Damage +", [2, "#99ff99", ["0.8%"]], "."]]],
+  320502402: [[["Vacuum Damage +", [2, "#99ff99", ["0.8%"]], "."]]],
+  320502500: [[["Minute Hand Skill Damage +", [2, "#99ff99", ["1.6%"]], "."]]],
+  320502600: [
+    [
+      [
+        "Spatial Slash Stagger Damage Bonus -",
+        [2, "#ff9999", ["50.0%"]],
+        ". On ",
+        [2, "#bf9ef6", ["Destiny"]],
+        " activation, gain the ",
+        [2, "#bf9ef6", ["Destiny: Severed Dimension"]],
+        " effect for ",
+        [2, "#ffff99", ["60.0s"]],
+        ".\n",
+        [2, "#bf9ef6", ["Destiny: Severed Dimension"]],
+        ": Minute Hand Skills (excluding Hyper Awakening Technique, Specialty skill, Spatial Slash) Damage -",
+        [2, "#ff9999", ["20.0%"]],
+        ". Spatial Slash Damage +",
+        [2, "#99ff99", ["18.0%"]],
+        ".\nOn using Hour Hand, Minute Hand, Fusion Skills (excluding Hyper Awakening Technique, Specialty skill, and Spatial Slash), gain the ",
+        [2, "#bf9ef6", ["Destiny: Dimensional Fragment"]],
+        " effect for ",
+        [2, "#ffff99", ["60.0s"]],
+        ".\n",
+        [2, "#bf9ef6", ["Destiny: Dimensional Fragment"]],
+        ": At ",
+        [2, "#ffff99", ["6"]],
+        " stacks, gain the ",
+        [2, "#bf9ef6", ["Destiny: Dimensional Distortion"]],
+        " effect for ",
+        [2, "#ffff99", ["60.0s"]],
+        ", and the ",
+        [2, "#ffff99", ["6"]],
+        " stacks are consumed.\n",
+        [2, "#bf9ef6", ["Destiny: Dimensional Distortion"]],
+        ": On Spatial Slash use, consume ",
+        [2, "#ffff99", ["1"]],
+        " stack. Spatial Slash Cooldown -",
+        [2, "#99ff99", ["60.0s"]],
+        " per stack. (Max ",
+        [2, "#ffff99", ["2"]],
+        " stacks)"
+      ]
+    ]
+  ],
+  320502700: [
+    [
+      [
+        "On Spatial Slash use, Spatial Manipulation cooldown -",
+        [2, "#99ff99", ["2.0s"]],
+        ". Spatial Slash Damage +",
+        [2, "#99ff99", [[4, "v0", 1], "%"]],
+        "."
+      ],
+      { v0: ["combateffect_sk", [15, 3205027]] }
+    ]
+  ],
+  320502800: [
+    [
+      [
+        "On Spatial Slash use, Spatial Manipulation cooldown -",
+        [2, "#99ff99", ["2.0s"]],
+        ". Spatial Slash Damage +",
+        [2, "#99ff99", [[4, "v0", 1], "%"]],
+        "."
+      ],
+      { v0: ["combateffect_sk", [17.5, 3205027]] }
+    ]
+  ],
+  320502900: [[["Spatial Slash Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
+  320502901: [[["Spatial Slash Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
+  320502902: [[["Spatial Slash Damage +", [2, "#99ff99", ["0.4%"]], "."]]],
+  320503000: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], "."]]],
+  320503100: [[["Using Dimensional Break activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
+  320503200: [
+    [["Damage to foes +", [2, "#99ff99", ["4.0%"]], ". Fusion Skill Casting Speed +", [2, "#99ff99", ["5.0%"]], "."]]
+  ],
+  320503300: [
+    [["Damage to foes +", [2, "#99ff99", ["5.0%"]], ". Fusion Skill Casting Speed +", [2, "#99ff99", ["5.0%"]], "."]]
+  ],
+  320503400: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320503401: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320503402: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320503500: [[["Fusion Skill Damage +", [2, "#99ff99", ["1.6%"]], "."]]],
+  320503600: [[["Using Cross Thrust activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
+  320503700: [[["Dimensional Break Damage +", [2, "#99ff99", ["15.0%"]], "."]]],
+  320503800: [[["Dimensional Break Damage +", [2, "#99ff99", ["18.0%"]], "."]]],
+  320503900: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320503901: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320503902: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320504000: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], "."]]],
+  320504100: [[["Using Timeline Divergence activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
+  320504200: [[["Split Timeline Damage to foes +", [2, "#99ff99", ["9.0%"]], "."]]],
+  320504300: [[["Split Timeline Damage to foes +", [2, "#99ff99", ["11.0%"]], "."]]],
+  320504400: [[["Damage to foes in Split Timeline +", [2, "#99ff99", ["0.25%"]]]]],
+  320504401: [[["Damage to foes in Split Timeline +", [2, "#99ff99", ["0.25%"]]]]],
+  320504402: [[["Damage to foes in Split Timeline +", [2, "#99ff99", ["0.25%"]]]]],
+  320504500: [[["Damage to foes +", [2, "#99ff99", ["1.5%"]], "."]]],
+  320504600: [[["Using Interference activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
+  320504700: [
+    [
+      [
+        "Minute Hand Skill Damage +",
+        [2, "#99ff99", ["6.5%"]],
+        ". Rift Cutter now lands as a Back Attack. Airsplitter becomes stackable up to 2 times."
+      ]
+    ]
+  ],
+  320504800: [
+    [
+      [
+        "Minute Hand Skill Damage +",
+        [2, "#99ff99", ["7.5%"]],
+        ". Rift Cutter now lands as a Back Attack. Airsplitter becomes stackable up to 2 times."
+      ]
+    ]
+  ],
+  320504900: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320504901: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320504902: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320505000: [[["Minute Hand Skill Damage +", [2, "#99ff99", ["1.6%"]], "."]]],
+  320505100: [[["Using Interference activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
+  320505200: [
+    [
+      [
+        "Cross Thrust Damage -",
+        [2, "#ff9999", ["90.0%"]],
+        ". On using Retaliate or Vacuum, Forward Thrust cooldown -",
+        [2, "#99ff99", ["10.0s"]],
+        "."
+      ]
+    ]
+  ],
+  320505300: [
+    [
+      [
+        "Cross Thrust Damage -",
+        [2, "#ff9999", ["90.0%"]],
+        ". On using Retaliate or Vacuum, Forward Thrust cooldown -",
+        [2, "#99ff99", ["10.0s"]],
+        ". Vacuum Damage +",
+        [2, "#99ff99", [[4, "v0", 1], "%"]],
+        "."
+      ],
+      { v0: ["combateffect_sk", [5, 3205053.0100000002, 3205053.0100000002]] }
+    ]
+  ],
+  320505400: [[["Vacuum Damage +", [2, "#99ff99", ["0.8%"]], "."]]],
+  320505401: [[["Vacuum Damage +", [2, "#99ff99", ["0.8%"]], "."]]],
+  320505402: [[["Vacuum Damage +", [2, "#99ff99", ["0.8%"]], "."]]],
+  320505500: [[["Minute Hand Skill Damage +", [2, "#99ff99", ["1.6%"]], "."]]],
+  320505600: [[["Using Spatial Manipulation activates ", [2, "#bf9ef6", ["Destiny"]], "."]]],
+  320505700: [[["Spatial Slash Damage +", [2, "#99ff99", ["28.0%"]], "."]]],
+  320505800: [[["Spatial Slash Damage +", [2, "#99ff99", ["31.0%"]], "."]]],
+  320505900: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320505901: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320505902: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320506000: [[["Damage to foes +", [2, "#99ff99", ["1.0%"]], "."]]],
+  320506100: [
+    [["Boundary Break Casting Speed +", [2, "#99ff99", ["10.0%"]], ". Damage +", [2, "#99ff99", ["16.0%"]], "."]]
+  ],
+  320506200: [
+    [["With Star, Dimensional Break Damage +", [2, "#99ff99", ["16.0%"]], ". Grants Push Immunity during skill use."]]
+  ],
+  320506300: [
+    [["With Star, Dimensional Break Damage +", [2, "#99ff99", ["20.0%"]], ". Grants Push Immunity during skill use."]]
+  ],
+  320506400: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320506401: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320506402: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320506500: [
+    [
+      [
+        "With Amass, Cross Thrust Casting Speed +",
+        [2, "#99ff99", ["20%"]],
+        ". Charge Time -",
+        [2, "#99ff99", ["50%"]],
+        "."
+      ]
+    ]
+  ],
+  320506600: [[["In the current timeline, Cross Thrust Damage +", [2, "#99ff99", ["100.0%"]], "."]]],
+  320506700: [[["With Precise Gravity, Dimensional Break Damage +", [2, "#99ff99", ["10.0%"]], "."]]],
+  320506800: [[["With Precise Gravity, Dimensional Break Damage +", [2, "#99ff99", ["13.0%"]], "."]]],
+  320506900: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320506901: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320506902: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320507000: [[["Damage to foes +", [2, "#99ff99", ["1.0%"]], "."]]],
+  320507100: [
+    [
+      [
+        "With Afterimage Shatter, Temporal Crush Damage +",
+        [2, "#99ff99", ["25%"]],
+        ". MP Cost -",
+        [2, "#99ff99", ["40%"]],
+        "."
+      ]
+    ]
+  ],
+  320507200: [[["Timeline Collapse Damage +", [2, "#99ff99", ["15.0%"]], "."]]],
+  320507300: [[["Timeline Collapse Damage +", [2, "#99ff99", ["19.0%"]], "."]]],
+  320507400: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320507401: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320507402: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320507500: [[["Damage to foes +", [2, "#99ff99", ["1.0%"]], "."]]],
+  320507600: [
+    [["Cross Slash Damage +", [2, "#99ff99", ["15.0%"]], ". Casting Speed +", [2, "#99ff99", ["10.0%"]], "."]]
+  ],
+  320507700: [
+    [["With Space Stack, Override Damage +", [2, "#99ff99", ["20.0%"]], ". Grants Push Immunity during skill use."]]
+  ],
+  320507800: [
+    [["With Space Stack, Override Damage +", [2, "#99ff99", ["26.0%"]], ". Grants Push Immunity during skill use."]]
+  ],
+  320507900: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320507901: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320507902: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320508000: [[["Forward Thrust +", [2, "#99ff99", ["15.0%"]], ". MP Cost -", [2, "#99ff99", ["60.0%"]], "."]]],
+  320508100: [[["Retaliate Damage +", [2, "#99ff99", ["15.0%"]], "."]]],
+  320508200: [[["Vacuum Damage +", [2, "#99ff99", ["16.0%"]], ". Casting Speed +", [2, "#99ff99", ["15.0%"]], "."]]],
+  320508300: [[["Vacuum Damage +", [2, "#99ff99", ["21.0%"]], ". Casting Speed +", [2, "#99ff99", ["15.0%"]], "."]]],
+  320508400: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320508401: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320508402: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320508500: [[["Spatial Slash Damage +", [2, "#99ff99", ["6.0%"]], "."]]],
+  320508600: [
+    [
+      [
+        "With Skip, Spatial Slash becomes stackable up to ",
+        [2, "#ffff99", ["2 times"]],
+        ". MP Cost -",
+        [2, "#99ff99", ["75.0%"]],
+        "."
+      ]
+    ]
+  ],
+  320508700: [[["With Skip, Spatial Slash Damage +", [2, "#99ff99", ["14.0%"]], "."]]],
+  320508800: [[["With Skip, Spatial Slash Damage +", [2, "#99ff99", ["16.0%"]], "."]]],
+  320508900: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320508901: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]],
+  320508902: [[["Damage to foes +", [2, "#99ff99", ["0.17%"]], "."]]]
 };

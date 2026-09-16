@@ -77,7 +77,7 @@ pub fn get_spec_from_ark_passive(node: &ArkPassiveNode) -> String {
         2230100 => "Shock Training",
         2220000 => "First Intention",
         2220100 => "Esoteric Skill Enhancement",
-        2240000 => "Energy Overflow",
+        2240000 => "Supreme Art",
         2240100 => "Robust Spirit",
         2340000 => "Control",
         2340100 => "Pinnacle",
@@ -117,6 +117,8 @@ pub fn get_spec_from_ark_passive(node: &ArkPassiveNode) -> String {
         2310600 => "Recurrence",
         2330000 => "Ferality",
         2330100 => "Phantom Beast Awakening",
+        220500000 => "Time Wielder",
+        220500100 => "Space Wielder",
         2490000 => "Hellfire Successor",
         2490100 => "Dreadful Roar",
         _ => "Unknown",
@@ -164,6 +166,8 @@ pub fn get_class_from_id(class_id: &u32) -> String {
         602 => "Artist",
         603 => "Aeromancer",
         604 => "Wildsoul",
+        611 => "Specialist (Male)",
+        612 => "Dimensionalist",
         701 => "Guardianknight",
         702 => "Guardianknight",
         _ => "Unknown",
@@ -435,7 +439,7 @@ pub fn get_player_spec(
                 || player.skills.contains_key(&24021)
                 || player.skills.values().all(|s| !s.name.contains("Hype"))
             {
-                "Energy Overflow"
+                "Supreme Art"
             } else {
                 "Robust Spirit"
             }
@@ -573,6 +577,17 @@ pub fn get_player_spec(
                 "Ferality"
             } else {
                 "Phantom Beast Awakening"
+            }
+        }
+        "Dimensionalist" => {
+            if player.skills.contains_key(&2050930) {
+                // Timeline Divergence
+                "Time Wielder"
+            } else if player.skills.contains_key(&2050933) || player.skills.contains_key(&2050936) {
+                // Interference
+                "Space Wielder"
+            } else {
+                "Unknown"
             }
         }
         "Guardianknight" => {

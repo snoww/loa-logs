@@ -12598,13 +12598,13 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
       [
         "Damage to foes +",
         [2, "#99ff99", ["20%"]],
-        ". Incoming Damage -",
+        ". Damage received -",
         [2, "#99ff99", ["40%"]],
-        ".\nStand Up Cooldown -",
+        ",\nand Stand Up Cooldown -",
         [2, "#99ff99", ["50%"]],
         ".\nTaking lethal damage triggers Unbreakable Mind, making you Invincible for ",
-        [2, "#ffff99", ["3s"]],
-        ", instantly recover ",
+        [2, "#ffff99", ["3"]],
+        "s, instantly recover ",
         [2, "#99ff99", ["75%"]],
         " of HP, and resets cooldowns for Stand Up and Movement Skill. (Cooldown 1 minute)"
       ]
@@ -12617,13 +12617,13 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
       [
         "Damage to foes +",
         [2, "#99ff99", ["15%"]],
-        ". Incoming Damage -",
+        ". Damage received -",
         [2, "#99ff99", ["30%"]],
-        ".\nStand Up Cooldown -",
+        ",\nand Stand Up Cooldown -",
         [2, "#99ff99", ["50%"]],
         ".\nTaking lethal damage triggers Unbreakable Mind, making you Invincible for ",
-        [2, "#ffff99", ["3s"]],
-        ", instantly recover ",
+        [2, "#ffff99", ["3"]],
+        "s, instantly recover ",
         [2, "#99ff99", ["75%"]],
         " of HP, and resets cooldowns for Stand Up and Movement Skill. (Cooldown 1 minute)"
       ]
@@ -12954,6 +12954,8 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [["You are drawn to the illusion of the painter who created the eerie painting."]],
     "buff_238"
   ],
+  921880: ["Swish!", [["You stepped on a booster pad. Move Speed+", [2, "#ff9999", ["30%"]], "."]], "buff_10"],
+  437724: ["Dud", [["You got a dud. Move Speed -", [2, "#ff9999", ["50%"]], "."]], "buff_43"],
   18103: [
     "Combat Formation",
     [
@@ -13163,7 +13165,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
       [
         "Damage to foes +",
         [2, "#99ff99", ["10%"]],
-        ". Atk./Move Speed +",
+        ".Atk./Move Speed +",
         [2, "#99ff99", ["9.0%"]],
         ". MP Recovery Speed +",
         [2, "#99ff99", ["30.0%"]],
@@ -15835,6 +15837,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_527"
   ],
+  12925: ["Frost Blizzard", [["My vision blurs and my body grows heavy in the fierce blizzard."]], "buff_145"],
   12938: [
     "Ark's Power",
     [["Primal Strength surges within.\nThe time has come to end the long war and write a new destiny."]],
@@ -15892,6 +15895,15 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "all_quest_03_76"
   ],
   15018: ["Stun", [["Becomes Stunned and Incapacitated."]], "buff_39"],
+  15160: [
+    "Maharaka Dance Star",
+    [
+      [
+        "Your excitement has grown so much that your body has grown with it.\nLeaving the pool will make the effect subside."
+      ]
+    ],
+    "buff_569"
+  ],
   66805101: [
     "Transcendence",
     [
@@ -16420,6 +16432,11 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [["Max Damage to foes of Deathblade Surge +", [2, "#99ff99", ["1.33%"]], " per stack."]],
     "ability_244"
   ],
+  2250400: [
+    "Surge Enhancement",
+    [["Max Damage to foes of Deathblade Surge +", [2, "#99ff99", ["1.33%"]], " per stack up to 60 stacks."]],
+    "ability_244"
+  ],
   2250700: [
     "Remaining Energy",
     [["Move Speed +", [2, "#99ff99", ["6%"]], ", Atk. Speed +", [2, "#99ff99", ["6%"]], "."]],
@@ -16600,26 +16617,6 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_315"
   ],
-  2250401: ["Locked In", [["Deathblade Surge's Damage to foes +", [2, "#99ff99", ["2.0%"]], "."]], "ark_passive_bl_6"],
-  2250402: ["Locked In", [["Deathblade Surge's Damage to foes +", [2, "#99ff99", ["4.0%"]], "."]], "ark_passive_bl_6"],
-  2250403: ["Locked In", [["Deathblade Surge's Damage to foes +", [2, "#99ff99", ["6.0%"]], "."]], "ark_passive_bl_6"],
-  2250404: ["Locked In", [["Deathblade Surge's Damage to foes +", [2, "#99ff99", ["8.0%"]], "."]], "ark_passive_bl_6"],
-  2250405: ["Locked In", [["Deathblade Surge's Damage to foes +", [2, "#99ff99", ["10.0%"]], "."]], "ark_passive_bl_6"],
-  2250500: [
-    "Sword Spirit Compression",
-    [["Deathblade Surge Damage +", [2, "#99ff99", ["10.0%"]], " per stack."]],
-    "ark_passive_bl_7"
-  ],
-  2250501: [
-    "Sword Spirit Compression",
-    [["Deathblade Surge Damage +", [2, "#99ff99", ["20.0%"]], " per stack."]],
-    "ark_passive_bl_7"
-  ],
-  2250502: [
-    "Sword Spirit Compression",
-    [["Deathblade Surge Damage +", [2, "#99ff99", ["30.0%"]], " per stack."]],
-    "ark_passive_bl_7"
-  ],
   2251100: ["Orb Recovery", [["Naturally gains Specialty Meter."]], "ark_passive_01_15"],
   2251101: ["Orb Recovery", [["Naturally gains Specialty Meter."]], "ark_passive_01_15"],
   2251102: ["Orb Recovery", [["Naturally gains Specialty Meter."]], "ark_passive_01_15"],
@@ -16628,56 +16625,68 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   2255700: ["Path of the Blade", [["Deathblade Surge Crit Damage +", [2, "#99ff99", ["20.0%"]], "."]], "buff_95"],
   2255701: ["Path of the Blade", [["Deathblade Surge Crit Damage +", [2, "#99ff99", ["40.0%"]], "."]], "buff_95"],
   2255702: ["Path of the Blade", [["Deathblade Surge Crit Damage +", [2, "#99ff99", ["60.0%"]], "."]], "buff_95"],
-  3250100: ["Destiny: Power Blade", [["Damage to foes +", [2, "#99ff99", ["5.0%"]], "."]], "buff_894"],
+  3250100: ["Destiny: Power Blade", [["Damage to foes +", [2, "#99ff99", ["5.0%"]], "."]], "buff_884"],
   3250200: [
     "Destiny: Deathblade Surge",
     [["Next Deathblade Surge Damage +", [2, "#99ff99", ["6.0%"]], " for ", [2, "#ffff99", ["1"]], " use(s)."]],
-    "buff_894"
+    "buff_885"
   ],
   3250201: [
     "Destiny: Deathblade Surge",
     [["Next Deathblade Surge Damage +", [2, "#99ff99", ["7.5%"]], " for ", [2, "#ffff99", ["1"]], " use(s)."]],
-    "buff_894"
+    "buff_885"
   ],
   3250600: [
-    "Destiny: Pinpoint Slash",
-    [["Next Normal Skill Damage +", [2, "#99ff99", ["15.0%"]], " for ", [2, "#ffff99", ["3"]], " use(s)."]],
-    "buff_894"
-  ],
-  3250700: [
-    "Destiny: Sword Reset",
+    "Destiny: Slaughter Spectacle",
     [
       [
-        "On Sword Reset Skill use, resets the cooldown of one Sword Reset Skill.\nSword Reset Skills: Surprise Attack, Spincutter, Wind Cut, Blade Dance, Deathly Slash."
+        "On Deathly Slash use, consume the ",
+        [2, "#bf9ef6", ["Destiny: Slaughter Spectacle"]],
+        " effect. Damage +",
+        [2, "#99ff99", ["30.0%"]],
+        "."
       ]
     ],
-    "buff_894"
+    "buff_884"
+  ],
+  3250700: [
+    "Destiny: Enhanced Sharpness",
+    [
+      [
+        "On Deathly Slash use, consume the ",
+        [2, "#bf9ef6", ["Destiny: Enhanced Sharpness"]],
+        " effect. Damage +",
+        [2, "#99ff99", ["4.0%"]],
+        " per stack."
+      ]
+    ],
+    "buff_885"
+  ],
+  3250800: [
+    "Destiny: Enhanced Sharpness",
+    [
+      [
+        "On Deathly Slash use, consume the ",
+        [2, "#bf9ef6", ["Destiny: Enhanced Sharpness"]],
+        " effect. Damage +",
+        [2, "#99ff99", ["5.0%"]],
+        " per stack."
+      ]
+    ],
+    "buff_885"
   ],
   3251200: [
     "Destiny: Deathblade Rush",
-    [["Next Blitz Rush Damage +", [2, "#99ff99", ["35.0%"]], " for ", [2, "#ffff99", ["1"]], " use(s)."]],
-    "buff_894"
+    [["Next Blitz Rush Damage +", [2, "#99ff99", ["26.0%"]], " for ", [2, "#ffff99", ["1"]], " use(s)."]],
+    "buff_884"
   ],
   3251201: [
     "Destiny: Deathblade Rush",
-    [["Blitz Rush Damage +", [2, "#99ff99", ["45.0%"]], " for ", [2, "#ffff99", ["1"]], " use(s)."]],
-    "buff_894"
+    [["Blitz Rush Damage +", [2, "#99ff99", ["34.0%"]], " for ", [2, "#ffff99", ["1"]], " use(s)."]],
+    "buff_884"
   ],
-  3251600: ["Destiny: Art Master", [["Damage to foes +", [2, "#99ff99", ["5.0%"]], "."]], "buff_894"],
+  3251600: ["Destiny: Art Master", [["Damage to foes +", [2, "#99ff99", ["5.0%"]], "."]], "buff_884"],
   3251700: [
-    "Destiny: Triple Arts",
-    [
-      [
-        "Next Twin Shadows, Turning Slash, and Death Sentence Damage +",
-        [2, "#99ff99", ["12.0%"]],
-        " for ",
-        [2, "#ffff99", ["3"]],
-        " use(s)."
-      ]
-    ],
-    "buff_894"
-  ],
-  3251701: [
     "Destiny: Triple Arts",
     [
       [
@@ -16688,7 +16697,20 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         " use(s)."
       ]
     ],
-    "buff_894"
+    "buff_885"
+  ],
+  3251701: [
+    "Destiny: Triple Arts",
+    [
+      [
+        "Next Twin Shadows, Turning Slash, and Death Sentence Damage +",
+        [2, "#99ff99", ["20.0%"]],
+        " for ",
+        [2, "#ffff99", ["3"]],
+        " use(s)."
+      ]
+    ],
+    "buff_885"
   ],
   3252100: [
     "Destiny: Focused Strike",
@@ -16703,9 +16725,9 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         "."
       ]
     ],
-    "buff_894"
+    "buff_884"
   ],
-  3252200: ["Destiny: Pinpoint Focus", [["Charge-type skill Damage +", [2, "#99ff99", ["7.5%"]], "."]], "buff_894"],
+  3252200: ["Destiny: Pinpoint Focus", [["Charge-type skill Damage +", [2, "#99ff99", ["10.0%"]], "."]], "buff_885"],
   3252201: [
     "Party: Open Weakness",
     [
@@ -16719,7 +16741,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_96"
   ],
-  3252210: ["Destiny: Pinpoint Focus", [["Charge-type Skill Damage +", [2, "#99ff99", ["9.0%"]], "."]], "buff_894"],
+  3252210: ["Destiny: Pinpoint Focus", [["Charge-type Skill Damage +", [2, "#99ff99", ["12.0%"]], "."]], "buff_885"],
   3252600: [
     "Destiny: Levin Slash",
     [["Next Fatal Wave Damage +", [2, "#99ff99", ["40.0%"]], " for ", [2, "#ffff99", ["1"]], " use(s)."]],
@@ -17484,9 +17506,9 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "Shadow Blade",
     [
       [
-        "On using a Swoop Skill in Persona Mode, the Shadow Blade effect disappears. Swoop Skill Damage to foes +",
-        [2, "#99ff99", ["28.0%"]],
-        ". Guarantees Back Attack."
+        "On using a Swoop Skill in Persona Mode, the Shadow Blade effect disappears. On Back Attack, Swoop Skill Damage to foes +",
+        [2, "#99ff99", ["41.0%"]],
+        "."
       ]
     ],
     "ark_passive_01_19"
@@ -17500,9 +17522,9 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "Shadow Blade",
     [
       [
-        "On using a Swoop Skill in Persona Mode, the Shadow Blade effect disappears. Swoop Skill Damage to foes +",
-        [2, "#99ff99", ["55.0%"]],
-        ". Guarantees Back Attack."
+        "On using a Swoop Skill in Persona Mode, the Shadow Blade effect disappears. On Back Attack, Swoop Skill Damage to foes +",
+        [2, "#99ff99", ["82.0%"]],
+        "."
       ]
     ],
     "ark_passive_01_19"
@@ -17516,9 +17538,9 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "Shadow Blade",
     [
       [
-        "On using a Swoop Skill in Persona Mode, the Shadow Blade effect disappears. Swoop Skill Damage to foes +",
-        [2, "#99ff99", ["80.0%"]],
-        ". Guarantees Back Attack."
+        "On using a Swoop Skill in Persona Mode, the Shadow Blade effect disappears. On Back Attack, Swoop Skill Damage to foes +",
+        [2, "#99ff99", ["125.0%"]],
+        "."
       ]
     ],
     "ark_passive_01_19"
@@ -17637,13 +17659,9 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_385"
   ],
-  2260803: ["Hunger I", [["Atk. Power +", [2, "#99ff99", ["13.0%"]], "."]], "ability_222"],
-  2260804: ["Hunger II", [["Atk. Power +", [2, "#99ff99", ["22.0%"]], "."]], "ability_222"],
-  2260805: ["Hunger III", [["Atk. Power +", [2, "#99ff99", ["32.0%"]], "."]], "ability_222"],
-  2260900: ["Assassin's Steps", [["Atk. Speed +", [2, "#99ff99", ["0.2%"]], " per stack."]], "buff_20"],
-  2260901: ["Assassin's Steps", [["Atk. Speed +", [2, "#99ff99", ["0.4%"]], " per stack."]], "buff_20"],
-  2260902: ["Assassin's Steps", [["Atk. Speed +", [2, "#99ff99", ["0.6%"]], " per stack."]], "buff_20"],
-  2260903: ["Assassin's Steps", [["Atk. Speed +", [2, "#99ff99", ["0.8%"]], " per stack."]], "buff_20"],
+  2260803: ["Hunger I", [["Atk. Power +", [2, "#99ff99", ["14.0%"]], "."]], "ability_222"],
+  2260804: ["Hunger II", [["Atk. Power +", [2, "#99ff99", ["26.0%"]], "."]], "ability_222"],
+  2260805: ["Hunger III", [["Atk. Power +", [2, "#99ff99", ["38.0%"]], "."]], "ability_222"],
   2260904: ["Assassin's Steps", [["Atk. Speed +", [2, "#99ff99", ["1%"]], " per stack."]], "buff_20"],
   2261001: [
     "Slaughterer",
@@ -17690,40 +17708,14 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [["Next Swoop Skill Damage +", [2, "#99ff99", ["4.3%"]], " for ", [2, "#ffff99", ["1"]], " use(s)."]],
     "buff_886"
   ],
-  3260600: [
-    "Destiny: Nightmare's Omen",
-    [["At ", [2, "#ffff99", ["3"]], " stacks, gain the ", [2, "#bf9ef6", ["Destiny: Lunar Nightmare"]], " effect."]],
-    "buff_886"
-  ],
-  3260601: [
-    "Destiny: Lunar Nightmare",
-    [
-      [
-        "Damage of next Nightmare's downward attack +",
-        [2, "#99ff99", ["200.0%"]],
-        ". Crit Rate +",
-        [2, "#99ff99", ["30.0%"]],
-        ". Cooldown resets on downward attack hit."
-      ]
-    ],
+  3260700: [
+    "Destiny: Falling Moon",
+    [["Silent Rage and Glowing Brand Damage +", [2, "#99ff99", ["10.0%"]], "."]],
     "buff_884"
   ],
-  3260700: [
-    "Destiny: Nightmare's Omen",
-    [["At ", [2, "#ffff99", ["3"]], " stacks, gain the ", [2, "#bf9ef6", ["Destiny: Lunar Nightmare"]], " effect."]],
-    "buff_886"
-  ],
-  3260701: [
-    "Destiny: Lunar Nightmare",
-    [
-      [
-        "Damage of next Nightmare's downward attack +",
-        [2, "#99ff99", ["500.0%"]],
-        ". Crit Rate +",
-        [2, "#99ff99", ["30.0%"]],
-        ". Cooldown resets on downward attack hit."
-      ]
-    ],
+  3260800: [
+    "Destiny: Falling Moon",
+    [["Silent Rage and Glowing Brand Damage +", [2, "#99ff99", ["12.0%"]], "."]],
     "buff_884"
   ],
   3261100: [
@@ -17777,54 +17769,38 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [["Rifle Skill Cooldown -", [2, "#99ff99", ["0.20"]], "s every second."]],
     "ark_passive_01_11"
   ],
-  2383400: ["Vital Point Expert", [["Crit Rate +", [2, "#99ff99", ["1.2%"]], "."]], "ark_passive_dhf_6"],
-  2383401: ["Vital Point Expert", [["Crit Rate +", [2, "#99ff99", ["2.4%"]], "."]], "ark_passive_dhf_6"],
-  2383402: ["Vital Point Expert", [["Crit Rate +", [2, "#99ff99", ["3.6%"]], "."]], "ark_passive_dhf_6"],
-  2383403: ["Vital Point Expert", [["Crit Rate +", [2, "#99ff99", ["4.8%"]], "."]], "ark_passive_dhf_6"],
-  2383404: ["Vital Point Expert", [["Crit Rate +", [2, "#99ff99", ["6.0%"]], "."]], "ark_passive_dhf_6"],
-  2384100: [
+  2384110: [
     "Gun Replacement Ready",
     [
       [
-        "Preparing to replace the gun.\nChanges to Gun Replacement Ready Complete upon stacking ",
-        [2, "#ffff99", ["2"]],
-        "."
-      ]
-    ],
-    "ark_passive_01_28"
-  ],
-  2384110: [
-    "Gun Replacement Ready Complete",
-    [
-      [
-        "Completed preparing to replace the gun.\nChanges to Gun Replacement Skill upon changing stances, increasing Damage to foes."
+        "Completed preparing to replace the gun.\nOn using Shotgun or Rifle Skills, they change to Gun Replacement Skill."
       ]
     ],
     "ark_passive_dhf_7"
   ],
   2384120: [
     "Gun Replacement Skill",
-    [["Gun Replacement Skill Damage +", [2, "#99ff99", ["1.0%"]], "."]],
+    [["Gun Replacement Skill increases Shotgun and Rifle Skill Damage +", [2, "#99ff99", ["1.2%"]], "."]],
     "ark_passive_01_16"
   ],
   2384121: [
     "Gun Replacement Skill",
-    [["Gun Replacement Skill Damage +", [2, "#99ff99", ["2.0%"]], "."]],
+    [["Gun Replacement Skill increases Shotgun and Rifle Skill Damage +", [2, "#99ff99", ["2.4%"]], "."]],
     "ark_passive_01_16"
   ],
   2384122: [
     "Gun Replacement Skill",
-    [["Gun Replacement Skill Damage +", [2, "#99ff99", ["3.0%"]], "."]],
+    [["Gun Replacement Skill increases Shotgun and Rifle Skill Damage +", [2, "#99ff99", ["3.6%"]], "."]],
     "ark_passive_01_16"
   ],
   2384123: [
     "Gun Replacement Skill",
-    [["Gun Replacement Skill Damage +", [2, "#99ff99", ["4.0%"]], "."]],
+    [["Gun Replacement Skill increases Shotgun and Rifle Skill Damage +", [2, "#99ff99", ["4.8%"]], "."]],
     "ark_passive_01_16"
   ],
   2384124: [
     "Gun Replacement Skill",
-    [["Gun Replacement Skill Damage +", [2, "#99ff99", ["5.0%"]], "."]],
+    [["Gun Replacement Skill increases Shotgun and Rifle Skill Damage +", [2, "#99ff99", ["6.0%"]], "."]],
     "ark_passive_01_16"
   ],
   2384200: [
@@ -17871,91 +17847,6 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
       ]
     ],
     "ark_passive_dhf_8"
-  ],
-  2384400: [
-    "Sniper's Will",
-    [
-      [
-        "Move Speed +",
-        [2, "#99ff99", ["0.3%"]],
-        ", Atk. Speed +",
-        [2, "#99ff99", ["0.3%"]],
-        ", Crit Damage +",
-        [2, "#99ff99", ["1.0%"]],
-        " per ",
-        [2, "#ffff99", ["1"]],
-        " stack."
-      ]
-    ],
-    "ark_passive_dhf_10"
-  ],
-  2384401: [
-    "Sniper's Will",
-    [
-      [
-        "Move Speed +",
-        [2, "#99ff99", ["0.6%"]],
-        ", Atk. Speed +",
-        [2, "#99ff99", ["0.6%"]],
-        ", Crit Damage +",
-        [2, "#99ff99", ["2.0%"]],
-        " per ",
-        [2, "#ffff99", ["1"]],
-        " stack."
-      ]
-    ],
-    "ark_passive_dhf_10"
-  ],
-  2384402: [
-    "Sniper's Will",
-    [
-      [
-        "Move Speed +",
-        [2, "#99ff99", ["0.9%"]],
-        ", Atk. Speed +",
-        [2, "#99ff99", ["0.9%"]],
-        ", Crit Damage +",
-        [2, "#99ff99", ["3.0%"]],
-        " per ",
-        [2, "#ffff99", ["1"]],
-        " stack."
-      ]
-    ],
-    "ark_passive_dhf_10"
-  ],
-  2384403: [
-    "Sniper's Will",
-    [
-      [
-        "Move Speed +",
-        [2, "#99ff99", ["1.2%"]],
-        ", Atk. Speed +",
-        [2, "#99ff99", ["1.2%"]],
-        ", Crit Damage +",
-        [2, "#99ff99", ["4.0%"]],
-        " per ",
-        [2, "#ffff99", ["1"]],
-        " stack."
-      ]
-    ],
-    "ark_passive_dhf_10"
-  ],
-  2384404: [
-    "Sniper's Will",
-    [
-      [
-        "Move Speed +",
-        [2, "#99ff99", ["1.5%"]],
-        ", Atk. Speed +",
-        [2, "#99ff99", ["1.5%"]],
-        ", Crit Damage +",
-        [2, "#99ff99", ["5.0%"]],
-        " per ",
-        [2, "#ffff99", ["1"]],
-        " stack."
-      ]
-    ],
-    "ark_passive_dhf_10"
   ],
   380504: ["Evasion", [["Dodge Rate +", [2, "#99ff99", ["10.0%"]], "."]], "buff_1"],
   380612: [
@@ -18084,7 +17975,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   ],
   3380100: [
     "Destiny: Eye of the Tigress",
-    [["Damage to foes +", [2, "#99ff99", ["5.0%"]], ". Atk. Speed +", [2, "#99ff99", ["5.0%"]], "."]],
+    [["Damage to foes +", [2, "#99ff99", ["6.0%"]], ". Atk. Speed +", [2, "#99ff99", ["5.0%"]], "."]],
     "buff_884"
   ],
   3383100: [
@@ -18166,7 +18057,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         [2, "#99ff99", ["2.0s"]],
         "."
       ],
-      { v0: ["combateffect_sk", [3.5, 33816.1]] }
+      { v0: ["combateffect_sk", [6, 33816.1]] }
     ],
     "buff_884"
   ],
@@ -18297,11 +18188,11 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "Guardian's Scales",
     [
       [
-        "Grants Push Immunity. Incoming Damage -",
-        [2, "#99ff99", ["20.0%"]],
-        ". Absorb Damage equal to ",
+        "Absorb Damage equal to ",
         [2, "#99ff99", ["30.0%"]],
-        " of Max HP. When hit by a boss of a specific rank or higher, Penalty Meter -",
+        " of Max HP. For the duration of the shield, gain Push Immunity and Incoming Damage -",
+        [2, "#99ff99", ["20.0%"]],
+        ". When hit by a boss of a specific rank or higher, Penalty Meter -",
         [2, "#99ff99", ["50%"]],
         "."
       ]
@@ -18317,11 +18208,11 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "Guardian's Scales",
     [
       [
-        "Grants Push Immunity. Incoming Damage -",
-        [2, "#99ff99", ["20.0%"]],
-        ". Absorb Damage equal to ",
+        "Absorb Damage equal to ",
         [2, "#99ff99", ["30.0%"]],
-        " of Max HP. When hit by a boss of a specific rank or higher, Penalty Meter -",
+        " of Max HP. For the duration of the shield, gain Push Immunity and Incoming Damage -",
+        [2, "#99ff99", ["20.0%"]],
+        ". When hit by a boss of a specific rank or higher, Penalty Meter -",
         [2, "#99ff99", ["50%"]],
         "."
       ]
@@ -18716,7 +18607,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   700001202: ["Light of Daybreak", [["Atk. Power +", [2, "#99ff99", ["3946"]]]], "buff_5"],
   700002201: [
     "Punishing Strike",
-    [["Deal heavy Damage based on number of stacks. Stacks up to ", [2, "#ffff99", ["5"]], " times."]],
+    [["Inflict heavy Damage based on number of stacks. Stacks up to ", [2, "#ffff99", ["5"]], " times."]],
     "estherlink_2"
   ],
   700003203: ["Esoteric Skill", [["Stagger Damage to foes +", [2, "#99ff99", ["12%"]]]], "buff_3"],
@@ -18780,7 +18671,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   700011202: ["Light of Daybreak", [["Atk. Power +", [2, "#99ff99", ["4,305"]]]], "buff_5"],
   700012201: [
     "Punishing Strike",
-    [["Deal heavy Damage based on number of stacks. Stacks up to ", [2, "#ffff99", ["5"]], " times."]],
+    [["Inflict heavy Damage based on number of stacks. Stacks up to ", [2, "#ffff99", ["5"]], " times."]],
     "estherlink_2"
   ],
   700013203: ["Esoteric Skill", [["Stagger Damage to foes +", [2, "#99ff99", ["12%"]]]], "buff_3"],
@@ -18809,7 +18700,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   700021202: ["Light of Daybreak", [["Atk. Power +", [2, "#99ff99", ["7,250"]]]], "buff_5"],
   700022201: [
     "Punishing Strike",
-    [["Deal heavy Damage based on number of stacks. Stacks up to ", [2, "#ffff99", ["5"]], " times."]],
+    [["Inflict heavy Damage based on number of stacks. Stacks up to ", [2, "#ffff99", ["5"]], " times."]],
     "estherlink_2"
   ],
   700023203: ["Esoteric Skill", [["Stagger Damage to foes +", [2, "#99ff99", ["12%"]]]], "buff_3"],
@@ -18838,7 +18729,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   700031202: ["Light of Daybreak", [["Atk. Power +", [2, "#99ff99", ["16450"]]]], "buff_5"],
   700032201: [
     "Punishing Strike",
-    [["Deal heavy Damage based on number of stacks. Stacks up to ", [2, "#ffff99", ["5"]], " times."]],
+    [["Inflict heavy Damage based on number of stacks. Stacks up to ", [2, "#ffff99", ["5"]], " times."]],
     "estherlink_2"
   ],
   700033203: ["Esoteric Skill", [["Stagger Damage to foes +", [2, "#99ff99", ["12%"]]]], "buff_3"],
@@ -18872,15 +18763,26 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_19"
   ],
-  220213: ["Freeze", [["Become Incapacitated while Frozen."]], "buff_35"],
-  220214: ["Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
   220203: ["Violent Explosion", [["Atk. Power +", [2, "#99ff99", ["3.0%"]], "."]], "buff_15"],
   220204: ["Violent Explosion", [["Atk. Power +", [2, "#99ff99", ["3.2%"]], "."]], "buff_15"],
   220205: ["Violent Explosion", [["Atk. Power +", [2, "#99ff99", ["3.4%"]], "."]], "buff_15"],
   220206: ["Violent Explosion", [["Atk. Power +", [2, "#99ff99", ["3.7%"]], "."]], "buff_15"],
   220207: ["Violent Explosion", [["Atk. Power +", [2, "#99ff99", ["4.0%"]], "."]], "buff_15"],
+  220213: ["Freeze", [["Become Incapacitated while Frozen."]], "buff_35"],
+  220214: ["Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
   220301: ["Petrification", [["Become Incapacitated from Petrification."]], "buff_36"],
   220306: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
+  220307: [
+    "Ready Attack",
+    [
+      [
+        "Atk. Power +",
+        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
+        "."
+      ]
+    ],
+    "buff_15"
+  ],
   220502: ["Freeze", [["Become Incapacitated while Frozen."]], "buff_35"],
   220703: [
     "Ready Attack",
@@ -19025,6 +18927,9 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   221620: ["Party: Weakness Exposure", [["Crit Resistance -", [2, "#ff9999", ["10.0%"]], "."]], "buff_62"],
   221701: ["Electric Attack", [["Inflicts Electric Attack Damage every", [2, "#ffff99", [" 1s"]], "."]], "buff_161"],
   221710: ["Party: Weakness Exposure", [["Crit Resistance -", [2, "#ff9999", ["10.0%"]], "."]], "buff_62"],
+  221816: ["Darkness", [["Darkness reduces sight range."]], "buff_13"],
+  221907: ["Electric Attack", [["Inflicts Electric Attack Damage every", [2, "#ffff99", [" 1s"]], "."]], "buff_161"],
+  221912: ["Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
   222802: [
     "Water Round Kick",
     [
@@ -19036,6 +18941,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_42"
   ],
+  222803: ["Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
   222827: [
     "Water Round Kick",
     [
@@ -19047,7 +18953,6 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_43"
   ],
-  222803: ["Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
   222900: [
     "Energy Combustion",
     [["Inflicts Damage to foes within a 3-meter radius every", [2, "#ffff99", [" 0.5s"]], "."]],
@@ -19102,6 +19007,21 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [["Inflicts Damage to foes within a 3-meter radius every", [2, "#ffff99", [" 0.5s"]], "."]],
     "bm_skill_01_24"
   ],
+  222918: [
+    "Energy Combustion",
+    [["Inflicts Damage to foes within a 3-meter radius every", [2, "#ffff99", [" 0.5s"]], "."]],
+    "bm_skill_01_24"
+  ],
+  222920: [
+    "Energy Combustion",
+    [["Inflicts Damage to foes within a 3.6-meter radius every ", [2, "#ffff99", ["0.5s"]], "."]],
+    "bm_skill_01_24"
+  ],
+  222922: [
+    "Energy Combustion",
+    [["Inflicts Damage to foes within a 3-meter radius every", [2, "#ffff99", [" 0.5s"]], "."]],
+    "bm_skill_01_24"
+  ],
   222924: [
     "Energy Combustion",
     [["Inflicts Damage to foes within a 3-meter radius every", [2, "#ffff99", [" 0.5s"]], "."]],
@@ -19122,32 +19042,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [["Inflicts Damage to foes within a 3-meter radius every", [2, "#ffff99", [" 0.5s"]], "."]],
     "bm_skill_01_24"
   ],
-  222918: [
-    "Energy Combustion",
-    [["Inflicts Damage to foes within a 3-meter radius every", [2, "#ffff99", [" 0.5s"]], "."]],
-    "bm_skill_01_24"
-  ],
-  222920: [
-    "Energy Combustion",
-    [["Inflicts Damage to foes within a 3.6-meter radius every ", [2, "#ffff99", ["0.5s"]], "."]],
-    "bm_skill_01_24"
-  ],
-  222922: [
-    "Energy Combustion",
-    [["Inflicts Damage to foes within a 3-meter radius every", [2, "#ffff99", [" 0.5s"]], "."]],
-    "bm_skill_01_24"
-  ],
-  220307: [
-    "Ready Attack",
-    [
-      [
-        "Atk. Power +",
-        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        "."
-      ]
-    ],
-    "buff_15"
-  ],
+  223201: ["Electric Attack", [["Inflicts Electric Attack Damage every", [2, "#ffff99", [" 1s"]], "."]], "buff_161"],
   223206: ["Darkness", [["Darkness reduces sight range."]], "buff_13"],
   223207: [
     "Pure Excellence",
@@ -19163,21 +19058,18 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "buff_27"
   ],
   223208: ["Pure Excellence", [["Incoming Phy./Mag. Damage received +", [2, "#ff9999", ["100%"]], "."]], "buff_27"],
-  223410: [
-    "Shield",
-    [["Creates a shield that absorbs Damage equal to ", [2, "#99ff99", ["15.0%"]], " of Max HP."]],
-    "buff_18"
-  ],
-  221816: ["Darkness", [["Darkness reduces sight range."]], "buff_13"],
-  223201: ["Electric Attack", [["Inflicts Electric Attack Damage every", [2, "#ffff99", [" 1s"]], "."]], "buff_161"],
   223300: [
     "Ultimate Skill: Fist of Dominance",
     [["Incoming Phy./Mag. Damage -", [2, "#99ff99", ["80%"]], "."]],
     "bm_skill_01_27"
   ],
-  221912: ["Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
-  221907: ["Electric Attack", [["Inflicts Electric Attack Damage every", [2, "#ffff99", [" 1s"]], "."]], "buff_161"],
+  223410: [
+    "Shield",
+    [["Creates a shield that absorbs Damage equal to ", [2, "#99ff99", ["15.0%"]], " of Max HP."]],
+    "buff_18"
+  ],
   223452: ["Freeze", [["Become Incapacitated while Frozen."]], "buff_35"],
+  230004: ["Continuous Push", [["Incoming Phy./Mag. Damage -", [2, "#99ff99", ["5%"]], "."]], "if_skill_01_15"],
   230203: [
     "Ready Attack",
     [
@@ -19221,11 +19113,11 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   231501: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
   231610: ["Bleed", [["Receive Phy. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_41"],
   231800: ["Rough Smash", [["Atk. Power +", [2, "#99ff99", ["10.0%"]], "."]], "buff_15"],
+  231803: ["Party: Damage Amplification", [["Damage from foes +", [2, "#ff9999", ["6%"]], "."]], "buff_26"],
   231805: ["Rough Smash", [["Atk. Power +", [2, "#99ff99", ["11.2%"]], "."]], "buff_15"],
   231806: ["Rough Smash", [["Atk. Power +", [2, "#99ff99", ["12.4%"]], "."]], "buff_15"],
   231807: ["Rough Smash", [["Atk. Power +", [2, "#99ff99", ["13.6%"]], "."]], "buff_15"],
   231808: ["Rough Smash", [["Atk. Power +", [2, "#99ff99", ["14.8%"]], "."]], "buff_15"],
-  231803: ["Party: Damage Amplification", [["Damage from foes +", [2, "#ff9999", ["6%"]], "."]], "buff_26"],
   232010: [
     "Fist of Endurance",
     [
@@ -19241,19 +19133,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   ],
   232105: ["Party: Target Focus", [["Incoming Stagger Damage +", [2, "#ff9999", ["20%"]], "."]], "buff_276"],
   232206: ["Bleed", [["Receive Phy. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_41"],
-  232600: [
-    "Sturdy Armor",
-    [
-      [
-        "Incoming Phy. Damage -",
-        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        ". Incoming Mag. Damage -",
-        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        "."
-      ]
-    ],
-    "buff_19"
-  ],
+  232300: ["Enhanced Fist", [["Incoming Phy./Mag. Damage -", [2, "#99ff99", ["30%"]], "."]], "buff_19"],
   232400: ["Electric Attack", [["Inflicts Electric Attack Damage every", [2, "#ffff99", [" 1s"]], "."]], "buff_51"],
   232401: [
     "Incoming Damage Reduction",
@@ -19268,9 +19148,20 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_19"
   ],
+  232600: [
+    "Sturdy Armor",
+    [
+      [
+        "Incoming Phy. Damage -",
+        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
+        ". Incoming Mag. Damage -",
+        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
+        "."
+      ]
+    ],
+    "buff_19"
+  ],
   232602: ["Electrocution", [["Becomes Incapacitated while Electrocuted."]], "buff_51"],
-  230004: ["Continuous Push", [["Incoming Phy./Mag. Damage -", [2, "#99ff99", ["5%"]], "."]], "if_skill_01_15"],
-  232300: ["Enhanced Fist", [["Incoming Phy./Mag. Damage -", [2, "#99ff99", ["30%"]], "."]], "buff_19"],
   232800: [
     "Tenacity Release",
     [
@@ -19305,7 +19196,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         ". Atk. Speed +",
         [2, "#99ff99", ["5.0%"]],
         ". Damage to foes +",
-        [2, "#99ff99", ["10.0%"]],
+        [2, "#99ff99", ["10%"]],
         "."
       ]
     ],
@@ -19320,7 +19211,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         ". Atk. Speed +",
         [2, "#99ff99", ["10.0%"]],
         ". Damage to foes +",
-        [2, "#99ff99", ["25.0%"]],
+        [2, "#99ff99", ["25%"]],
         "."
       ]
     ],
@@ -19330,75 +19221,24 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "Level 3 Hype",
     [
       [
-        "Skill Cooldown -",
-        [2, "#99ff99", ["25.0%"]],
+        "Skill cooldown -",
+        [2, "#99ff99", ["20.0%"]],
         ". Atk. Speed +",
         [2, "#99ff99", ["15.0%"]],
         ". Damage to foes +",
-        [2, "#99ff99", ["60.0%"]],
+        [2, "#99ff99", ["50%"]],
         "."
       ]
     ],
     "so_skill_01_23"
   ],
-  240230: [
-    "Level 3 Hype",
-    [
-      [
-        "Skill Cooldown -",
-        [2, "#99ff99", ["25.0%"]],
-        ". Atk. Speed +",
-        [2, "#99ff99", ["15.0%"]],
-        ". Damage to foes +",
-        [2, "#99ff99", ["80.0%"]],
-        "."
-      ]
-    ],
-    "so_skill_01_23"
-  ],
-  240240: [
-    "Level 3 Hype",
-    [
-      [
-        "Skill Cooldown -",
-        [2, "#99ff99", ["25.0%"]],
-        ". Atk. Speed +",
-        [2, "#99ff99", ["15.0%"]],
-        ". Damage to foes +",
-        [2, "#99ff99", ["90.0%"]],
-        "."
-      ]
-    ],
-    "so_skill_01_23"
-  ],
-  240250: [
-    "Level 3 Hype",
-    [
-      [
-        "Skill Cooldown -",
-        [2, "#99ff99", ["25.0%"]],
-        ". Atk. Speed +",
-        [2, "#99ff99", ["15.0%"]],
-        ". Damage to foes +",
-        [2, "#99ff99", ["100.0%"]],
-        "."
-      ]
-    ],
-    "so_skill_01_23"
-  ],
-  241701: [
-    "Sturdy Armor",
-    [
-      [
-        "Incoming Phy. Damage -",
-        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        ". Incoming Mag. Damage -",
-        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        "."
-      ]
-    ],
-    "buff_19"
-  ],
+  240800: ["Prepared Attacker", [["Atk. Power +", [2, "#99ff99", ["4.0%"]], "."]], "buff_15"],
+  240801: ["Freeze", [["Become Incapacitated while Frozen."]], "buff_35"],
+  240802: ["Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
+  240803: ["Prepared Attacker", [["Atk. Power +", [2, "#99ff99", ["4.6%"]], "."]], "buff_15"],
+  240804: ["Prepared Attacker", [["Atk. Power +", [2, "#99ff99", ["5.2%"]], "."]], "buff_15"],
+  240805: ["Prepared Attacker", [["Atk. Power +", [2, "#99ff99", ["5.9%"]], "."]], "buff_15"],
+  240806: ["Prepared Attacker", [["Atk. Power +", [2, "#99ff99", ["6.6%"]], "."]], "buff_15"],
   240905: [
     "Impaired Mobility",
     [
@@ -19410,27 +19250,23 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_43"
   ],
-  241916: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
-  242500: [
-    "Energy Release",
-    [["Incoming Phy. Damage -", [2, "#99ff99", ["12.0%"]], ". Incoming Mag. Damage -", [2, "#99ff99", ["12.0%"]], "."]],
-    "so_skill_01_20"
-  ],
-  242501: [
-    "Energy Release Enhancement",
+  241101: [
+    "Aggressiveness",
     [
       [
-        "Incoming Phy. Damage -",
-        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        ". Incoming Mag. Damage -",
-        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
+        "Incoming Phy. Damage received +",
+        [2, "#ff9999", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
+        ". Incoming Mag. Damage received +",
+        [2, "#ff9999", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
         "."
       ]
     ],
-    "buff_19"
+    "buff_27"
   ],
-  242507: ["Party: Fighting Spirit Enhancement", [["Atk. Power +", [2, "#99ff99", ["6.0%"]], "."]], "buff_5"],
-  242508: [
+  241200: ["Freeze", [["Become Incapacitated while Frozen."]], "buff_35"],
+  241209: ["Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
+  241800: ["Party: Fighting Spirit Enhancement", [["Atk. Power +", [2, "#99ff99", ["6.0%"]], "."]], "buff_5"],
+  241801: [
     "Ready Attack",
     [
       [
@@ -19441,75 +19277,46 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_15"
   ],
-  242512: [
-    "Grace",
+  241802: [
+    "Sturdy Armor",
     [
       [
-        "Absorbs Damage for all party members equal to ",
-        [2, "#99ff99", [[0, "Missing SkillBuff entries for ID 242511"], "%"]],
-        " of caster's Max HP."
-      ]
-    ],
-    "so_skill_01_20"
-  ],
-  242521: [
-    "Grace",
-    [
-      [
-        "Absorbs Damage for all party members equal to ",
-        [2, "#99ff99", [[0, "Missing SkillBuff entries for ID 242513"], "%"]],
-        " of caster's Max HP."
-      ]
-    ],
-    "so_skill_01_20"
-  ],
-  242522: [
-    "Grace",
-    [
-      [
-        "Absorbs Damage for all party members equal to ",
-        [2, "#99ff99", [[0, "Missing SkillBuff entries for ID 242514"], "%"]],
-        " of caster's Max HP."
-      ]
-    ],
-    "so_skill_01_20"
-  ],
-  242523: [
-    "Grace",
-    [
-      [
-        "Absorbs Damage for all party members equal to ",
-        [2, "#99ff99", [[0, "Missing SkillBuff entries for ID 242515"], "%"]],
-        " of caster's Max HP."
-      ]
-    ],
-    "so_skill_01_20"
-  ],
-  242524: [
-    "Grace",
-    [
-      [
-        "Absorbs Damage for all party members equal to ",
-        [2, "#99ff99", [[0, "Missing SkillBuff entries for ID 242516"], "%"]],
-        " of caster's Max HP."
-      ]
-    ],
-    "so_skill_01_20"
-  ],
-  242600: [
-    "Impaired Mobility",
-    [
-      [
-        "Move Speed -",
-        [2, "#ff9999", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
+        "Incoming Phy. Damage -",
+        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
+        " Incoming Mag. Damage -",
+        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
         "."
       ]
     ],
-    "buff_43"
+    "buff_19"
   ],
-  242601: ["Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
-  241200: ["Freeze", [["Become Incapacitated while Frozen."]], "buff_35"],
-  241209: ["Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
+  241916: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
+  242126: [
+    "Contagious Burn",
+    [
+      [
+        "Receives [Fire] Damage every",
+        [2, "#ffff99", [" 1s"]],
+        ". [Fire] Damage transfers to you and surrounding foes on effect end."
+      ]
+    ],
+    "buff_56"
+  ],
+  242127: ["Contagious Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
+  242128: [
+    "Contagious Burn",
+    [
+      [
+        "Receives [Fire] Damage every",
+        [2, "#ffff99", [" 1s"]],
+        ". [Fire] Damage transfers to you and surrounding foes on effect end."
+      ]
+    ],
+    "buff_56"
+  ],
+  242129: ["Contagious Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
+  242200: ["Party: Fighting Spirit Enhancement", [["Atk. Power +", [2, "#99ff99", ["6.0%"]], "."]], "buff_5"],
+  242201: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
   242301: [
     "Impaired Mobility",
     [
@@ -19539,138 +19346,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_19"
   ],
-  242402: [
-    "Victory Shout",
-    [
-      [
-        "Atk. Power +",
-        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        ". Stacks up to ",
-        [2, "#ffff99", ["3"]],
-        " times."
-      ]
-    ],
-    "buff_15"
-  ],
-  241800: ["Party: Fighting Spirit Enhancement", [["Atk. Power +", [2, "#99ff99", ["6.0%"]], "."]], "buff_5"],
-  241801: [
-    "Ready Attack",
-    [
-      [
-        "Atk. Power +",
-        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        "."
-      ]
-    ],
-    "buff_15"
-  ],
-  241802: [
-    "Sturdy Armor",
-    [
-      [
-        "Incoming Phy. Damage -",
-        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        " Incoming Mag. Damage -",
-        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        "."
-      ]
-    ],
-    "buff_19"
-  ],
-  242126: [
-    "Contagious Burn",
-    [
-      [
-        "Receives [Fire] Damage every",
-        [2, "#ffff99", [" 1s"]],
-        ". [Fire] Damage transfers to you and surrounding foes on effect end."
-      ]
-    ],
-    "buff_56"
-  ],
-  242127: ["Contagious Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
-  242128: [
-    "Contagious Burn",
-    [
-      [
-        "Receives [Fire] Damage every",
-        [2, "#ffff99", [" 1s"]],
-        ". [Fire] Damage transfers to you and surrounding foes on effect end."
-      ]
-    ],
-    "buff_56"
-  ],
-  242129: ["Contagious Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
-  242121: [
-    "Extortion",
-    [
-      [
-        "Move Speed +",
-        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        "."
-      ]
-    ],
-    "buff_10"
-  ],
-  242122: [
-    "Extortion",
-    [
-      [
-        "Move Speed -",
-        [2, "#ff9999", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        "."
-      ]
-    ],
-    "buff_43"
-  ],
-  242200: ["Party: Fighting Spirit Enhancement", [["Atk. Power +", [2, "#99ff99", ["6.0%"]], "."]], "buff_5"],
-  242201: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
-  240800: ["Prepared Attacker", [["Atk. Power +", [2, "#99ff99", ["4.0%"]], "."]], "buff_15"],
-  240803: ["Prepared Attacker", [["Atk. Power +", [2, "#99ff99", ["4.6%"]], "."]], "buff_15"],
-  240804: ["Prepared Attacker", [["Atk. Power +", [2, "#99ff99", ["5.2%"]], "."]], "buff_15"],
-  240805: ["Prepared Attacker", [["Atk. Power +", [2, "#99ff99", ["5.9%"]], "."]], "buff_15"],
-  240806: ["Prepared Attacker", [["Atk. Power +", [2, "#99ff99", ["6.6%"]], "."]], "buff_15"],
-  240801: ["Freeze", [["Become Incapacitated while Frozen."]], "buff_35"],
-  240802: ["Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
-  241703: ["Brave Ember", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
-  241704: ["Freeze", [["Become Incapacitated while Frozen."]], "buff_35"],
-  241400: [
-    "Sturdy Armor",
-    [
-      [
-        "Incoming Phy. Damage -",
-        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        ". Incoming Mag. Damage -",
-        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        "."
-      ]
-    ],
-    "buff_19"
-  ],
-  241418: [
-    "Crippling Barrier",
-    [["Move Speed and Atk. Power -", [2, "#ff9999", ["10.0%"]], ". Stacks up to ", [2, "#ffff99", ["4"]], " times."]],
-    "so_skill_01_9"
-  ],
-  242002: ["Slow Pace", [["Move Speed -", [2, "#ff9999", ["80.0%"]], "."]], "buff_43"],
-  241101: [
-    "Aggressiveness",
-    [
-      [
-        "Incoming Phy. Damage received +",
-        [2, "#ff9999", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        ". Incoming Mag. Damage received +",
-        [2, "#ff9999", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        "."
-      ]
-    ],
-    "buff_27"
-  ],
-  241419: [
-    "Keen Judgment",
-    [["Incoming Phy. Damage -", [2, "#99ff99", ["30.0%"]], ". Incoming Mag. Damage -", [2, "#99ff99", ["30.0%"]], "."]],
-    "buff_19"
-  ],
+  242460: ["Party: Fighting Spirit Enhancement", [["Atk. Power +", [2, "#99ff99", ["6.0%"]], "."]], "buff_5"],
   242980: [
     "Sturdy Armor",
     [["Incoming Phy. Damage -", [2, "#99ff99", ["30.0%"]], ". Incoming Mag. Damage -", [2, "#99ff99", ["30.0%"]], "."]],
@@ -19681,8 +19357,6 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [["Incoming Phy. Damage -", [2, "#99ff99", ["30.0%"]], ". Incoming Mag. Damage -", [2, "#99ff99", ["30.0%"]], "."]],
     "buff_19"
   ],
-  340802: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
-  340810: ["Target Weak Point", [["On Crit Hit, incoming Damage +", [2, "#ff9999", ["8.0%"]], "."]], "buff_602"],
   340002: ["Focus Level 1", [["Move Speed +", [2, "#99ff99", ["5%"]], "."]], "lm_skill_01_40"],
   340003: [
     "Focus Level 2",
@@ -19793,6 +19467,8 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "buff_63"
   ],
   340651: ["Freeze", [["Become Incapacitated while Frozen."]], "buff_35"],
+  340802: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
+  340810: ["Target Weak Point", [["On Crit Hit, incoming Damage +", [2, "#ff9999", ["8.0%"]], "."]], "buff_602"],
   340961: ["Move Speed Reduction", [["Move Speed -", [2, "#ff9999", ["70.0%"]], "."]], "buff_43"],
   341005: [
     "Incoming Damage Reduction",
@@ -19833,6 +19509,19 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "lm_skill_01_11"
   ],
+  341302: [
+    "Incoming Damage Reduction",
+    [
+      [
+        "Incoming Phy. Damage -",
+        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
+        ". Incoming Mag. Damage -",
+        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
+        "."
+      ]
+    ],
+    "buff_19"
+  ],
   341501: ["Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
   341502: [
     "Frost Slash",
@@ -19860,6 +19549,33 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "buff_19"
   ],
   341508: ["Shield", [["Absorbs Damage equal to ", [2, "#99ff99", ["40%"]], " of Max HP."]], "buff_18"],
+  341600: [
+    "Incoming Damage Reduction",
+    [
+      [
+        "Incoming Phy. Damage -",
+        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
+        ". Incoming Mag. Damage -",
+        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
+        "."
+      ]
+    ],
+    "buff_19"
+  ],
+  341611: [
+    "Raid",
+    [
+      [
+        "Move Speed -",
+        [2, "#ff9999", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
+        "."
+      ]
+    ],
+    "buff_43"
+  ],
+  341701: ["Ground-Breaker", [["Become Incapacitated by an Earthquake."]], "buff_49"],
+  341706: ["Yeon Clan Technique", [["Crit Rate +", [2, "#99ff99", ["2.0%"]], "."]], "buff_829"],
+  341708: ["Target Weak Point", [["On Crit Hit, incoming Damage +", [2, "#ff9999", ["8.0%"]], "."]], "buff_602"],
   345002: ["Flurry Level 1", [["Atk. Speed +", [2, "#99ff99", ["10%"]], "."]], "lm_skill_01_43"],
   345003: [
     "Flurry Level 2",
@@ -19924,11 +19640,6 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "lm_skill_01_47"
   ],
   345410: ["Target Weak Point", [["On Crit Hit, incoming Damage +", [2, "#ff9999", ["8.0%"]], "."]], "buff_602"],
-  345800: [
-    "Dragonscale Defense",
-    [["Absorbs Damage equal to ", [2, "#99ff99", ["50%"]], " of Max HP."]],
-    "lm_skill_01_24"
-  ],
   345580: ["Infected Wound", [["Receive Phy. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_41"],
   345650: [
     "Shield",
@@ -19941,46 +19652,11 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_18"
   ],
-  341302: [
-    "Incoming Damage Reduction",
-    [
-      [
-        "Incoming Phy. Damage -",
-        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        ". Incoming Mag. Damage -",
-        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        "."
-      ]
-    ],
-    "buff_19"
+  345800: [
+    "Dragonscale Defense",
+    [["Absorbs Damage equal to ", [2, "#99ff99", ["50%"]], " of Max HP."]],
+    "lm_skill_01_24"
   ],
-  341600: [
-    "Incoming Damage Reduction",
-    [
-      [
-        "Incoming Phy. Damage -",
-        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        ". Incoming Mag. Damage -",
-        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        "."
-      ]
-    ],
-    "buff_19"
-  ],
-  341611: [
-    "Raid",
-    [
-      [
-        "Move Speed -",
-        [2, "#ff9999", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        "."
-      ]
-    ],
-    "buff_43"
-  ],
-  341701: ["Ground-Breaker", [["Become Incapacitated by an Earthquake."]], "buff_49"],
-  341706: ["Yeon Clan Technique", [["Crit Rate +", [2, "#99ff99", ["2.0%"]], "."]], "buff_829"],
-  341708: ["Target Weak Point", [["On Crit Hit, incoming Damage +", [2, "#ff9999", ["8.0%"]], "."]], "buff_602"],
   345801: ["Mind Destruction", [["Become Stunned and Incapacitated."]], "buff_39"],
   345913: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
   345914: [
@@ -19996,11 +19672,43 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_19"
   ],
-  390801: ["Lightning Whisper", [["Crit Rate +", [2, "#99ff99", ["1.0%"]], "."]], "bm_skill_01_28"],
-  390802: ["Lightning's Blessing", [["Atk. Speed +", [2, "#99ff99", ["8.0%"]], "."]], "buff_20"],
-  390803: ["Party: Weakness Exposure", [["Crit Resistance -", [2, "#ff9999", ["10.0%"]], "."]], "buff_62"],
-  390805: ["Electric Attack", [["Inflicts Electric Attack Damage every", [2, "#ffff99", [" 1s"]], "."]], "buff_51"],
-  390810: ["Electric Attack", [["Inflicts Electric Attack Damage every", [2, "#ffff99", [" 1s"]], "."]], "buff_51"],
+  390203: ["Raging Wind", [["Move Speed +", [2, "#99ff99", ["1.5%"]], "."]], "buff_10"],
+  390204: ["Raging Wind", [["Move Speed +", [2, "#99ff99", ["1.7%"]], "."]], "buff_10"],
+  390205: ["Raging Wind", [["Move Speed +", [2, "#99ff99", ["1.9%"]], "."]], "buff_10"],
+  390206: ["Raging Wind", [["Move Speed +", [2, "#99ff99", ["2.2%"]], "."]], "buff_10"],
+  390207: ["Raging Wind", [["Move Speed +", [2, "#99ff99", ["2.5%"]], "."]], "buff_10"],
+  390213: ["Freeze", [["Become Incapacitated while Frozen."]], "buff_35"],
+  390214: ["Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
+  390306: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
+  390307: [
+    "Blessing of the Wind",
+    [
+      [
+        "Move Speed +",
+        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
+        ".  Atk. Speed +",
+        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
+        "."
+      ]
+    ],
+    "buff_10"
+  ],
+  390400: [
+    "Sturdy Armor",
+    [
+      [
+        "Incoming Phy. Damage -",
+        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
+        " Incoming Mag. Damage -",
+        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
+        "."
+      ]
+    ],
+    "buff_19"
+  ],
+  390401: ["Ring of Fire", [["Inflicts Burn Damage to nearby foes every", [2, "#ffff99", [" 1s"]], "."]], "buff_56"],
+  390404: ["Darkness", [["Darkness reduces sight range."]], "buff_13"],
+  390408: ["Eye of the Tempest", [["Atk. Power +", [2, "#99ff99", ["40.0%"]], "."]], "buff_15"],
   390500: [
     "Sturdy Armor",
     [
@@ -20014,15 +19722,18 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_19"
   ],
-  390213: ["Freeze", [["Become Incapacitated while Frozen."]], "buff_35"],
-  390214: ["Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
-  390203: ["Raging Wind", [["Move Speed +", [2, "#99ff99", ["1.5%"]], "."]], "buff_10"],
-  390204: ["Raging Wind", [["Move Speed +", [2, "#99ff99", ["1.7%"]], "."]], "buff_10"],
-  390205: ["Raging Wind", [["Move Speed +", [2, "#99ff99", ["1.9%"]], "."]], "buff_10"],
-  390206: ["Raging Wind", [["Move Speed +", [2, "#99ff99", ["2.2%"]], "."]], "buff_10"],
-  390207: ["Raging Wind", [["Move Speed +", [2, "#99ff99", ["2.5%"]], "."]], "buff_10"],
-  390306: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
-  390408: ["Eye of the Tempest", [["Atk. Power +", [2, "#99ff99", ["40.0%"]], "."]], "buff_15"],
+  390604: [
+    "Sacred Attack",
+    [
+      [
+        "Atk. Speed +",
+        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
+        "."
+      ]
+    ],
+    "buff_96"
+  ],
+  390605: ["Darkness", [["Darkness reduces sight range."]], "buff_13"],
   390703: [
     "Blessing of the Wind",
     [
@@ -20036,6 +19747,12 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_10"
   ],
+  390801: ["Lightning Whisper", [["Crit Rate +", [2, "#99ff99", ["1.0%"]], "."]], "bm_skill_01_28"],
+  390802: ["Lightning's Blessing", [["Atk. Speed +", [2, "#99ff99", ["8.0%"]], "."]], "buff_20"],
+  390803: ["Party: Weakness Exposure", [["Crit Resistance -", [2, "#ff9999", ["10.0%"]], "."]], "buff_62"],
+  390805: ["Electric Attack", [["Inflicts Electric Attack Damage every", [2, "#ffff99", [" 1s"]], "."]], "buff_51"],
+  390810: ["Electric Attack", [["Inflicts Electric Attack Damage every", [2, "#ffff99", [" 1s"]], "."]], "buff_51"],
+  390907: ["Freeze", [["Become Incapacitated while Frozen."]], "buff_35"],
   391001: ["Electrocution", [["Become Incapacitated while Electrocuted."]], "buff_51"],
   391125: ["Frost Storm", [["Move Speed -", [2, "#ff9999", ["10.0%"]], "."]], "buff_63"],
   391126: ["Freeze", [["Become Incapacitated while Frozen."]], "buff_35"],
@@ -20057,6 +19774,9 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   ],
   391605: ["Party: Weakness Exposure", [["Crit Resistance -", [2, "#ff9999", ["10.0%"]], "."]], "buff_62"],
   391701: ["Electric Attack", [["Inflicts Electric Attack Damage every", [2, "#ffff99", [" 1s"]], "."]], "buff_161"],
+  391816: ["Darkness", [["Darkness reduces sight range."]], "buff_13"],
+  391907: ["Electric Attack", [["Inflicts Electric Attack Damage every", [2, "#ffff99", [" 1s"]], "."]], "buff_161"],
+  391912: ["Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
   392802: [
     "Water Round Kick",
     [
@@ -20068,6 +19788,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_42"
   ],
+  392803: ["Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
   392827: [
     "Water Round Kick",
     [
@@ -20079,54 +19800,185 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_43"
   ],
-  392803: ["Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
-  390307: [
-    "Blessing of the Wind",
-    [
-      [
-        "Move Speed +",
-        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        ".  Atk. Speed +",
-        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        "."
-      ]
-    ],
-    "buff_10"
-  ],
-  390604: [
-    "Sacred Attack",
-    [
-      [
-        "Atk. Speed +",
-        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        "."
-      ]
-    ],
-    "buff_96"
-  ],
-  390605: ["Darkness", [["Darkness reduces sight range."]], "buff_13"],
-  393206: ["Darkness", [["Darkness reduces sight range."]], "buff_13"],
-  391816: ["Darkness", [["Darkness reduces sight range."]], "buff_13"],
-  393201: ["Electric Attack", [["Inflicts Electric Attack Damage every", [2, "#ffff99", [" 1s"]], "."]], "buff_161"],
-  391912: ["Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
-  391907: ["Electric Attack", [["Inflicts Electric Attack Damage every", [2, "#ffff99", [" 1s"]], "."]], "buff_161"],
-  390400: [
-    "Sturdy Armor",
-    [
-      [
-        "Incoming Phy. Damage -",
-        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        " Incoming Mag. Damage -",
-        [2, "#99ff99", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
-        "."
-      ]
-    ],
-    "buff_19"
-  ],
-  390401: ["Ring of Fire", [["Inflicts Burn Damage to nearby foes every", [2, "#ffff99", [" 1s"]], "."]], "buff_56"],
-  390907: ["Freeze", [["Become Incapacitated while Frozen."]], "buff_35"],
-  390404: ["Darkness", [["Darkness reduces sight range."]], "buff_13"],
   392900: ["Party: Weakness Exposure", [["Crit Resistance -", [2, "#ff9999", ["10.0%"]], "."]], "buff_62"],
+  393201: ["Electric Attack", [["Inflicts Electric Attack Damage every", [2, "#ffff99", [" 1s"]], "."]], "buff_161"],
+  393206: ["Darkness", [["Darkness reduces sight range."]], "buff_13"],
+  2220200: ["Energy Recovery", [["Recover MP."]], "ark_passive_01_34"],
+  2220201: ["Energy Recovery", [["Recover MP."]], "ark_passive_01_34"],
+  2220202: ["Energy Recovery", [["Recover MP."]], "ark_passive_01_34"],
+  2220503: [
+    "Esoteric Origin",
+    [
+      [
+        "Damage dealt from the next Leaping Dragon, Moon Flash Kick, Sweeping Kick, or Deadly Dive Skill +",
+        [2, "#99ff99", ["40.0%"]],
+        "."
+      ]
+    ],
+    "ark_passive_bm_4"
+  ],
+  2220504: [
+    "Esoteric Origin",
+    [
+      [
+        "Damage dealt from the next Leaping Dragon, Moon Flash Kick, Sweeping Kick, or Deadly Dive Skill +",
+        [2, "#99ff99", ["65.0%"]],
+        "."
+      ]
+    ],
+    "ark_passive_bm_4"
+  ],
+  2220505: [
+    "Esoteric Origin",
+    [
+      [
+        "Damage dealt from the next Leaping Dragon, Moon Flash Kick, Sweeping Kick, or Deadly Dive Skill +",
+        [2, "#99ff99", ["90.0%"]],
+        "."
+      ]
+    ],
+    "ark_passive_bm_4"
+  ],
+  2220506: ["Push Immunity", [["Gain Push Immunity."]], "buff_21"],
+  2220700: ["Esoteric Combustion", [["Damage to foes +", [2, "#99ff99", ["1.0%"]], "."]], "ark_passive_01_17"],
+  2220701: ["Esoteric Combustion", [["Damage to foes +", [2, "#99ff99", ["2.0%"]], "."]], "ark_passive_01_17"],
+  2220702: ["Esoteric Combustion", [["Damage to foes +", [2, "#99ff99", ["3.0%"]], "."]], "ark_passive_01_17"],
+  2220703: ["Esoteric Combustion", [["Damage to foes +", [2, "#99ff99", ["4.0%"]], "."]], "ark_passive_01_17"],
+  2220704: ["Esoteric Combustion", [["Damage to foes +", [2, "#99ff99", ["5.0%"]], "."]], "ark_passive_01_17"],
+  2221100: ["Esoteric Skill Preparation", [["At max stack, Esoteric Skill Damage increases."]], "ark_passive_bm_6"],
+  2230700: ["Duck II", [["Damage to foes +", [2, "#99ff99", ["1.0%"]], "."]], "ark_passive_01_16"],
+  2230701: ["Duck II", [["Damage to foes +", [2, "#99ff99", ["2.0%"]], "."]], "ark_passive_01_16"],
+  2230702: ["Duck II", [["Damage to foes +", [2, "#99ff99", ["3.0%"]], "."]], "ark_passive_01_16"],
+  2230703: ["Duck II", [["Damage to foes +", [2, "#99ff99", ["4.0%"]], "."]], "ark_passive_01_16"],
+  2230704: ["Duck II", [["Damage to foes +", [2, "#99ff99", ["5.0%"]], "."]], "ark_passive_01_16"],
+  2231000: [
+    "Shock Release",
+    [
+      ["Damage from skills that deplete Shock Energy +", [2, "#99ff99", [[4, "v0", 1], "%"]], "."],
+      { v0: ["combateffect_sk", [17, 22310.04, 22310.09, 22310.11]] }
+    ],
+    "ark_passive_01_18"
+  ],
+  2231001: [
+    "Shock Release",
+    [
+      ["Damage from skills that deplete Shock Energy +", [2, "#99ff99", [[4, "v0", 1], "%"]], "."],
+      { v0: ["combateffect_sk", [34, 22310.03, 22310.09, 22310.11]] }
+    ],
+    "ark_passive_01_18"
+  ],
+  2231002: [
+    "Shock Release",
+    [
+      ["Damage from skills that deplete Shock Energy +", [2, "#99ff99", [[4, "v0", 1], "%"]], "."],
+      { v0: ["combateffect_sk", [51, 22310.03, 22310.09, 22310.11]] }
+    ],
+    "ark_passive_01_18"
+  ],
+  2231100: [
+    "One-Sided Attack",
+    [["Back Attack and Frontal Attack are applied regardless of the orientation of the attack."]],
+    "ark_passive_01_19"
+  ],
+  2240500: [
+    "Diamond Tough",
+    [["Incoming Phy. Damage -", [2, "#99ff99", ["50.0%"]], ". Incoming Mag. Damage -", [2, "#99ff99", ["50.0%"]], "."]],
+    "ark_passive_so_18"
+  ],
+  2240600: [
+    "Level 3 Hype",
+    [
+      [
+        "Skill Cooldown -",
+        [2, "#99ff99", ["20.0%"]],
+        ". Atk. Speed +",
+        [2, "#99ff99", ["15.0%"]],
+        ". Damage to foes +",
+        [2, "#99ff99", ["54.0%"]],
+        "."
+      ]
+    ],
+    "so_skill_01_23"
+  ],
+  2240601: [
+    "Level 3 Hype",
+    [
+      [
+        "Skill Cooldown -",
+        [2, "#99ff99", ["20.0%"]],
+        ". Atk. Speed +",
+        [2, "#99ff99", ["15.0%"]],
+        ". Damage to foes +",
+        [2, "#99ff99", ["6400/100/>%"]],
+        "."
+      ]
+    ],
+    "so_skill_01_23"
+  ],
+  2240602: [
+    "Level 3 Hype",
+    [
+      [
+        "Skill Cooldown -",
+        [2, "#99ff99", ["20.0%"]],
+        ". Atk. Speed +",
+        [2, "#99ff99", ["15.0%"]],
+        ". Damage to foes +",
+        [2, "#99ff99", ["74.0%"]],
+        "."
+      ]
+    ],
+    "so_skill_01_23"
+  ],
+  2240900: ["Energy Explosion", [["Crit Damage +", [2, "#99ff99", ["15.0%"]], "."]], "ark_passive_so_7"],
+  2240901: ["Energy Explosion", [["Crit Damage +", [2, "#99ff99", ["15.0%"]], "."]], "ark_passive_so_7"],
+  2240902: ["Energy Explosion", [["Crit Damage +", [2, "#99ff99", ["15.0%"]], "."]], "ark_passive_so_7"],
+  2241000: [
+    "Level 3 Hype",
+    [
+      [
+        "Skill Cooldown -",
+        [2, "#99ff99", ["22.2%"]],
+        ". Atk. Speed +",
+        [2, "#99ff99", ["16.7%"]],
+        ". Damage to foes +",
+        [2, "#99ff99", ["82.1%"]],
+        "."
+      ]
+    ],
+    "ark_passive_so_8"
+  ],
+  2241001: [
+    "Level 3 Hype",
+    [
+      [
+        "Skill Cooldown -",
+        [2, "#99ff99", ["24.4%"]],
+        ". Atk. Speed +",
+        [2, "#99ff99", ["18.3%"]],
+        ". Damage to foes +",
+        [2, "#99ff99", ["90.3%"]],
+        "."
+      ]
+    ],
+    "ark_passive_so_8"
+  ],
+  2241002: [
+    "Level 3 Hype",
+    [
+      [
+        "Skill Cooldown -",
+        [2, "#99ff99", ["26.6%"]],
+        ". Atk. Speed +",
+        [2, "#99ff99", ["20.0%"]],
+        ". Damage to foes +",
+        [2, "#99ff99", ["98.4%"]],
+        "."
+      ]
+    ],
+    "ark_passive_so_8"
+  ],
+  2241003: ["Ready Attack", [["Atk. Power +", [2, "#99ff99", ["55.6%"]], "."]], "buff_15"],
   2340000: [
     "Pinnacle: Flurry",
     [
@@ -20222,6 +20074,26 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
       ]
     ],
     "lm_skill_01_47"
+  ],
+  2340020: [
+    "Yeon-Style Encore",
+    [["Next Skill's Damage to foes +", [2, "#99ff99", ["25.0%"]], "."]],
+    "ark_passive_lm_7"
+  ],
+  2340021: [
+    "Yeon-Style Encore Seal",
+    [["You must change stance to use the Yeon-Style Encore skill again."]],
+    "ark_passive_lm_8"
+  ],
+  2340022: [
+    "Yeon-Style Encore",
+    [["Next Skill's Damage to foes +", [2, "#99ff99", ["50.0%"]], "."]],
+    "ark_passive_lm_7"
+  ],
+  2340023: [
+    "Yeon-Style Encore",
+    [["Next Skill's Damage to foes +", [2, "#99ff99", ["75.0%"]], "."]],
+    "ark_passive_lm_7"
   ],
   2340100: [
     "Pinnacle: Focus",
@@ -20330,26 +20202,6 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   2340803: ["Yeon-Style Mark", [["Damage from foes +", [2, "#ff9999", ["4.8%"]], "."]], "ark_passive_lm_5"],
   2340804: ["Yeon-Style Mark", [["Damage from foes +", [2, "#ff9999", ["6.0%"]], "."]], "ark_passive_lm_5"],
   2340904: ["Yeon Clan Technique", [["Crit Rate +", [2, "#99ff99", ["20.0%"]], "."]], "buff_829"],
-  2340020: [
-    "Yeon-Style Encore",
-    [["Next Skill's Damage to foes +", [2, "#99ff99", ["24.0%"]], "."]],
-    "ark_passive_lm_7"
-  ],
-  2340021: [
-    "Yeon-Style Encore Seal",
-    [["You must change stance to use the Yeon-Style Encore skill again."]],
-    "ark_passive_lm_8"
-  ],
-  2340022: [
-    "Yeon-Style Encore",
-    [["Next Skill's Damage to foes +", [2, "#99ff99", ["48.0%"]], "."]],
-    "ark_passive_lm_7"
-  ],
-  2340023: [
-    "Yeon-Style Encore",
-    [["Next Skill's Damage to foes +", [2, "#99ff99", ["72.0%"]], "."]],
-    "ark_passive_lm_7"
-  ],
   2341100: ["Quick-Change Crits", [["Crit Rate +", [2, "#99ff99", ["0.8%"]], "."]], "ark_passive_01_18"],
   2341101: ["Quick-Change Crits", [["Crit Rate +", [2, "#99ff99", ["1.6%"]], "."]], "ark_passive_01_18"],
   2341102: ["Quick-Change Crits", [["Crit Rate +", [2, "#99ff99", ["2.4%"]], "."]], "ark_passive_01_18"],
@@ -20374,204 +20226,6 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [["Consuming ", [2, "#ffff99", ["16"]], " Esoteric Orbs increases the damage of the next Esoteric Skill."]],
     "ark_passive_bmm_8"
   ],
-  2220200: ["Energy Recovery", [["Recover MP."]], "ark_passive_01_34"],
-  2220201: ["Energy Recovery", [["Recover MP."]], "ark_passive_01_34"],
-  2220202: ["Energy Recovery", [["Recover MP."]], "ark_passive_01_34"],
-  2220700: ["Esoteric Combustion", [["Damage to foes +", [2, "#99ff99", ["1.0%"]], "."]], "ark_passive_01_17"],
-  2220701: ["Esoteric Combustion", [["Damage to foes +", [2, "#99ff99", ["2.0%"]], "."]], "ark_passive_01_17"],
-  2220702: ["Esoteric Combustion", [["Damage to foes +", [2, "#99ff99", ["3.0%"]], "."]], "ark_passive_01_17"],
-  2220703: ["Esoteric Combustion", [["Damage to foes +", [2, "#99ff99", ["4.0%"]], "."]], "ark_passive_01_17"],
-  2220704: ["Esoteric Combustion", [["Damage to foes +", [2, "#99ff99", ["5.0%"]], "."]], "ark_passive_01_17"],
-  2220503: [
-    "Esoteric Origin",
-    [
-      [
-        "Damage dealt from the next Leaping Dragon, Moon Flash Kick, Sweeping Kick, or Deadly Dive Skill +",
-        [2, "#99ff99", ["40.0%"]],
-        "."
-      ]
-    ],
-    "ark_passive_bm_4"
-  ],
-  2220504: [
-    "Esoteric Origin",
-    [
-      [
-        "Damage dealt from the next Leaping Dragon, Moon Flash Kick, Sweeping Kick, or Deadly Dive Skill +",
-        [2, "#99ff99", ["65.0%"]],
-        "."
-      ]
-    ],
-    "ark_passive_bm_4"
-  ],
-  2220505: [
-    "Esoteric Origin",
-    [
-      [
-        "Damage dealt from the next Leaping Dragon, Moon Flash Kick, Sweeping Kick, or Deadly Dive Skill +",
-        [2, "#99ff99", ["90.0%"]],
-        "."
-      ]
-    ],
-    "ark_passive_bm_4"
-  ],
-  2220506: ["Push Immunity", [["Gain Push Immunity."]], "buff_21"],
-  2221100: ["Esoteric Skill Preparation", [["At max stack, Esoteric Skill Damage increases."]], "ark_passive_bm_6"],
-  2240600: [
-    "Level 3 Hype",
-    [
-      [
-        "Skill Cooldown -",
-        [2, "#99ff99", ["25.0%"]],
-        ". Atk. Speed +",
-        [2, "#99ff99", ["15.0%"]],
-        ". Damage to foes +",
-        [2, "#99ff99", ["68.0%"]],
-        "."
-      ]
-    ],
-    "so_skill_01_23"
-  ],
-  2240601: [
-    "Level 3 Hype",
-    [
-      [
-        "Skill Cooldown -",
-        [2, "#99ff99", ["25.0%"]],
-        ". Atk. Speed +",
-        [2, "#99ff99", ["15.0%"]],
-        ". Damage to foes +",
-        [2, "#99ff99", ["79.0%"]],
-        "."
-      ]
-    ],
-    "so_skill_01_23"
-  ],
-  2240602: [
-    "Level 3 Hype",
-    [
-      [
-        "Skill Cooldown -",
-        [2, "#99ff99", ["25.0%"]],
-        ". Atk. Speed +",
-        [2, "#99ff99", ["15.0%"]],
-        ". Damage to foes +",
-        [2, "#99ff99", ["91.0%"]],
-        "."
-      ]
-    ],
-    "so_skill_01_23"
-  ],
-  2241000: [
-    "Level 3 Hype",
-    [
-      [
-        "Skill Cooldown -",
-        [2, "#99ff99", ["27.8%"]],
-        ". Atk. Speed +",
-        [2, "#99ff99", ["16.6%"]],
-        ". Damage to foes +",
-        [2, "#99ff99", ["101.0%"]],
-        "."
-      ]
-    ],
-    "ark_passive_so_8"
-  ],
-  2241001: [
-    "Level 3 Hype",
-    [
-      [
-        "Skill Cooldown -",
-        [2, "#99ff99", ["30.5%"]],
-        ". Atk. Speed +",
-        [2, "#99ff99", ["18.3%"]],
-        ". Damage to foes +",
-        [2, "#99ff99", ["111.0%"]],
-        "."
-      ]
-    ],
-    "ark_passive_so_8"
-  ],
-  2241002: [
-    "Level 3 Hype",
-    [
-      [
-        "Skill Cooldown -",
-        [2, "#99ff99", ["33.2%"]],
-        ". Atk. Speed +",
-        [2, "#99ff99", ["19.9%"]],
-        ". Damage to foes +",
-        [2, "#99ff99", ["121.0%"]],
-        "."
-      ]
-    ],
-    "ark_passive_so_8"
-  ],
-  2240801: [
-    "Level 1 Hype",
-    [
-      [
-        "Skill Cooldown -",
-        [2, "#99ff99", ["5.0%"]],
-        ". Atk. Speed +",
-        [2, "#99ff99", ["5.0%"]],
-        ". Damage to foes +",
-        [2, "#99ff99", ["10.0%"]],
-        "."
-      ]
-    ],
-    "so_skill_01_21"
-  ],
-  2240900: [
-    "Energy Explosion",
-    [["Crit Damage +", [2, "#99ff99", [[0, "Missing combateffect entries for ID 2240903"], "%"]], "."]],
-    "ark_passive_so_7"
-  ],
-  2240901: [
-    "Energy Explosion",
-    [["Crit Damage +", [2, "#99ff99", [[0, "Missing combateffect entries for ID 2240904"], "%"]], "."]],
-    "ark_passive_so_7"
-  ],
-  2240902: [
-    "Energy Explosion",
-    [["Crit Damage +", [2, "#99ff99", [[0, "Missing combateffect entries for ID 2240905"], "%"]], "."]],
-    "ark_passive_so_7"
-  ],
-  2230700: ["Duck II", [["Damage to foes +", [2, "#99ff99", ["1.0%"]], "."]], "ark_passive_01_16"],
-  2230701: ["Duck II", [["Damage to foes +", [2, "#99ff99", ["2.0%"]], "."]], "ark_passive_01_16"],
-  2230702: ["Duck II", [["Damage to foes +", [2, "#99ff99", ["3.0%"]], "."]], "ark_passive_01_16"],
-  2230703: ["Duck II", [["Damage to foes +", [2, "#99ff99", ["4.0%"]], "."]], "ark_passive_01_16"],
-  2230704: ["Duck II", [["Damage to foes +", [2, "#99ff99", ["5.0%"]], "."]], "ark_passive_01_16"],
-  2231000: [
-    "Shock Release",
-    [
-      ["Damage from skills that deplete Shock Energy +", [2, "#99ff99", [[4, "v0", 1], "%"]], "."],
-      { v0: ["combateffect_sk", [17, 22310.04, 22310.09, 22310.11]] }
-    ],
-    "ark_passive_01_18"
-  ],
-  2231001: [
-    "Shock Release",
-    [
-      ["Damage from skills that deplete Shock Energy +", [2, "#99ff99", [[4, "v0", 1], "%"]], "."],
-      { v0: ["combateffect_sk", [34, 22310.03, 22310.09, 22310.11]] }
-    ],
-    "ark_passive_01_18"
-  ],
-  2231002: [
-    "Shock Release",
-    [
-      ["Damage from skills that deplete Shock Energy +", [2, "#99ff99", [[4, "v0", 1], "%"]], "."],
-      { v0: ["combateffect_sk", [51, 22310.03, 22310.09, 22310.11]] }
-    ],
-    "ark_passive_01_18"
-  ],
-  2231100: [
-    "One-Sided Attack",
-    [["Back Attack and Frontal Attack are applied regardless of the orientation of the attack."]],
-    "ark_passive_01_19"
-  ],
-  2241003: ["Ready Attack", [["Atk. Power +", [2, "#99ff99", ["55.6%"]], "."]], "buff_15"],
   3220100: ["Destiny: Smite Barrage", [["Crit Rate +", [2, "#99ff99", ["20.0%"]], "."]], "buff_884"],
   3220200: [
     "Destiny: Smite Barrage",
@@ -20600,8 +20254,8 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "buff_884"
   ],
   3220600: ["Destiny: Celestial Strike", [["Next Sweeping Kick Damage +", [2, "#99ff99", ["15.0%"]]]], "buff_885"],
-  3220700: ["Destiny: Enlightened Origin", [["Damage to foes +", [2, "#99ff99", ["12.0%"]], "."]], "buff_884"],
-  3220800: ["Destiny: Enlightened Origin", [["Damage to foes +", [2, "#99ff99", ["13.5%"]], "."]], "buff_884"],
+  3220700: ["Destiny: Enlightened Origin", [["Damage to foes +", [2, "#99ff99", ["9.0%"]], "."]], "buff_884"],
+  3220800: ["Destiny: Enlightened Origin", [["Damage to foes +", [2, "#99ff99", ["10.5%"]], "."]], "buff_884"],
   3221100: [
     "Destiny: Opening Three Gates",
     [["At ", [2, "#ffff99", ["3"]], " stacks, recovers all Esoteric Origin."]],
@@ -20686,7 +20340,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   3224700: ["Move Speed Bonus", [["Move Speed +", [2, "#99ff99", ["16.0%"]], "."]], "buff_10"],
   3230100: [
     "Destiny: Shock Burst",
-    [["Damage from skills that deplete Shock Energy +", [2, "#99ff99", ["8.0%"]], "."]],
+    [["Damage from skills that deplete Shock Energy +", [2, "#99ff99", ["10.0%"]], "."]],
     "buff_884"
   ],
   3230200: [
@@ -20694,13 +20348,13 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [
       [
         "Damage from skills that consume all Shock Energy +",
-        [2, "#99ff99", ["8.0%"]],
+        [2, "#99ff99", ["10.0%"]],
         " and Atk. Speed +",
         [2, "#99ff99", ["10.0%"]],
         ". Shock Skill Crit Rate +",
         [2, "#99ff99", ["5.0%"]],
         " and Damage +",
-        [2, "#99ff99", ["8.0%"]],
+        [2, "#99ff99", ["10.0%"]],
         "."
       ]
     ],
@@ -20711,13 +20365,13 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [
       [
         "Damage from skills that consume all Shock Energy +",
-        [2, "#99ff99", ["8.0%"]],
+        [2, "#99ff99", ["10.0%"]],
         " and Atk. Speed +",
         [2, "#99ff99", ["10.0%"]],
         ". Shock Skill Crit Rate +",
         [2, "#99ff99", ["5.0%"]],
         " and Damage +",
-        [2, "#99ff99", ["9.0%"]],
+        [2, "#99ff99", ["11.0%"]],
         "."
       ]
     ],
@@ -20752,7 +20406,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         [2, "#99ff99", [[4, "v1", 1], "%"]],
         "."
       ],
-      { v0: ["combateffect_sk", [100, 32307.010000000002]], v1: ["combateffect_sk", [45, 0]] }
+      { v0: ["combateffect_sk", [100, 32307.010000000002]], v1: ["combateffect_sk", [47, 0]] }
     ],
     "buff_885"
   ],
@@ -20766,7 +20420,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         [2, "#99ff99", [[4, "v1", 1], "%"]],
         "."
       ],
-      { v0: ["combateffect_sk", [100, 32308.010000000002]], v1: ["combateffect_sk", [48, 0]] }
+      { v0: ["combateffect_sk", [100, 32308.010000000002]], v1: ["combateffect_sk", [50, 0]] }
     ],
     "buff_885"
   ],
@@ -20830,11 +20484,6 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_884"
   ],
-  3234100: [
-    "Fragmented Destiny",
-    [["After ", [2, "#ffff99", ["4"]], " Stamina Skill uses, activates ", [2, "#bf9ef6", ["Destiny"]], "."]],
-    "buff_883"
-  ],
   3231600: [
     "Destiny: Condensed Stamina",
     [
@@ -20844,7 +20493,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_884"
   ],
-  3231601: ["Destiny: Earth Collapse", [["Earth Rend Damage +", [2, "#99ff99", ["8.0%"]], " per stack."]], "buff_885"],
+  3231601: ["Destiny: Earth Collapse", [["Earth Rend Damage +", [2, "#99ff99", ["7.0%"]], " per stack."]], "buff_885"],
   3232100: [
     "Destiny: Repeated Leap",
     [
@@ -20922,20 +20571,255 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   ],
   3232700: ["Crystal Mind", [["Damage to foes +", [2, "#99ff99", ["7.0%"]], "."]], "buff_886"],
   3232800: ["Crystal Mind", [["Damage to foes +", [2, "#99ff99", ["8.0%"]], "."]], "buff_886"],
+  3234100: [
+    "Fragmented Destiny",
+    [["After ", [2, "#ffff99", ["4"]], " Stamina Skill uses, activates ", [2, "#bf9ef6", ["Destiny"]], "."]],
+    "buff_883"
+  ],
   3235600: [
     "Fragmented Destiny",
     [["After ", [2, "#ffff99", ["4"]], " Stamina Skill uses, activates ", [2, "#bf9ef6", ["Destiny"]], "."]],
     "buff_883"
   ],
+  3240100: [
+    "Destiny: Decimation",
+    [
+      [
+        "While in Hype Mode, World Decimation Skill Damage +",
+        [2, "#99ff99", ["20.0%"]],
+        ".\nWorld Decimation cooldown -",
+        [2, "#99ff99", ["20.0%"]],
+        "."
+      ]
+    ],
+    "buff_884"
+  ],
+  3240200: [
+    "Destiny: Instant Focus",
+    [
+      [
+        "Next Merciless Pummel Damage +",
+        [2, "#99ff99", [[0, "Missing ability feature entry for Key 3240200, Level 1"], "%"]],
+        "."
+      ]
+    ],
+    "buff_885"
+  ],
+  3240300: [
+    "Destiny: Instant Focus",
+    [
+      [
+        "Next Merciless Pummel Damage +",
+        [2, "#99ff99", [[0, "Missing ability feature entry for Key 3240200, Level 2"], "%"]],
+        "."
+      ]
+    ],
+    "buff_885"
+  ],
+  3240600: [
+    "Destiny: Unleashed Energy",
+    [
+      [
+        "On using Martial Art Skills (other than Hyper Awakening Technique) in Hype Mode, cooldown of Tempest Blast, Energy Blast, and Heavenly Spiral Palm -",
+        [2, "#99ff99", ["0.5s"]],
+        "."
+      ]
+    ],
+    "buff_884"
+  ],
+  3241100: ["Destiny: Force", [["Force Skill Damage +", [2, "#99ff99", ["4.5%"]], "."]], "buff_884"],
+  3241101: [
+    "Destiny: Burst Adept",
+    [
+      [
+        "Palm Burst Damage +",
+        [2, "#99ff99", [[0, "Missing ability feature entry for Key 3241101, Level 1"], "%"]],
+        " per stack. Max ",
+        [2, "#ffff99", ["7"]],
+        " stacks."
+      ]
+    ],
+    "buff_885"
+  ],
+  3241600: ["Destiny: Supreme", [["Martial Art Skill Damage +", [2, "#99ff99", ["10.0%"]], "."]], "buff_884"],
+  3241700: [
+    "Destiny: Supreme",
+    [
+      [
+        "Martial Art Skill Damage +",
+        [2, "#99ff99", ["10.0%"]],
+        ". Supreme Art Form Damage +",
+        [2, "#99ff99", ["12.5%"]],
+        "."
+      ]
+    ],
+    "buff_884"
+  ],
+  3241800: [
+    "Destiny: Supreme",
+    [
+      [
+        "Martial Art Skill Damage +",
+        [2, "#99ff99", ["10.0%"]],
+        ". Supreme Art Form Damage +",
+        [2, "#99ff99", ["15.5%"]],
+        "."
+      ]
+    ],
+    "buff_884"
+  ],
+  3242100: [
+    "Destiny: Supreme Energy",
+    [
+      [
+        "Supreme Art Form Damage +",
+        [2, "#99ff99", ["6.0%"]],
+        " per stack. Martial Art Skill Damage -",
+        [2, "#ff9999", [[4, "v0", 1], "%"]],
+        "."
+      ],
+      { v0: ["combateffect_sk", [-80, 32422.07]] }
+    ],
+    "buff_884"
+  ],
+  3242600: [
+    "Destiny: Pinpoint Focus",
+    [
+      [
+        "Yin Yang Palm Damage +",
+        [2, "#99ff99", ["8.0%"]],
+        ". On using Supreme Art Form, Yin Yang Palm cooldown -",
+        [2, "#99ff99", ["50.0%"]],
+        "."
+      ]
+    ],
+    "buff_884"
+  ],
+  3242700: ["Destiny: Force Cycle", [["Supreme Art Form Damage +", [2, "#99ff99", ["13.0%"]], "."]], "buff_885"],
+  3242800: ["Destiny: Force Cycle", [["Supreme Art Form Damage +", [2, "#99ff99", ["17.0%"]], "."]], "buff_885"],
+  3243200: [
+    "Adamantine Body",
+    [
+      [
+        "Atk. Speed +",
+        [2, "#99ff99", ["10.0%"]],
+        ". Damage to foes +",
+        [2, "#99ff99", [[0, "Missing combateffect entries for ID 3243201"], "%"]],
+        "."
+      ]
+    ],
+    "buff_15"
+  ],
+  3243300: [
+    "Adamantine Body",
+    [
+      [
+        "Atk. Speed +",
+        [2, "#99ff99", ["10.0%"]],
+        ". Damage to foes +",
+        [2, "#99ff99", [[0, "Missing combateffect entries for ID 3243301"], "%"]],
+        "."
+      ]
+    ],
+    "buff_15"
+  ],
+  3244100: [
+    "Fragmented Destiny",
+    [["After ", [2, "#ffff99", ["2"]], " Force Skill use(s), activates ", [2, "#bf9ef6", ["Destiny"]], "."]],
+    "buff_883"
+  ],
+  3245600: [
+    "Fragmented Destiny",
+    [["After ", [2, "#ffff99", ["5"]], " Martial Art Skill use(s), activates ", [2, "#bf9ef6", ["Destiny"]], "."]],
+    "buff_883"
+  ],
+  3340100: ["Destiny: Red Dragon Energy", [["Damage to foes +", [2, "#99ff99", ["5.0%"]], "."]], "buff_884"],
+  3340200: [
+    "Destiny: Pinpoint Focus",
+    [
+      [
+        "Next Red Dragon's Horn or Deadly Red Dragon Damage +",
+        [2, "#99ff99", ["12.0%"]],
+        " for ",
+        [2, "#ffff99", ["1"]],
+        " use(s), and always hits as a Back Attack."
+      ]
+    ],
+    "buff_885"
+  ],
+  3340600: ["Target Weak Point", [["On Crit Hit, incoming Damage +", [2, "#ff9999", ["8.0%"]], "."]], "buff_602"],
+  3340700: [
+    "Destiny: Red Dragon Barrage",
+    [
+      [
+        "Next Raging Dragon Slash, Half Moon Slash, Dragon's Rampage, Red Dragon's Horn, Deadly Red Dragon, Thrust of Destruction, and Starfall Pounce Damage +",
+        [2, "#99ff99", ["5.0%"]],
+        " for ",
+        [2, "#ffff99", ["3"]],
+        " times."
+      ]
+    ],
+    "buff_884"
+  ],
+  3341100: [
+    "Destiny: Yeon-Style Spear Technique",
+    [
+      [
+        "Focus Skill Crit Rate -",
+        [2, "#ff9999", ["20.0%"]],
+        ". On Focus Skill Crit Hit, Damage to foes +",
+        [2, "#99ff99", ["20.0%"]],
+        "."
+      ]
+    ],
+    "buff_884"
+  ],
+  3341200: ["Destiny: Yeon-Style Flurry", [["Flurry Skill Damage +", [2, "#99ff99", ["28.0%"]], "."]], "buff_885"],
+  3341201: ["Destiny: Yeon-Style Flurry", [["Flurry Skill Damage +", [2, "#99ff99", ["34.0%"]], "."]], "buff_885"],
+  3341600: ["Destiny: Galewind Barrage", [["Damage to foes +", [2, "#99ff99", ["2.4%"]], "."]], "buff_884"],
+  3341700: [
+    "Destiny: Raging Dragon Energy",
+    [
+      [
+        "Next Raging Dragon Slash and Half Moon Slash Damage +",
+        [2, "#99ff99", ["15.0%"]],
+        " for ",
+        [2, "#ffff99", ["2"]],
+        " use(s)."
+      ]
+    ],
+    "buff_885"
+  ],
+  3342100: ["Destiny: Heroic Spirit", [["Damage to foes +", [2, "#99ff99", ["2.0%"]], "."]], "buff_884"],
+  3342200: [
+    "Destiny: Yeon-Style Slash",
+    [["Next Yeon-Style Technique Damage +", [2, "#99ff99", ["5.0%"]], " for ", [2, "#ffff99", ["1"]], " use(s)."]],
+    "buff_885"
+  ],
+  3342600: [
+    "Destiny: Raging Dragon Quintuple Strike",
+    [["Damage to foes +", [2, "#99ff99", ["2.0%"]], "."]],
+    "buff_884"
+  ],
+  3342700: [
+    "Destiny: Chain Hit",
+    [["Next Combo-type Skill Damage +", [2, "#99ff99", ["20.0%"]], " for ", [2, "#ffff99", ["4"]], " use(s)."]],
+    "buff_885"
+  ],
+  3345600: [
+    "Fragmented Destiny",
+    [["After ", [2, "#ffff99", ["4"]], " skill uses, activates ", [2, "#bf9ef6", ["Destiny"]], "."]],
+    "buff_883"
+  ],
   3390100: ["Destiny: Esoteric Skill", [["Esoteric Skill Crit Damage +", [2, "#99ff99", ["16.5%"]], "."]], "buff_884"],
   3390201: [
     "Destiny: Tiger's Roar",
-    [["Esoteric Skill Damage +", [2, "#99ff99", [[4, "v0", 1], "%"]], "."], { v0: ["combateffect_sk", [6, 33902.03]] }],
+    [["Esoteric Skill Damage +", [2, "#99ff99", [[4, "v0", 1], "%"]], "."], { v0: ["combateffect_sk", [7, 33902.03]] }],
     "buff_885"
   ],
   3390301: [
     "Destiny: Tiger's Roar",
-    [["Esoteric Skill Damage +", [2, "#99ff99", [[4, "v0", 1], "%"]], "."], { v0: ["combateffect_sk", [7, 33903.03]] }],
+    [["Esoteric Skill Damage +", [2, "#99ff99", [[4, "v0", 1], "%"]], "."], { v0: ["combateffect_sk", [8, 33903.03]] }],
     "buff_885"
   ],
   3390600: [
@@ -20990,45 +20874,6 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "Destiny: Utter Carnage",
     [["Berserk Circle Damage +", [2, "#99ff99", ["35.0%"]], " per stack. Max ", [2, "#ffff99", ["3"]], " stacks."]],
     "buff_885"
-  ],
-  3391600: [
-    "Destiny: Speed of Light",
-    [
-      [
-        "Esoteric Skill Damage +",
-        [2, "#99ff99", ["9.0%"]],
-        ". Atk./Move Speed +",
-        [2, "#99ff99", ["4.0%"]],
-        " per stack."
-      ]
-    ],
-    "buff_884"
-  ],
-  3391700: [
-    "Destiny: Speed of Light",
-    [
-      [
-        "Esoteric Skill Damage +",
-        [2, "#99ff99", ["12.0%"]],
-        ". Atk./Move Speed +",
-        [2, "#99ff99", ["4.0%"]],
-        " per stack."
-      ]
-    ],
-    "buff_884"
-  ],
-  3391800: [
-    "Destiny: Speed of Light",
-    [
-      [
-        "Esoteric Skill Damage +",
-        [2, "#99ff99", ["13.0%"]],
-        ". Atk./Move Speed +",
-        [2, "#99ff99", ["4.0%"]],
-        " per stack."
-      ]
-    ],
-    "buff_884"
   ],
   3391100: [
     "Destiny: Lightning Tiger",
@@ -21085,6 +20930,45 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         v0: ["combateffect_sk", [-11, 33911.020000000004, 33911.020000000004, 33911.020000000004, 33911.020000000004]],
         v1: ["combateffect_sk", [10.5, 3]]
       }
+    ],
+    "buff_884"
+  ],
+  3391600: [
+    "Destiny: Speed of Light",
+    [
+      [
+        "Esoteric Skill Damage +",
+        [2, "#99ff99", ["9.0%"]],
+        ". Atk./Move Speed +",
+        [2, "#99ff99", ["4.0%"]],
+        " per stack."
+      ]
+    ],
+    "buff_884"
+  ],
+  3391700: [
+    "Destiny: Speed of Light",
+    [
+      [
+        "Esoteric Skill Damage +",
+        [2, "#99ff99", ["12.0%"]],
+        ". Atk./Move Speed +",
+        [2, "#99ff99", ["4.0%"]],
+        " per stack."
+      ]
+    ],
+    "buff_884"
+  ],
+  3391800: [
+    "Destiny: Speed of Light",
+    [
+      [
+        "Esoteric Skill Damage +",
+        [2, "#99ff99", ["13.0%"]],
+        ". Atk./Move Speed +",
+        [2, "#99ff99", ["4.0%"]],
+        " per stack."
+      ]
     ],
     "buff_884"
   ],
@@ -21178,224 +21062,6 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
       ]
     ],
     "buff_884"
-  ],
-  3340100: ["Destiny: Red Dragon Energy", [["Damage to foes +", [2, "#99ff99", ["4.0%"]], "."]], "buff_884"],
-  3340200: [
-    "Destiny: Pinpoint Focus",
-    [
-      [
-        "Next Red Dragon's Horn or Deadly Red Dragon Damage +",
-        [2, "#99ff99", ["12.0%"]],
-        " for ",
-        [2, "#ffff99", ["1"]],
-        " use(s), and always hits as a Back Attack."
-      ]
-    ],
-    "buff_885"
-  ],
-  3340700: [
-    "Destiny: Red Dragon Barrage",
-    [["Next Flurry or Focus Skill Damage +", [2, "#99ff99", ["5.0%"]], " for ", [2, "#ffff99", ["3"]], " uses."]],
-    "buff_884"
-  ],
-  3341100: [
-    "Destiny: Yeon-Style Spear Technique",
-    [
-      [
-        "Focus Skill Crit Rate -",
-        [2, "#ff9999", ["20.0%"]],
-        ". On Focus Skill Crit Hit, Damage to foes +",
-        [2, "#99ff99", ["20.0%"]],
-        "."
-      ]
-    ],
-    "buff_884"
-  ],
-  3341200: ["Destiny: Yeon-Style Flurry", [["Flurry Skill Damage +", [2, "#99ff99", ["20.0%"]], "."]], "buff_885"],
-  3341201: ["Destiny: Yeon-Style Flurry", [["Flurry Skill Damage +", [2, "#99ff99", ["25.0%"]], "."]], "buff_885"],
-  3341600: ["Destiny: Galewind Barrage", [["Damage to foes +", [2, "#99ff99", ["2.4%"]], "."]], "buff_884"],
-  3341700: [
-    "Destiny: Raging Dragon Energy",
-    [
-      [
-        "Next Raging Dragon Slash and Half Moon Slash Damage +",
-        [2, "#99ff99", ["15.0%"]],
-        " for ",
-        [2, "#ffff99", ["2"]],
-        " use(s)."
-      ]
-    ],
-    "buff_885"
-  ],
-  3342100: ["Destiny: Heroic Spirit", [["Damage to foes +", [2, "#99ff99", ["2.0%"]], "."]], "buff_884"],
-  3342200: [
-    "Destiny: Yeon-Style Slash",
-    [["Next Yeon-Style Technique Damage +", [2, "#99ff99", ["5.0%"]], " for ", [2, "#ffff99", ["1"]], " use(s)."]],
-    "buff_885"
-  ],
-  3342600: [
-    "Destiny: Raging Dragon Quintuple Strike",
-    [["Damage to foes +", [2, "#99ff99", ["2.0%"]], "."]],
-    "buff_884"
-  ],
-  3342700: [
-    "Destiny: Chain Hit",
-    [["Next Combo-type Skill Damage +", [2, "#99ff99", ["20.0%"]], " for ", [2, "#ffff99", ["4"]], " use(s)."]],
-    "buff_885"
-  ],
-  3345600: [
-    "Fragmented Destiny",
-    [["After ", [2, "#ffff99", ["4"]], " skill uses, activates ", [2, "#bf9ef6", ["Destiny"]], "."]],
-    "buff_883"
-  ],
-  3240100: [
-    "Destiny: Energy Focus",
-    [
-      [
-        "On Normal Skill use, Energy Release cooldown -",
-        [2, "#99ff99", ["0.3"]],
-        "s. Damage to foes +",
-        [2, "#99ff99", ["5.0%"]],
-        "."
-      ]
-    ],
-    "buff_884"
-  ],
-  3240200: ["Destiny: Instant Focus", [["Next Merciless Pummel Damage +", [2, "#99ff99", ["40.0%"]], "."]], "buff_885"],
-  3240300: ["Destiny: Instant Focus", [["Next Merciless Pummel Damage +", [2, "#99ff99", ["45.0%"]], "."]], "buff_885"],
-  3243200: [
-    "Adamantine Body",
-    [["Atk. Speed +", [2, "#99ff99", ["10.0%"]], ". Damage to foes +", [2, "#99ff99", ["3.0%"]], "."]],
-    "buff_15"
-  ],
-  3243300: [
-    "Adamantine Body",
-    [["Atk. Speed +", [2, "#99ff99", ["10.0%"]], ". Damage to foes +", [2, "#99ff99", ["4.0%"]], "."]],
-    "buff_15"
-  ],
-  3240600: [
-    "Destiny: Unleashed Force",
-    [
-      [
-        "Merciless Pummel, Lightning Palm, Illusion Strike Damage -",
-        [2, "#ff9999", ["30.0%"]],
-        ". Energy Bullet, Tempest Blast, Energy Blast, Celestial Palm, Force Orb Damage +",
-        [2, "#99ff99", ["30.0%"]],
-        "."
-      ]
-    ],
-    "buff_884"
-  ],
-  3241100: [
-    "Destiny: Onslaught",
-    [
-      [
-        "Atk. Power +",
-        [2, "#99ff99", ["55.6%"]],
-        ". On Palm Burst use, Normal Skill (excluding Palm Burst and Hyper Awakening Techniques) cooldown -",
-        [2, "#99ff99", ["15.0%"]],
-        ". On Normal Skill use (excluding Palm Burst), gain the Destiny: Burst Adept effect."
-      ]
-    ],
-    "buff_884"
-  ],
-  3241101: [
-    "Destiny: Burst Adept",
-    [["Palm Burst Damage +", [2, "#99ff99", ["5.0%"]], " per stack. Max ", [2, "#ffff99", ["7"]], " stacks."]],
-    "buff_885"
-  ],
-  3241600: [
-    "Destiny: Autonomic Circulation",
-    [["On Energy Release use, gain the Destiny: Poison Pulse Strike effect."]],
-    "buff_884"
-  ],
-  3241601: ["Destiny: Somatic Circulation", [["Damage to Foes +", [2, "#99ff99", ["5.0%"]], "."]], "buff_885"],
-  3241700: [
-    "Destiny: Autonomic Circulation",
-    [["On Energy Release use, gain the Destiny: Poison Pulse Strike effect."]],
-    "buff_884"
-  ],
-  3241701: [
-    "Destiny: Somatic Circulation",
-    [["Atk. Speed +", [2, "#99ff99", ["10.0%"]], ". Damage to foes +", [2, "#99ff99", ["8.0%"]], "."]],
-    "buff_885"
-  ],
-  3241800: [
-    "Destiny: Autonomic Circulation",
-    [["On Energy Release use, gain the Destiny: Poison Pulse Strike effect."]],
-    "buff_884"
-  ],
-  3241801: [
-    "Destiny: Somatic Circulation",
-    [["Atk. Speed +", [2, "#99ff99", ["10.0%"]], ". Damage to foes +", [2, "#99ff99", ["9.0%"]], "."]],
-    "buff_885"
-  ],
-  3242100: [
-    "Destiny: Grand Cycle",
-    [["Upon entering Level 3 Hype, changes to the Destiny: Illusion effect."]],
-    "buff_884"
-  ],
-  3242101: [
-    "Destiny: Illusion",
-    [["Illusion Strike Damage +", [2, "#99ff99", ["20.0%"]], ". Gains the Destiny: Barrier Pull effect on use."]],
-    "buff_885"
-  ],
-  3242102: ["Destiny: Barrier Pull", [["Crippling Barrier Damage +", [2, "#99ff99", ["60.0%"]], "."]], "buff_886"],
-  3242200: [
-    "Destiny: Grand Cycle",
-    [["Upon entering Level 3 Hype, changes to the Destiny: Illusion effect."]],
-    "buff_884"
-  ],
-  3242201: [
-    "Destiny: Illusion",
-    [["Illusion Strike Damage +", [2, "#99ff99", ["20.0%"]], ". Gains the Destiny: Barrier Pull effect on use."]],
-    "buff_885"
-  ],
-  3242202: ["Destiny: Barrier Pull", [["Crippling Barrier Damage +", [2, "#99ff99", ["60.0%"]], "."]], "buff_886"],
-  3242300: [
-    "Destiny: Grand Cycle",
-    [["Upon entering Level 3 Hype, changes to the Destiny: Illusion effect."]],
-    "buff_884"
-  ],
-  3242301: [
-    "Destiny: Illusion",
-    [["Illusion Strike Damage +", [2, "#99ff99", ["20.0%"]], ". Gains the Destiny: Barrier Pull effect on use."]],
-    "buff_885"
-  ],
-  3242302: ["Destiny: Barrier Pull", [["Crippling Barrier Damage +", [2, "#99ff99", ["60.0%"]], "."]], "buff_886"],
-  3242600: [
-    "Destiny: Barefist",
-    [
-      [
-        "Atk./Move Speed +",
-        [2, "#99ff99", ["12.0%"]],
-        ". In Hype Mode, Damage to foes -",
-        [2, "#ff9999", ["80.0%"]],
-        ". On Flash Step use, gain the Destiny: Strike effect, and on Hype use, gain the Destiny: Self Defense effect."
-      ]
-    ],
-    "buff_884"
-  ],
-  3242601: [
-    "Destiny: Strike",
-    [
-      [
-        "Atk. Power +",
-        [2, "#99ff99", ["55.6%"]],
-        ". Bolting Crash Damage +",
-        [2, "#99ff99", [[4, "v0", 1], "%"]],
-        ". Pulverizing Palm Damage +",
-        [2, "#99ff99", ["100%"]],
-        "."
-      ],
-      { v0: ["combateffect_sk", [100, 100, 32411.030000000002]] }
-    ],
-    "buff_885"
-  ],
-  3242602: [
-    "Destiny: Self Defense",
-    [["Absorbs Damage equal to ", [2, "#99ff99", ["10.0%"]], " of Max HP."]],
-    "buff_886"
   ],
   280203: [
     "Quick Pace",
@@ -21674,52 +21340,132 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   2283302: ["Storm Mark", [["Sharpshooter Damage +", [2, "#99ff99", ["18.0%"]], ". "]], "ark_passive_01_25"],
   2283400: [
     "Deep Learning",
-    [["Change to Deep Learning Complete upon reaching ", [2, "#ffff99", ["10"]], " stacks."]],
+    [
+      [
+        "Damage to foes +",
+        [2, "#99ff99", ["0.5%"]],
+        ", and at ",
+        [2, "#ffff99", ["5"]],
+        " stacks, changes to the Deep Learning Complete buff."
+      ]
+    ],
     "ark_passive_01_66"
   ],
   2283401: [
     "Deep Learning",
-    [["Change to Deep Learning Complete upon reaching ", [2, "#ffff99", ["10"]], " stacks."]],
+    [
+      [
+        "Damage to foes +",
+        [2, "#99ff99", ["1.0%"]],
+        ", and at ",
+        [2, "#ffff99", ["5"]],
+        " stacks, changes to the Deep Learning Complete buff."
+      ]
+    ],
     "ark_passive_01_66"
   ],
   2283402: [
     "Deep Learning",
-    [["Change to Deep Learning Complete upon reaching ", [2, "#ffff99", ["10"]], " stacks."]],
+    [
+      [
+        "Damage to foes +",
+        [2, "#99ff99", ["1.5%"]],
+        ", and at ",
+        [2, "#ffff99", ["5"]],
+        " stacks, changes to the Deep Learning Complete buff."
+      ]
+    ],
     "ark_passive_01_66"
   ],
   2283403: [
     "Deep Learning",
-    [["Change to Deep Learning Complete upon reaching ", [2, "#ffff99", ["10"]], " stacks."]],
+    [
+      [
+        "Damage to foes +",
+        [2, "#99ff99", ["2.0%"]],
+        ", and at ",
+        [2, "#ffff99", ["5"]],
+        " stacks, changes to the Deep Learning Complete buff."
+      ]
+    ],
     "ark_passive_01_66"
   ],
   2283404: [
     "Deep Learning",
-    [["Change to Deep Learning Complete upon reaching ", [2, "#ffff99", ["10"]], " stacks."]],
+    [
+      [
+        "Damage to foes +",
+        [2, "#99ff99", ["2.5%"]],
+        ", and at ",
+        [2, "#ffff99", ["5"]],
+        " stacks, changes to the Deep Learning Complete buff."
+      ]
+    ],
     "ark_passive_01_66"
   ],
   2283410: [
     "Deep Learning",
-    [["Change to Deep Learning Complete upon reaching ", [2, "#ffff99", ["10"]], " stacks."]],
+    [
+      [
+        "Damage to foes +",
+        [2, "#99ff99", ["0.5%"]],
+        ", and at ",
+        [2, "#ffff99", ["5"]],
+        " stacks, changes to the Deep Learning Complete buff."
+      ]
+    ],
     "ark_passive_01_66"
   ],
   2283411: [
     "Deep Learning",
-    [["Change to Deep Learning Complete upon reaching ", [2, "#ffff99", ["10"]], " stacks."]],
+    [
+      [
+        "Damage to foes +",
+        [2, "#99ff99", ["1.0%"]],
+        ", and at ",
+        [2, "#ffff99", ["5"]],
+        " stacks, changes to the Deep Learning Complete buff."
+      ]
+    ],
     "ark_passive_01_66"
   ],
   2283412: [
     "Deep Learning",
-    [["Change to Deep Learning Complete upon reaching ", [2, "#ffff99", ["10"]], " stacks."]],
+    [
+      [
+        "Damage to foes +",
+        [2, "#99ff99", ["1.5%"]],
+        ", and at ",
+        [2, "#ffff99", ["5"]],
+        " stacks, changes to the Deep Learning Complete buff."
+      ]
+    ],
     "ark_passive_01_66"
   ],
   2283413: [
     "Deep Learning",
-    [["Change to Deep Learning Complete upon reaching ", [2, "#ffff99", ["10"]], " stacks."]],
+    [
+      [
+        "Damage to foes +",
+        [2, "#99ff99", ["2.0%"]],
+        ", and at ",
+        [2, "#ffff99", ["5"]],
+        " stacks, changes to the Deep Learning Complete buff."
+      ]
+    ],
     "ark_passive_01_66"
   ],
   2283414: [
     "Deep Learning",
-    [["Change to Deep Learning Complete upon reaching ", [2, "#ffff99", ["10"]], " stacks."]],
+    [
+      [
+        "Damage to foes +",
+        [2, "#99ff99", ["2.5%"]],
+        ", and at ",
+        [2, "#ffff99", ["5"]],
+        " stacks, changes to the Deep Learning Complete buff."
+      ]
+    ],
     "ark_passive_01_66"
   ],
   2283420: ["Deep Learning Complete", [["Damage to foes +", [2, "#99ff99", ["1.0%"]], "."]], "ark_passive_he_6"],
@@ -21783,7 +21529,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         "At ",
         [2, "#ffff99", ["5"]],
         " stacks, changes to the Destiny: Deadly Downpour effect lasting ",
-        [2, "#ffff99", ["10.0s"]],
+        [2, "#ffff99", ["20.0s"]],
         "."
       ]
     ],
@@ -21814,7 +21560,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         "At ",
         [2, "#ffff99", ["5"]],
         " stacks, changes to the Destiny: Deadly Downpour effect lasting ",
-        [2, "#ffff99", ["10.0s"]],
+        [2, "#ffff99", ["20.0s"]],
         "."
       ]
     ],
@@ -22199,7 +21945,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "ark_passive_dhf_1"
   ],
   2294441: ["Shining Bullet", [["Handgun Skill Damage +", [2, "#99ff99", ["7.0%"]], "."]], "ark_passive_dh_8"],
-  3290100: ["Destiny: Bloodhound", [["Damage to foes +", [2, "#99ff99", ["5.0%"]], "."]], "buff_884"],
+  3290100: ["Destiny: Bloodhound", [["Damage to foes +", [2, "#99ff99", ["7.0%"]], "."]], "buff_884"],
   3293100: [
     "Fragmented Destiny",
     [["At ", [2, "#ffff99", ["2"]], " stacks, activate ", [2, "#bf9ef6", ["Destiny"]], "."]],
@@ -22300,9 +22046,9 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   300217: ["Overheat", [["Normal Skill Damage +", [2, "#99ff99", ["7.0%"]], "."]], "ability_271"],
   300218: ["Overheat", [["Normal Skill Damage +", [2, "#99ff99", ["14.0%"]], "."]], "ability_271"],
   300219: ["Overheat", [["Normal Skill Damage +", [2, "#99ff99", ["28.0%"]], "."]], "ability_271"],
-  300220: ["Overheat", [["Normal Skill Damage +", [2, "#99ff99", ["25.0%"]], "."]], "ability_271"],
-  300221: ["Overheat", [["Normal Skill Damage +", [2, "#99ff99", ["35.0%"]], "."]], "ability_271"],
-  300222: ["Overheat", [["Normal Skill Damage +", [2, "#99ff99", ["45.0%"]], "."]], "ability_271"],
+  300220: ["Overheat", [["Normal Skill Damage +", [2, "#99ff99", ["39.0%"]], "."]], "ability_271"],
+  300221: ["Overheat", [["Normal Skill Damage +", [2, "#99ff99", ["48.0%"]], "."]], "ability_271"],
+  300222: ["Overheat", [["Normal Skill Damage +", [2, "#99ff99", ["57.0%"]], "."]], "ability_271"],
   300223: ["Firepower Enhancement III", [["Crit Rate +", [2, "#99ff99", ["30.0%"]], "."]], "buff_171"],
   300224: ["Firepower Enhancement III", [["Crit Rate +", [2, "#99ff99", ["35.0%"]], "."]], "buff_171"],
   300225: ["Firepower Enhancement III", [["Crit Rate +", [2, "#99ff99", ["40.0%"]], "."]], "buff_171"],
@@ -22508,8 +22254,8 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "ark_passive_bs_6"
   ],
   3300100: ["Destiny: Bombardment", [["Barrage Skill Damage +", [2, "#99ff99", ["7.0%"]], "."]], "buff_884"],
-  3300200: ["Destiny: Bombardment", [["Barrage Skill Damage +", [2, "#99ff99", ["12.0%"]], "."]], "buff_884"],
-  3300300: ["Destiny: Bombardment", [["Barrage Skill Damage +", [2, "#99ff99", ["13.5%"]], "."]], "buff_884"],
+  3300200: ["Destiny: Bombardment", [["Barrage Skill Damage +", [2, "#99ff99", ["14.5%"]], "."]], "buff_884"],
+  3300300: ["Destiny: Bombardment", [["Barrage Skill Damage +", [2, "#99ff99", ["16.0%"]], "."]], "buff_884"],
   3303200: ["Atk. Speed Increase", [["Atk. Speed +", [2, "#99ff99", ["12.0"]], "."]], "buff_20"],
   3303300: ["Atk. Speed Increase", [["Atk. Speed +", [2, "#99ff99", ["12.0"]], "."]], "buff_20"],
   3300600: [
@@ -25638,8 +25384,8 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "use_7_223"
   ],
   110000031: ["Mokoko Seed", [["You've transformed into a cute and small Mokoko seed."]], "use_7_224"],
-  610001000: ["Lostwind Cliff", [["Holy Damage taken +", [2, "#99ff99", ["1.0%"]], "."]], "card_skill_63"],
-  610001001: ["Lostwind Cliff", [["Holy Damage taken +", [2, "#99ff99", ["2.0%"]], "."]], "card_skill_63"],
+  610001000: ["Lostwind Cliff", [["Holy Damage taken +", [2, "#99ff99", ["1%"]], "."]], "card_skill_63"],
+  610001001: ["Lostwind Cliff", [["Holy Damage taken +", [2, "#99ff99", ["2%"]], "."]], "card_skill_63"],
   610001002: ["Lostwind Cliff", [["Holy Damage taken +", [2, "#99ff99", ["3.5%"]], "."]], "card_skill_63"],
   610001010: ["Grand Master Trial", [["Earth Damage taken +", [2, "#99ff99", ["0.5%"]], "."]], "card_skill_34"],
   610001011: ["Grand Master Trial", [["Earth Damage taken +", [2, "#99ff99", ["1.5%"]], "."]], "card_skill_34"],
@@ -25650,7 +25396,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   610001023: ["Farewell, Weapon", [["Crit Rate +", [2, "#99ff99", ["24%"]]]], "buff_96"],
   610001053: ["We'll Meet Again", [["My HP is recovering fast."]], "buff_8"],
   610001080: ["Verdantier Plan", [["Lightning Damage taken +", [2, "#99ff99", ["0.5%"]], "."]], "card_skill_38"],
-  610001081: ["Verdantier Plan", [["Lightning Damage taken +", [2, "#99ff99", ["1.0%"]], "."]], "card_skill_38"],
+  610001081: ["Verdantier Plan", [["Lightning Damage taken +", [2, "#99ff99", ["1%"]], "."]], "card_skill_38"],
   610001082: ["Verdantier Plan", [["Lightning Damage taken +", [2, "#99ff99", ["1.5%"]], "."]], "card_skill_38"],
   610001093: ["The Weight of Destiny", [["Inflicts Damage to nearby foes."]], "buff_23"],
   610001120: ["Spear Master", [["Dark Damage taken +", [2, "#99ff99", ["0.5%"]], "."]], "card_skill_30"],
@@ -25689,22 +25435,22 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "card_skill_21"
   ],
   610001280: ["Frozen Wildfire Protection", [["Fire Damage taken +", [2, "#99ff99", ["1%"]], "."]], "card_skill_46"],
-  610001281: ["Frozen Wildfire Protection", [["Fire Damage taken +", [2, "#99ff99", ["2.0%"]], "."]], "card_skill_46"],
+  610001281: ["Frozen Wildfire Protection", [["Fire Damage taken +", [2, "#99ff99", ["2%"]], "."]], "card_skill_46"],
   610001282: ["Frozen Wildfire Protection", [["Fire Damage taken +", [2, "#99ff99", ["3.5%"]], "."]], "card_skill_46"],
-  610001290: ["Melodious Tide Protection", [["Water Damage taken +", [2, "#99ff99", ["1.0%"]], "."]], "card_skill_18"],
-  610001291: ["Melodious Tide Protection", [["Water Damage taken +", [2, "#99ff99", ["2.0%"]], "."]], "card_skill_18"],
+  610001290: ["Melodious Tide Protection", [["Water Damage taken +", [2, "#99ff99", ["1%"]], "."]], "card_skill_18"],
+  610001291: ["Melodious Tide Protection", [["Water Damage taken +", [2, "#99ff99", ["2%"]], "."]], "card_skill_18"],
   610001292: ["Melodious Tide Protection", [["Water Damage taken +", [2, "#99ff99", ["3.5%"]], "."]], "card_skill_18"],
-  610001300: ["Sleeping Earth Protection", [["Earth Damage taken +", [2, "#99ff99", ["1.0%"]], "."]], "card_skill_34"],
-  610001301: ["Sleeping Earth Protection", [["Earth Damage taken +", [2, "#99ff99", ["2.0%"]], "."]], "card_skill_34"],
+  610001300: ["Sleeping Earth Protection", [["Earth Damage taken +", [2, "#99ff99", ["1%"]], "."]], "card_skill_34"],
+  610001301: ["Sleeping Earth Protection", [["Earth Damage taken +", [2, "#99ff99", ["2%"]], "."]], "card_skill_34"],
   610001302: ["Sleeping Earth Protection", [["Earth Damage taken +", [2, "#99ff99", ["3.5%"]], "."]], "card_skill_34"],
   610001310: [
     "Raging Thunderbolt Protection",
-    [["Lightning Damage taken +", [2, "#99ff99", ["1.0%"]], "."]],
+    [["Lightning Damage taken +", [2, "#99ff99", ["1%"]], "."]],
     "card_skill_38"
   ],
   610001311: [
     "Raging Thunderbolt Protection",
-    [["Lightning Damage taken +", [2, "#99ff99", ["2.0%"]], "."]],
+    [["Lightning Damage taken +", [2, "#99ff99", ["2%"]], "."]],
     "card_skill_38"
   ],
   610001312: [
@@ -26931,9 +26677,9 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [["Strength +", [2, "#99ff99", ["40"]], ". Max MP +", [2, "#99ff99", ["10%"]], "."]],
     "all_quest_03_163"
   ],
-  6852409: ["Expert Steak", [["Strength +", [2, "#99ff99", ["48"]], "."]], "all_quest_03_163"],
+  6852409: ["Expert's Steak", [["Strength +", [2, "#99ff99", ["48"]], "."]], "all_quest_03_163"],
   6852410: [
-    "Expert Garlic Steak",
+    "Expert's Garlic Steak",
     [
       [
         "Strength +",
@@ -26948,18 +26694,18 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "all_quest_03_163"
   ],
   6852411: [
-    "Expert Butter Steak",
+    "Expert's Butter Steak",
     [["Strength +", [2, "#99ff99", ["60"]], ". Phy./Mag. Defense +", [2, "#99ff99", ["475"]], "."]],
     "all_quest_03_163"
   ],
   6852412: [
-    "Expert Herb Steak",
+    "Expert's Herb Steak",
     [["Strength +", [2, "#99ff99", ["60"]], ". Max MP +", [2, "#99ff99", ["10%"]], "."]],
     "all_quest_03_163"
   ],
-  6852413: ["Expert Steak Meal", [["Strength +", [2, "#99ff99", ["72"]], "."]], "all_quest_03_163"],
+  6852413: ["Expert's Steak Meal", [["Strength +", [2, "#99ff99", ["72"]], "."]], "all_quest_03_163"],
   6852414: [
-    "Expert Garlic Steak Meal",
+    "Expert's Garlic Steak Meal",
     [
       [
         "Strength +",
@@ -26974,12 +26720,12 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "all_quest_03_163"
   ],
   6852415: [
-    "Expert Butter Steak Meal",
+    "Expert's Butter Steak Meal",
     [["Strength +", [2, "#99ff99", ["80"]], ". Phy./Mag. Defense +", [2, "#99ff99", ["525"]], "."]],
     "all_quest_03_163"
   ],
   6852416: [
-    "Expert Herb Steak Meal",
+    "Expert's Herb Steak Meal",
     [["Strength +", [2, "#99ff99", ["80"]], ". Max MP +", [2, "#99ff99", ["10%"]], "."]],
     "all_quest_03_163"
   ],
@@ -28620,8 +28366,33 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [["Max HP +", [2, "#99ff99", ["10000"]], ". Atk/Move Speed +", [2, "#99ff99", ["5%"]], "."]],
     "townchef_10"
   ],
+  100410436: [
+    "Feast: Hot Pot Set",
+    [["Weapon Power +", [2, "#99ff99", ["1,600"]], ". Atk./Move Speed +", [2, "#99ff99", ["5%"]], "."]],
+    "townchef_57"
+  ],
+  100410437: [
+    "Feast: Hot Pot Set",
+    [
+      [
+        "Weapon Power +",
+        [2, "#99ff99", ["1,600"]],
+        ". Vitality +",
+        [2, "#99ff99", ["5,750"]],
+        ". Healing +",
+        [2, "#99ff99", ["20%"]],
+        "."
+      ]
+    ],
+    "townchef_57"
+  ],
+  100410438: [
+    "Feast: Hot Pot Set",
+    [["Weapon Power +", [2, "#99ff99", ["1,600"]], ". Phy./Mag. Defense +", [2, "#99ff99", ["5,500"]], "."]],
+    "townchef_57"
+  ],
   100410439: [
-    "Feast: Adventurer's Festival Cake",
+    "Feast: New Journey Cake",
     [
       [
         "Max HP +",
@@ -28636,7 +28407,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "townchef_9"
   ],
   100410440: [
-    "Feast: Adventurer's Festival Cake",
+    "Feast: New Journey Cake",
     [["Max HP +", [2, "#99ff99", ["10000"]], ". Atk/Move Speed +", [2, "#99ff99", ["5%"]], "."]],
     "townchef_9"
   ],
@@ -28789,6 +28560,81 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "Feast: Roasted Sweet Potato Set",
     [["Weapon Power +", [2, "#99ff99", ["1600"]], ". Phy./Mag. Defense +", [2, "#99ff99", ["5500"]], "."]],
     "townchef_55"
+  ],
+  100410457: [
+    "Feast: Maharaka Chicken Bite Meal",
+    [["Max HP +", [2, "#99ff99", ["10000"]], ". Atk./Move Speed +", [2, "#99ff99", ["5%"]], "."]],
+    "townplacement_162"
+  ],
+  100410458: [
+    "Feast: Maharaka Chicken Bite Meal",
+    [
+      [
+        "Max HP +",
+        [2, "#99ff99", ["10000"]],
+        ". Additional HP +",
+        [2, "#99ff99", ["10%"]],
+        ". Healing +",
+        [2, "#99ff99", ["15%"]],
+        "."
+      ]
+    ],
+    "townplacement_162"
+  ],
+  100410459: [
+    "Feast: Maharaka Chicken Bite Meal",
+    [["Max HP +", [2, "#99ff99", ["10000"]], ". Phy./Mag. Defense +", [2, "#99ff99", ["5000"]], "."]],
+    "townplacement_162"
+  ],
+  100410460: [
+    "Feast: Maharaka Corndog Meal",
+    [["Max HP +", [2, "#99ff99", ["10000"]], ". Atk./Move Speed +", [2, "#99ff99", ["5%"]], "."]],
+    "townplacement_163"
+  ],
+  100410461: [
+    "Feast: Maharaka Corndog Meal",
+    [
+      [
+        "Max HP +",
+        [2, "#99ff99", ["10000"]],
+        ". Additional HP +",
+        [2, "#99ff99", ["10%"]],
+        ". Healing +",
+        [2, "#99ff99", ["15%"]],
+        "."
+      ]
+    ],
+    "townplacement_163"
+  ],
+  100410462: [
+    "Feast: Maharaka Corndog Meal",
+    [["Max HP +", [2, "#99ff99", ["10000"]], ". Phy./Mag. Defense +", [2, "#99ff99", ["5000"]], "."]],
+    "townplacement_163"
+  ],
+  100410463: [
+    "Feast: Maharaka Takoyaki Meal",
+    [["Max HP +", [2, "#99ff99", ["10000"]], ". Atk./Move Speed +", [2, "#99ff99", ["5%"]], "."]],
+    "townplacement_164"
+  ],
+  100410464: [
+    "Feast: Maharaka Takoyaki Meal",
+    [
+      [
+        "Max HP +",
+        [2, "#99ff99", ["10000"]],
+        ". Additional HP +",
+        [2, "#99ff99", ["10%"]],
+        ". Healing +",
+        [2, "#99ff99", ["15%"]],
+        "."
+      ]
+    ],
+    "townplacement_164"
+  ],
+  100410465: [
+    "Feast: Maharaka Takoyaki Meal",
+    [["Max HP +", [2, "#99ff99", ["10000"]], ". Phy./Mag. Defense +", [2, "#99ff99", ["5000"]], "."]],
+    "townplacement_164"
   ],
   100410078: ["BBQ: Salted", [["Weapon Power +", [2, "#99ff99", ["100"]], "."]], "use_9_98"],
   100410079: ["BBQ: Grilled Skewers", [["Weapon Power +", [2, "#99ff99", ["135"]], "."]], "use_9_99"],
@@ -29331,12 +29177,12 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "use_8_178"
   ],
   6854014: [
-    "[Masterwork] Specialist Mixed Stew",
+    "[Masterwork] Specialist's Mixed Stew",
     [["Strength, Dexterity, and Intelligence +", [2, "#99ff99", ["8,000"]], "."]],
     "use_8_125"
   ],
   6854015: [
-    "[Masterwork] Specialist Traditional Omelet",
+    "[Masterwork] Specialist's Traditional Omelet",
     [
       [
         "Strength, Dexterity, and Intelligence +",
@@ -29561,12 +29407,12 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "use_8_178"
   ],
   6856014: [
-    "[Masterwork] Specialist Mixed Stew (Bound)",
+    "[Masterwork] Specialist's Mixed Stew (Bound)",
     [["Strength, Dexterity, and Intelligence +", [2, "#99ff99", ["8,000"]], "."]],
     "use_8_125"
   ],
   6856015: [
-    "[Masterwork] Specialist Traditional Omelet (Bound)",
+    "[Masterwork] Specialist's Traditional Omelet (Bound)",
     [
       [
         "Strength, Dexterity, and Intelligence +",
@@ -31024,7 +30870,6 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "buff_10"
   ],
   202205: ["Petrification", [["Become Incapacitated from Petrification."]], "buff_36"],
-  202280: ["MP Reduction", [["Max MP -", [2, "#ff9999", ["1.0%"]], " per second."]], "sm_skill_01_16"],
   202308: ["Electrocution", [["Become Incapacitated while Electrocuted."]], "buff_51"],
   202402: ["Freeze", [["Become Incapacitated while Frozen."]], "buff_35"],
   202502: [
@@ -32012,7 +31857,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         [2, "#ffff99", [" 1s"]],
         ". Explodes at ",
         [2, "#ffff99", ["5"]],
-        " stacks dealing great Damage to the surrounding area."
+        " stacks inflicting great Damage to the surrounding area."
       ]
     ],
     "buff_56"
@@ -32025,7 +31870,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         [2, "#ffff99", [" 1s"]],
         ". Explodes at ",
         [2, "#ffff99", ["5"]],
-        " stacks dealing great Damage to the surrounding area."
+        " stacks inflicting great Damage to the surrounding area."
       ]
     ],
     "buff_56"
@@ -32050,7 +31895,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
       [
         "Become infected by Shurdi's Holy Flame. At ",
         [2, "#ffff99", ["3"]],
-        " stacks, it explodes and deals [Holy] Attribute Damage."
+        " stacks, it explodes and inflicts [Holy] Attribute Damage."
       ]
     ],
     "buff_120"
@@ -32105,7 +31950,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         " stack of the ",
         [2, "#bf9ef6", ["Destiny: Edge of Fate"]],
         " effect. Damage +",
-        [2, "#99ff99", ["10.0%"]],
+        [2, "#99ff99", ["13.0%"]],
         "."
       ]
     ],
@@ -32120,7 +31965,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         " stack of the ",
         [2, "#bf9ef6", ["Destiny: Edge of Fate"]],
         " effect. Damage +",
-        [2, "#99ff99", ["11.0%"]],
+        [2, "#99ff99", ["14.5%"]],
         "."
       ]
     ],
@@ -32203,41 +32048,22 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   ],
   3200600: [
     "Destiny: Enhanced Burst",
-    [
-      [
-        "Ancient Energy gain -",
-        [2, "#ff9999", ["100.0%"]],
-        ". Summoning Skill Damage +",
-        [2, "#99ff99", ["35.0%"]],
-        ". Removed when Akir Burst ends."
-      ]
-    ],
+    [["Summoning Skill Damage +", [2, "#99ff99", ["12.0%"]], ". Removed when Akir Burst ends."]],
+    "buff_884"
+  ],
+  3200601: [
+    "Destiny: Burst Rebound",
+    [["Ancient Energy Gain -", [2, "#ff9999", ["100.0%"]], ". All Elemental Orbs are restored when this effect ends."]],
     "buff_884"
   ],
   3200700: [
     "Destiny: Enhanced Burst",
-    [
-      [
-        "Ancient Energy gain -",
-        [2, "#ff9999", ["100.0%"]],
-        ". Summoning Skill Damage +",
-        [2, "#99ff99", ["47.0%"]],
-        ". Removed when Akir Burst ends."
-      ]
-    ],
+    [["Summoning Skill Damage +", [2, "#99ff99", ["20.0%"]], ". Removed when Akir Burst ends."]],
     "buff_884"
   ],
   3200800: [
     "Destiny: Enhanced Burst",
-    [
-      [
-        "Ancient Energy gain -",
-        [2, "#ff9999", ["100.0%"]],
-        ". Summoning Skill Damage +",
-        [2, "#99ff99", ["50.0%"]],
-        ". Removed when Akir Burst ends."
-      ]
-    ],
+    [["Summoning Skill Damage +", [2, "#99ff99", ["22.5%"]], ". Removed when Akir Burst ends."]],
     "buff_884"
   ],
   3201100: [
@@ -32263,7 +32089,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         "On Ancient Spear use, consume the ",
         [2, "#bf9ef6", ["Destiny: Ancient Legacy"]],
         " effect. Damage +",
-        [2, "#99ff99", ["25.0%"]],
+        [2, "#99ff99", ["30.0%"]],
         "."
       ]
     ],
@@ -32276,7 +32102,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         "On Ancient Spear use, consume the ",
         [2, "#bf9ef6", ["Destiny: Ancient Legacy"]],
         " effect. Damage +",
-        [2, "#99ff99", ["45.0%"]],
+        [2, "#99ff99", ["55.0%"]],
         "."
       ]
     ],
@@ -32289,13 +32115,13 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         "On Ancient Spear use, consume the ",
         [2, "#bf9ef6", ["Destiny: Ancient Legacy"]],
         " effect. Damage +",
-        [2, "#99ff99", ["49.0%"]],
+        [2, "#99ff99", ["59.0%"]],
         "."
       ]
     ],
     "buff_884"
   ],
-  3202600: ["Destiny: Osh", [["Osh's Damage +", [2, "#99ff99", ["125.0%"]], "."]], "sm_skill_01_11"],
+  3202600: ["Destiny: Osh", [["Osh's Damage +", [2, "#99ff99", ["145.0%"]], "."]], "sm_skill_01_11"],
   3202601: ["Destiny: Alimaji", [["Alimaji's Damage +", [2, "#99ff99", ["35.0%"]], "."]], "sm_skill_01_12"],
   3202602: ["Destiny: Phoenix", [["Phoenix's Damage +", [2, "#99ff99", ["20.0%"]], "."]], "sm_skill_01_22"],
   3202603: [
@@ -32304,20 +32130,20 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "sm_skill_01_13"
   ],
   3202604: ["Destiny: Akir", [["Akir's Damage +", [2, "#99ff99", ["40.0%"]], "."]], "sm_skill_01_35"],
-  3202700: ["Destiny: Osh", [["Osh's Damage +", [2, "#99ff99", ["125.0%"]], "."]], "sm_skill_01_11"],
-  3202701: ["Destiny: Alimaji", [["Alimaji's Damage +", [2, "#99ff99", ["60.0%"]], "."]], "sm_skill_01_12"],
-  3202702: ["Destiny: Phoenix", [["Phoenix's Damage +", [2, "#99ff99", ["45.0%"]]]], "sm_skill_01_22"],
+  3202700: ["Destiny: Osh", [["Osh's Damage +", [2, "#99ff99", ["145.0%"]], "."]], "sm_skill_01_11"],
+  3202701: ["Destiny: Alimaji", [["Alimaji's Damage +", [2, "#99ff99", ["68.0%"]], "."]], "sm_skill_01_12"],
+  3202702: ["Destiny: Phoenix", [["Phoenix's Damage +", [2, "#99ff99", ["52.0%"]]]], "sm_skill_01_22"],
   3202703: [
     "Destiny: Jahia & Ligheas",
-    [["Jahia & Ligheas's Damage +", [2, "#99ff99", ["30.0%"]], "."]],
+    [["Jahia & Ligheas's Damage +", [2, "#99ff99", ["36.0%"]], "."]],
     "sm_skill_01_13"
   ],
-  3202704: ["Destiny: Akir", [["Akir's Damage +", [2, "#99ff99", ["40.0%"]], "."]], "sm_skill_01_35"],
-  3202800: ["Destiny: Osh", [["Osh's Damage +", [2, "#99ff99", ["135.0%"]]]], "sm_skill_01_11"],
-  3202801: ["Destiny: Alimaji", [["Alimaji's Damage +", [2, "#99ff99", ["60.0%"]]]], "sm_skill_01_12"],
-  3202802: ["Destiny: Phoenix", [["Phoenix's Damage +", [2, "#99ff99", ["45.0%"]], "."]], "sm_skill_01_22"],
-  3202803: ["Destiny: Jahia & Ligheas", [["Jahia & Ligheas's Damage +", [2, "#99ff99", ["30.0%"]]]], "sm_skill_01_13"],
-  3202804: ["Destiny: Akir", [["Akir's Damage +", [2, "#99ff99", ["48.0%"]]]], "sm_skill_01_35"],
+  3202704: ["Destiny: Akir", [["Akir's Damage +", [2, "#99ff99", ["48.0%"]], "."]], "sm_skill_01_35"],
+  3202800: ["Destiny: Osh", [["Osh's Damage +", [2, "#99ff99", ["155.0%"]]]], "sm_skill_01_11"],
+  3202801: ["Destiny: Alimaji", [["Alimaji's Damage +", [2, "#99ff99", ["68.0%"]]]], "sm_skill_01_12"],
+  3202802: ["Destiny: Phoenix", [["Phoenix's Damage +", [2, "#99ff99", ["52.0%"]], "."]], "sm_skill_01_22"],
+  3202803: ["Destiny: Jahia & Ligheas", [["Jahia & Ligheas's Damage +", [2, "#99ff99", ["36.0%"]]]], "sm_skill_01_13"],
+  3202804: ["Destiny: Akir", [["Akir's Damage +", [2, "#99ff99", ["56.0%"]]]], "sm_skill_01_35"],
   3210100: [
     "Destiny: Serenade of Fortitude",
     [["Skill Damage +", [2, "#99ff99", ["2.5%"]], " (excluding Awakening Skills)."]],
@@ -34203,28 +34029,6 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   410400202: ["Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
   45182115: ["Poison", [["Inflicts Damage and decreases Move Speed."]], "buff_12"],
   7524: ["Stun", [["Become Incapacitated."]], "buff_39"],
-  426971511: [
-    "Electric Attack",
-    [["Thunderbolt inflicts ", [2, "#ff9999", ["3%"]], " of Vitality every ", [2, "#ff9999", ["1s"]], "."]],
-    "buff_104"
-  ],
-  539590600: [
-    "Crimson Energy",
-    [["Gradually recover the target's HP due to crimson energy emanating from the tail."]],
-    "buff_34"
-  ],
-  539590611: ["Magnetic Field", [["High-voltage current is enveloping the Guardian."]], "buff_72"],
-  539590613: ["Argeos's Source", [["Absorbed Argeos's Source. Increases Move Speed and Stagger Damage."]], "buff_321"],
-  539590614: ["Steel Skin", [["Target's Incoming Stagger Damage decreases."]], "buff_320"],
-  427260099: [
-    "Storm's Wrath",
-    [
-      [
-        'Attacking areas such as the Behemoth\'s wings and tail triggers a "Weak Point Attack" sign, applying Frontal Attack and Back Attack.'
-      ]
-    ],
-    "buff_714"
-  ],
   1018221: ["Slow", [["Move Speed -", [2, "#ff9999", ["0.5%"]], "."]], "buff_43"],
   1018613: [
     "Deadly Poison",
@@ -34370,19 +34174,6 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     "buff_219"
   ],
   53891700: ["Blessing of Light", [["Temporarily increases Atk. Power and Atk. Speed."]], "buff_220"],
-  53891701: [
-    "Curse of Light",
-    [
-      [
-        "Move Speed and Atk. Power decrease.",
-        [2, "#ffff99", ["8s"]],
-        " later receive Damage every ",
-        [2, "#ffff99", ["1s"]],
-        "."
-      ]
-    ],
-    "buff_221"
-  ],
   53890713: [
     "Torch Storm",
     [["The sacred flame spreads in all directions, inflicting Damage to the surrounding area."]],
@@ -35152,13 +34943,13 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [
       [
         "Per stack, Attack and Move Speed +",
-        [2, "#99ff99", ["10%"]],
+        [2, "#99ff99", ["5%"]],
         ", Crit Rate +",
         [2, "#99ff99", ["5%"]],
         ", Atk. Power +",
         [2, "#99ff99", ["50,000"]],
         ", Resource Recovery +",
-        [2, "#99ff99", ["100%"]]
+        [2, "#99ff99", ["20%"]]
       ]
     ],
     "buff_4"
@@ -35174,12 +34965,177 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         ", Atk. Power +",
         [2, "#99ff99", ["1,500,000"]],
         ", Resource Recovery +",
-        [2, "#99ff99", ["500%"]],
+        [2, "#99ff99", ["1,500%"]],
         ", Skill Cooldown Reduction +",
         [2, "#99ff99", ["80%"]]
       ]
     ],
     "buff_4"
+  ],
+  422000013: [
+    "Weak Point Detection",
+    [
+      [
+        "Activates ",
+        [2, "#ff9999", ["Weak Point Detection"]],
+        " by successfully attacking Hanumatan from close proximity.\nIncoming Damage +",
+        [2, "#ffff99", ["0.4"]],
+        "% per debuff in the stack. Stack reduced when hit by Hanumatan.\nWhen ",
+        [2, "#ff9999", ["Weak Point Detection"]],
+        " stacks to a certain amount, ",
+        [2, "#99ff99", ["Wartorn Will"]],
+        " activates and increases Combat Stats. "
+      ]
+    ],
+    "buff_460"
+  ],
+  422000014: [
+    "Wartorn Will",
+    [
+      [
+        [2, "#99ff99", ["Wartorn Will"]],
+        " activated by the amount of ",
+        [2, "#ff9999", ["Weak Point Detection"]],
+        " stacks. Atk. Power +",
+        [2, "#99ff99", ["10"]],
+        "%. Party Atk. Power Buff +",
+        [2, "#99ff99", ["25"]],
+        "%."
+      ]
+    ],
+    "buff_4"
+  ],
+  422000015: [
+    "Combat Awakening",
+    [
+      [
+        [2, "#99ff99", ["Wartorn Will"]],
+        " changes to ",
+        [2, "#99ff99", ["Combat Enhancement"]],
+        " by the amount of ",
+        [2, "#ff9999", ["Weak Point Detection"]],
+        " stacks. Atk. Power +",
+        [2, "#99ff99", ["30"]],
+        "%. Party Atk. Power Buff +",
+        [2, "#99ff99", ["75"]],
+        "%."
+      ]
+    ],
+    "buff_4"
+  ],
+  422000016: [
+    "Impeccable",
+    [
+      [
+        [2, "#99ff99", ["Combat Enhancement"]],
+        " changes to ",
+        [2, "#99ff99", ["Impeccable"]],
+        " by the amount of ",
+        [2, "#ff9999", ["Weak Point Detection"]],
+        " stacks. Atk. Power +",
+        [2, "#99ff99", ["40"]],
+        "%. Party Atk. Power Buff +",
+        [2, "#99ff99", ["100"]],
+        "%."
+      ]
+    ],
+    "buff_4"
+  ],
+  422000023: [
+    "Weak Point Detection",
+    [
+      [
+        "Activates ",
+        [2, "#ff9999", ["Weak Point Detection"]],
+        " by successfully attacking Hanumatan from close proximity.\nIncoming Damage +",
+        [2, "#ffff99", ["0.4"]],
+        "% per debuff in the stack. Stack reduced when hit by Hanumatan.\nWhen ",
+        [2, "#ff9999", ["Weak Point Detection"]],
+        " stacks to a certain amount, ",
+        [2, "#99ff99", ["Wartorn Will"]],
+        " activates and increases Combat Stats. "
+      ]
+    ],
+    "buff_461"
+  ],
+  422000024: [
+    "Wartorn Will",
+    [
+      [
+        [2, "#99ff99", ["Wartorn Will"]],
+        " activated by the amount of ",
+        [2, "#ff9999", ["Weak Point Detection"]],
+        " stacks. Atk. Power +",
+        [2, "#99ff99", ["15"]],
+        "%. Party Atk. Power Buff +",
+        [2, "#99ff99", ["35"]],
+        "%."
+      ]
+    ],
+    "buff_4"
+  ],
+  422000025: [
+    "Combat Awakening",
+    [
+      [
+        [2, "#99ff99", ["Wartorn Will"]],
+        " changes to ",
+        [2, "#99ff99", ["Combat Enhancement"]],
+        " by the amount of ",
+        [2, "#ff9999", ["Weak Point Detection"]],
+        " stacks. Atk. Power +",
+        [2, "#99ff99", ["40"]],
+        "%. Party Atk. Power Buff +",
+        [2, "#99ff99", ["100"]],
+        "%."
+      ]
+    ],
+    "buff_4"
+  ],
+  422000026: [
+    "Impeccable",
+    [
+      [
+        [2, "#99ff99", ["Combat Enhancement"]],
+        " changes to ",
+        [2, "#99ff99", ["Impeccable"]],
+        " by the amount of ",
+        [2, "#ff9999", ["Weak Point Detection"]],
+        " stacks. Atk. Power +",
+        [2, "#99ff99", ["50"]],
+        "%. Party Atk. Power Buff +",
+        [2, "#99ff99", ["125"]],
+        "%."
+      ]
+    ],
+    "buff_4"
+  ],
+  422000030: [
+    "Yin Yang Shield",
+    [["Yin and Yang energy surround the body.\n", [2, "#99ff99", ["Negates"]], " Hanumatan's powerful attacks. "]],
+    "buff_458"
+  ],
+  422000032: [
+    "Target Focus",
+    [
+      [
+        "Marked for blocking a specific attack from Hanumatan. Able to draw Hanumatan's attention for a set duration.\nWhen attacked by Hanumatan, the stacks of Weak Point Detection for yourself and your party decrease by a certain amount."
+      ]
+    ],
+    "buff_341"
+  ],
+  422000043: ["Earthquake", [["Become Incapacitated due to an Earthquake."]], "buff_49"],
+  422000047: ["Great Earthquake", [["Become Incapacitated due to a massive Earthquake."]], "buff_49"],
+  422000048: [
+    "Dizziness",
+    [["Experiencing a loss of direction due to dizziness caused by the trembling of the sky and earth."]],
+    "buff_91"
+  ],
+  422000055: ["Great Earthquake", [["Become Incapacitated due to a massive Earthquake."]], "buff_49"],
+  422000081: [
+    "Target Focus",
+    [["Marked by Hanumatan. Able to draw Hanumatan's attention for a set duration."]],
+    "buff_341"
   ],
   430450503: [
     "Critical Shock",
@@ -35234,1062 +35190,6 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   430563661: ["Gaze", [["The Tuning Fork is watching."]], "buff_341"],
   430564001: ["Echo", [["Arcenos's Bell has been rung.\nAtk. Power +", [2, "#99ff99", ["10%"]], "."]], "buff_646"],
   430565200: ["Damage Reduction", [["Incoming Damage -", [2, "#ff9999", ["90%"]], "."]], "buff_19"],
-  426590011: ["Condensed Red Moon Energy", [["Enhanced by the Red Moon's energy."]], "buff_611"],
-  426590021: [
-    "Organism",
-    [
-      [
-        "An organism that detached from Killineza.\nIt exudes an ominous aura, but a skilled artisan might be able to use it in another way."
-      ]
-    ],
-    "buff_613"
-  ],
-  426599221: [
-    "+1 Refined Organism",
-    [
-      [
-        "An organism refined by an artisan.\nAtk. Power +",
-        [2, "#99ff99", ["4%"]],
-        ". Stagger Damage +",
-        [2, "#99ff99", ["4%"]],
-        ". Skill Weak Point Lv. ",
-        [2, "#99ff99", ["+1"]],
-        ". While Staggered, Damage to foes +",
-        [2, "#99ff99", ["10%"]],
-        "."
-      ]
-    ],
-    "buff_614"
-  ],
-  426599222: [
-    "+2 Refined Organism",
-    [
-      [
-        "An organism refined by an artisan.\nAtk. Power +",
-        [2, "#99ff99", ["10%"]],
-        ". Stagger Damage +",
-        [2, "#99ff99", ["8%"]],
-        ". Skill Weak Point Lv. ",
-        [2, "#99ff99", ["+1"]],
-        ". While Staggered, Damage to foes +",
-        [2, "#99ff99", ["10%"]],
-        "."
-      ]
-    ],
-    "buff_614"
-  ],
-  426599223: [
-    "+3 Refined Organism",
-    [
-      [
-        "An organism refined by an artisan.\nAtk. Power +",
-        [2, "#99ff99", ["18%"]],
-        ". Stagger Damage +",
-        [2, "#99ff99", ["12%"]],
-        ". Skill Weak Point Lv. ",
-        [2, "#99ff99", ["+1"]],
-        ". While Staggered, Damage to foes +",
-        [2, "#99ff99", ["10%"]],
-        "."
-      ]
-    ],
-    "buff_614"
-  ],
-  426599224: [
-    "+4 Refined Organism",
-    [
-      [
-        "An organism refined by an artisan.\nAtk. Power +",
-        [2, "#99ff99", ["30%"]],
-        ". Stagger Damage +",
-        [2, "#99ff99", ["16%"]],
-        ". Skill Weak Point Lv. ",
-        [2, "#99ff99", ["+1"]],
-        ". While Staggered, Damage to foes +",
-        [2, "#99ff99", ["10%"]],
-        "."
-      ]
-    ],
-    "buff_614"
-  ],
-  426599225: [
-    "+5 Refined Organism",
-    [
-      [
-        "An organism refined by an artisan.\nAtk. Power +",
-        [2, "#99ff99", ["45%"]],
-        ". Stagger Damage +",
-        [2, "#99ff99", ["20%"]],
-        ". Skill Weak Point Lv. ",
-        [2, "#99ff99", ["+1"]],
-        ". While Staggered, Damage to foes +",
-        [2, "#99ff99", ["10%"]],
-        "."
-      ]
-    ],
-    "buff_614"
-  ],
-  426599226: [
-    "+6 Refined Organism",
-    [
-      [
-        "An organism refined by an artisan.\nAtk. Power +",
-        [2, "#99ff99", ["64%"]],
-        ". Stagger Damage +",
-        [2, "#99ff99", ["24%"]],
-        ". Skill Weak Point Lv. ",
-        [2, "#99ff99", ["+1"]],
-        ". While Staggered, Damage to foes +",
-        [2, "#99ff99", ["10%"]],
-        "."
-      ]
-    ],
-    "buff_614"
-  ],
-  426599227: [
-    "+7 Refined Organism",
-    [
-      [
-        "An organism refined by an artisan.\nAtk. Power +",
-        [2, "#99ff99", ["81%"]],
-        ". Stagger Damage +",
-        [2, "#99ff99", ["28%"]],
-        ". Skill Weak Point Lv. ",
-        [2, "#99ff99", ["+1"]],
-        ". While Staggered, Damage to foes +",
-        [2, "#99ff99", ["10%"]],
-        "."
-      ]
-    ],
-    "buff_614"
-  ],
-  426599228: [
-    "+8 Refined Organism",
-    [
-      [
-        "An organism refined by an artisan.\nAtk. Power +",
-        [2, "#99ff99", ["90%"]],
-        ". Stagger Damage +",
-        [2, "#99ff99", ["32%"]],
-        ". Skill Weak Point Lv. ",
-        [2, "#99ff99", ["+1"]],
-        ". While Staggered, Damage to foes +",
-        [2, "#99ff99", ["10%"]],
-        "."
-      ]
-    ],
-    "buff_614"
-  ],
-  426599229: [
-    "+9 Refined Organism",
-    [
-      [
-        "An organism refined by an artisan.\nAtk. Power +",
-        [2, "#99ff99", ["96%"]],
-        ". Stagger Damage +",
-        [2, "#99ff99", ["36%"]],
-        ". Skill Weak Point Lv. ",
-        [2, "#99ff99", ["+1"]],
-        ". While Staggered, Damage to foes +",
-        [2, "#99ff99", ["10%"]],
-        "."
-      ]
-    ],
-    "buff_614"
-  ],
-  426599230: [
-    "+10 Refined Organism",
-    [
-      [
-        "An organism refined by an artisan.\nAtk. Power +",
-        [2, "#99ff99", ["100%"]],
-        ". Stagger Damage +",
-        [2, "#99ff99", ["40%"]],
-        ". Skill Weak Point Lv. ",
-        [2, "#99ff99", ["+1"]],
-        ". While Staggered, Damage to foes +",
-        [2, "#99ff99", ["10%"]],
-        "."
-      ]
-    ],
-    "buff_614"
-  ],
-  426590031: ["Spot Weak Point", [["Search for Killineza's weak point."]], "buff_615"],
-  426590032: ["Weak Point Detection", [["Found Killineza's weak point."]], "buff_616"],
-  426590034: ["Spot Weak Point", [["Search for Killineza's weak point."]], "buff_615"],
-  426590035: ["Weak Point Detection", [["Found Killineza's weak point."]], "buff_616"],
-  426590037: ["Spot Weak Point", [["Search for Killineza's weak point."]], "buff_615"],
-  426590038: ["Weak Point Detection", [["Found Killineza's weak point."]], "buff_616"],
-  426590040: ["Spot Weak Point", [["Search for Killineza's weak point."]], "buff_615"],
-  426590041: ["Weak Point Detection", [["Found Killineza's weak point."]], "buff_616"],
-  426590043: ["Spot Weak Point", [["Search for Killineza's weak point."]], "buff_615"],
-  426590044: ["Weak Point Detection", [["Found Killineza's weak point."]], "buff_616"],
-  426590046: ["Spot Weak Point", [["Search for Killineza's weak point."]], "buff_615"],
-  426590047: ["Weak Point Detection", [["Found Killineza's weak point."]], "buff_616"],
-  426590049: ["Spot Weak Point", [["Search for Killineza's weak point."]], "buff_615"],
-  426590050: ["Weak Point Detection", [["Found Killineza's weak point."]], "buff_616"],
-  426590052: ["Spot Weak Point", [["Search for Killineza's weak point."]], "buff_615"],
-  426590053: ["Weak Point Detection", [["Found Killineza's weak point."]], "buff_616"],
-  426590083: ["Constrain", [["Killineza's hands are Staggered, weakening certain hand skills."]], "buff_627"],
-  426590085: ["Constrain", [["Killineza's hands are Staggered, weakening certain hand skills."]], "buff_627"],
-  426590171: ["Rage", [["Enraged.\nAtk. Speed and Move Speed +", [2, "#99ff99", ["250%"]], "."]], "buff_617"],
-  426590173: [
-    "Endorphin",
-    [
-      [
-        "Enraged because of Killineza's ",
-        [2, "#A566FF", ["Rage"]],
-        " buff.\nImmune to Push, Status Ailment, ",
-        [2, "#A566FF", ["Bleed"]],
-        " debuffs. Atk. Speed and Move Speed increases drastically. On hit, ",
-        [2, "#A566FF", ["Accumulated Damage"]],
-        " debuff stacks."
-      ]
-    ],
-    "buff_620"
-  ],
-  426590175: [
-    "Accumulated Damage",
-    [
-      [
-        "Damage is accumulated by the ",
-        [2, "#A566FF", ["Endorphin"]],
-        " buff.\nDamage is inflicted when the ",
-        [2, "#A566FF", ["Endorphin"]],
-        " buff disappears, reducing the number of stacks incrementally."
-      ]
-    ],
-    "buff_94"
-  ],
-  426590791: [
-    "Bleed",
-    [["Changes to the ", [2, "#A566FF", ["Heavy Bleeding"]], " debuff at 10", [2, "#ffff99", [" stacks."]]]],
-    "buff_165"
-  ],
-  426590793: ["Heavy Bleeding", [["Incapacitated due to excessive bleeding"]], "buff_427"],
-  426590891: [
-    "Adrenaline",
-    [
-      [
-        "Killineza is currently enraged.\nPer stack, Atk. Speed +",
-        [2, "#99ff99", ["25%"]],
-        ", and becomes more vulnerable to ",
-        [2, "#ffff99", ["Counterattack"]],
-        " with each stack."
-      ]
-    ],
-    "buff_618"
-  ],
-  426590895: [
-    "Control",
-    [
-      [
-        "Killineza is controlling herself.\nStacks equal to the number of ",
-        [2, "#A566FF", ["Adrenaline"]],
-        " stacks and Atk. Power +",
-        [2, "#99ff99", ["25%"]],
-        " per stack."
-      ]
-    ],
-    "buff_619"
-  ],
-  426592108: ["Stun", [["Incapacitated due to Killineza's attack"]], "buff_39"],
-  426594491: ["Stun", [["Incapacitated due to Killineza's attack"]], "buff_39"],
-  426594931: ["Bind", [["Incapacitated"]], "buff_633"],
-  426594935: ["Bind", [["Incapacitated"]], "buff_633"],
-  426595191: ["Corrosion", [["Incapacitated due to the organism's erosion"]], "buff_203"],
-  426595193: ["Corrosion", [["Incapacitated due to the organism's erosion"]], "buff_203"],
-  426595801: ["Stun", [["Incapacitated due to Killineza's attack"]], "buff_39"],
-  426597081: [
-    "Tentacle Defense",
-    [["Reduce Stagger Point according to the number of tentacles on the ground."]],
-    "buff_18"
-  ],
-  426597701: [
-    "Concussion",
-    [
-      [
-        "Shocked by Killineza's attack.\nAtk. Power -",
-        [2, "#ff9999", ["5%"]],
-        ", All incoming Damage +",
-        [2, "#ff9999", ["5%"]],
-        " per stack."
-      ]
-    ],
-    "buff_27"
-  ],
-  426597702: [
-    "Concussion",
-    [
-      [
-        "Shocked by Killineza's attack.\nAtk. Power -",
-        [2, "#ff9999", ["5%"]],
-        ", All incoming Damage +",
-        [2, "#ff9999", ["5%"]],
-        " per stack."
-      ]
-    ],
-    "buff_27"
-  ],
-  426597703: [
-    "Concussion",
-    [
-      [
-        "Shocked by Killineza's attack.\nAtk. Power -",
-        [2, "#ff9999", ["5%"]],
-        ", All incoming Damage +",
-        [2, "#ff9999", ["5%"]],
-        " per stack."
-      ]
-    ],
-    "buff_27"
-  ],
-  426597704: [
-    "Concussion",
-    [
-      [
-        "Shocked by Killineza's attack.\nAtk. Power -",
-        [2, "#ff9999", ["5%"]],
-        ", All incoming Damage +",
-        [2, "#ff9999", ["5%"]],
-        " per stack."
-      ]
-    ],
-    "buff_27"
-  ],
-  426597705: [
-    "Concussion",
-    [
-      [
-        "Shocked by Killineza's attack.\nAtk. Power -",
-        [2, "#ff9999", ["5%"]],
-        ", All incoming Damage +",
-        [2, "#ff9999", ["5%"]],
-        " per stack."
-      ]
-    ],
-    "buff_27"
-  ],
-  426598401: ["Weaken", [["Killineza Staggered.\nStagger time increases per stack."]], "buff_45"],
-  426599204: [
-    "Punishment",
-    [
-      [
-        "Sidereal Skill's effect decreases due to Sidereal's fury over Killineza's atrocities, but meter gain greatly increases."
-      ]
-    ],
-    "buff_210"
-  ],
-  426680001: ["Stun", [["Incapacitated due to Killineza's attack"]], "buff_39"],
-  426654111: ["Organism Infection", [[""]], "buff_629"],
-  426654121: ["Organism Erosion", [[" "]], "buff_630"],
-  426654131: ["Organism Homogenization", [[" "]], "buff_631"],
-  426654141: ["Organism Overload", [[" "]], "buff_632"],
-  426640005: [
-    "Dejection",
-    [["Dejected upon meeting Killineza's gaze.\nBreaking free requires another's assistance."]],
-    "buff_500"
-  ],
-  44341701: ["Fear", [["Incapacitated"]], "buff_38"],
-  426654523: [
-    "Open Weakness",
-    [["Your weak point is exposed to Killineza.\nAll Damage received +", [2, "#ff9999", ["5%"]], " per stack."]],
-    "buff_362"
-  ],
-  45141211: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141212: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141213: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141214: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141215: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141216: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141217: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141218: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141219: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141221: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141222: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141223: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141224: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141225: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141226: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141227: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141228: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141229: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141231: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141232: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141233: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141234: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141235: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141236: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141237: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141238: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141239: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141241: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141242: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141243: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141244: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141245: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141246: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141247: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141248: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141249: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141251: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141252: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141253: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141254: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141255: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141256: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141257: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141258: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141259: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141261: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141262: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141263: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141264: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141265: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141266: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141267: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141268: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141269: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141271: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141272: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141273: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141274: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141275: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141276: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141277: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141278: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141279: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141281: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141282: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141283: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141284: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141285: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141286: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141287: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141288: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141289: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
-  45141613: [
-    "Red Moon Encroachment",
-    [
-      [
-        "Mentally rattled by the Red Moon's influence.\nCan no longer be controlled, and loses HP gradually. Atk./Move Speed +",
-        [2, "#99ff99", ["10%"]],
-        "."
-      ]
-    ],
-    "buff_622"
-  ],
-  426654902: [
-    "Contamination",
-    [
-      [
-        "Covered in Killineza's organism.\nAtk. Power -",
-        [2, "#ff9999", ["95%"]],
-        ". Stagger Point and Weak Point Damage level -",
-        [2, "#ff9999", ["100%"]],
-        ". Receive massive damage at ",
-        [2, "#ffff99", ["2"]],
-        " stacks."
-      ]
-    ],
-    "buff_629"
-  ],
-  426655003: ["Paralyze", [["Incapacitated"]], "buff_51"],
-  417300201: ["Fear", [["Incapacitated"]], "buff_38"],
-  417300311: [
-    "Organism Retrieval",
-    [["Killineza retrieved her organism.\nAll Damage received -", [2, "#99ff99", ["20%"]], "."]],
-    "buff_613"
-  ],
-  426655204: [
-    "Noble Determination",
-    [["Determined to sacrifice for the sake of others after locking eyes with Killineza"]],
-    "buff_624"
-  ],
-  426655206: [
-    "Seraphic Sacrifice",
-    [["Moved by another's noble sacrifice. Atk. Power +", [2, "#99ff99", ["10%"]], "."]],
-    "buff_625"
-  ],
-  426599202: [
-    "Berserk",
-    [
-      [
-        "Restore HP every ",
-        [2, "#ffff99", ["60s"]],
-        ". Move Speed +",
-        [2, "#99ff99", ["100%"]],
-        ". Atk. Speed +",
-        [2, "#99ff99", ["100%"]],
-        ". Atk. Power +",
-        [2, "#99ff99", ["400%"]],
-        "."
-      ]
-    ],
-    "buff_71"
-  ],
-  426596091: [
-    "Destruction",
-    [["Atk. Power -", [2, "#ff9999", ["3%"]], ", All incoming Damage +", [2, "#ff9999", ["3%"]], " per stack."]],
-    "buff_28"
-  ],
-  426480121: ["Weaken", [["Black liquid increases incoming damage."]], "buff_598"],
-  426480123: ["Electrocution", [["Temporarily Immobilized due to being electrocuted."]], "buff_599"],
-  426480124: ["Restrain", [["Temporarily Immobilized and bound by the power of darkness."]], "buff_595"],
-  426480125: ["Numbing", [["Temporarily decreases Atk./Move Speed."]], "buff_43"],
-  426500911: [
-    "Deep Dark",
-    [["Failure to escape from the fog created by the Dark Strength will result in instant death."]],
-    "buff_252"
-  ],
-  426487210: ["Gaze", [["Valinak is glaring."]], "buff_234"],
-  426480165: [
-    "Dark Strength",
-    [["Valinak is temporarily enhanced by the Dark Strength granted by Thaemine."]],
-    "buff_593"
-  ],
-  426487215: [
-    "Elemental Attribute Cancellation",
-    [["Due to the cancellation effect, Stagger effects on Valinak are amplified."]],
-    "buff_27"
-  ],
-  426490122: [
-    "Electric Discharge",
-    [["By discharging all of Valinak's electricity, you can anticipate where the Final Strike will land."]],
-    "buff_116"
-  ],
-  426490201: [
-    "Unstable Electricity",
-    [["Blocking Valinak's strike causes all the electricity in his body to discharge after a while."]],
-    "buff_595"
-  ],
-  426490202: ["Electricity Release", [["Immobilized while emitting electricity."]], "buff_597"],
-  426481801: [
-    "Dark Membrane",
-    [["After a set duration, a membrane imbued with Dark Strength forms underfoot."]],
-    "buff_594"
-  ],
-  426480158: [
-    "Dark Strength",
-    [["Valinak is temporarily enhanced by the Dark Strength granted by Thaemine."]],
-    "buff_593"
-  ],
-  426510204: ["Shadow Shield", [["Incoming Damage is reduced by the shield."]], "buff_607"],
-  426510205: ["Shadow Mark", [["Shadow Thaemine appears at the marked target location."]], "buff_608"],
-  426510209: ["Spectral Embrace", [["Become incapacitated while Imprisoned."]], "buff_609"],
-  426510211: ["Thick Darkness", [["Consumed by Darkness."]], "buff_13"],
-  426510213: ["Courage to Confront", [["Atk. Power +", [2, "#99ff99", ["10%"]], " per stack."]], "buff_604"],
-  426510214: ["Critical Wound", [["Incoming Damage +", [2, "#ff9999", ["20%"]], " per stack."]], "buff_605"],
-  426510215: ["Dark Energy", [["Shadow mark is enhanced per stack."]], "buff_606"],
-  426510216: ["Exhaustion", [["Cannot block certain attacks while in current state."]], "buff_610"],
-  426510217: ["Darkness", [["Consumed by Darkness."]], "buff_13"],
-  426510218: ["Fear", [["Become Feared."]], "buff_38"],
-  426510228: ["Imprisonment", [["Become incapacitated while Imprisoned."]], "buff_48"],
-  426510229: ["Confusion", [["The world is turned upside down, control is reversed."]], "buff_91"],
-  426513843: ["Seed of Darkness", [["The Dark Energy will soon explode."]], "buff_595"],
-  426513845: ["Enhance Unity", [["Stagger Point per stack -", [2, "#ff9999", ["25%"]], "."]], "buff_605"],
-  426513861: ["Stun", [["Become Stunned and Incapacitated by a powerful energy."]], "buff_39"],
-  426513862: ["Thick Darkness", [["Consumed by Darkness."]], "buff_13"],
-  426513864: ["Shadow Shield", [["Incoming Damage is reduced by the shield."]], "buff_607"],
-  426511182: ["Thick Darkness", [["Consumed by Darkness."]], "buff_13"],
-  426610000: [
-    "Dark Encroachment",
-    [
-      [
-        "Partially encroached by Thaemine's darkness. Atk. Power -",
-        [2, "#ff9999", ["20"]],
-        "%. Will succumb to the encroachment upon reaching 3 stacks."
-      ]
-    ],
-    "buff_647"
-  ],
-  426610001: [
-    "Encroachment Status",
-    [["Completely consumed by Thaemine's darkness. Has Status Ailment Immunity and target will die."]],
-    "buff_647"
-  ],
-  426610004: ["Dark Strength", [["Thaemine's attack power increases."]], "buff_654"],
-  426610007: ["Darkness", [["Vision is limited by darkness, and cannot see the signs of counters."]], "buff_13"],
-  426610009: [
-    "Onyx Energy Fragment",
-    [["Stands against the encroachment of darkness and gains immunity against it."]],
-    "buff_648"
-  ],
-  426610010: ["Encroachment Resistance", [["Gain immunity to Encroachment effect for duration."]], "buff_648"],
-  426610011: [
-    "Rupture",
-    [["An inevitably fatal wound. Incoming Damage +", [2, "#ff9999", ["5%"]], ". Will die upon reaching 3 stacks."]],
-    "buff_29"
-  ],
-  426610012: [
-    "Master of Darkness",
-    [["Thaemine has unleashed his strength and has a chance to cause Crit Damage."]],
-    "buff_641"
-  ],
-  426610013: ["Time Distortion Immunity", [["Gained immunity to Shandi's power of Time Distortion."]], "buff_170"],
-  426610042: [
-    "Black Impact",
-    [
-      [
-        "Shocked from slamming hard into a wall of darkness. Incoming Damage +",
-        [2, "#ff9999", ["15"]],
-        "%. Vision is narrowed. Unable to see the motion before a counterattack."
-      ]
-    ],
-    "buff_89"
-  ],
-  426619900: [
-    "Shock",
-    [["Shocked from slamming hard into a wall. Incoming Damage +", [2, "#ff9999", ["15"]], "%."]],
-    "buff_27"
-  ],
-  426610902: ["Fear", [["Become Incapacitated while struck with fear."]], "buff_38"],
-  426610903: ["Aim Sword", [["A myriad of swords are about to strike."]], "buff_642"],
-  426610904: ["Aim Sword", [["A myriad of swords are about to strike."]], "buff_642"],
-  426611100: ["Earthquake", [["Become Incapacitated by an Earthquake."]], "buff_49"],
-  426611101: [
-    "Shandi's Energy",
-    [["Energy containing Shandi's power. It harmonizes with all the other Sidereal Energy."]],
-    "buff_644"
-  ],
-  426611103: [
-    "Azena's Energy",
-    [["Energy containing Azena's power. It harmonizes with all the other Sidereal Energy."]],
-    "buff_280"
-  ],
-  426611105: [
-    "Thirain's Energy",
-    [["Energy containing Thirain's power. It harmonizes with all the other Sidereal Energy."]],
-    "buff_645"
-  ],
-  426611106: ["Sword Fragment", [["A special energy emanates from the scattered sword fragments."]], "buff_646"],
-  426611201: ["Fear", [["Become Incapacitated while struck with fear."]], "buff_38"],
-  426611215: [
-    "Aim",
-    [
-      [
-        "Targeted by the massive Nightfall Greatsword. Soon, the Nightfall Greatsword will fall, delivering a fatal strike."
-      ]
-    ],
-    "buff_643"
-  ],
-  426611303: ["Invincible", [["Become immune to all Damage."]], "buff_22"],
-  426611310: ["Invincible", [["Become immune to all Damage."]], "buff_22"],
-  426611600: ["Enh. Release Shadowburst", [["The encroaching energy envelops the weapon"]], "buff_649"],
-  426611700: ["Earthquake", [["Become Incapacitated by an Earthquake."]], "buff_49"],
-  426611701: ["Enh. Release Shadowburst", [["The encroaching energy envelops the weapon"]], "buff_650"],
-  426612701: ["Darkness Territory", [["After a set duration, an encroachment zone will form."]], "buff_652"],
-  426612702: ["Darkness Territory", [["After a set duration, an encroachment zone will form."]], "buff_652"],
-  426612703: ["Darkness Territory", [["After a set duration, an encroachment zone will form."]], "buff_652"],
-  426612704: ["Darkness Territory", [["After a set duration, an encroachment zone will form."]], "buff_652"],
-  426612705: ["Darkness Territory", [["After a set duration, an encroachment zone will form."]], "buff_652"],
-  426612823: ["Dark Suppression", [["Thaemine will counterattack upon using a skill."]], "buff_48"],
-  426612824: ["Curse of Darkness", [["A curse where Thaemine counters by using a skill."]], "buff_48"],
-  426612825: ["Curse of Darkness", [["A curse where Thaemine counters by using a skill."]], "buff_48"],
-  426612826: ["Dark Shield", [["A shield of darkness that protects against fatal strikes"]], "buff_239"],
-  426612900: ["Ebon Bind", [["Robbed of bodily control by the thick darkness"]], "buff_653"],
-  426613000: ["Insurmountable Power", [["Thaemine's overwhelming power. It cannot be opposed."]], "buff_150"],
-  426613300: ["Enh. Release Shadowburst", [["The encroaching energy envelops the weapon"]], "buff_651"],
-  426613400: [
-    "Weaken Darkness",
-    [["Dark powers zap your strength. Atk. Power -", [2, "#ff9999", ["40%"]], "."]],
-    "buff_28"
-  ],
-  426600420: [
-    "Overwhelm",
-    [
-      [
-        "Overwhelmed by darkness and immobilized.\nFailing to escape within the given time will cause darkness to attack."
-      ]
-    ],
-    "buff_48"
-  ],
-  426601232: [
-    "Overwhelm",
-    [
-      [
-        "Overwhelmed by darkness and immobilized.\nFailing to escape within the given time will cause darkness to attack."
-      ]
-    ],
-    "buff_48"
-  ],
-  426602613: [
-    "Overwhelm",
-    [
-      [
-        "Overwhelmed by darkness and immobilized.\nFailing to escape within the given time will cause darkness to attack."
-      ]
-    ],
-    "buff_48"
-  ],
-  426601902: [
-    "Overwhelm",
-    [
-      [
-        "Overwhelmed by darkness and immobilized.\nFailing to escape within the given time will cause darkness to attack."
-      ]
-    ],
-    "buff_48"
-  ],
-  426600425: ["Petrification", [["Become Incapacitated from Petrification."]], "buff_36"],
-  426602608: ["Scar of Darkness", [["Dies after a certain number of stacks."]], "buff_96"],
-  426601210: ["Earthquake", [["Become Incapacitated by an Earthquake."]], "buff_49"],
-  426601690: ["Damage Increase", [["Incoming Phy./Mag. Damage received +", [2, "#ff9999", ["50%"]], "."]], "buff_27"],
-  426602403: [
-    "Life Snatch",
-    [["HP taken by Thaemine.\nEach time you deal damage to Thaemine, you restore some HP."]],
-    "buff_220"
-  ],
-  426602409: ["Silence", [["Battle Item cannot be used."]], "buff_88"],
-  426602440: ["Silence", [["Battle Item cannot be used."]], "buff_88"],
-  426602411: ["Fear of Darkness", [["Recovery Effect -", [2, "#ff9999", ["45%"]], "."]], "buff_11"],
-  426602451: ["Fear of Darkness", [["Recovery Effect -", [2, "#ff9999", ["45%"]], "."]], "buff_11"],
-  426602500: ["Spacetime Domination", [["The flow of time and space slows."]], "buff_25"],
-  426602506: ["Spacetime Domination", [["The flow of time and space slows."]], "buff_25"],
-  426602507: ["Spacetime Domination", [["The flow of time and space slows."]], "buff_25"],
-  426609930: ["Damage Reduction", [["Incoming Phy./Mag. Damage -", [2, "#99ff99", ["99.9%"]], "."]], "buff_19"],
-  426609905: ["Bleed", [["Receive Phy. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_41"],
-  426609922: [
-    "Sidereal's Protection",
-    [["Empowered by Sidereal's will. Atk. Power +", [2, "#99ff99", ["80%"]], "."]],
-    "buff_655"
-  ],
-  426609923: ["Kadan's Blow", [["Suffered a major hit from Kadan's attack."]], "buff_657"],
-  426609924: [
-    "Kadan's Protection",
-    [["Protected by Kadan.\nImmune to Paralysis and Push. Incoming Damage -", [2, "#99ff99", ["80"]], "%."]],
-    "buff_656"
-  ],
-  426601960: [
-    "Target Gaze",
-    [["The target becomes prioritized as the attack target.\nBecome Petrified soon after."]],
-    "buff_234"
-  ],
-  426601961: ["Petrification", [["Become Incapacitated from Petrification."]], "buff_36"],
-  426609942: ["Decay", [["Crit Resistance -", [2, "#ff9999", ["30%"]], "."]], "buff_89"],
-  413830521: [
-    "Agris's Brand",
-    [["You have become Agris's target.\nIf you fail to stop Agris's spell, you will die."]],
-    "buff_48"
-  ],
-  413831051: [
-    "Gleaming Scale",
-    [["Agris's strength powerfully surround Narkiel.\nDecreases incoming Damage and counters upon receiving Damage."]],
-    "buff_669"
-  ],
-  413831052: [
-    "Discomfort",
-    [
-      [
-        "Only a portion of Agris's strength remains and surrounds Narkiel.\nCounters damage when hit on a scale-covered area."
-      ]
-    ],
-    "buff_163"
-  ],
-  413830161: [
-    "Provocative Support",
-    [
-      [
-        "Atk. Power has increased with Agris's support.\nAs the number of foes nearby increases, so does the Atk. Power."
-      ]
-    ],
-    "buff_692"
-  ],
-  413830162: [
-    "Provocative Support",
-    [
-      [
-        "Reduce your Defense and strengthen Narkiel's Atk. Power. The more disruptions there are from nearby foes, the more Defense decreases."
-      ]
-    ],
-    "buff_693"
-  ],
-  413830165: ["Quick Steps", [["Increases Move Speed."]], "buff_10"],
-  413830121: [
-    "Skill Absorption",
-    [["Narkiel absorbs the skills of nearby foes, and strengthens his ability to reduce Incoming Damage."]],
-    "buff_173"
-  ],
-  413831056: [
-    "Gleaming Scale",
-    [["Agris's strength faintly surround Narkiel.\nIncoming Damage decreased."]],
-    "buff_669"
-  ],
-  413831057: ["Discomfort", [["Only a portion of Agris's strength remains and surrounds Narkiel."]], "buff_163"],
-  413831095: ["Overwhelm", [["You are overwhelmed by Narkiel's gaze.\nTemporarily unable to move. "]], "buff_48"],
-  426870402: [
-    "Enhance",
-    [
-      [
-        "Narkiel absorbs power from nearby and becomes stronger. Atk. Power +",
-        [2, "#99ff99", ["20%"]],
-        " with each stack."
-      ]
-    ],
-    "buff_672"
-  ],
-  426870503: [
-    "Soul Absorption",
-    [
-      [
-        "Narkiel absorbs the soldiers' souls. At max stack, the absorbed souls are discharged simultaneously to inflict powerful damage."
-      ]
-    ],
-    "buff_676"
-  ],
-  426870701: [
-    "Breath of Death",
-    [["Consumed by the scent of death.\nYou have become Narkiel's target and will die."]],
-    "buff_677"
-  ],
-  426870710: [
-    "Fragrance of Death",
-    [["You have approached the censer and breathed in the smoke.\nYou will become Narkiel's target upon stacking."]],
-    "buff_676"
-  ],
-  426870714: [
-    "Uncontrollable",
-    [
-      [
-        "You cannot control the censer again for ",
-        [2, "#99ff99", ["60s"]],
-        ". You will die if you try to control it again before time is up."
-      ]
-    ],
-    "buff_142"
-  ],
-  426870715: [
-    "Incoming Damage Increase",
-    [["Incoming Damage +", [2, "#ff9999", ["100%"]], " with each stack."]],
-    "buff_27"
-  ],
-  426870800: [
-    "Red Curse",
-    [
-      [
-        "You have been cursed by Narkiel.\nEveryone will be annihilated if you fail to undo the curse within ",
-        [2, "#99ff99", ["80"]],
-        "s."
-      ]
-    ],
-    "buff_671"
-  ],
-  426871000: [
-    "Scent of Yearning",
-    [["Creates a zone of red desire at the target's location in a few seconds."]],
-    "buff_674"
-  ],
-  426871001: [
-    "Scent of Despair",
-    [["Creates a zone of black despair at the target's location in a few seconds."]],
-    "buff_675"
-  ],
-  426871005: ["Scent of Chaos", [["Creates a zone of chaos at the target's location in a few seconds."]], "buff_696"],
-  426871006: [
-    "Faint Encroachment",
-    [
-      [
-        "Exposed to Narkiel's scent.\nYou will be encroached by the scent of desire at ",
-        [2, "#99ff99", ["3"]],
-        " stacks."
-      ]
-    ],
-    "buff_429"
-  ],
-  426871007: [
-    "Scent of Yearning",
-    [["Creates a zone of red desire at the target's location in a few seconds."]],
-    "buff_674"
-  ],
-  426871100: [
-    "Swamp of Resentment",
-    [["Creates a sticky swamp of resentment at the target's location in a few seconds."]],
-    "buff_512"
-  ],
-  426871101: ["Heavy Limbs", [["Move Speed and Atk. Speed temporarily decrease."]], "buff_43"],
-  426871102: [
-    "Incoming Damage Increase",
-    [["Incoming Damage +", [2, "#ff9999", ["20%"]], " with each stack."]],
-    "buff_27"
-  ],
-  426871300: [
-    "Tracking Censer",
-    [["Narkiel's Censer will be summoned at the target's location in a few seconds."]],
-    "buff_673"
-  ],
-  426871309: [
-    "Tracking Censer",
-    [["Narkiel's Censer will be summoned at the target's location in a few seconds."]],
-    "buff_673"
-  ],
-  426871311: ["Heavy Legs", [["Move Speed temporarily decreases."]], "buff_43"],
-  426871316: [
-    "Tracking Censer",
-    [["Narkiel's Censer will be summoned at the target's location in a few seconds."]],
-    "buff_673"
-  ],
-  426871317: [
-    "Tracking Censer",
-    [["Narkiel's Censer will be summoned at the target's location in a few seconds."]],
-    "buff_673"
-  ],
-  426872400: ["Imprisonment", [["Becomes Imprisoned."]], "buff_670"],
-  426871310: ["Earthquake", [["Become Incapacitated due to an Earthquake."]], "buff_49"],
-  426871700: ["Target Locked", [["Becomes the target of a curse."]], "buff_234"],
-  426871701: ["Target Locked", [["Becomes the target of a curse."]], "buff_165"],
-  426871702: ["Target Locked", [["Becomes the target of a curse."]], "buff_234"],
-  427030200: [
-    "Smoke of Protection",
-    [["A thick smoke surrounds you.\nThe smoke that protected the censer now protects you temporarily."]],
-    "buff_428"
-  ],
-  427030205: [
-    "Smoke of Protection",
-    [["A thick smoke surrounds you.\nThe smoke that protected the censer now protects you temporarily."]],
-    "buff_428"
-  ],
-  426876014: [
-    "Gaze",
-    [
-      [
-        "Narkiel is watching you.\nMove Speed decreases and Incoming Damage increases. The effects amplify upon stacking. When assimilated with Narkiel's magick, you will be able to see the hidden censer temporarily."
-      ]
-    ],
-    "buff_385"
-  ],
-  426876025: [
-    "Morale Boost",
-    [["You have helped your allies and their morale has increased. Atk. Power +", [2, "#99ff99", ["10%"]], "."]],
-    "buff_210"
-  ],
-  426876030: ["Blood Curse", [["Continuously receives damage from the curse."]], "buff_38"],
-  426876155: ["Blood Curse", [["Continuously receives damage from the curse."]], "buff_38"],
-  426876033: ["Shield", [["Receives protection through the sorcerer."]], "buff_277"],
-  10213301: ["Confusion", [["Unable to move while confused."]], "buff_362"],
-  426873410: ["Pursuit", [["Increases Move Speed."]], "buff_10"],
-  40520104: [
-    "Stubborn Gaze",
-    [
-      [
-        "The snake is gazing at you.\nIt's dangerous to look into the snake's eyes too long.\nBecome Petrified at 3 stacks."
-      ]
-    ],
-    "buff_441"
-  ],
-  40520200: ["Petrification", [["Become Petrified."]], "buff_36"],
-  426899900: ["Fabric Imprisonment", [["Surrounded by cloth and unable to move."]], "buff_619"],
-  426899902: ["Petrification", [["Become Incapacitated from Petrification."]], "buff_36"],
-  426899930: ["Relaxed Gaze", [["Echidna is gazing at you."]], "buff_341"],
-  426899944: ["Exhaustion", [["Cannot block certain attacks while in current state."]], "buff_610"],
-  426899952: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
-  426899953: ["Deranged", [["Becomes temporarily confused."]], "buff_452"],
-  426899954: [
-    "Unstoppable Walk",
-    [["Able to move without stopping.\nAble to use Movement Skills with no cooldown equal to number of stacks."]],
-    "buff_37"
-  ],
-  426899958: [
-    "Critical Wound",
-    [
-      [
-        "Receive an internal wound after an attack from the giant snake.\nIncoming Damage +",
-        [2, "#99ff99", ["50%"]],
-        " per stack.\n",
-        [2, "#99ff99", ["Unable to evade certain attacks from Echidna."]]
-      ]
-    ],
-    "buff_27"
-  ],
-  426899966: ["Sense of Loss", [["Incoming Damage +", [2, "#99ff99", ["30%"]], "."]], "buff_27"],
-  426899967: ["Relaxed Gaze", [["Echidna is gazing at you."]], "buff_341"],
-  426899981: ["Snake's Fury", [["Damage to foes +", [2, "#99ff99", ["25%"]], " per stack."]], "buff_66"],
-  426898348: [
-    "Covetous Prisoner",
-    [["Echidna's desire has been injected in you.\nYou will be in danger if more desire enters you."]],
-    "buff_424"
-  ],
-  426898357: ["Snake's Blindness", [["Incoming Damage +", [2, "#99ff99", ["50%"]], " per stack."]], "buff_27"],
-  426893433: ["Covetous Seed Enhancement", [["The covetous seed enhances with each stack."]], "buff_678"],
-  426980619: [
-    "Partial Petrification",
-    [
-      [
-        "A state in which part of the body is petrified.\nAt 3 stacks, the entire body hardens, resulting in petrification."
-      ]
-    ],
-    "buff_286"
-  ],
-  426980621: ["Petrification", [["Become Incapacitated from Petrification."]], "buff_36"],
-  426893502: ["Covetous Seed", [["The covetous seed will sprout nearby in a few seconds."]], "buff_678"],
-  426893503: [
-    "Whispers of Seduction",
-    [["Hear the whispers of seduction.\nBecome dominated by Echidna's charm at 3 stacks."]],
-    "buff_431"
-  ],
-  426893504: [
-    "Dominance of Seduction",
-    [
-      [
-        "Become dominated by Echidna's charm.\nOverwhelmed by Echidna's bewitching whispers, you are unable to recognize your allies."
-      ]
-    ],
-    "buff_431"
-  ],
-  426893513: [
-    "Covetous Chains",
-    [
-      [
-        "Become closer to Echidna, unable to hide your deepest desires.\nYou will hear the bewitching whispers in a few seconds."
-      ]
-    ],
-    "buff_681"
-  ],
-  426893514: ["Mark", [["A Giant Butterfly tracks the target."]], "buff_234"],
-  426893515: [
-    "Butterfly Fantasy",
-    [
-      ["Make contact with the butterfly and fall asleep.\nYou can no longer distinguish between you and the butterfly."]
-    ],
-    "buff_682"
-  ],
-  426893516: ["Luring Temptation", [["Go toward Echidna against your will."]], "buff_680"],
-  426893518: ["Petrification", [["Becomes Petrified after looking into Echidna's eyes."]], "buff_36"],
-  426893519: ["Electrocution", [["Become Incapacitated while Electrocuted."]], "buff_51"],
-  426893520: [
-    "Covetous Chains",
-    [["Become connected to Echidna, who ignites your desires.\nDeliver the bewitching whispers to those nearby."]],
-    "buff_681"
-  ],
-  426893526: ["Explosive Desire", [["Covetous Energy explodes nearby in a few seconds."]], "buff_679"],
-  426893529: ["Petrification", [["Become Incapacitated from Petrification."]], "buff_36"],
-  426893532: [
-    "Ecstasy",
-    [
-      [
-        "Become bewitched and unable to control your feelings.\nYour love for Echidna surges.\nIgnores Status Ailment Immunity Rate."
-      ]
-    ],
-    "buff_680"
-  ],
-  426893539: ["Mark", [["Threat occurs at the marked target's location."]], "buff_234"],
-  426893541: ["Silence", [["Unable to use any skills while silenced."]], "buff_53"],
-  426893546: ["Covetous Seed", [["The covetous seed will sprout nearby in a few seconds."]], "buff_678"],
-  426893547: ["Covetous Seed", [["The covetous seed will sprout nearby in a few seconds."]], "buff_678"],
-  426893548: ["Covetous Seed", [["The covetous seed will sprout nearby in a few seconds."]], "buff_678"],
-  426893549: ["Covetous Seed", [["The covetous seed will sprout nearby in a few seconds."]], "buff_678"],
-  426893550: ["Covetous Seed", [["The covetous seed will sprout nearby in a few seconds."]], "buff_678"],
-  426893551: ["Covetous Seed", [["The covetous seed will sprout nearby in a few seconds."]], "buff_678"],
-  426893552: ["Covetous Seed", [["The covetous seed will sprout nearby in a few seconds."]], "buff_678"],
-  426893553: ["Tranquility", [["Stagger Point -", [2, "#ff9999", ["5%"]], " per stack."]], "buff_180"],
-  426893554: ["Valor", [["Stagger Point +", [2, "#99ff99", ["30%"]], " per stack."]], "buff_275"],
-  426893555: ["Petrification", [["Become Incapacitated from Petrification."]], "buff_36"],
-  427070176: [
-    "Alluring Scent",
-    [["Echidna's scent lingers on the body.\nAtk. Power -", [2, "#ff9999", ["20%"]], " for 30s."]],
-    "buff_452"
-  ],
-  427070178: ["Atk. Power Reduction", [["Atk. Power -", [2, "#ff9999", ["20%"]], " for 30s."]], "buff_28"],
-  427040733: ["Chains of Charm", [["Become closer to Echidna, unable to hide your deepest desires."]], "buff_681"],
   9910092: ["Fear", [["Become Incapacitated while struck with fear."]], "buff_24"],
   9910103: ["Slow Field", [["Reduces Atk./Move Speed."]], "buff_43"],
   9910104: ["Petrification", [["Become Incapacitated from Petrification."]], "buff_36"],
@@ -36540,6 +35440,28 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [["A series of lightning bolts will soon fall successively in the surrounding area."]],
     "buff_191"
   ],
+  426971511: [
+    "Electric Attack",
+    [["Thunderbolt inflicts ", [2, "#ff9999", ["3%"]], " of Vitality every ", [2, "#ff9999", ["1s"]], "."]],
+    "buff_104"
+  ],
+  539590600: [
+    "Crimson Energy",
+    [["Gradually recover the target's HP due to crimson energy emanating from the tail."]],
+    "buff_34"
+  ],
+  539590611: ["Magnetic Field", [["High-voltage current is enveloping the Guardian."]], "buff_72"],
+  539590613: ["Argeos's Source", [["Absorbed Argeos's Source. Increases Move Speed and Stagger Damage."]], "buff_321"],
+  539590614: ["Steel Skin", [["Target's Incoming Stagger Damage decreases."]], "buff_320"],
+  427260099: [
+    "Storm's Wrath",
+    [
+      [
+        'Attacking areas such as the Behemoth\'s wings and tail triggers a "Weak Point Attack" sign, applying Frontal Attack and Back Attack.'
+      ]
+    ],
+    "buff_714"
+  ],
   44581304: ["Sweet", [["Sweet! Sweet! Delicious!"]], "buff_98"],
   416503300: ["Earthquake", [["Is it just me or the ground is actually shaking?"]], "buff_49"],
   416503307: ["Damage Reduction", [["Drunk, cheerful, and insensible."]], "buff_150"],
@@ -36733,707 +35655,13 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [["The New Year's Bow Rascals' incoming Damage increases. At max stacks, receive even more Damage."]],
     "buff_27"
   ],
-  73110601: ["Guardian", [["Life Energy protects you from all harm."]], "buff_22"],
-  73110604: ["Life Energy", [["The air is filled with Life Energy."]], "buff_156"],
-  422000013: [
-    "Weak Point Detection",
-    [
-      [
-        "Activates ",
-        [2, "#ff9999", ["Weak Point Detection"]],
-        " by successfully attacking Hanumatan from close proximity.\nIncoming Damage +",
-        [2, "#ffff99", ["0.4"]],
-        "% per debuff in the stack. Stack reduced when hit by Hanumatan.\nWhen ",
-        [2, "#ff9999", ["Weak Point Detection"]],
-        " stacks to a certain amount, ",
-        [2, "#99ff99", ["Wartorn Will"]],
-        " activates and increases Combat Stats. "
-      ]
-    ],
-    "buff_460"
+  422562602: ["Agh! It's Cold!", [["Wave Jump successful!"]], "buff_569"],
+  10380310: ["Perfect Guy!", [["Achieved the highest hammer score!"]], "buff_640"],
+  427670595: [
+    "Feeling Full",
+    [["You ran like the wind and ate like a horse. You're feeling full and drowsy."]],
+    "all_quest_04_209"
   ],
-  422000014: [
-    "Wartorn Will",
-    [
-      [
-        [2, "#99ff99", ["Wartorn Will"]],
-        " activated by the amount of ",
-        [2, "#ff9999", ["Weak Point Detection"]],
-        " stacks. Atk. Power +",
-        [2, "#99ff99", ["10"]],
-        "%. Party Atk. Power Buff +",
-        [2, "#99ff99", ["25"]],
-        "%."
-      ]
-    ],
-    "buff_4"
-  ],
-  422000015: [
-    "Combat Awakening",
-    [
-      [
-        [2, "#99ff99", ["Wartorn Will"]],
-        " changes to ",
-        [2, "#99ff99", ["Combat Enhancement"]],
-        " by the amount of ",
-        [2, "#ff9999", ["Weak Point Detection"]],
-        " stacks. Atk. Power +",
-        [2, "#99ff99", ["30"]],
-        "%. Party Atk. Power Buff +",
-        [2, "#99ff99", ["75"]],
-        "%."
-      ]
-    ],
-    "buff_4"
-  ],
-  422000016: [
-    "Impeccable",
-    [
-      [
-        [2, "#99ff99", ["Combat Enhancement"]],
-        " changes to ",
-        [2, "#99ff99", ["Impeccable"]],
-        " by the amount of ",
-        [2, "#ff9999", ["Weak Point Detection"]],
-        " stacks. Atk. Power +",
-        [2, "#99ff99", ["40"]],
-        "%. Party Atk. Power Buff +",
-        [2, "#99ff99", ["100"]],
-        "%."
-      ]
-    ],
-    "buff_4"
-  ],
-  422000023: [
-    "Weak Point Detection",
-    [
-      [
-        "Activates ",
-        [2, "#ff9999", ["Weak Point Detection"]],
-        " by successfully attacking Hanumatan from close proximity.\nIncoming Damage +",
-        [2, "#ffff99", ["0.4"]],
-        "% per debuff in the stack. Stack reduced when hit by Hanumatan.\nWhen ",
-        [2, "#ff9999", ["Weak Point Detection"]],
-        " stacks to a certain amount, ",
-        [2, "#99ff99", ["Wartorn Will"]],
-        " activates and increases Combat Stats. "
-      ]
-    ],
-    "buff_461"
-  ],
-  422000024: [
-    "Wartorn Will",
-    [
-      [
-        [2, "#99ff99", ["Wartorn Will"]],
-        " activated by the amount of ",
-        [2, "#ff9999", ["Weak Point Detection"]],
-        " stacks. Atk. Power +",
-        [2, "#99ff99", ["15"]],
-        "%. Party Atk. Power Buff +",
-        [2, "#99ff99", ["35"]],
-        "%."
-      ]
-    ],
-    "buff_4"
-  ],
-  422000025: [
-    "Combat Awakening",
-    [
-      [
-        [2, "#99ff99", ["Wartorn Will"]],
-        " changes to ",
-        [2, "#99ff99", ["Combat Enhancement"]],
-        " by the amount of ",
-        [2, "#ff9999", ["Weak Point Detection"]],
-        " stacks. Atk. Power +",
-        [2, "#99ff99", ["40"]],
-        "%. Party Atk. Power Buff +",
-        [2, "#99ff99", ["100"]],
-        "%."
-      ]
-    ],
-    "buff_4"
-  ],
-  422000026: [
-    "Impeccable",
-    [
-      [
-        [2, "#99ff99", ["Combat Enhancement"]],
-        " changes to ",
-        [2, "#99ff99", ["Impeccable"]],
-        " by the amount of ",
-        [2, "#ff9999", ["Weak Point Detection"]],
-        " stacks. Atk. Power +",
-        [2, "#99ff99", ["50"]],
-        "%. Party Atk. Power Buff +",
-        [2, "#99ff99", ["125"]],
-        "%."
-      ]
-    ],
-    "buff_4"
-  ],
-  422000030: [
-    "Yin Yang Shield",
-    [["Yin and Yang energy surround the body.\n", [2, "#99ff99", ["Negates"]], " Hanumatan's powerful attacks. "]],
-    "buff_458"
-  ],
-  422000032: [
-    "Target Focus",
-    [
-      [
-        "Marked for blocking a specific attack from Hanumatan. Able to draw Hanumatan's attention for a set duration.\nWhen attacked by Hanumatan, the stacks of Weak Point Detection for yourself and your party decrease by a certain amount."
-      ]
-    ],
-    "buff_341"
-  ],
-  422000043: ["Earthquake", [["Become Incapacitated due to an Earthquake."]], "buff_49"],
-  422000047: ["Great Earthquake", [["Become Incapacitated due to a massive Earthquake."]], "buff_49"],
-  422000048: [
-    "Dizziness",
-    [["Experiencing a loss of direction due to dizziness caused by the trembling of the sky and earth."]],
-    "buff_91"
-  ],
-  422000055: ["Great Earthquake", [["Become Incapacitated due to a massive Earthquake."]], "buff_49"],
-  422000081: [
-    "Target Focus",
-    [["Marked by Hanumatan. Able to draw Hanumatan's attention for a set duration."]],
-    "buff_341"
-  ],
-  414841082: ["Darkness", [["Becomes unable to look far, shrouded in darkness."]], "buff_13"],
-  427550111: [
-    "Standstill",
-    [["Attacked by Prokel, who was summoned by Brelshaza.\nTemporarily unable to move."]],
-    "buff_49"
-  ],
-  427550112: ["Prokel's Brand", [["Hit by Prokel's Shadow.\nDefense is reduced."]], "buff_27"],
-  427550194: ["Shadow's Gaze ", [["Prokel's Shadow is gazing at you."]], "buff_234"],
-  427550195: ["Shadow Rupture", [["Prokel's Shadow cannot appear for the duration."]], "buff_48"],
-  427520731: [
-    "Nightmare Shadow",
-    [["Touched by Brelshaza's Nightmare Shadow.\nMove Speed and Atk. Speed are temporarily reduced."]],
-    "buff_37"
-  ],
-  427520813: ["Darkness", [["Phantom Sphere explodes and reduces vision."]], "buff_13"],
-  427520903: [
-    "Deepening Phantom",
-    [["Brelshaza has absorbed the surrounding magick.\nBrelshaza's Atk. Power increases for a set duration."]],
-    "buff_773"
-  ],
-  427521111: [
-    "Phantom Brand",
-    [["Branded by Brelshaza's magick.\nAfter a set duration, special magick is activated."]],
-    "buff_234"
-  ],
-  427521311: [
-    "Nightmare Barrier",
-    [
-      [
-        "Brelshaza creates a barrier that blocks external attacks.\nThe damage Brelshaza receives is greatly reduced and Stagger Point is lowered."
-      ]
-    ],
-    "buff_216"
-  ],
-  427530830: ["Frost Release", [["Consumed by nightmares.\nEmit frost to those nearby."]], "buff_322"],
-  427530831: ["Frost Release", [["Consumed by nightmares.\nEmit frost to those nearby."]], "buff_322"],
-  427530832: [
-    "Phantom Brand",
-    [["Branded by Brelshaza's magick.\nAfter a set duration, special magick is activated."]],
-    "buff_234"
-  ],
-  427530841: ["Bind", [["Bound by nightmares.\nMovement is restricted."]], "buff_286"],
-  427530851: ["Bind", [["Bound by nightmares.\nMovement is restricted."]], "buff_286"],
-  427530911: ["Bind", [["Bound by nightmares.\nMovement is restricted."]], "buff_286"],
-  427530951: ["Bind", [["Bound by nightmares.\nMovement is restricted."]], "buff_286"],
-  427531031: ["Nightmare Wave", [["Consumed by nightmares.\nEmit nightmare energy to those nearby."]], "buff_221"],
-  427531033: ["Darkness", [["Phantom Sphere explodes and reduces vision."]], "buff_13"],
-  427531131: ["Frost Release", [["Consumed by nightmares.\nEmit frost to those nearby."]], "buff_322"],
-  427531133: [
-    "Phantom Brand",
-    [["Branded by Brelshaza's magick.\nAfter a set duration, special magick is activated."]],
-    "buff_234"
-  ],
-  427531301: [
-    "Dominion",
-    [["Dominated by the phantom.\nPossessed by Brelshaza's phantom, you cannot recognize your allies."]],
-    "buff_254"
-  ],
-  427531302: ["Nightmare Wave", [["Consumed by nightmares.\nEmit nightmare energy to those nearby."]], "buff_221"],
-  427531305: [
-    "Magick Afterimage",
-    [["Exposed to Brelshaza's magick.\nRecovery is temporarily greatly reduced while the afterimage lingers."]],
-    "buff_774"
-  ],
-  427531071: ["Numbing", [["Exposed to cold magick.\nYour body slows down as Move Speed is reduced."]], "buff_64"],
-  427531921: ["Numbing", [["Exposed to cold magick.\nYour body slows down as Move Speed is reduced."]], "buff_64"],
-  427532431: [
-    "Phantom Brand",
-    [["Branded by Brelshaza's magick.\nAfter a set duration, special magick is activated."]],
-    "buff_234"
-  ],
-  427532451: [
-    "Phantom Brand",
-    [["Branded by Brelshaza's magick.\nAfter a set duration, special magick is activated."]],
-    "buff_234"
-  ],
-  427535100: [
-    "Nightmare Brand",
-    [["Branded by Brelshaza's magick.\nAfter a set duration, a powerful magick activates at the target's location."]],
-    "buff_423"
-  ],
-  427535200: ["Manifester's Gaze", [["Brelshaza is gazing at you."]], "buff_234"],
-  427820210: [
-    "Magick Afterimage",
-    [["Exposed to Brelshaza's magick.\nRecovery is temporarily greatly reduced while the afterimage lingers."]],
-    "buff_774"
-  ],
-  427710383: [
-    "Magick Afterimage",
-    [["Exposed to Brelshaza's magick.\nRecovery is temporarily greatly reduced while the afterimage lingers."]],
-    "buff_774"
-  ],
-  427711401: ["Frost Encroachment", [["Body is frozen due to cold magick."]], "buff_144"],
-  427711402: [
-    "Absolute Freeze",
-    [["Body is completely frozen due to exposure to cold magick.\nBecome Incapacitated."]],
-    "buff_772"
-  ],
-  427711403: [
-    "Freeze",
-    [["Body is frozen due to exposure to cold magick.\nTemporarily become Incapacitated."]],
-    "buff_145"
-  ],
-  427710520: ["Frost Encroachment", [["Body is frozen due to cold magick."]], "buff_144"],
-  427710521: [
-    "Absolute Freeze",
-    [["Body is completely frozen due to exposure to cold magick.\nBecome Incapacitated."]],
-    "buff_772"
-  ],
-  427711101: ["Frostbite", [["Body gradually freezes due to exposure to cold Magick."]], "buff_63"],
-  427711102: [
-    "Freeze",
-    [["Body is frozen due to exposure to cold magick.\nTemporarily become Incapacitated."]],
-    "buff_145"
-  ],
-  427533611: [
-    "Frost Scar",
-    [["Body temperature drops due to exposure to cold magick.\nBecome unable to block certain attacks."]],
-    "buff_144"
-  ],
-  427533612: [
-    "Absolute Freeze",
-    [["Body is completely frozen due to exposure to cold magick.\nBecome Incapacitated."]],
-    "buff_772"
-  ],
-  427535405: [
-    "Freeze",
-    [["Body is frozen due to exposure to cold magick.\nTemporarily become Incapacitated."]],
-    "buff_145"
-  ],
-  427540122: [
-    "Magick Collision",
-    [
-      [
-        "The summoned Nightmare Phantaniclas's magick is colliding.\nThe Phantaniclas's structure weakens, making them easier to destroy."
-      ]
-    ],
-    "buff_27"
-  ],
-  426492102: [
-    "Phantom Encroachment",
-    [["Consumed by the exploded Phantom Sphere's magick.\nAtk. Power and Stagger Point are reduced."]],
-    "buff_31"
-  ],
-  426492103: [
-    "Deepening Nightmare",
-    [
-      [
-        "Brelshaza has absorbed the exploded Phantom Sphere's magick.\nBrelshaza's Atk. Power increases for a set duration."
-      ]
-    ],
-    "buff_15"
-  ],
-  427524105: ["Phantom Barrier", [["Shrouded by a Phantom Barrier, unable to move."]], "buff_48"],
-  427536301: ["Rime Explosion", [["After some time, discharges powerful chill in the surrounding area."]], "buff_249"],
-  427536302: ["Rime Explosion", [["After some time, discharges powerful chill in the surrounding area."]], "buff_249"],
-  427524302: ["Dream Barrier", [["Has created a protective barrier around itself."]], "buff_216"],
-  427524304: ["Encroachment", [["Temporarily unable to move, consumed by the Phantom World."]], "buff_322"],
-  427521303: ["Hallucination", [["Disoriented by Hallucination."]], "buff_59"],
-  427521340: [
-    "Phantom Brand",
-    [["Branded by Brelshaza's magick.\nAfter a set duration, special magick is activated."]],
-    "buff_234"
-  ],
-  427520907: [
-    "Magick Conversion",
-    [
-      [
-        "Has absorbed magick from an Absolute Freeze target.\nIf 5 or more targets become affected by Absolute Freeze, its attacks can no longer be stopped."
-      ]
-    ],
-    "buff_38"
-  ],
-  427711408: [
-    "Absolute Freeze",
-    [["Body is completely frozen due to exposure to cold magick.\nBecome Incapacitated."]],
-    "buff_772"
-  ],
-  427533711: ["Snow Wave", [["Continuously generates Cold Waves in a wide radius."]], "buff_321"],
-  427531181: ["Frost Release", [["Consumed by nightmares.\nEmit frost to those nearby."]], "buff_322"],
-  427531184: [
-    "Absolute Freeze",
-    [["Body is completely frozen due to exposure to cold magick.\nBecome Incapacitated."]],
-    "buff_772"
-  ],
-  427532607: ["Encroachment", [["Temporarily unable to move, consumed by the Phantom World."]], "buff_322"],
-  427530981: ["Gravity Manipulation", [["Powerful gravity temporarily slows Move Speed and Atk. Speed."]], "buff_37"],
-  427550197: ["Deep Shadow", [["At max effect, Prokel's Shadow appears and unleashes a powerful blow."]], "buff_441"],
-  427550199: ["Heavy Bleeding", [["Vitality is greatly reduced by a Fatal Strike."]], "buff_95"],
-  427530713: ["Silence", [["Become Silenced and unable to use Skills."]], "buff_53"],
-  427530872: [
-    "Frost Enhancement",
-    [["Phantaniclas is further hardened by cold energy.\nInflicts Damage to nearby foes."]],
-    "buff_239"
-  ],
-  427536405: [
-    "Chill",
-    [["Touched by Brelshaza's Nightmare Shadow.\nMove Speed and Atk. Speed are temporarily reduced."]],
-    "buff_37"
-  ],
-  427536406: ["Rime Explosion", [["After some time, discharges powerful chill in the surrounding area."]], "buff_144"],
-  427530991: ["Magick Barrier", [["Incoming Stagger Damage is reduced."]], "buff_89"],
-  427536000: [
-    "Spatial Distortion",
-    [["Released from Encroachment. Space appears distorted. Increases incoming Damage."]],
-    "buff_322"
-  ],
-  427281206: ["Soul Bind", [["Struck by the soul of the dead.\nTemporarily unable to move."]], "buff_48"],
-  427280807: ["Soul Bind", [["Struck by the soul of the dead.\nTemporarily unable to move."]], "buff_48"],
-  427281304: ["Spirit Earthquake", [["Become Incapacitated due to an Earthquake caused by Akkan."]], "buff_49"],
-  427281502: ["Curse of Degradation", [["Become blind and unable to move freely for a set time."]], "buff_344"],
-  427282201: ["Fear", [["Become Incapacitated for a long time out of overwhelming fear."]], "buff_38"],
-  427282401: ["Red Eye's Curse", [["Akkan's curse is watching you."]], "buff_500"],
-  427282403: ["Green Heart's Curse ", [["Akkan's curse is watching you."]], "buff_503"],
-  427282405: ["Fragile Sickle's Curse", [["Akkan's curse is watching you."]], "buff_502"],
-  427282407: ["Azure Horn's Curse", [["Akkan's curse is watching you."]], "buff_501"],
-  427282492: [
-    "Soul Banishment",
-    [
-      [
-        "Soul is banished after being cut by Akkan's scythe.\nYou wander the world of the dead.\nAtk. Power -",
-        [2, "#ff9999", ["99%"]],
-        "."
-      ]
-    ],
-    "buff_398"
-  ],
-  427282495: [
-    "Soul Banishment",
-    [
-      [
-        "Soul is banished after being cut by Akkan's scythe.\nYou wander the world of the dead.\nAtk. Power -",
-        [2, "#ff9999", ["99%"]],
-        "."
-      ]
-    ],
-    "buff_398"
-  ],
-  427282815: ["Soul Unity", [["Akkan resonates with the Shadow of Valtan."]], "buff_399"],
-  427283005: ["Fear", [["Become Incapacitated for a long time out of overwhelming fear."]], "buff_38"],
-  45692001: ["Fear", [["Become Incapacitated for a long time out of overwhelming fear."]], "buff_38"],
-  427350202: [
-    "Giant's Earthquake",
-    [["Become Incapacitated due to an Earthquake caused by Abyss Monarch Aegir."]],
-    "buff_49"
-  ],
-  427360013: ["Critical Wound", [["Incoming Damage +", [2, "#ff9999", ["20%"]], " per stack."]], "buff_27"],
-  427360339: [
-    "Giant's Earthquake",
-    [["Become Incapacitated due to an Earthquake caused by Abyss Monarch Aegir."]],
-    "buff_49"
-  ],
-  427350411: ["Giant's Gaze ", [["Abyss Monarch Aegir has his eye on you."]], "buff_234"],
-  427350421: ["Giant's Gaze ", [["Abyss Monarch Aegir has his eye on you."]], "buff_234"],
-  427282371: [
-    "Soul Banishment",
-    [
-      [
-        "Soul is banished after being cut by Akkan's scythe.\nYou wander the world of the dead.\nAtk. Power -",
-        [2, "#ff9999", ["99%"]],
-        "."
-      ]
-    ],
-    "buff_398"
-  ],
-  427282375: [
-    "Soul Banishment",
-    [
-      [
-        "Soul is banished after being cut by Akkan's scythe.\nYou wander the world of the dead.\nAtk. Power -",
-        [2, "#ff9999", ["99%"]],
-        "."
-      ]
-    ],
-    "buff_398"
-  ],
-  427380741: ["Move Speed Reduction", [["Move Speed -", [2, "#ff9999", ["30%"]], "."]], "buff_43"],
-  427381416: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
-  427380305: ["Move Speed Reduction", [["Move Speed -", [2, "#ff9999", ["50%"]], "."]], "buff_43"],
-  427382003: [
-    "Clone Rupture",
-    [["Weakened by the rupture of the clone.\nTemporarily incapacitated after a certain number of stacks."]],
-    "buff_57"
-  ],
-  427382125: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
-  427383600: ["Damage Reduction", [["Incoming Phy./Mag. Damage -", [2, "#99ff99", ["99.9%"]], "."]], "buff_19"],
-  427383712: ["Imprisonment", [["Your allies must help you escape."]], "buff_48"],
-  427383831: ["Imprisonment", [["Your allies must help you escape."]], "buff_48"],
-  427385502: ["Imprisonment", [["Your allies must help you escape."]], "buff_48"],
-  427385004: ["Shield", [["Incoming Phy./Mag. Damage -", [2, "#99ff99", ["99.9%"]], "."]], "buff_19"],
-  427385012: ["Pursuit of Punishment", [["Targeted by the Punishing Blade."]], "buff_449"],
-  427385546: ["Petrification", [["Become Incapacitated from Petrification."]], "buff_36"],
-  427383623: [
-    "Spatial Distortion",
-    [["Corroded by distorted space.\nDeals damage after a certain number of stacks."]],
-    "buff_176"
-  ],
-  427383626: [
-    "Spatial Distortion",
-    [["Corroded by distorted space.\nDeals damage after a certain number of stacks."]],
-    "buff_176"
-  ],
-  427510104: ["Bleed", [["Receive Phy. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_41"],
-  427384711: [
-    "Spatial Overload",
-    [["A state where space is distorted, dulling actions.\nMovement slows down."]],
-    "buff_25"
-  ],
-  427384712: [
-    "Spatial Overload",
-    [["A state where space is distorted, dulling actions.\nMovement slows down."]],
-    "buff_25"
-  ],
-  427384713: [
-    "Spatial Overload",
-    [["A state where space is distorted, dulling actions.\nMovement slows down."]],
-    "buff_25"
-  ],
-  427385303: ["Imprisonment", [["Your allies must help you escape."]], "buff_48"],
-  427385403: ["Bleed", [["Receive Phy. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_41"],
-  427384119: ["Burst Stop", [["You have gained the power to stop Aegir's rampage."]], "buff_93"],
-  427384103: ["Imprisonment", [["Your allies must help you escape."]], "buff_48"],
-  427386501: [
-    "Hellfire Brand",
-    [["Burned by the fire that erupted when the heart was destroyed.\nTake very strong continuous fire damage."]],
-    "buff_56"
-  ],
-  427386502: ["Overcoming Hellfire", [["Hitting Aegir restores lost Vitality."]], "buff_220"],
-  427386503: ["Abyssal Shield", [["A force that resonates with the heart protects Aegir."]], "buff_18"],
-  427386504: ["Abyssal Will", [["Atk./Move Speed +", [2, "#99ff99", ["10%"]], "."]], "buff_20"],
-  427386505: ["Abyssal Focus", [["Crit Rate +", [2, "#99ff99", ["30%"]], "."]], "buff_9"],
-  427386508: ["Damage Reduction", [["Incoming Phy./Mag. Damage -", [2, "#99ff99", ["99.9%"]], "."]], "buff_19"],
-  427386512: [
-    "Heart Unity",
-    [
-      [
-        "Aegir and the heart are bonded, and their powers resonate with each other,\nresulting in periodic powerful attacks."
-      ]
-    ],
-    "buff_450"
-  ],
-  427386562: [
-    "Heart Unity",
-    [
-      [
-        "Aegir and the heart are bonded, and their powers resonate with each other,\nresulting in periodic powerful attacks."
-      ]
-    ],
-    "buff_450"
-  ],
-  427385520: [
-    "Burst",
-    [["Aegir has gone on a rampage and gained great power.\nIncreases Crit Hit when attacking."]],
-    "buff_32"
-  ],
-  427385521: ["Ealyn's Protection", [["Protected by Ealyn's magic."]], "buff_67"],
-  427384403: ["The Oppressor's Gaze", [["Aegir has his eye on you."]], "buff_58"],
-  427387010: ["Stealth", [["Become Stealthed. Invisible to foes."]], "buff_148"],
-  427387011: ["Damage Reduction", [["Incoming Phy./Mag. Damage -", [2, "#99ff99", ["6.6%"]], "."]], "buff_19"],
-  427387015: ["Damage Reduction", [["Incoming Phy./Mag. Damage -", [2, "#99ff99", ["4%"]], "."]], "buff_19"],
-  427387020: [
-    "Heart Destruction",
-    [["The heart is destroyed and is temporarily incapacitated.\nBecome Staggered, but gain Damage Reduction."]],
-    "buff_39"
-  ],
-  427382168: ["Aegir's Arm", [["Aegir has his eye on you."]], "buff_234"],
-  427382169: ["Aegir's Arm", [["Aegir has his eye on you."]], "buff_234"],
-  429990215: ["Damage Reduction", [["Incoming Phy./Mag. Damage received -", [2, "#99ff99", ["30%"]], "."]], "buff_19"],
-  429990218: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
-  429990219: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
-  427385204: ["Incoming Damage Increase", [["Incoming Phy./Mag. Damage +", [2, "#ff9999", ["20%"]], "."]], "buff_27"],
-  427386572: [
-    "Hellfire Brand",
-    [["Burned by the fire that erupted when the heart was destroyed.\nTake very strong continuous fire damage."]],
-    "buff_56"
-  ],
-  429991112: ["Burn", [["Becomes Burned and periodically receives Damage."]], "buff_56"],
-  429991113: [
-    "Hellfire Outburst",
-    [
-      [
-        "A state where Hellfire energy that accumulated during combat burns uncontrollably.\nAfter a short time, creates a Flame Area nearby and deals explosion damage."
-      ]
-    ],
-    "buff_581"
-  ],
-  427641301: [
-    "Hellfire Ember",
-    [["A state where Hellfire Embers from the destroyed Heart are attached.\nInflicts fatal damage when stacked."]],
-    "buff_103"
-  ],
-  428450011: [
-    "Dark Encroachment",
-    [["Overcome by Infernas's darkness.\nBecome Incapacitated. Take Damage after some time."]],
-    "buff_808"
-  ],
-  428450012: [
-    "Traces of the Dark",
-    [
-      [
-        "Traces of being Encroached by darkness linger on the body.\nEach stack enhances the effect of the next ",
-        [2, "#A566FF", ["Dark Encroachment"]],
-        "."
-      ]
-    ],
-    "buff_809"
-  ],
-  428450021: [
-    "Dark Encroachment",
-    [["Overcome by Infernas's darkness.\nBecome Incapacitated. Take Damage after some time."]],
-    "buff_808"
-  ],
-  428450022: [
-    "Traces of the Dark",
-    [
-      [
-        "Traces of being Encroached by darkness linger on the body.\nEach stack enhances the effect of the next ",
-        [2, "#A566FF", ["Dark Encroachment"]],
-        "."
-      ]
-    ],
-    "buff_809"
-  ],
-  428450031: [
-    "Dark Encroachment",
-    [["Overcome by Infernas's darkness.\nBecome Incapacitated. Take Damage after some time."]],
-    "buff_808"
-  ],
-  428450032: [
-    "Traces of the Dark",
-    [
-      [
-        "Traces of being Encroached by darkness linger on the body.\nEach stack enhances the effect of the next ",
-        [2, "#A566FF", ["Dark Encroachment"]],
-        "."
-      ]
-    ],
-    "buff_809"
-  ],
-  428450041: [
-    "Dark Encroachment",
-    [["Overcome by Infernas's darkness.\nBecome Incapacitated. Take Damage after some time."]],
-    "buff_808"
-  ],
-  428450042: [
-    "Traces of the Dark",
-    [
-      [
-        "Traces of being Encroached by darkness linger on the body.\nEach stack enhances the effect of the next ",
-        [2, "#A566FF", ["Dark Encroachment"]],
-        "."
-      ]
-    ],
-    "buff_809"
-  ],
-  428450051: [
-    "Dark Encroachment",
-    [["Overcome by Infernas's darkness.\nBecome Incapacitated. Take Damage after some time."]],
-    "buff_808"
-  ],
-  428450052: [
-    "Traces of the Dark",
-    [
-      [
-        "Traces of being Encroached by darkness linger on the body.\nEach stack enhances the effect of the next ",
-        [2, "#A566FF", ["Dark Encroachment"]],
-        "."
-      ]
-    ],
-    "buff_809"
-  ],
-  428455201: [
-    "Recoil",
-    [["Infernas is in recoil.\nStagger Point per stack +", [2, "#ff9999", ["20%"]], "."]],
-    "buff_27"
-  ],
-  428430311: [
-    "Life Snatch",
-    [["HP taken by Thaemine.\nEach time you deal damage to Thaemine, you restore some HP."]],
-    "buff_220"
-  ],
-  428430312: ["Silence", [["Battle Item cannot be used."]], "buff_88"],
-  428430402: ["Spacetime Domination", [["The flow of time and space slows."]], "buff_25"],
-  428430403: ["Spacetime Domination", [["The flow of time and space slows."]], "buff_25"],
-  428430404: ["Spacetime Domination", [["The flow of time and space slows."]], "buff_25"],
-  428430525: [
-    "Weaken",
-    [["Weakened after being hit by a powerful attack.\nStagger Point per stack is slightly reduced."]],
-    "buff_45"
-  ],
-  428430551: ["Dark Barrier", [["Trapped inside the barrier created by Thaemine."]], "buff_634"],
-  428430552: ["Dark Barrier", [["Trapped inside the barrier created by Thaemine."]], "buff_634"],
-  428430553: ["Dark Barrier", [["Trapped inside the barrier created by Thaemine."]], "buff_634"],
-  428430554: ["Dark Barrier", [["Trapped inside the barrier created by Thaemine."]], "buff_634"],
-  428430555: ["Dark Barrier", [["Trapped inside the barrier created by Thaemine."]], "buff_634"],
-  428430556: ["Dark Barrier", [["Trapped inside the barrier created by Thaemine."]], "buff_634"],
-  428430557: ["Dark Barrier", [["Trapped inside the barrier created by Thaemine."]], "buff_634"],
-  428430558: ["Dark Barrier", [["Trapped inside the barrier created by Thaemine."]], "buff_634"],
-  428432133: ["Earthquake", [["Become Incapacitated by an Earthquake."]], "buff_49"],
-  428432711: ["Stun", [["Temporarily Stunned by Thaemine's ferocious attack.\nBecome Incapacitated."]], "buff_39"],
-  428432901: [
-    "Target Gaze",
-    [["The target becomes prioritized as the attack target.\nBecome Petrified soon after."]],
-    "buff_234"
-  ],
-  428432903: ["Petrification", [["Become Incapacitated."]], "buff_36"],
-  428435301: [
-    "Target of Darkness",
-    [
-      [
-        "Marked by Thaemine's deep darkness.\nBecome Silenced. Only able to use ",
-        [2, "#ffff99", ["Perfect Block"]],
-        "."
-      ]
-    ],
-    "buff_641"
-  ],
-  428435891: [
-    "Overwhelm",
-    [
-      [
-        "Paralyzed by Thaemine's overwhelming power.\nBecome Incapacitated. Only able to use ",
-        [2, "#ffff99", ["Perfect Block"]],
-        "."
-      ]
-    ],
-    "buff_653"
-  ],
-  428438902: ["Spacetime Domination", [["The flow of time and space slows."]], "buff_25"],
-  428438903: ["Spacetime Domination", [["The flow of time and space slows."]], "buff_25"],
-  428438904: ["Spacetime Domination", [["The flow of time and space slows."]], "buff_25"],
-  428610421: ["Azakiel's Grace", [["Protected by Azakiel's Grace.\nGain Push Immunity."]], "buff_21"],
-  428610811: ["Confusion", [["Confused due to Infernas.\nMove Speed is fixed. Becomes Silenced."]], "buff_638"],
-  428611201: ["Gaze of Darkness", [["The thick darkness gazes upon you."]], "buff_234"],
   429750233: ["Stun", [["Stunned by a powerful attack.\nUnable to act for a certain time."]], "buff_39"],
   429750605: [
     "Imprisonment",
@@ -37526,11 +35754,21 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   429830126: ["Gaze", [["The Abyss Lord Kazeros gazes upon you."]], "buff_861"],
   429830494: ["Gaze", [["The Abyss Lord Kazeros gazes upon you."]], "buff_861"],
   429830722: ["Abyss Mark", [["After some time, Abyssal Flames blaze underfoot."]], "buff_862"],
+  429830735: ["Abyss Mark", [["After some time, Abyssal Flames blaze underfoot."]], "buff_862"],
   429830851: ["Gaze", [["The Abyss Lord Kazeros gazes upon you."]], "buff_861"],
   429831083: ["Electrocution", [["Becomes Electrocuted and Incapacitated."]], "buff_346"],
   429831214: ["Telekinesis", [["Actions are forcibly restricted by Kazeros."]], "buff_855"],
   429831341: ["Abyss Shield", [["Protected by a thick barrier of Abyssal Energy."]], "buff_863"],
   429831344: ["Rift", [["Kazeros's Abyssal Energy has weakened.\nShield Destruction Damage increases."]], "buff_864"],
+  429831730: [
+    "Abyss",
+    [
+      [
+        "Fallen into a deep abyss.\nDecreases Move Speed and Atk. Speed of nearby allies and explodes after some time to inflict Damage."
+      ]
+    ],
+    "buff_856"
+  ],
   429832404: ["Gaze", [["The Abyss Lord Kazeros gazes upon you."]], "buff_861"],
   429832441: ["Confusion", [["Confused by Kazeros's attack."]], "buff_344"],
   429832821: ["Shockwave", [["The ground trembles due to Kazeros's powerful attack.\nAble to escape."]], "buff_42"],
@@ -37546,6 +35784,17 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   429833541: ["Abyssal Domination", [["After some time, Abyssal Flames ignite on the floor."]], "buff_856"],
   429833542: ["Abyss Shield", [["Surrounded by a thick barrier of Abyssal Energy."]], "buff_863"],
   429833544: ["Rift", [["Kazeros's Abyssal Energy has weakened.\nShield Destruction Damage increases."]], "buff_864"],
+  429833790: [
+    "Encroaching Fear",
+    [
+      [
+        "Consumed by the deep abyss, Damage -",
+        [2, "#ff9999", ["80%"]],
+        ". Successfully defending against Kazeros's powerful attack allows you to shake off the abyssal energy."
+      ]
+    ],
+    "buff_19"
+  ],
   429833662: [
     "Unyielding Will",
     [["Stacks up to ", [2, "#99ff99", ["5"]], " times. Atk. Power ", [2, "#99ff99", ["+10%"]], " per stack."]],
@@ -37566,6 +35815,23 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   ],
   429836602: ["Seal", [["Perfect Block sealed by Kazeros."]], "buff_866"],
   429836900: ["Telekinesis", [["Actions are forcibly restricted by Kazeros."]], "buff_855"],
+  429925005: ["Telekinesis", [["Actions are forcibly restricted by Kazeros."]], "buff_855"],
+  429925010: [
+    "Overcome",
+    [["Your fighting spirit blazes after overcoming Kazeros's attack. Can counter certain attacks from Kazeros."]],
+    "buff_869"
+  ],
+  429925615: ["Fear", [["Encroached by fear under Kazeros's gaze."]], "buff_38"],
+  429925690: [
+    "Abyss Nightfall",
+    [
+      [
+        "Abyssal darkness obscures your vision. You become unable to see the signs of some attacks performed by afterimages."
+      ]
+    ],
+    "buff_286"
+  ],
+  429925506: ["Telekinesis", [["Actions are forcibly restricted by Kazeros."]], "buff_855"],
   429921001: ["Weaken", [["Abyssal Energy weakens, increasing incoming Stagger Damage."]], "buff_337"],
   429921002: ["Pinpoint Focus", [["Temporarily increases Stagger Attack Power."]], "buff_96"],
   429921008: ["Weaken", [["Abyssal Energy weakens, increasing incoming Stagger Damage."]], "buff_337"],
@@ -37770,691 +36036,6 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   ],
   430009014: ["Oppression", [["Immobilized by Kazeros's words of power."]], "buff_855"],
   430009052: ["Balthorr's Protection", [["Gain Push Immunity and greatly decrease all incoming Damage."]], "buff_21"],
-  428530101: ["Positive Charge", [["A positive electrical charge flows through the body."]], "buff_781"],
-  428530102: ["Negative Charge", [["A negative electrical charge flows through the body."]], "buff_782"],
-  428530104: ["Charge Area", [["Inflict Damage in the vicinity of the charge area."]], "buff_783"],
-  428530105: ["Charge Area", [["Inflict Damage in the vicinity of the charge area."]], "buff_783"],
-  428530106: ["Skirmish", [["Under Mordum's gaze. Able to engage in a duel with Mordum."]], "buff_786"],
-  428530109: ["Open Weakness", [["Mordum's armor is destroyed, exposing its weakness to attacks."]], "buff_791"],
-  428530111: [
-    "Negative Charge Area",
-    [["Inflict Damage to positively charged targets around the charge area."]],
-    "buff_785"
-  ],
-  428530112: [
-    "Positive Charge Area",
-    [["Inflict Damage to negatively charged targets around the charge area."]],
-    "buff_784"
-  ],
-  428530114: ["Charge Conversion", [["Convert the charge of nearby allies after a short time."]], "buff_787"],
-  428530123: [
-    "Striking Lightning",
-    [["Generate an electric field at the previous location after a short time."]],
-    "buff_712"
-  ],
-  428530124: [
-    "Electric Wave Bomb",
-    [["Detonate an Electric Wave bomb, inflicting wide-area Damage after a short time."]],
-    "buff_788"
-  ],
-  428530127: ["Negative Overcharge", [["Negatively overcharged."]], "buff_789"],
-  428530128: ["Blue Overcharge", [["Positively overcharged."]], "buff_790"],
-  428530136: [
-    "Level 1 Overload",
-    [
-      [
-        "Lv. 1 Overload. Atk. Power +",
-        [2, "#99ff99", ["3%"]],
-        ". Generate a shield equal to ",
-        [2, "#99ff99", ["1%"]],
-        " of Max HP."
-      ]
-    ],
-    "buff_18"
-  ],
-  428530137: [
-    "Level 2 Overload",
-    [
-      [
-        "Lv. 2 Overload. Atk. Power +",
-        [2, "#99ff99", ["6%"]],
-        ". Generate a shield equal to ",
-        [2, "#99ff99", ["2%"]],
-        " of Max HP."
-      ]
-    ],
-    "buff_18"
-  ],
-  428530138: [
-    "Level 3 Overload",
-    [
-      [
-        "Lv. 3 Overload. Atk. Power +",
-        [2, "#99ff99", ["9%"]],
-        ". Generate a shield equal to ",
-        [2, "#99ff99", ["3%"]],
-        " of Max HP."
-      ]
-    ],
-    "buff_18"
-  ],
-  428530139: [
-    "Level 4 Overload",
-    [
-      [
-        "Lv. 4 Overload. Atk. Power +",
-        [2, "#99ff99", ["12%"]],
-        ". Generate a shield equal to ",
-        [2, "#99ff99", ["4%"]],
-        " of Max HP."
-      ]
-    ],
-    "buff_18"
-  ],
-  428530140: [
-    "Level 5 Overload",
-    [
-      [
-        "Lv. 5 Overload. Atk. Power +",
-        [2, "#99ff99", ["15%"]],
-        ". Generate a shield equal to ",
-        [2, "#99ff99", ["5%"]],
-        " of Max HP."
-      ]
-    ],
-    "buff_18"
-  ],
-  428530141: [
-    "Level 6 Overload",
-    [
-      [
-        "Lv. 6 Overload. Atk. Power +",
-        [2, "#99ff99", ["18%"]],
-        ". Generate a shield equal to ",
-        [2, "#99ff99", ["6%"]],
-        " of Max HP."
-      ]
-    ],
-    "buff_18"
-  ],
-  428530142: [
-    "Level 7 Overload",
-    [
-      [
-        "Lv. 7 Overload. Atk. Power +",
-        [2, "#99ff99", ["21%"]],
-        ". Generate a shield equal to ",
-        [2, "#99ff99", ["7%"]],
-        " of Max HP."
-      ]
-    ],
-    "buff_18"
-  ],
-  428530143: [
-    "Level 8 Overload",
-    [
-      [
-        "Lv. 8 Overload. Atk. Power +",
-        [2, "#99ff99", ["24%"]],
-        ". Generate a shield equal to ",
-        [2, "#99ff99", ["8%"]],
-        " of Max HP."
-      ]
-    ],
-    "buff_18"
-  ],
-  428530144: [
-    "Level 9 Overload",
-    [
-      [
-        "Lv. 9 Overload. Atk. Power +",
-        [2, "#99ff99", ["27%"]],
-        ". Generate a shield equal to ",
-        [2, "#99ff99", ["9%"]],
-        " of Max HP."
-      ]
-    ],
-    "buff_18"
-  ],
-  428530145: [
-    "Level 10 Overload",
-    [
-      [
-        "Lv. 10 Overload. Atk. Power +",
-        [2, "#99ff99", ["30%"]],
-        ". Generate a shield equal to ",
-        [2, "#99ff99", ["10%"]],
-        " of Max HP."
-      ]
-    ],
-    "buff_18"
-  ],
-  428530146: [
-    "Level 11 Overload",
-    [
-      [
-        "Lv. 11 Overload. Atk. Power +",
-        [2, "#99ff99", ["33%"]],
-        ". Generate a shield equal to ",
-        [2, "#99ff99", ["11%"]],
-        " of Max HP."
-      ]
-    ],
-    "buff_18"
-  ],
-  428530147: [
-    "Level 12 Overload",
-    [
-      [
-        "Lv. 12 Overload. Atk. Power +",
-        [2, "#99ff99", ["36%"]],
-        ". Generate a shield equal to ",
-        [2, "#99ff99", ["12%"]],
-        " of Max HP."
-      ]
-    ],
-    "buff_18"
-  ],
-  428530148: [
-    "Level 13 Overload",
-    [
-      [
-        "Lv. 13 Overload. Atk. Power +",
-        [2, "#99ff99", ["39%"]],
-        ". Generate a shield equal to ",
-        [2, "#99ff99", ["13%"]],
-        " of Max HP."
-      ]
-    ],
-    "buff_18"
-  ],
-  428530149: [
-    "Level 14 Overload",
-    [
-      [
-        "Lv. 14 Overload. Atk. Power +",
-        [2, "#99ff99", ["42%"]],
-        ". Generate a shield equal to ",
-        [2, "#99ff99", ["14%"]],
-        " of Max HP."
-      ]
-    ],
-    "buff_18"
-  ],
-  428530150: [
-    "Level 15 Overload",
-    [
-      [
-        "Lv. 15 Overload. Atk. Power +",
-        [2, "#99ff99", ["45%"]],
-        ". Generate a shield equal to ",
-        [2, "#99ff99", ["15%"]],
-        " of Max HP."
-      ]
-    ],
-    "buff_18"
-  ],
-  428530151: [
-    "Level 16 Overload",
-    [
-      [
-        "Lv. 16 Overload. Atk. Power +",
-        [2, "#99ff99", ["48%"]],
-        ". Generate a shield equal to ",
-        [2, "#99ff99", ["16%"]],
-        " of Max HP."
-      ]
-    ],
-    "buff_18"
-  ],
-  428530152: [
-    "Level 17 Overload",
-    [
-      [
-        "Lv. 17 Overload. Atk. Power +",
-        [2, "#99ff99", ["51%"]],
-        ". Generate a shield equal to ",
-        [2, "#99ff99", ["17%"]],
-        " of Max HP."
-      ]
-    ],
-    "buff_18"
-  ],
-  428530153: [
-    "Level 18 Overload",
-    [
-      [
-        "Lv. 18 Overload. Atk. Power +",
-        [2, "#99ff99", ["54%"]],
-        ". Generate a shield equal to ",
-        [2, "#99ff99", ["18%"]],
-        " of Max HP."
-      ]
-    ],
-    "buff_18"
-  ],
-  428530154: [
-    "Level 19 Overload",
-    [
-      [
-        "Lv. 19 Overload. Atk. Power +",
-        [2, "#99ff99", ["57%"]],
-        ". Generate a shield equal to ",
-        [2, "#99ff99", ["19%"]],
-        " of Max HP."
-      ]
-    ],
-    "buff_18"
-  ],
-  428530155: [
-    "Level 20 Overload",
-    [
-      [
-        "Lv. 20 Overload. Atk. Power +",
-        [2, "#99ff99", ["60%"]],
-        ". Generate a shield equal to ",
-        [2, "#99ff99", ["20%"]],
-        " of Max HP."
-      ]
-    ],
-    "buff_18"
-  ],
-  428530166: ["Electrocution Shock", [["Become Incapacitated while Electrocuted."]], "buff_51"],
-  428530167: ["Electrocution Damage", [["Take Damage from Electrocution for the entire duration."]], "buff_392"],
-  428530168: ["Blind", [["Become Incapacitated while Blinded."]], "buff_39"],
-  428530177: ["Earthquake", [["Become Incapacitated due to Earthquake."]], "buff_49"],
-  428530194: ["Overcurrent", [["Atk. Power slightly increases per stack due to Overcurrent."]], "buff_310"],
-  428530201: ["Charge Area", [["Inflict Damage in the vicinity of the charge area."]], "buff_783"],
-  428530222: [
-    "Negative Charge Area",
-    [["Inflict Damage to positively charged targets around the charge area."]],
-    "buff_785"
-  ],
-  428530223: [
-    "Positive Charge Area",
-    [["Inflict Damage to negatively charged targets around the charge area."]],
-    "buff_784"
-  ],
-  428530224: [
-    "Positive Charge",
-    [
-      [
-        "Check the Allied Forces' Positive Charge state and ensure that the balance of the flowing charges is maintained."
-      ]
-    ],
-    "buff_781"
-  ],
-  428530225: [
-    "Negative Charge",
-    [
-      [
-        "Check the Allied Forces' Negative Charge state and ensure that the balance of the flowing charges is maintained."
-      ]
-    ],
-    "buff_782"
-  ],
-  428530244: ["Permanent Electrocution Damage", [["Take Damage from Electrocution until death."]], "buff_392"],
-  428530252: [
-    "Positive Charge",
-    [
-      [
-        "Check the Allied Forces' Positive Charge state and ensure that the balance of the flowing charges is maintained."
-      ]
-    ],
-    "buff_781"
-  ],
-  428530253: [
-    "Negative Charge",
-    [
-      [
-        "Check the Allied Forces' Negative Charge state and ensure that the balance of the flowing charges is maintained."
-      ]
-    ],
-    "buff_782"
-  ],
-  428530256: [
-    "Positive Charge",
-    [
-      [
-        "Check the Allied Forces' Positive Charge state and ensure that the balance of the flowing charges is maintained."
-      ]
-    ],
-    "buff_781"
-  ],
-  428530257: [
-    "Negative Charge",
-    [
-      [
-        "Check the Allied Forces' Negative Charge state and ensure that the balance of the flowing charges is maintained."
-      ]
-    ],
-    "buff_782"
-  ],
-  428530260: [
-    "Positive Charge",
-    [
-      [
-        "Check the Allied Forces' Positive Charge state and ensure that the balance of the flowing charges is maintained."
-      ]
-    ],
-    "buff_781"
-  ],
-  428530261: [
-    "Negative Charge",
-    [
-      [
-        "Check the Allied Forces' Negative Charge state and ensure that the balance of the flowing charges is maintained."
-      ]
-    ],
-    "buff_782"
-  ],
-  428530269: ["Electrocution", [["Become Incapacitated while Electrocuted."]], "buff_51"],
-  428530280: ["Overcurrent", [["Atk. Power slightly increases per stack due to Overcurrent."]], "buff_310"],
-  428530295: [
-    "Striking Lightning",
-    [["Generate an electric field at the previous location after a short time."]],
-    "buff_712"
-  ],
-  428530299: ["Charge Area", [["Inflict Damage in the vicinity of the charge area."]], "buff_783"],
-  428530302: ["Charge Area", [["Inflict Damage in the vicinity of the charge area."]], "buff_783"],
-  427480116: [
-    "Frost Crown",
-    [["A Frost Crown forms on Narok the Butcher's head.\nNarok's incoming Damage -", [2, "#99ff99", ["30%"]], "."]],
-    "buff_775"
-  ],
-  427480117: [
-    "Frost Greaves",
-    [
-      [
-        "Frost Greaves form on Narok the Butcher's legs.\nNarok periodically creates a Frost Zone on the target he is gazing at."
-      ]
-    ],
-    "buff_776"
-  ],
-  427480118: [
-    "Frost Blade",
-    [["A Frost Blade forms on Narok's tail. \nNarok's Atk. Power +", [2, "#99ff99", ["5%"]], "."]],
-    "buff_777"
-  ],
-  427480144: [
-    "Frost Crown - Destructible",
-    [["The Frost Crown on Narok the Butcher's head can be destroyed."]],
-    "buff_778"
-  ],
-  427480145: [
-    "Frost Greaves - Destructible",
-    [["The Frost Greaves on Narok the Butcher's legs can be destroyed."]],
-    "buff_779"
-  ],
-  427480165: [
-    "Frost Blade - Destructible",
-    [["The Frost Blade on Narok the Butcher's tail can be destroyed."]],
-    "buff_780"
-  ],
-  427480170: [
-    "Hypothermia",
-    [
-      [
-        "Body temperature drops due to exposure to Narok the Butcher's cold.\nWhen hit by Narok's specific pattern, become frozen immediately."
-      ]
-    ],
-    "buff_144"
-  ],
-  427480171: [
-    "Thin Ice",
-    [["Exposed to Narok the Butcher's cold while afflicted with Hypothermia.\nTemporarily Incapacitated."]],
-    "buff_204"
-  ],
-  427480173: [
-    "Freeze Scar",
-    [
-      [
-        "Shows traces of having once been frozen solid due to complete loss of body heat.\nA second exposure to Narok the Butcher's frost, which causes full body heat loss, will result in instant death."
-      ]
-    ],
-    "buff_249"
-  ],
-  427480174: [
-    "Freeze",
-    [
-      [
-        "Body temperature completely drops due to exposure to Narok the Butcher's cold.\nBecome Frozen and Incapacitated."
-      ]
-    ],
-    "buff_145"
-  ],
-  427480706: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
-  427482305: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
-  427483611: [
-    "Rapid Freeze",
-    [
-      [
-        "Exposed to Narok the Butcher's powerful cold while afflicted with Hypothermia.\nBecome Frozen and Incapacitated."
-      ]
-    ],
-    "buff_145"
-  ],
-  427484435: ["Gaze", [["Narok's weapon drops when the buff duration ends."]], "buff_341"],
-  427484505: [
-    "Chill",
-    [["Exposed to Narok the Butcher's cold.\nAt ", [2, "#99ff99", ["20 stacks, triggers a large explosion."]]]],
-    "buff_219"
-  ],
-  427482605: ["Move Speed Reduction", [["Move Speed -", [2, "#99ff99", ["20%"]], "."]], "buff_43"],
-  427482112: [
-    "Gaze",
-    [["Narok the Butcher gazes at you.\nAfter a set duration, a Frost Zone will appear."]],
-    "buff_341"
-  ],
-  427483537: [
-    "Condensed Frost",
-    [
-      [
-        "Narok the Butcher is condensing cold energy.\nNarok launches a powerful attack that reduces the body temperature gauge by 1% per stack."
-      ]
-    ],
-    "buff_329"
-  ],
-  423931204: [
-    "Ice Shard",
-    [
-      [
-        "A cold material that Narok the Butcher absorbs.\nOnce a certain amount is collected, Narok will launch a powerful attack."
-      ]
-    ],
-    "buff_278"
-  ],
-  428460101: [
-    "Parasitic Infection",
-    [["In a state of infection due to a parasitic invasion from Naitreya."]],
-    "buff_794"
-  ],
-  428460102: ["Paralyze", [["Unable to move due to paralysis."]], "buff_795"],
-  428460103: ["Imprisonment", [["Become Incapacitated due to Naitreya's fierce attack. "]], "buff_48"],
-  428460104: ["Predation Preparation", [["The ravenous Naitreya begins preparing to devour everything. "]], "buff_794"],
-  428460201: [
-    "Power of Light",
-    [["The Guardian's sacred power purifies the darkness emitted by Naitreya. "]],
-    "buff_339"
-  ],
-  428460210: ["Dark Might", [["Encroached by the tainted darkness released by Naitreya."]], "buff_796"],
-  428460211: ["Gluttony Preparation", [["The ravenous Naitreya begins preparing to consume everything. "]], "buff_796"],
-  428460213: ["Imprisonment", [["Become Incapacitated due to Naitreya's Sharp Attack. "]], "buff_48"],
-  428460214: ["Daze", [["Exposed to Naitreya's darkness. Vision gradually becomes blurry."]], "buff_13"],
-  428460215: ["Paralyze", [["Unable to move due to paralysis."]], "buff_795"],
-  428460802: [
-    "Poison",
-    [["Poisoned by Naitreya's deadly poison. Move Speed is reduced. Become Silenced."]],
-    "buff_797"
-  ],
-  428460803: ["Toxic Explosion", [["Inflict poison Damage to nearby targets. "]], "buff_798"],
-  428460816: ["Stun", [["Temporarily Stunned from exhaustion. Become Incapacitated."]], "buff_39"],
-  428461009: [
-    "Encroachment",
-    [["Encroached by Naitreya's magick. Inflict poison Damage to nearby targets, then fall under mind control.  "]],
-    "buff_798"
-  ],
-  428461010: [
-    "Curse",
-    [["Become unable to move freely after being afflicted by Naitreya's powerful curse."]],
-    "buff_452"
-  ],
-  428461011: [
-    "Enchanting Poison",
-    [["Move Speed increases after being afflicted by the poison scattered by Naitreya."]],
-    "buff_10"
-  ],
-  428461012: [
-    "Lethal Poison",
-    [["Move Speed decreases after being afflicted by the deadly poison spread by Naitreya. "]],
-    "buff_43"
-  ],
-  428461013: [
-    "Toxic Swamp",
-    [["Completely Encroached by the deadly poison spread by Naitreya. Become unable to move freely. "]],
-    "buff_43"
-  ],
-  428461050: [
-    "Encroachment",
-    [["Encroached by Naitreya's magick. Inflict poison Damage to nearby targets."]],
-    "buff_798"
-  ],
-  428462601: [
-    "Burn",
-    [
-      [
-        "Burned due to being hit by Naitreya's deadly flames. Receive [Fire] Mag. Damage every ",
-        [2, "#ffff99", ["1s"]],
-        "."
-      ]
-    ],
-    "buff_56"
-  ],
-  428463204: [
-    "Stun",
-    [["Temporarily Stunned due to being hit by Naitreya's powerful attack. Become Incapacitated."]],
-    "buff_39"
-  ],
-  428464101: ["Energy of Blessing", [["The blessed energy of Alberhastic infused into Naitreya."]], "buff_792"],
-  428464102: ["Unyielding Energy", [["The steadfast energy of Alberhastic infused into Naitreya."]], "buff_793"],
-  428465903: ["Energy of Blessing", [["The blessed energy of Alberhastic infused into Naitreya."]], "buff_792"],
-  428465904: ["Unyielding Energy", [["The steadfast energy of Alberhastic infused into Naitreya."]], "buff_793"],
-  428466005: [
-    "Unstable Heat",
-    [["The energy of Alberhastic infused into Naitreya. It radiates intense heat."]],
-    "buff_215"
-  ],
-  428466429: ["Stun", [["Hit by Naitreya's Sharp Attack. Become unable to move freely."]], "buff_50"],
-  428466430: ["Domination", [["Blocked Naitreya's Ferocious Attack, temporarily increasing Stagger. "]], "buff_425"],
-  428466602: ["Tracking", [["Encroached by fear under the predator's gaze."]], "buff_38"],
-  428469140: [
-    "Waned Gluttony",
-    [["Naitreya is weakened due to the Allied Forces' fierce attack. Naitreya's incoming Damage increases."]],
-    "buff_492"
-  ],
-  428469141: [
-    "Devour Yearning",
-    [["The ravenous Naitreya desires to feast. Naitreya's Atk. Power increase."]],
-    "buff_321"
-  ],
-  428469161: [
-    "Piercing Poison",
-    [["Exposed to Naitreya's deadly poison. Being captured by Naitreya once more will lead to death."]],
-    "buff_434"
-  ],
-  428469163: [
-    "Death by Poison",
-    [["Completely Encroached by Naitreya's deadly poison. Lethal injuries result in death."]],
-    "buff_435"
-  ],
-  428577101: ["Banish", [["Leaving Naitreya's line of sight prevents skill usage."]], "buff_88"],
-  428577113: [
-    "Infected",
-    [
-      [
-        "Infected after being drenched in Naitreya's expelled bile. After a short time, the contamination spreads, causing severe Damage around the infected. "
-      ]
-    ],
-    "buff_189"
-  ],
-  428575505: [
-    "Blossoming Fear",
-    [["Overwhelmed by the horrifying terror spread by Naitreya. Become unable to move freely. "]],
-    "buff_452"
-  ],
-  426011404: ["Abyssal Domination", [["Outgoing Damage is significantly reduced by abyssal energy."]], "buff_334"],
-  426011557: [
-    "Elzowin's Grace",
-    [["Gain Push Immunity while the barrier effect is active and gradually recover HP."]],
-    "buff_440"
-  ],
-  426011639: ["Stun", [["Becomes Stunned and Incapacitated."]], "buff_39"],
-  533200001: ["Balthorr's Protection", [["Gain Push Immunity and greatly decrease all incoming Damage."]], "buff_412"],
-  427980604: ["Stun", [["Becomes Stunned and Incapacitated."]], "buff_39"],
-  455901000: ["Wary", [["The priest is feeling something is not right."]], "buff_82"],
-  455901001: ["Wary", [["The priest is feeling something is not right."]], "buff_82"],
-  455901002: ["Wary", [["The priest is feeling something is not right."]], "buff_82"],
-  455901003: ["Wary", [["The priest is feeling something is not right."]], "buff_82"],
-  455901004: ["Wary", [["The priest is feeling something is not right."]], "buff_82"],
-  455901005: ["Wary", [["The priest is feeling something is not right."]], "buff_82"],
-  455901006: ["Stealthy", [["Well-hidden from sight."]], "buff_148"],
-  455901007: ["Danger", [["Any more attacks could be dangerous."]], "buff_167"],
-  455901008: ["Danger", [["Any more attacks could be dangerous."]], "buff_167"],
-  455901010: ["Discovered", [["Discovered by a priest."]], "buff_58"],
-  455901011: ["Discovered", [["Discovered by a priest."]], "buff_58"],
-  455901012: ["Discovered", [["Discovered by a priest."]], "buff_58"],
-  455901013: ["Discovered", [["Discovered by a priest."]], "buff_58"],
-  455901014: ["Discovered", [["Discovered by a priest."]], "buff_58"],
-  455901015: ["Discovered", [["Discovered by a priest."]], "buff_58"],
-  455901017: ["Discovered", [["Discovered by a priest."]], "buff_58"],
-  455901018: ["Discovered", [["Discovered by a priest."]], "buff_58"],
-  430350600: ["Earthquake", [["Become Incapacitated by an Earthquake."]], "buff_49"],
-  426950101: [
-    "Poisoning",
-    [["Receives ", [2, "#99ff99", ["2%"]], "-", [2, "#99ff99", ["3%"]], " of Vitality as Damage every 1s. "]],
-    "buff_429"
-  ],
-  427010105: ["Encroachment", [["Kazeros's poison corrodes the ship."]], "buff_429"],
-  427010106: ["Bind", [["Prolonged corrosion by Kazeros's poison binds the ship."]], "buff_37"],
-  427010116: ["Poison", [["Become poisoned, decreasing Move Speed."]], "buff_37"],
-  427010117: ["Poison", [["Become poisoned, decreasing Move Speed."]], "buff_37"],
-  427290130: [
-    "Burn",
-    [
-      [
-        "You got a critical burn from a high-temperature fire.\nReceive [Fire] Mag. Damage every ",
-        [2, "#ffff99", ["1s"]],
-        "."
-      ]
-    ],
-    "buff_56"
-  ],
-  427290131: ["Infectious Burn", [["Transfer Burn to nearby targets. "]], "buff_333"],
-  427290140: ["Tenacity", [["Temporarily gain Push Immunity on a successful Counterattack."]], "buff_306"],
-  427290150: [
-    "Incoming Damage Increase",
-    [["Sevek Atun's incoming Damage increases. At max stack, receive even more Damage. "]],
-    "buff_27"
-  ],
-  426010903: ["Armen's Help", [["Periodically recovers HP and gains a shield."]], "buff_8"],
-  426010910: ["Airship Support", [["Receiving cover from the airship Mari specially modified."]], "buff_134"],
-  426010911: ["Mystic's Support", [["Receiving protection from the Solar Guardian Mystic."]], "buff_134"],
-  427060601: [
-    "Abyss Fog",
-    [["Abyssal fog emanates from the resurrected Kazeros. It feels like it's slowly suffocating you."]],
-    "buff_628"
-  ],
-  427060701: ["Damage Reduction", [["Incoming Damage is decreased."]], "buff_19"],
-  45660505: ["Incoming Damage Reduction", [["Incoming Damage is decreased."]], "buff_19"],
-  427060801: ["Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
-  425830201: ["Shield", [["Absorbs Damage equal to ", [2, "#99ff99", ["5%"]], " of Max HP."]], "buff_18"],
-  427900405: ["Fear", [["Become Incapacitated while struck with fear."]], "buff_38"],
-  427900409: ["Fear", [["Become Incapacitated while struck with fear."]], "buff_38"],
-  427900413: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
-  427860102: ["Incoming Damage Reduction", [["Incoming Damage decreased."]], "buff_19"],
-  428410001: ["Incoming Damage Reduction", [["Incoming Damage decreased."]], "buff_19"],
-  428410203: ["Fear", [["Become Incapacitated while struck with fear."]], "buff_38"],
-  414789411: ["Sleep Illusion", [["Enter the Illusion state to see mysterious items."]], "buff_180"],
   40545010: ["Death Gaze", [["Falls under the gaze of death. Receives massive Damage at 5 stacks."]], "buff_95"],
   40545020: ["Heavy Bleeding", [["Exposed to foul blood, receives periodic Damage."]], "buff_168"],
   40545030: [
@@ -38707,7 +36288,11 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [["Covetous energy explodes, damaging the front and creating a Covetous Face."]],
     "buff_420"
   ],
-  421710201: ["Covetous Explosion", [["Covetous energy explodes and deals Damage toward the back."]], "buff_421"],
+  421710201: [
+    "Covetous Explosion",
+    [["Covetous energy explodes after a short delay and inflicts Damage toward the back."]],
+    "buff_421"
+  ],
   421711100: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
   421711101: ["Slow", [["Move Speed -", [2, "#ff9999", ["30%"]], "."]], "buff_43"],
   421711102: ["Darkness", [["Inside a monster's stomach"]], "buff_13"],
@@ -38716,7 +36301,11 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   421711202: ["Energy Shroud", [["Covetous energy covers Vykas' body, reducing Damage received."]], "buff_89"],
   421711300: ["Covetous Wave", [["Covetous energy expands and inflicts Damage to the vicinity."]], "buff_423"],
   421711400: ["Electrocution", [["Become Incapacitated while Electrocuted."]], "buff_51"],
-  421711600: ["Storm of Despair", [["Covetous energy explodes and deals Damage toward the back."]], "buff_23"],
+  421711600: [
+    "Storm of Despair",
+    [["Covetous energy explodes after a short delay and inflicts Damage toward the back."]],
+    "buff_23"
+  ],
   421711700: ["Pure Desire", [["Pure Vykas's Desire Energy"]], "buff_434"],
   421711701: ["Twisted Desire", [["Twisted and Skewed Vykas's Desire Energy"]], "buff_435"],
   421711703: ["Slow", [["Move Speed -", [2, "#ff9999", ["50%"]], "."]], "buff_43"],
@@ -42272,6 +39861,2602 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_98"
   ],
+  73110601: ["Guardian", [["Life Energy protects you from all harm."]], "buff_22"],
+  73110604: ["Life Energy", [["The air is filled with Life Energy."]], "buff_156"],
+  414841082: ["Darkness", [["Becomes unable to look far, shrouded in darkness."]], "buff_13"],
+  41393850: ["Incapacitation", [["Fall deep into the image and become Incapacitated. "]], "buff_36"],
+  41393852: ["Incapacitation", [["Fall deep into the image and become Incapacitated."]], "buff_36"],
+  41393856: ["Precipitation", [["Sink into darkness."]], "buff_222"],
+  41393859: ["Encroachment", [["Frozen in terror as darkness grips on the mind."]], "buff_38"],
+  419146307: [
+    "Tired",
+    [["Fatigue grows and slows you down.\nMove Speed -30% per stack. Changes to Sleep at 2 stacks."]],
+    "buff_43"
+  ],
+  419146337: [
+    "Tired",
+    [["Fatigue grows and slows you down.\nMove Speed -30% per stack. Changes to Sleep at 2 stacks."]],
+    "buff_43"
+  ],
+  419146308: ["Sleep", [["Fatigue overwhelms you and you fall to Sleep."]], "buff_40"],
+  419146320: ["Sleep", [["Fatigue overwhelms you and you fall to Sleep."]], "buff_40"],
+  419146306: ["Floral Scent", [["I want to go closer to where the Fragrant Flower scent is coming from."]], "buff_431"],
+  419146311: ["Stun", [["Temporarily unable to move."]], "buff_39"],
+  419146314: [
+    "Chronic Fatigue",
+    [["Your body feels heavy.\nReceive Damage temporarily, and Atk. Speed and Move Speed -40%."]],
+    "buff_23"
+  ],
+  418940613: [
+    "Stable Heart",
+    [["Incoming Damage decreased during the fight against yourself with an unwavering heart."]],
+    "buff_19"
+  ],
+  419146700: ["Flame", [["Kaltaya is engulfed by fire and weakened."]], "buff_489"],
+  419146701: ["Great Flame", [["Kaltaya is engulfed by a fierce inferno and greatly weakened."]], "buff_56"],
+  419146207: [
+    "Sharp Thorn",
+    [["Stabbed by Kaltaya's thorns.\nStagger Damage greatly increases temporarily."]],
+    "buff_584"
+  ],
+  419146240: [
+    "Rotten Thorn",
+    [
+      [
+        "Stabbed deeply by Kaltaya's Rotten Thorns.\nAt 3 stacks, the thorns will grow inside the body and ensnare the target if not removed in time."
+      ]
+    ],
+    "buff_585"
+  ],
+  419146261: [
+    "Rotten Thorn",
+    [
+      [
+        "Stabbed deeply by Kaltaya's Rotten Thorns.\nAt 3 stacks, the thorns will grow inside the body and ensnare the target if not removed in time."
+      ]
+    ],
+    "buff_585"
+  ],
+  419146241: [
+    "Thorn",
+    [
+      [
+        "Kaltaya's Thorns have pierced your body.\nMove Speed +10% per stack.\nThis effect can stack up to ",
+        [2, "#ffff99", ["3"]],
+        " times."
+      ]
+    ],
+    "buff_583"
+  ],
+  419146208: [
+    "Vine Prison",
+    [["Kaltaya's thorns have taken root in the body.\nInflicts massive Damage if not freed within the duration."]],
+    "buff_48"
+  ],
+  419146260: [
+    "Vine Prison",
+    [["Kaltaya's thorns have taken root in the body.\nInflicts massive Damage if not freed within the duration."]],
+    "buff_48"
+  ],
+  425810301: ["Dust", [["Enough Combustible Dust to light a fire is sticking to the body."]], "buff_309"],
+  425810304: [
+    "Thick Dust",
+    [["A thick layer of Combustible Dust that can light a large fire is sticking to the body."]],
+    "buff_310"
+  ],
+  419146704: [
+    "Defensive Stance",
+    [["Kaltaya is protected by thorns.\nReflects all attacks and ignores Atk. Speed."]],
+    "buff_172"
+  ],
+  425810305: ["Thin Dust", [["A little bit of Combustible Dust is sticking to the body."]], "buff_314"],
+  419146717: [
+    "Body Enhancement",
+    [["Kaltaya's body is enhanced.\nKaltaya's Atk. Power and Atk. Speed are strengthened."]],
+    "buff_15"
+  ],
+  426250110: ["Zeherade's Protection", [["Overload Debuff slowly decreases due to Zeherade's Protection."]], "buff_1"],
+  426250111: [
+    "Wisdom's Protection",
+    [
+      [
+        "Shield created by the Homunculus.\nAll Overload Debuffs disappear due to the Authority of Wisdom, and temporarily become immune."
+      ]
+    ],
+    "buff_167"
+  ],
+  426250120: [
+    "Overload",
+    [
+      [
+        "Umbellae's great knowledge collapses their own ego.\nMove Speed slowly decreases. Gains a stack every 10 stacks. At 10 stacks, becomes Stunned every 10s."
+      ]
+    ],
+    "buff_43"
+  ],
+  426250122: ["Stun", [["Becomes Incapacitated by the Curse of Knowledge."]], "buff_39"],
+  426250125: [
+    "Curse of Knowledge",
+    [["Currently under the Curse of Knowledge. Will be continuously inflicted by the Overload Debuff."]],
+    "buff_357"
+  ],
+  41393896: ["Elemental Energy Discovery", [["You found the hidden Element Space."]], "buff_58"],
+  426250131: ["Zeherade's Will", [["The Absolute Law engraved onto Zeherade creates a miracle."]], "buff_19"],
+  45926001: ["Burn", [["Periodically inflicts Burn Damage."]], "buff_56"],
+  426070011: [
+    "Mutated Head",
+    [["Rakathus's ", [2, "#ffff99", ["head"]], " is mutated.\nHead-related attacks are enhanced."]],
+    "buff_575"
+  ],
+  426070013: [
+    "Mutated Fore Feet",
+    [["Rakathus's ", [2, "#ffff99", ["fore feet"]], " are mutated.\nFore feet-related attacks are enhanced."]],
+    "buff_576"
+  ],
+  426070015: [
+    "Mutated Hind Feet",
+    [["Rakathus's ", [2, "#ffff99", ["hind feet"]], " are mutated.\nHind feet-related attacks are enhanced."]],
+    "buff_577"
+  ],
+  426070017: [
+    "Mutated Tail",
+    [["Rakathus's ", [2, "#ffff99", ["tail"]], " is mutated.\nTail-related attacks are enhanced."]],
+    "buff_578"
+  ],
+  426070019: [
+    "Mutated Back",
+    [["Rakathus's ", [2, "#ffff99", ["back"]], " is mutated.\nHP Regen +", [2, "#99ff99", ["100%"]], "."]],
+    "buff_579"
+  ],
+  426070055: [
+    "Rakathus's Blood",
+    [
+      [
+        "Skill Cooldown is drastically reduced. Atk. Speed, Move Speed, and Combat Resource Natural Recovery are greatly increased. When attacked, a ",
+        [2, "#A566FF", ["Blood Encroachment"]],
+        " debuff is applied."
+      ]
+    ],
+    "buff_580"
+  ],
+  426070057: [
+    "Rakathus's Blood",
+    [
+      [
+        "Skill Cooldown is drastically reduced. Atk. Speed, Move Speed, and Combat Resource Natural Recovery are greatly increased. When attacked, a ",
+        [2, "#A566FF", ["Blood Encroachment"]],
+        " debuff is applied."
+      ]
+    ],
+    "buff_580"
+  ],
+  426070061: [
+    "Blood Encroachment",
+    [["Rakathus's HP slowly decreases until he is near death from fatigue."]],
+    "buff_427"
+  ],
+  426070068: [
+    "Blood Encroachment",
+    [["Rakathus's HP slowly decreases until he is near death from fatigue."]],
+    "buff_427"
+  ],
+  426070070: ["Taunt Immunity", [["Becomes immune to Taunt."]], "buff_18"],
+  426070082: ["Gaze", [["Rakathus is watching."]], "buff_234"],
+  426070086: ["Gaze of Arrogance", [["The Divided Parts of Arrogance are watching."]], "buff_234"],
+  426070418: ["Flame", [["Regularly receives [Fire] Mag. Damage proportional to Max HP."]], "buff_56"],
+  426070448: ["Chaos Wildfire", [["Regularly receives [Fire] Mag. Damage proportional to Max HP."]], "buff_586"],
+  426072693: [
+    "Weaken",
+    [["Atk. Power -", [2, "#ff9999", ["15%"]], ", All Inoming Damage +", [2, "#ff9999", ["20%"]], " per stack."]],
+    "buff_45"
+  ],
+  426073301: [
+    "Rage",
+    [
+      [
+        "Rakathus is infuriated.\nStacks at certain intervals, with Atk. Power +",
+        [2, "#99ff99", ["5%"]],
+        ". All incoming Damage +",
+        [2, "#ff9999", ["15%"]],
+        " per stack."
+      ]
+    ],
+    "buff_138"
+  ],
+  426073321: [
+    "Condensed Chaos Wildfire",
+    [
+      [
+        "Blood Flame is condensed.\nUpon inflicting certain attacks at ",
+        [2, "#ffff99", ["10"]],
+        " stacks, the condensed Blood Flame unleashes an attack that damages nearby foes."
+      ]
+    ],
+    "buff_582"
+  ],
+  426073351: [
+    "Dense Chaos Wildfire",
+    [
+      [
+        "All incoming Damage +",
+        [2, "#ff9999", ["50%"]],
+        ". Periodically receives [Fire] Mag. Damage proportional to stacks and Max HP. Receives a powerful attack at ",
+        [2, "#ffff99", ["5"]],
+        " stacks."
+      ]
+    ],
+    "buff_581"
+  ],
+  426073355: [
+    "Reversal",
+    [
+      [
+        "Becomes Stunned and Incapacitated due to a powerful Flame Explosion. All incoming Damage +",
+        [2, "#ff9999", ["100%"]],
+        "."
+      ]
+    ],
+    "buff_39"
+  ],
+  426073357: ["Clotting", [["Becomes unable to move because the body is hardened."]], "buff_429"],
+  426170441: ["Cautious", [["Quickly handle the Guardian Restraining Orb in the body."]], "buff_320"],
+  426170443: ["Cautious", [["Quickly handle the Guardian Restraining Orb in the body."]], "buff_320"],
+  40362224: ["Concussion", [["Become Stunned and Incapacitated."]], "buff_39"],
+  40369916: [
+    "Rift",
+    [
+      [
+        "Receive a Powerful Shock, which increases Weak Point Damage by ",
+        [2, "#ff9999", ["1"]],
+        " level.\nDoes not stack with Corrosive Bomb."
+      ]
+    ],
+    "buff_392"
+  ],
+  40369951: [
+    "Ferocious Flame",
+    [
+      [
+        "The higher the stacks, the more damage dealt by Firehorn's Undying Flame.\nReceive the energy of fire to increase Atk. Power +",
+        [2, "#99ff99", ["5%"]],
+        ", Atk. Speed +",
+        [2, "#99ff99", ["1%"]],
+        ", Move Speed +",
+        [2, "#99ff99", ["1%"]],
+        " for every stack up to 5 stacks.\nCan be canceled by going in the water."
+      ]
+    ],
+    "buff_564"
+  ],
+  40369971: ["Drown Damage", [["The higher the stacks, the more difficult the minigame becomes."]], "buff_342"],
+  40369972: ["Shred", [["Incoming Damage +", [2, "#ff9999", ["80%"]], " per stack."]], "buff_27"],
+  426131020: ["Dimensional Interference", [["Move Speed -", [2, "#ff9999", ["30%"]], "."]], "buff_448"],
+  426131021: ["Pull", [["Pushes outwards."]], "buff_448"],
+  426021226: ["Dimensional Sword", [["Causes Damage to a certain area."]], "buff_6"],
+  426021403: ["Target Gaze", [["Become prioritized as the attack target."]], "buff_234"],
+  426022312: ["Imprisonment", [["Your allies must help you escape."]], "buff_48"],
+  426021721: ["Accumulating Dimension", [["After a certain number of stacks, become Imprisoned."]], "buff_48"],
+  426021722: ["Imprisonment", [["Your allies must help you escape."]], "buff_48"],
+  426021723: ["Stagger Decrease (S)", [["Stagger Damage -", [2, "#ff9999", ["5%"]], "."]], "buff_31"],
+  426021724: ["Atk. Power Reduction (S)", [["Atk. Power -", [2, "#ff9999", ["10%"]], "."]], "buff_31"],
+  426021725: ["Atk. Power Reduction (M)", [["Atk. Power -", [2, "#ff9999", ["30%"]], "."]], "buff_31"],
+  426024321: ["X Target Tracking", [["Magick explodes toward the target with the X mark."]], "buff_341"],
+  426024322: ["X Target Tracking", [["Magick explodes toward the target with the X mark."]], "buff_341"],
+  426024323: ["X Target Tracking", [["Magick explodes toward the target with the X mark."]], "buff_341"],
+  426024324: ["X Target Tracking", [["Magick explodes toward the target with the X mark."]], "buff_341"],
+  426024331: ["X Target Tracking", [["Magick explodes toward the target with the X mark."]], "buff_341"],
+  426024332: ["X Target Tracking", [["Magick explodes toward the target with the X mark."]], "buff_341"],
+  426024333: ["X Target Tracking", [["Magick explodes toward the target with the X mark."]], "buff_341"],
+  426024334: ["X Target Tracking", [["Magick explodes toward the target with the X mark."]], "buff_341"],
+  426024700: [
+    "Magick Core Burst",
+    [["The Magick Core bursts and causes periodic waves that inflict Damage."]],
+    "buff_429"
+  ],
+  426024720: [
+    "Magick Core Berserk",
+    [["Atk. Power +", [2, "#99ff99", ["100%"]], ". Atk./Move Speed +", [2, "#99ff99", ["50%"]], "."]],
+    "buff_15"
+  ],
+  426024800: ["Magick Core Enhancement", [["The Magick Core is enhanced."]], "buff_134"],
+  426024730: ["Magick Core Wave", [["Magick Core Shock status at 3 stacks."]], "buff_134"],
+  426024731: ["Magick Core Wave", [["The Magick Core Wave causes Paralysis."]], "buff_104"],
+  426024740: [
+    "Magick Core Shock",
+    [["Incoming Phy. Damage +", [2, "#ff9999", ["10%"]], " and Incoming Mag. Damage +", [2, "#ff9999", ["10%"]], "."]],
+    "buff_27"
+  ],
+  426141401: ["Stagger Increase (M)", [["Stagger Damage +", [2, "#99ff99", ["20%"]], "."]], "buff_5"],
+  426141403: ["Stagger Increase (S)", [["Stagger Damage +", [2, "#99ff99", ["10%"]], "."]], "buff_5"],
+  426141402: ["Stagger Increase (M)", [["Stagger Damage +", [2, "#99ff99", ["20%"]], "."]], "buff_5"],
+  426142000: ["Stagger Increase (M)", [["Stagger Damage +", [2, "#99ff99", ["20%"]], "."]], "buff_5"],
+  426141406: [
+    "Stagger Increase",
+    [["Stagger Damage +", [2, "#99ff99", ["30%"]], ". Move Speed +", [2, "#99ff99", ["20%"]], "."]],
+    "buff_5"
+  ],
+  426141407: ["Stagger Decrease", [["Stagger Damage -", [2, "#ff9999", ["20%"]], "."]], "buff_5"],
+  426141410: ["Cooldown Decrease", [[" +", [2, "#99ff99", ["300000"]], "."]], "buff_93"],
+  426141420: ["Origin Defense", [["Incoming Stagger Damage decreases."]], "buff_89"],
+  426020106: [
+    "Dimension Change",
+    [["Lazaram's magick flows in and can be used to open a Dimensional Door."]],
+    "buff_149"
+  ],
+  426020126: ["Spreading Target", [["Can be transferred to another target."]], "buff_451"],
+  426020108: ["Target Gaze", [["Become prioritized as the attack target."]], "buff_234"],
+  426020109: ["Dimension Defense", [["Damage dealt to Lazaram decreases."]], "buff_422"],
+  426142201: ["Dimension Change", [["Moves to another dimension."]], "buff_149"],
+  426142202: ["Dimension Change", [["Moves to another dimension."]], "buff_149"],
+  426020130: ["Spreading Chaos", [["Can be transferred to another target."]], "buff_451"],
+  426020131: ["Accumulating Chaos", [["After a certain number of stacks, become dominated by Chaos."]], "buff_451"],
+  426020132: ["Mind Domination", [["Dominated by Chaos."]], "buff_362"],
+  426020134: ["Faction Change", [["Changes the target's faction summoned by the power of Chaos."]], "buff_452"],
+  426020124: ["Stopping the Chaos", [["Casts Stopping the Chaos after a short time."]], "buff_62"],
+  426020112: ["Recovery", [["Recovers Lazaram's HP."]], "buff_8"],
+  426029000: ["Chaos Resistance", [["Incoming Phy./Mag. Damage -", [2, "#99ff99", ["99.9%"]], "."]], "buff_19"],
+  426023920: ["Target Gaze", [["The target becomes prioritized as the attack target."]], "buff_234"],
+  426131923: ["Imprisonment", [["Your allies must help you escape."]], "buff_48"],
+  426131933: ["Imprisonment", [["Your allies must help you escape."]], "buff_48"],
+  426590011: ["Condensed Red Moon Energy", [["Enhanced by the Red Moon's energy."]], "buff_611"],
+  426590021: [
+    "Organism",
+    [
+      [
+        "An organism that detached from Killineza.\nIt exudes an ominous aura, but a skilled artisan might be able to use it in another way."
+      ]
+    ],
+    "buff_613"
+  ],
+  426599221: [
+    "+1 Refined Organism",
+    [
+      [
+        "An organism refined by an artisan.\nAtk. Power +",
+        [2, "#99ff99", ["4%"]],
+        ". Stagger Damage +",
+        [2, "#99ff99", ["4%"]],
+        ". Skill Weak Point Lv. ",
+        [2, "#99ff99", ["+1"]],
+        ". While Staggered, Damage to foes +",
+        [2, "#99ff99", ["10%"]],
+        "."
+      ]
+    ],
+    "buff_614"
+  ],
+  426599222: [
+    "+2 Refined Organism",
+    [
+      [
+        "An organism refined by an artisan.\nAtk. Power +",
+        [2, "#99ff99", ["10%"]],
+        ". Stagger Damage +",
+        [2, "#99ff99", ["8%"]],
+        ". Skill Weak Point Lv. ",
+        [2, "#99ff99", ["+1"]],
+        ". While Staggered, Damage to foes +",
+        [2, "#99ff99", ["10%"]],
+        "."
+      ]
+    ],
+    "buff_614"
+  ],
+  426599223: [
+    "+3 Refined Organism",
+    [
+      [
+        "An organism refined by an artisan.\nAtk. Power +",
+        [2, "#99ff99", ["18%"]],
+        ". Stagger Damage +",
+        [2, "#99ff99", ["12%"]],
+        ". Skill Weak Point Lv. ",
+        [2, "#99ff99", ["+1"]],
+        ". While Staggered, Damage to foes +",
+        [2, "#99ff99", ["10%"]],
+        "."
+      ]
+    ],
+    "buff_614"
+  ],
+  426599224: [
+    "+4 Refined Organism",
+    [
+      [
+        "An organism refined by an artisan.\nAtk. Power +",
+        [2, "#99ff99", ["30%"]],
+        ". Stagger Damage +",
+        [2, "#99ff99", ["16%"]],
+        ". Skill Weak Point Lv. ",
+        [2, "#99ff99", ["+1"]],
+        ". While Staggered, Damage to foes +",
+        [2, "#99ff99", ["10%"]],
+        "."
+      ]
+    ],
+    "buff_614"
+  ],
+  426599225: [
+    "+5 Refined Organism",
+    [
+      [
+        "An organism refined by an artisan.\nAtk. Power +",
+        [2, "#99ff99", ["45%"]],
+        ". Stagger Damage +",
+        [2, "#99ff99", ["20%"]],
+        ". Skill Weak Point Lv. ",
+        [2, "#99ff99", ["+1"]],
+        ". While Staggered, Damage to foes +",
+        [2, "#99ff99", ["10%"]],
+        "."
+      ]
+    ],
+    "buff_614"
+  ],
+  426599226: [
+    "+6 Refined Organism",
+    [
+      [
+        "An organism refined by an artisan.\nAtk. Power +",
+        [2, "#99ff99", ["64%"]],
+        ". Stagger Damage +",
+        [2, "#99ff99", ["24%"]],
+        ". Skill Weak Point Lv. ",
+        [2, "#99ff99", ["+1"]],
+        ". While Staggered, Damage to foes +",
+        [2, "#99ff99", ["10%"]],
+        "."
+      ]
+    ],
+    "buff_614"
+  ],
+  426599227: [
+    "+7 Refined Organism",
+    [
+      [
+        "An organism refined by an artisan.\nAtk. Power +",
+        [2, "#99ff99", ["81%"]],
+        ". Stagger Damage +",
+        [2, "#99ff99", ["28%"]],
+        ". Skill Weak Point Lv. ",
+        [2, "#99ff99", ["+1"]],
+        ". While Staggered, Damage to foes +",
+        [2, "#99ff99", ["10%"]],
+        "."
+      ]
+    ],
+    "buff_614"
+  ],
+  426599228: [
+    "+8 Refined Organism",
+    [
+      [
+        "An organism refined by an artisan.\nAtk. Power +",
+        [2, "#99ff99", ["90%"]],
+        ". Stagger Damage +",
+        [2, "#99ff99", ["32%"]],
+        ". Skill Weak Point Lv. ",
+        [2, "#99ff99", ["+1"]],
+        ". While Staggered, Damage to foes +",
+        [2, "#99ff99", ["10%"]],
+        "."
+      ]
+    ],
+    "buff_614"
+  ],
+  426599229: [
+    "+9 Refined Organism",
+    [
+      [
+        "An organism refined by an artisan.\nAtk. Power +",
+        [2, "#99ff99", ["96%"]],
+        ". Stagger Damage +",
+        [2, "#99ff99", ["36%"]],
+        ". Skill Weak Point Lv. ",
+        [2, "#99ff99", ["+1"]],
+        ". While Staggered, Damage to foes +",
+        [2, "#99ff99", ["10%"]],
+        "."
+      ]
+    ],
+    "buff_614"
+  ],
+  426599230: [
+    "+10 Refined Organism",
+    [
+      [
+        "An organism refined by an artisan.\nAtk. Power +",
+        [2, "#99ff99", ["100%"]],
+        ". Stagger Damage +",
+        [2, "#99ff99", ["40%"]],
+        ". Skill Weak Point Lv. ",
+        [2, "#99ff99", ["+1"]],
+        ". While Staggered, Damage to foes +",
+        [2, "#99ff99", ["10%"]],
+        "."
+      ]
+    ],
+    "buff_614"
+  ],
+  426590031: ["Spot Weak Point", [["Search for Killineza's weak point."]], "buff_615"],
+  426590032: ["Weak Point Detection", [["Found Killineza's weak point."]], "buff_616"],
+  426590034: ["Spot Weak Point", [["Search for Killineza's weak point."]], "buff_615"],
+  426590035: ["Weak Point Detection", [["Found Killineza's weak point."]], "buff_616"],
+  426590037: ["Spot Weak Point", [["Search for Killineza's weak point."]], "buff_615"],
+  426590038: ["Weak Point Detection", [["Found Killineza's weak point."]], "buff_616"],
+  426590040: ["Spot Weak Point", [["Search for Killineza's weak point."]], "buff_615"],
+  426590041: ["Weak Point Detection", [["Found Killineza's weak point."]], "buff_616"],
+  426590043: ["Spot Weak Point", [["Search for Killineza's weak point."]], "buff_615"],
+  426590044: ["Weak Point Detection", [["Found Killineza's weak point."]], "buff_616"],
+  426590046: ["Spot Weak Point", [["Search for Killineza's weak point."]], "buff_615"],
+  426590047: ["Weak Point Detection", [["Found Killineza's weak point."]], "buff_616"],
+  426590049: ["Spot Weak Point", [["Search for Killineza's weak point."]], "buff_615"],
+  426590050: ["Weak Point Detection", [["Found Killineza's weak point."]], "buff_616"],
+  426590052: ["Spot Weak Point", [["Search for Killineza's weak point."]], "buff_615"],
+  426590053: ["Weak Point Detection", [["Found Killineza's weak point."]], "buff_616"],
+  426590083: ["Constrain", [["Killineza's hands are Staggered, weakening certain hand skills."]], "buff_627"],
+  426590085: ["Constrain", [["Killineza's hands are Staggered, weakening certain hand skills."]], "buff_627"],
+  426590171: ["Rage", [["Enraged.\nAtk. Speed and Move Speed +", [2, "#99ff99", ["250%"]], "."]], "buff_617"],
+  426590173: [
+    "Endorphin",
+    [
+      [
+        "Enraged because of Killineza's ",
+        [2, "#A566FF", ["Rage"]],
+        " buff.\nImmune to Push, Status Ailment, ",
+        [2, "#A566FF", ["Bleed"]],
+        " debuffs. Atk. Speed and Move Speed increases drastically. On hit, ",
+        [2, "#A566FF", ["Accumulated Damage"]],
+        " debuff stacks."
+      ]
+    ],
+    "buff_620"
+  ],
+  426590175: [
+    "Accumulated Damage",
+    [
+      [
+        "Damage is accumulated by the ",
+        [2, "#A566FF", ["Endorphin"]],
+        " buff.\nDamage is inflicted when the ",
+        [2, "#A566FF", ["Endorphin"]],
+        " buff disappears, reducing the number of stacks incrementally."
+      ]
+    ],
+    "buff_94"
+  ],
+  426590791: [
+    "Bleed",
+    [["Changes to the ", [2, "#A566FF", ["Heavy Bleeding"]], " debuff at 10", [2, "#ffff99", [" stacks."]]]],
+    "buff_165"
+  ],
+  426590793: ["Heavy Bleeding", [["Incapacitated due to excessive bleeding"]], "buff_427"],
+  426590891: [
+    "Adrenaline",
+    [
+      [
+        "Killineza is currently enraged.\nPer stack, Atk. Speed +",
+        [2, "#99ff99", ["25%"]],
+        ", and becomes more vulnerable to ",
+        [2, "#ffff99", ["Counterattack"]],
+        " with each stack."
+      ]
+    ],
+    "buff_618"
+  ],
+  426590895: [
+    "Control",
+    [
+      [
+        "Killineza is controlling herself.\nStacks equal to the number of ",
+        [2, "#A566FF", ["Adrenaline"]],
+        " stacks and Atk. Power +",
+        [2, "#99ff99", ["25%"]],
+        " per stack."
+      ]
+    ],
+    "buff_619"
+  ],
+  426592108: ["Stun", [["Incapacitated due to Killineza's attack"]], "buff_39"],
+  426594491: ["Stun", [["Incapacitated due to Killineza's attack"]], "buff_39"],
+  426594931: ["Bind", [["Incapacitated"]], "buff_633"],
+  426594935: ["Bind", [["Incapacitated"]], "buff_633"],
+  426595191: ["Corrosion", [["Incapacitated due to the organism's erosion"]], "buff_203"],
+  426595193: ["Corrosion", [["Incapacitated due to the organism's erosion"]], "buff_203"],
+  426595801: ["Stun", [["Incapacitated due to Killineza's attack"]], "buff_39"],
+  426597081: [
+    "Tentacle Defense",
+    [["Reduce Stagger Point according to the number of tentacles on the ground."]],
+    "buff_18"
+  ],
+  426597701: [
+    "Concussion",
+    [
+      [
+        "Shocked by Killineza's attack.\nAtk. Power -",
+        [2, "#ff9999", ["5%"]],
+        ", All incoming Damage +",
+        [2, "#ff9999", ["5%"]],
+        " per stack."
+      ]
+    ],
+    "buff_27"
+  ],
+  426597702: [
+    "Concussion",
+    [
+      [
+        "Shocked by Killineza's attack.\nAtk. Power -",
+        [2, "#ff9999", ["5%"]],
+        ", All incoming Damage +",
+        [2, "#ff9999", ["5%"]],
+        " per stack."
+      ]
+    ],
+    "buff_27"
+  ],
+  426597703: [
+    "Concussion",
+    [
+      [
+        "Shocked by Killineza's attack.\nAtk. Power -",
+        [2, "#ff9999", ["5%"]],
+        ", All incoming Damage +",
+        [2, "#ff9999", ["5%"]],
+        " per stack."
+      ]
+    ],
+    "buff_27"
+  ],
+  426597704: [
+    "Concussion",
+    [
+      [
+        "Shocked by Killineza's attack.\nAtk. Power -",
+        [2, "#ff9999", ["5%"]],
+        ", All incoming Damage +",
+        [2, "#ff9999", ["5%"]],
+        " per stack."
+      ]
+    ],
+    "buff_27"
+  ],
+  426597705: [
+    "Concussion",
+    [
+      [
+        "Shocked by Killineza's attack.\nAtk. Power -",
+        [2, "#ff9999", ["5%"]],
+        ", All incoming Damage +",
+        [2, "#ff9999", ["5%"]],
+        " per stack."
+      ]
+    ],
+    "buff_27"
+  ],
+  426598401: ["Weaken", [["Killineza Staggered.\nStagger time increases per stack."]], "buff_45"],
+  426599204: [
+    "Punishment",
+    [
+      [
+        "Sidereal Skill's effect decreases due to Sidereal's fury over Killineza's atrocities, but meter gain greatly increases."
+      ]
+    ],
+    "buff_210"
+  ],
+  426680001: ["Stun", [["Incapacitated due to Killineza's attack"]], "buff_39"],
+  426654111: ["Organism Infection", [[""]], "buff_629"],
+  426654121: ["Organism Erosion", [[" "]], "buff_630"],
+  426654131: ["Organism Homogenization", [[" "]], "buff_631"],
+  426654141: ["Organism Overload", [[" "]], "buff_632"],
+  426640005: [
+    "Dejection",
+    [["Dejected upon meeting Killineza's gaze.\nBreaking free requires another's assistance."]],
+    "buff_500"
+  ],
+  44341701: ["Fear", [["Incapacitated"]], "buff_38"],
+  426654523: [
+    "Open Weakness",
+    [["Your weak point is exposed to Killineza.\nAll Damage received +", [2, "#ff9999", ["5%"]], " per stack."]],
+    "buff_362"
+  ],
+  45141211: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141212: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141213: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141214: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141215: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141216: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141217: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141218: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141219: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141221: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141222: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141223: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141224: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141225: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141226: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141227: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141228: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141229: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141231: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141232: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141233: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141234: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141235: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141236: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141237: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141238: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141239: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141241: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141242: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141243: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141244: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141245: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141246: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141247: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141248: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141249: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141251: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141252: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141253: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141254: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141255: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141256: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141257: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141258: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141259: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141261: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141262: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141263: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141264: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141265: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141266: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141267: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141268: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141269: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141271: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141272: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141273: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141274: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141275: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141276: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141277: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141278: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141279: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141281: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141282: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141283: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141284: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141285: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141286: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141287: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141288: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141289: ["Near Death", [["Low Vitality.\nUnder the influence of the Red Moon, the Wraith attacks."]], "buff_621"],
+  45141613: [
+    "Red Moon Encroachment",
+    [
+      [
+        "Mentally rattled by the Red Moon's influence.\nCan no longer be controlled, and loses HP gradually. Atk./Move Speed +",
+        [2, "#99ff99", ["10%"]],
+        "."
+      ]
+    ],
+    "buff_622"
+  ],
+  426654902: [
+    "Contamination",
+    [
+      [
+        "Covered in Killineza's organism.\nAtk. Power -",
+        [2, "#ff9999", ["95%"]],
+        ". Stagger Point and Weak Point Damage level -",
+        [2, "#ff9999", ["100%"]],
+        ". Receive massive damage at ",
+        [2, "#ffff99", ["2"]],
+        " stacks."
+      ]
+    ],
+    "buff_629"
+  ],
+  426655003: ["Paralyze", [["Incapacitated"]], "buff_51"],
+  417300201: ["Fear", [["Incapacitated"]], "buff_38"],
+  417300311: [
+    "Organism Retrieval",
+    [["Killineza retrieved her organism.\nAll Damage received -", [2, "#99ff99", ["20%"]], "."]],
+    "buff_613"
+  ],
+  426655204: [
+    "Noble Determination",
+    [["Determined to sacrifice for the sake of others after locking eyes with Killineza"]],
+    "buff_624"
+  ],
+  426655206: [
+    "Seraphic Sacrifice",
+    [["Moved by another's noble sacrifice. Atk. Power +", [2, "#99ff99", ["10%"]], "."]],
+    "buff_625"
+  ],
+  426599202: [
+    "Berserk",
+    [
+      [
+        "Restore HP every ",
+        [2, "#ffff99", ["60s"]],
+        ". Move Speed +",
+        [2, "#99ff99", ["100%"]],
+        ". Atk. Speed +",
+        [2, "#99ff99", ["100%"]],
+        ". Atk. Power +",
+        [2, "#99ff99", ["400%"]],
+        "."
+      ]
+    ],
+    "buff_71"
+  ],
+  426596091: [
+    "Destruction",
+    [["Atk. Power -", [2, "#ff9999", ["3%"]], ", All incoming Damage +", [2, "#ff9999", ["3%"]], " per stack."]],
+    "buff_28"
+  ],
+  426480121: ["Weaken", [["Black liquid increases incoming damage."]], "buff_598"],
+  426480123: ["Electrocution", [["Temporarily Immobilized due to being electrocuted."]], "buff_599"],
+  426480124: ["Restrain", [["Temporarily Immobilized and bound by the power of darkness."]], "buff_595"],
+  426480125: ["Numbing", [["Temporarily decreases Atk./Move Speed."]], "buff_43"],
+  426500911: [
+    "Deep Dark",
+    [["Failure to escape from the fog created by the Dark Strength will result in instant death."]],
+    "buff_252"
+  ],
+  426487210: ["Gaze", [["Valinak is glaring."]], "buff_234"],
+  426480165: [
+    "Dark Strength",
+    [["Valinak is temporarily enhanced by the Dark Strength granted by Thaemine."]],
+    "buff_593"
+  ],
+  426487215: [
+    "Elemental Attribute Cancellation",
+    [["Due to the cancellation effect, Stagger effects on Valinak are amplified."]],
+    "buff_27"
+  ],
+  426490122: [
+    "Electric Discharge",
+    [["By discharging all of Valinak's electricity, you can anticipate where the Final Strike will land."]],
+    "buff_116"
+  ],
+  426490201: [
+    "Unstable Electricity",
+    [["Blocking Valinak's strike causes all the electricity in his body to discharge after a while."]],
+    "buff_595"
+  ],
+  426490202: ["Electricity Release", [["Immobilized while emitting electricity."]], "buff_597"],
+  426481801: [
+    "Dark Membrane",
+    [["After a set duration, a membrane imbued with Dark Strength forms underfoot."]],
+    "buff_594"
+  ],
+  426480158: [
+    "Dark Strength",
+    [["Valinak is temporarily enhanced by the Dark Strength granted by Thaemine."]],
+    "buff_593"
+  ],
+  426510204: ["Shadow Shield", [["Incoming Damage is reduced by the shield."]], "buff_607"],
+  426510205: ["Shadow Mark", [["Shadow Thaemine appears at the marked target location."]], "buff_608"],
+  426510209: ["Spectral Embrace", [["Become incapacitated while Imprisoned."]], "buff_609"],
+  426510211: ["Thick Darkness", [["Consumed by Darkness."]], "buff_13"],
+  426510213: ["Courage to Confront", [["Atk. Power +", [2, "#99ff99", ["10%"]], " per stack."]], "buff_604"],
+  426510214: ["Critical Wound", [["Incoming Damage +", [2, "#ff9999", ["20%"]], " per stack."]], "buff_605"],
+  426510215: ["Dark Energy", [["Shadow mark is enhanced per stack."]], "buff_606"],
+  426510216: ["Exhaustion", [["Cannot block certain attacks while in current state."]], "buff_610"],
+  426510217: ["Darkness", [["Consumed by Darkness."]], "buff_13"],
+  426510218: ["Fear", [["Become Feared."]], "buff_38"],
+  426510228: ["Imprisonment", [["Become incapacitated while Imprisoned."]], "buff_48"],
+  426510229: ["Confusion", [["The world is turned upside down, control is reversed."]], "buff_91"],
+  426513843: ["Seed of Darkness", [["The Dark Energy will soon explode."]], "buff_595"],
+  426513845: ["Enhance Unity", [["Stagger Point per stack -", [2, "#ff9999", ["25%"]], "."]], "buff_605"],
+  426513861: ["Stun", [["Become Stunned and Incapacitated by a powerful energy."]], "buff_39"],
+  426513862: ["Thick Darkness", [["Consumed by Darkness."]], "buff_13"],
+  426513864: ["Shadow Shield", [["Incoming Damage is reduced by the shield."]], "buff_607"],
+  426511182: ["Thick Darkness", [["Consumed by Darkness."]], "buff_13"],
+  426610000: [
+    "Dark Encroachment",
+    [
+      [
+        "Partially encroached by Thaemine's darkness. Atk. Power -",
+        [2, "#ff9999", ["20"]],
+        "%. Will succumb to the encroachment upon reaching 3 stacks."
+      ]
+    ],
+    "buff_647"
+  ],
+  426610001: [
+    "Encroachment Status",
+    [["Completely consumed by Thaemine's darkness. Has Status Ailment Immunity and target will die."]],
+    "buff_647"
+  ],
+  426610004: ["Dark Strength", [["Thaemine's attack power increases."]], "buff_654"],
+  426610007: ["Darkness", [["Vision is limited by darkness, and cannot see the signs of counters."]], "buff_13"],
+  426610009: [
+    "Onyx Energy Fragment",
+    [["Stands against the encroachment of darkness and gains immunity against it."]],
+    "buff_648"
+  ],
+  426610010: ["Encroachment Resistance", [["Gain immunity to Encroachment effect for duration."]], "buff_648"],
+  426610011: [
+    "Rupture",
+    [["An inevitably fatal wound. Incoming Damage +", [2, "#ff9999", ["5%"]], ". Will die upon reaching 3 stacks."]],
+    "buff_29"
+  ],
+  426610012: [
+    "Master of Darkness",
+    [["Thaemine has unleashed his strength and has a chance to cause Crit Damage."]],
+    "buff_641"
+  ],
+  426610013: ["Time Distortion Immunity", [["Gained immunity to Shandi's power of Time Distortion."]], "buff_170"],
+  426610042: [
+    "Black Impact",
+    [
+      [
+        "Shocked from slamming hard into a wall of darkness. Incoming Damage +",
+        [2, "#ff9999", ["15"]],
+        "%. Vision is narrowed. Unable to see the motion before a counterattack."
+      ]
+    ],
+    "buff_89"
+  ],
+  426619900: [
+    "Shock",
+    [["Shocked from slamming hard into a wall. Incoming Damage +", [2, "#ff9999", ["15"]], "%."]],
+    "buff_27"
+  ],
+  426610902: ["Fear", [["Become Incapacitated while struck with fear."]], "buff_38"],
+  426610903: ["Aim Sword", [["A myriad of swords are about to strike."]], "buff_642"],
+  426610904: ["Aim Sword", [["A myriad of swords are about to strike."]], "buff_642"],
+  426611100: ["Earthquake", [["Become Incapacitated by an Earthquake."]], "buff_49"],
+  426611101: [
+    "Shandi's Energy",
+    [["Energy containing Shandi's power. It harmonizes with all the other Sidereal Energy."]],
+    "buff_644"
+  ],
+  426611103: [
+    "Azena's Energy",
+    [["Energy containing Azena's power. It harmonizes with all the other Sidereal Energy."]],
+    "buff_280"
+  ],
+  426611105: [
+    "Thirain's Energy",
+    [["Energy containing Thirain's power. It harmonizes with all the other Sidereal Energy."]],
+    "buff_645"
+  ],
+  426611106: ["Sword Fragment", [["A special energy emanates from the scattered sword fragments."]], "buff_646"],
+  426611201: ["Fear", [["Become Incapacitated while struck with fear."]], "buff_38"],
+  426611215: [
+    "Aim",
+    [
+      [
+        "Targeted by the massive Nightfall Greatsword. Soon, the Nightfall Greatsword will fall, delivering a fatal strike."
+      ]
+    ],
+    "buff_643"
+  ],
+  426611303: ["Invincible", [["Become immune to all Damage."]], "buff_22"],
+  426611310: ["Invincible", [["Become immune to all Damage."]], "buff_22"],
+  426611600: ["Enh. Release Shadowburst", [["The encroaching energy envelops the weapon"]], "buff_649"],
+  426611700: ["Earthquake", [["Become Incapacitated by an Earthquake."]], "buff_49"],
+  426611701: ["Enh. Release Shadowburst", [["The encroaching energy envelops the weapon"]], "buff_650"],
+  426612701: ["Darkness Territory", [["After a set duration, an encroachment zone will form."]], "buff_652"],
+  426612702: ["Darkness Territory", [["After a set duration, an encroachment zone will form."]], "buff_652"],
+  426612703: ["Darkness Territory", [["After a set duration, an encroachment zone will form."]], "buff_652"],
+  426612704: ["Darkness Territory", [["After a set duration, an encroachment zone will form."]], "buff_652"],
+  426612705: ["Darkness Territory", [["After a set duration, an encroachment zone will form."]], "buff_652"],
+  426612823: ["Dark Suppression", [["Thaemine will counterattack upon using a skill."]], "buff_48"],
+  426612824: ["Curse of Darkness", [["A curse where Thaemine counters by using a skill."]], "buff_48"],
+  426612825: ["Curse of Darkness", [["A curse where Thaemine counters by using a skill."]], "buff_48"],
+  426612826: ["Dark Shield", [["A shield of darkness that protects against fatal strikes"]], "buff_239"],
+  426612900: ["Ebon Bind", [["Robbed of bodily control by the thick darkness"]], "buff_653"],
+  426613000: ["Insurmountable Power", [["Thaemine's overwhelming power. It cannot be opposed."]], "buff_150"],
+  426613300: ["Enh. Release Shadowburst", [["The encroaching energy envelops the weapon"]], "buff_651"],
+  426613400: [
+    "Weaken Darkness",
+    [["Dark powers zap your strength. Atk. Power -", [2, "#ff9999", ["40%"]], "."]],
+    "buff_28"
+  ],
+  426600420: [
+    "Overwhelm",
+    [
+      [
+        "Overwhelmed by darkness and immobilized.\nFailing to escape within the given time will cause darkness to attack."
+      ]
+    ],
+    "buff_48"
+  ],
+  426601232: [
+    "Overwhelm",
+    [
+      [
+        "Overwhelmed by darkness and immobilized.\nFailing to escape within the given time will cause darkness to attack."
+      ]
+    ],
+    "buff_48"
+  ],
+  426602613: [
+    "Overwhelm",
+    [
+      [
+        "Overwhelmed by darkness and immobilized.\nFailing to escape within the given time will cause darkness to attack."
+      ]
+    ],
+    "buff_48"
+  ],
+  426601902: [
+    "Overwhelm",
+    [
+      [
+        "Overwhelmed by darkness and immobilized.\nFailing to escape within the given time will cause darkness to attack."
+      ]
+    ],
+    "buff_48"
+  ],
+  426600425: ["Petrification", [["Become Incapacitated from Petrification."]], "buff_36"],
+  426602608: ["Scar of Darkness", [["Dies after a certain number of stacks."]], "buff_96"],
+  426601210: ["Earthquake", [["Become Incapacitated by an Earthquake."]], "buff_49"],
+  426601690: ["Damage Increase", [["Incoming Phy./Mag. Damage received +", [2, "#ff9999", ["50%"]], "."]], "buff_27"],
+  426602403: [
+    "Life Snatch",
+    [["HP taken by Thaemine.\nEach time you deal damage to Thaemine, you restore some HP."]],
+    "buff_220"
+  ],
+  426602409: ["Silence", [["Battle Item cannot be used."]], "buff_88"],
+  426602440: ["Silence", [["Battle Item cannot be used."]], "buff_88"],
+  426602411: ["Fear of Darkness", [["Recovery Effect -", [2, "#ff9999", ["45%"]], "."]], "buff_11"],
+  426602451: ["Fear of Darkness", [["Recovery Effect -", [2, "#ff9999", ["45%"]], "."]], "buff_11"],
+  426602500: ["Spacetime Domination", [["The flow of time and space slows."]], "buff_25"],
+  426602506: ["Spacetime Domination", [["The flow of time and space slows."]], "buff_25"],
+  426602507: ["Spacetime Domination", [["The flow of time and space slows."]], "buff_25"],
+  426609930: ["Damage Reduction", [["Incoming Phy./Mag. Damage -", [2, "#99ff99", ["99.9%"]], "."]], "buff_19"],
+  426609905: ["Bleed", [["Receive Phy. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_41"],
+  426609922: [
+    "Sidereal's Protection",
+    [["Empowered by Sidereal's will. Atk. Power +", [2, "#99ff99", ["80%"]], "."]],
+    "buff_655"
+  ],
+  426609923: ["Kadan's Blow", [["Suffered a major hit from Kadan's attack."]], "buff_657"],
+  426609924: [
+    "Kadan's Protection",
+    [["Protected by Kadan.\nImmune to Paralysis and Push. Incoming Damage -", [2, "#99ff99", ["80"]], "%."]],
+    "buff_656"
+  ],
+  426601960: [
+    "Target Gaze",
+    [["The target becomes prioritized as the attack target.\nBecome Petrified soon after."]],
+    "buff_234"
+  ],
+  426601961: ["Petrification", [["Become Incapacitated from Petrification."]], "buff_36"],
+  426609942: ["Decay", [["Crit Resistance -", [2, "#ff9999", ["30%"]], "."]], "buff_89"],
+  413830521: [
+    "Agris's Brand",
+    [["You have become Agris's target.\nIf you fail to stop Agris's spell, you will die."]],
+    "buff_48"
+  ],
+  413831051: [
+    "Gleaming Scale",
+    [["Agris's strength powerfully surround Narkiel.\nDecreases incoming Damage and counters upon receiving Damage."]],
+    "buff_669"
+  ],
+  413831052: [
+    "Discomfort",
+    [
+      [
+        "Only a portion of Agris's strength remains and surrounds Narkiel.\nCounters damage when hit on a scale-covered area."
+      ]
+    ],
+    "buff_163"
+  ],
+  413830161: [
+    "Provocative Support",
+    [
+      [
+        "Atk. Power has increased with Agris's support.\nAs the number of foes nearby increases, so does the Atk. Power."
+      ]
+    ],
+    "buff_692"
+  ],
+  413830162: [
+    "Provocative Support",
+    [
+      [
+        "Reduce your Defense and strengthen Narkiel's Atk. Power. The more disruptions there are from nearby foes, the more Defense decreases."
+      ]
+    ],
+    "buff_693"
+  ],
+  413830165: ["Quick Steps", [["Increases Move Speed."]], "buff_10"],
+  413830121: [
+    "Skill Absorption",
+    [["Narkiel absorbs the skills of nearby foes, and strengthens his ability to reduce Incoming Damage."]],
+    "buff_173"
+  ],
+  413831056: [
+    "Gleaming Scale",
+    [["Agris's strength faintly surround Narkiel.\nIncoming Damage decreased."]],
+    "buff_669"
+  ],
+  413831057: ["Discomfort", [["Only a portion of Agris's strength remains and surrounds Narkiel."]], "buff_163"],
+  413831095: ["Overwhelm", [["You are overwhelmed by Narkiel's gaze.\nTemporarily unable to move. "]], "buff_48"],
+  426876014: [
+    "Gaze",
+    [
+      [
+        "Narkiel is watching you.\nMove Speed decreases and Incoming Damage increases. The effects amplify upon stacking. When assimilated with Narkiel's magick, you will be able to see the hidden censer temporarily."
+      ]
+    ],
+    "buff_385"
+  ],
+  426876025: [
+    "Morale Boost",
+    [["You have helped your allies and their morale has increased. Atk. Power +", [2, "#99ff99", ["10%"]], "."]],
+    "buff_210"
+  ],
+  426876030: ["Blood Curse", [["Continuously receives damage from the curse."]], "buff_38"],
+  426876155: ["Blood Curse", [["Continuously receives damage from the curse."]], "buff_38"],
+  426876033: ["Shield", [["Receives protection through the sorcerer."]], "buff_277"],
+  10213301: ["Confusion", [["Unable to move while confused."]], "buff_362"],
+  426873410: ["Pursuit", [["Increases Move Speed."]], "buff_10"],
+  426870402: [
+    "Enhance",
+    [
+      [
+        "Narkiel absorbs power from nearby and becomes stronger. Atk. Power +",
+        [2, "#99ff99", ["20%"]],
+        " with each stack."
+      ]
+    ],
+    "buff_672"
+  ],
+  426870503: [
+    "Soul Absorption",
+    [
+      [
+        "Narkiel absorbs the soldiers' souls. At max stack, the absorbed souls are discharged simultaneously to inflict powerful damage."
+      ]
+    ],
+    "buff_676"
+  ],
+  426870701: [
+    "Breath of Death",
+    [["Consumed by the scent of death.\nYou have become Narkiel's target and will die."]],
+    "buff_677"
+  ],
+  426870710: [
+    "Fragrance of Death",
+    [["You have approached the censer and breathed in the smoke.\nYou will become Narkiel's target upon stacking."]],
+    "buff_676"
+  ],
+  426870714: [
+    "Uncontrollable",
+    [
+      [
+        "You cannot control the censer again for ",
+        [2, "#99ff99", ["60s"]],
+        ". You will die if you try to control it again before time is up."
+      ]
+    ],
+    "buff_142"
+  ],
+  426870715: [
+    "Incoming Damage Increase",
+    [["Incoming Damage +", [2, "#ff9999", ["100%"]], " with each stack."]],
+    "buff_27"
+  ],
+  426870800: [
+    "Red Curse",
+    [
+      [
+        "You have been cursed by Narkiel.\nEveryone will be annihilated if you fail to undo the curse within ",
+        [2, "#99ff99", ["80"]],
+        "s."
+      ]
+    ],
+    "buff_671"
+  ],
+  426871000: [
+    "Scent of Yearning",
+    [["Creates a zone of red desire at the target's location in a few seconds."]],
+    "buff_674"
+  ],
+  426871001: [
+    "Scent of Despair",
+    [["Creates a zone of black despair at the target's location in a few seconds."]],
+    "buff_675"
+  ],
+  426871005: ["Scent of Chaos", [["Creates a zone of chaos at the target's location in a few seconds."]], "buff_696"],
+  426871006: [
+    "Faint Encroachment",
+    [
+      [
+        "Exposed to Narkiel's scent.\nYou will be encroached by the scent of desire at ",
+        [2, "#99ff99", ["3"]],
+        " stacks."
+      ]
+    ],
+    "buff_429"
+  ],
+  426871007: [
+    "Scent of Yearning",
+    [["Creates a zone of red desire at the target's location in a few seconds."]],
+    "buff_674"
+  ],
+  426871100: [
+    "Swamp of Resentment",
+    [["Creates a sticky swamp of resentment at the target's location in a few seconds."]],
+    "buff_512"
+  ],
+  426871101: ["Heavy Limbs", [["Move Speed and Atk. Speed temporarily decrease."]], "buff_43"],
+  426871102: [
+    "Incoming Damage Increase",
+    [["Incoming Damage +", [2, "#ff9999", ["20%"]], " with each stack."]],
+    "buff_27"
+  ],
+  426871300: [
+    "Tracking Censer",
+    [["Narkiel's Censer will be summoned at the target's location in a few seconds."]],
+    "buff_673"
+  ],
+  426871309: [
+    "Tracking Censer",
+    [["Narkiel's Censer will be summoned at the target's location in a few seconds."]],
+    "buff_673"
+  ],
+  426871311: ["Heavy Legs", [["Move Speed temporarily decreases."]], "buff_43"],
+  426871316: [
+    "Tracking Censer",
+    [["Narkiel's Censer will be summoned at the target's location in a few seconds."]],
+    "buff_673"
+  ],
+  426871317: [
+    "Tracking Censer",
+    [["Narkiel's Censer will be summoned at the target's location in a few seconds."]],
+    "buff_673"
+  ],
+  426872400: ["Imprisonment", [["Becomes Imprisoned."]], "buff_670"],
+  426871310: ["Earthquake", [["Become Incapacitated due to an Earthquake."]], "buff_49"],
+  426871700: ["Target Locked", [["Becomes the target of a curse."]], "buff_234"],
+  426871701: ["Target Locked", [["Becomes the target of a curse."]], "buff_165"],
+  426871702: ["Target Locked", [["Becomes the target of a curse."]], "buff_234"],
+  427030200: [
+    "Smoke of Protection",
+    [["A thick smoke surrounds you.\nThe smoke that protected the censer now protects you temporarily."]],
+    "buff_428"
+  ],
+  427030205: [
+    "Smoke of Protection",
+    [["A thick smoke surrounds you.\nThe smoke that protected the censer now protects you temporarily."]],
+    "buff_428"
+  ],
+  426893433: ["Covetous Seed Enhancement", [["The covetous seed enhances with each stack."]], "buff_678"],
+  426980619: [
+    "Partial Petrification",
+    [
+      [
+        "A state in which part of the body is petrified.\nAt 3 stacks, the entire body hardens, resulting in petrification."
+      ]
+    ],
+    "buff_286"
+  ],
+  426980621: ["Petrification", [["Become Incapacitated from Petrification."]], "buff_36"],
+  426893502: ["Covetous Seed", [["The covetous seed will sprout nearby in a few seconds."]], "buff_678"],
+  426893503: [
+    "Whispers of Seduction",
+    [["Hear the whispers of seduction.\nBecome dominated by Echidna's charm at 3 stacks."]],
+    "buff_431"
+  ],
+  426893504: [
+    "Dominance of Seduction",
+    [
+      [
+        "Become dominated by Echidna's charm.\nOverwhelmed by Echidna's bewitching whispers, you are unable to recognize your allies."
+      ]
+    ],
+    "buff_431"
+  ],
+  426893513: [
+    "Covetous Chains",
+    [
+      [
+        "Become closer to Echidna, unable to hide your deepest desires.\nYou will hear the bewitching whispers in a few seconds."
+      ]
+    ],
+    "buff_681"
+  ],
+  426893514: ["Mark", [["A Giant Butterfly tracks the target."]], "buff_234"],
+  426893515: [
+    "Butterfly Fantasy",
+    [
+      ["Make contact with the butterfly and fall asleep.\nYou can no longer distinguish between you and the butterfly."]
+    ],
+    "buff_682"
+  ],
+  426893516: ["Luring Temptation", [["Go toward Echidna against your will."]], "buff_680"],
+  426893518: ["Petrification", [["Becomes Petrified after looking into Echidna's eyes."]], "buff_36"],
+  426893519: ["Electrocution", [["Become Incapacitated while Electrocuted."]], "buff_51"],
+  426893520: [
+    "Covetous Chains",
+    [["Become connected to Echidna, who ignites your desires.\nDeliver the bewitching whispers to those nearby."]],
+    "buff_681"
+  ],
+  426893526: ["Explosive Desire", [["Covetous Energy explodes nearby in a few seconds."]], "buff_679"],
+  426893529: ["Petrification", [["Become Incapacitated from Petrification."]], "buff_36"],
+  426893532: [
+    "Ecstasy",
+    [
+      [
+        "Become bewitched and unable to control your feelings.\nYour love for Echidna surges.\nIgnores Status Ailment Immunity Rate."
+      ]
+    ],
+    "buff_680"
+  ],
+  426893539: ["Mark", [["Threat occurs at the marked target's location."]], "buff_234"],
+  426893541: ["Silence", [["Unable to use any skills while silenced."]], "buff_53"],
+  426893546: ["Covetous Seed", [["The covetous seed will sprout nearby in a few seconds."]], "buff_678"],
+  426893547: ["Covetous Seed", [["The covetous seed will sprout nearby in a few seconds."]], "buff_678"],
+  426893548: ["Covetous Seed", [["The covetous seed will sprout nearby in a few seconds."]], "buff_678"],
+  426893549: ["Covetous Seed", [["The covetous seed will sprout nearby in a few seconds."]], "buff_678"],
+  426893550: ["Covetous Seed", [["The covetous seed will sprout nearby in a few seconds."]], "buff_678"],
+  426893551: ["Covetous Seed", [["The covetous seed will sprout nearby in a few seconds."]], "buff_678"],
+  426893552: ["Covetous Seed", [["The covetous seed will sprout nearby in a few seconds."]], "buff_678"],
+  426893553: ["Tranquility", [["Stagger Point -", [2, "#ff9999", ["5%"]], " per stack."]], "buff_180"],
+  426893554: ["Valor", [["Stagger Point +", [2, "#99ff99", ["30%"]], " per stack."]], "buff_275"],
+  426893555: ["Petrification", [["Become Incapacitated from Petrification."]], "buff_36"],
+  427070176: [
+    "Alluring Scent",
+    [["Echidna's scent lingers on the body.\nAtk. Power -", [2, "#ff9999", ["20%"]], " for 30s."]],
+    "buff_452"
+  ],
+  427070178: ["Atk. Power Reduction", [["Atk. Power -", [2, "#ff9999", ["20%"]], " for 30s."]], "buff_28"],
+  427040733: ["Chains of Charm", [["Become closer to Echidna, unable to hide your deepest desires."]], "buff_681"],
+  40520104: [
+    "Stubborn Gaze",
+    [
+      [
+        "The snake is gazing at you.\nIt's dangerous to look into the snake's eyes too long.\nBecome Petrified at 3 stacks."
+      ]
+    ],
+    "buff_441"
+  ],
+  40520200: ["Petrification", [["Become Petrified."]], "buff_36"],
+  426899900: ["Fabric Imprisonment", [["Surrounded by cloth and unable to move."]], "buff_619"],
+  426899902: ["Petrification", [["Become Incapacitated from Petrification."]], "buff_36"],
+  426899930: ["Relaxed Gaze", [["Echidna is gazing at you."]], "buff_341"],
+  426899944: ["Exhaustion", [["Cannot block certain attacks while in current state."]], "buff_610"],
+  426899952: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
+  426899953: ["Deranged", [["Becomes temporarily confused."]], "buff_452"],
+  426899954: [
+    "Unstoppable Walk",
+    [["Able to move without stopping.\nAble to use Movement Skills with no cooldown equal to number of stacks."]],
+    "buff_37"
+  ],
+  426899958: [
+    "Critical Wound",
+    [
+      [
+        "Receive an internal wound after an attack from the giant snake.\nIncoming Damage +",
+        [2, "#99ff99", ["50%"]],
+        " per stack.\n",
+        [2, "#99ff99", ["Unable to evade certain attacks from Echidna."]]
+      ]
+    ],
+    "buff_27"
+  ],
+  426899966: ["Sense of Loss", [["Incoming Damage +", [2, "#99ff99", ["30%"]], "."]], "buff_27"],
+  426899967: ["Relaxed Gaze", [["Echidna is gazing at you."]], "buff_341"],
+  426899981: ["Snake's Fury", [["Damage to foes +", [2, "#99ff99", ["25%"]], " per stack."]], "buff_66"],
+  426898348: [
+    "Covetous Prisoner",
+    [["Echidna's desire has been injected in you.\nYou will be in danger if more desire enters you."]],
+    "buff_424"
+  ],
+  426898357: ["Snake's Blindness", [["Incoming Damage +", [2, "#99ff99", ["50%"]], " per stack."]], "buff_27"],
+  427281206: ["Soul Bind", [["Struck by the soul of the dead.\nTemporarily unable to move."]], "buff_48"],
+  427280807: ["Soul Bind", [["Struck by the soul of the dead.\nTemporarily unable to move."]], "buff_48"],
+  427281304: ["Spirit Earthquake", [["Become Incapacitated due to an Earthquake caused by Akkan."]], "buff_49"],
+  427281502: ["Curse of Degradation", [["Become blind and unable to move freely for a set time."]], "buff_344"],
+  427282201: ["Fear", [["Become Incapacitated for a long time out of overwhelming fear."]], "buff_38"],
+  427282401: ["Red Eye's Curse", [["Akkan's curse is watching you."]], "buff_500"],
+  427282403: ["Green Heart's Curse ", [["Akkan's curse is watching you."]], "buff_503"],
+  427282405: ["Fragile Sickle's Curse", [["Akkan's curse is watching you."]], "buff_502"],
+  427282407: ["Azure Horn's Curse", [["Akkan's curse is watching you."]], "buff_501"],
+  427282492: [
+    "Soul Banishment",
+    [
+      [
+        "Soul is banished after being cut by Akkan's scythe.\nYou wander the world of the dead.\nAtk. Power -",
+        [2, "#ff9999", ["99%"]],
+        "."
+      ]
+    ],
+    "buff_398"
+  ],
+  427282495: [
+    "Soul Banishment",
+    [
+      [
+        "Soul is banished after being cut by Akkan's scythe.\nYou wander the world of the dead.\nAtk. Power -",
+        [2, "#ff9999", ["99%"]],
+        "."
+      ]
+    ],
+    "buff_398"
+  ],
+  427282815: ["Soul Unity", [["Akkan resonates with the Shadow of Valtan."]], "buff_399"],
+  427283005: ["Fear", [["Become Incapacitated for a long time out of overwhelming fear."]], "buff_38"],
+  45692001: ["Fear", [["Become Incapacitated for a long time out of overwhelming fear."]], "buff_38"],
+  427350202: [
+    "Giant's Earthquake",
+    [["Become Incapacitated due to an Earthquake caused by Abyss Monarch Aegir."]],
+    "buff_49"
+  ],
+  427360013: ["Critical Wound", [["Incoming Damage +", [2, "#ff9999", ["20%"]], " per stack."]], "buff_27"],
+  427360339: [
+    "Giant's Earthquake",
+    [["Become Incapacitated due to an Earthquake caused by Abyss Monarch Aegir."]],
+    "buff_49"
+  ],
+  427350411: ["Giant's Gaze ", [["Abyss Monarch Aegir has his eye on you."]], "buff_234"],
+  427350421: ["Giant's Gaze ", [["Abyss Monarch Aegir has his eye on you."]], "buff_234"],
+  427282371: [
+    "Soul Banishment",
+    [
+      [
+        "Soul is banished after being cut by Akkan's scythe.\nYou wander the world of the dead.\nAtk. Power -",
+        [2, "#ff9999", ["99%"]],
+        "."
+      ]
+    ],
+    "buff_398"
+  ],
+  427282375: [
+    "Soul Banishment",
+    [
+      [
+        "Soul is banished after being cut by Akkan's scythe.\nYou wander the world of the dead.\nAtk. Power -",
+        [2, "#ff9999", ["99%"]],
+        "."
+      ]
+    ],
+    "buff_398"
+  ],
+  427380741: ["Move Speed Reduction", [["Move Speed -", [2, "#ff9999", ["30%"]], "."]], "buff_43"],
+  427381416: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
+  427380305: ["Move Speed Reduction", [["Move Speed -", [2, "#ff9999", ["50%"]], "."]], "buff_43"],
+  427382003: [
+    "Clone Rupture",
+    [["Weakened by the rupture of the clone.\nTemporarily incapacitated after a certain number of stacks."]],
+    "buff_57"
+  ],
+  427382125: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
+  427383600: ["Damage Reduction", [["Incoming Phy./Mag. Damage -", [2, "#99ff99", ["99.9%"]], "."]], "buff_19"],
+  427383712: ["Imprisonment", [["Your allies must help you escape."]], "buff_48"],
+  427383831: ["Imprisonment", [["Your allies must help you escape."]], "buff_48"],
+  427385502: ["Imprisonment", [["Your allies must help you escape."]], "buff_48"],
+  427385004: ["Shield", [["Incoming Phy./Mag. Damage -", [2, "#99ff99", ["99.9%"]], "."]], "buff_19"],
+  427385012: ["Pursuit of Punishment", [["Targeted by the Punishing Blade."]], "buff_449"],
+  427385546: ["Petrification", [["Become Incapacitated from Petrification."]], "buff_36"],
+  427383623: [
+    "Spatial Distortion",
+    [["Corroded by distorted space.\nInflicts damage after a certain number of stacks."]],
+    "buff_176"
+  ],
+  427510104: ["Bleed", [["Receive Phy. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_41"],
+  427384711: [
+    "Spatial Overload",
+    [["A state where space is distorted, dulling actions.\nMovement slows down."]],
+    "buff_25"
+  ],
+  427384712: [
+    "Spatial Overload",
+    [["A state where space is distorted, dulling actions.\nMovement slows down."]],
+    "buff_25"
+  ],
+  427384713: [
+    "Spatial Overload",
+    [["A state where space is distorted, dulling actions.\nMovement slows down."]],
+    "buff_25"
+  ],
+  427385303: ["Imprisonment", [["Your allies must help you escape."]], "buff_48"],
+  427385403: ["Bleed", [["Receive Phy. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_41"],
+  427384119: ["Burst Stop", [["You have gained the power to stop Aegir's rampage."]], "buff_93"],
+  427384103: ["Imprisonment", [["Your allies must help you escape."]], "buff_48"],
+  427386501: [
+    "Hellfire Brand",
+    [["Burned by the fire that erupted when the heart was destroyed.\nTake very strong continuous fire damage."]],
+    "buff_56"
+  ],
+  427386502: ["Overcoming Hellfire", [["Hitting Aegir restores lost Vitality."]], "buff_220"],
+  427386503: ["Abyssal Shield", [["A force that resonates with the heart protects Aegir."]], "buff_18"],
+  427386504: ["Abyssal Will", [["Atk./Move Speed +", [2, "#99ff99", ["10%"]], "."]], "buff_20"],
+  427386505: ["Abyssal Focus", [["Crit Rate +", [2, "#99ff99", ["30%"]], "."]], "buff_9"],
+  427386512: [
+    "Heart Unity",
+    [
+      [
+        "Aegir and the heart are bonded, and their powers resonate with each other,\nresulting in periodic powerful attacks."
+      ]
+    ],
+    "buff_450"
+  ],
+  427386562: [
+    "Heart Unity",
+    [
+      [
+        "Aegir and the heart are bonded, and their powers resonate with each other,\nresulting in periodic powerful attacks."
+      ]
+    ],
+    "buff_450"
+  ],
+  427385520: [
+    "Burst",
+    [["Aegir has gone on a rampage and gained great power.\nIncreases Crit Hit when attacking."]],
+    "buff_32"
+  ],
+  427385521: ["Ealyn's Protection", [["Protected by Ealyn's magic."]], "buff_67"],
+  427384403: ["The Oppressor's Gaze", [["Aegir has his eye on you."]], "buff_58"],
+  427387010: ["Stealth", [["Become Stealthed. Invisible to foes."]], "buff_148"],
+  427387011: ["Damage Reduction", [["Incoming Phy./Mag. Damage -", [2, "#99ff99", ["6.6%"]], "."]], "buff_19"],
+  427387020: [
+    "Heart Destruction",
+    [["The heart is destroyed and is temporarily incapacitated.\nBecome Staggered, but gain Damage Reduction."]],
+    "buff_39"
+  ],
+  427382168: ["Aegir's Arm", [["Aegir has his eye on you."]], "buff_234"],
+  427382169: ["Aegir's Arm", [["Aegir has his eye on you."]], "buff_234"],
+  429991112: ["Burn", [["Becomes Burned and periodically receives Damage."]], "buff_56"],
+  429991113: [
+    "Hellfire Outburst",
+    [
+      [
+        "A state where Hellfire energy that accumulated during combat burns uncontrollably.\nAfter a short time, creates a Flame Area nearby and inflicts explosion damage."
+      ]
+    ],
+    "buff_581"
+  ],
+  427641301: [
+    "Hellfire Ember",
+    [["A state where Hellfire Embers from the destroyed Heart are attached.\nInflicts fatal damage when stacked."]],
+    "buff_103"
+  ],
+  427480116: [
+    "Frost Crown",
+    [["A Frost Crown forms on Narok the Butcher's head.\nNarok's incoming Damage -", [2, "#99ff99", ["30%"]], "."]],
+    "buff_775"
+  ],
+  427480117: [
+    "Frost Greaves",
+    [
+      [
+        "Frost Greaves form on Narok the Butcher's legs.\nNarok periodically creates a Frost Zone on the target he is gazing at."
+      ]
+    ],
+    "buff_776"
+  ],
+  427480118: [
+    "Frost Blade",
+    [["A Frost Blade forms on Narok's tail. \nNarok's Atk. Power +", [2, "#99ff99", ["5%"]], "."]],
+    "buff_777"
+  ],
+  427480144: [
+    "Frost Crown - Destructible",
+    [["The Frost Crown on Narok the Butcher's head can be destroyed."]],
+    "buff_778"
+  ],
+  427480145: [
+    "Frost Greaves - Destructible",
+    [["The Frost Greaves on Narok the Butcher's legs can be destroyed."]],
+    "buff_779"
+  ],
+  427480165: [
+    "Frost Blade - Destructible",
+    [["The Frost Blade on Narok the Butcher's tail can be destroyed."]],
+    "buff_780"
+  ],
+  427480170: [
+    "Hypothermia",
+    [
+      [
+        "Body temperature drops due to exposure to Narok the Butcher's cold.\nWhen hit by Narok's specific pattern, become frozen immediately."
+      ]
+    ],
+    "buff_144"
+  ],
+  427480171: [
+    "Thin Ice",
+    [["Exposed to Narok the Butcher's cold while afflicted with Hypothermia.\nTemporarily Incapacitated."]],
+    "buff_204"
+  ],
+  427480173: [
+    "Freeze Scar",
+    [
+      [
+        "Shows traces of having once been frozen solid due to complete loss of body heat.\nA second exposure to Narok the Butcher's frost, which causes full body heat loss, will result in instant death."
+      ]
+    ],
+    "buff_249"
+  ],
+  427480174: [
+    "Freeze",
+    [
+      [
+        "Body temperature completely drops due to exposure to Narok the Butcher's cold.\nBecome Frozen and Incapacitated."
+      ]
+    ],
+    "buff_145"
+  ],
+  427480706: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
+  427482305: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
+  427483611: [
+    "Rapid Freeze",
+    [
+      [
+        "Exposed to Narok the Butcher's powerful cold while afflicted with Hypothermia.\nBecome Frozen and Incapacitated."
+      ]
+    ],
+    "buff_145"
+  ],
+  427484435: ["Gaze", [["Narok's weapon drops when the buff duration ends."]], "buff_341"],
+  427484505: [
+    "Chill",
+    [["Exposed to Narok the Butcher's cold.\nAt ", [2, "#99ff99", ["20 stacks, triggers a large explosion."]]]],
+    "buff_219"
+  ],
+  427482605: ["Move Speed Reduction", [["Move Speed -", [2, "#99ff99", ["20%"]], "."]], "buff_43"],
+  427482112: [
+    "Gaze",
+    [["Narok the Butcher gazes at you.\nAfter a set duration, a Frost Zone will appear."]],
+    "buff_341"
+  ],
+  427483537: [
+    "Condensed Frost",
+    [
+      [
+        "Narok the Butcher is condensing cold energy.\nNarok launches a powerful attack that reduces the body temperature gauge by 1% per stack."
+      ]
+    ],
+    "buff_329"
+  ],
+  423931204: [
+    "Ice Shard",
+    [
+      [
+        "A cold material that Narok the Butcher absorbs.\nOnce a certain amount is collected, Narok will launch a powerful attack."
+      ]
+    ],
+    "buff_278"
+  ],
+  427550111: [
+    "Standstill",
+    [["Attacked by Prokel, who was summoned by Brelshaza.\nTemporarily unable to move."]],
+    "buff_49"
+  ],
+  427550112: ["Prokel's Brand", [["Hit by Prokel's Shadow.\nDefense is reduced."]], "buff_27"],
+  427550194: ["Shadow's Gaze ", [["Prokel's Shadow is gazing at you."]], "buff_234"],
+  427550195: ["Shadow Rupture", [["Prokel's Shadow cannot appear for the duration."]], "buff_48"],
+  427520731: [
+    "Nightmare Shadow",
+    [["Touched by Brelshaza's Nightmare Shadow.\nMove Speed and Atk. Speed are temporarily reduced."]],
+    "buff_37"
+  ],
+  427520813: ["Darkness", [["Phantom Sphere explodes and reduces vision."]], "buff_13"],
+  427520903: [
+    "Deepening Phantom",
+    [["Brelshaza has absorbed the surrounding magick.\nBrelshaza's Atk. Power increases for a set duration."]],
+    "buff_773"
+  ],
+  427521111: [
+    "Phantom Brand",
+    [["Branded by Brelshaza's magick.\nAfter a set duration, special magick is activated."]],
+    "buff_234"
+  ],
+  427521311: [
+    "Nightmare Barrier",
+    [
+      [
+        "Brelshaza creates a barrier that blocks external attacks.\nThe damage Brelshaza receives is greatly reduced and Stagger Point is lowered."
+      ]
+    ],
+    "buff_216"
+  ],
+  427530830: ["Frost Release", [["Consumed by nightmares.\nEmit frost to those nearby."]], "buff_322"],
+  427530831: ["Frost Release", [["Consumed by nightmares.\nEmit frost to those nearby."]], "buff_322"],
+  427530832: [
+    "Phantom Brand",
+    [["Branded by Brelshaza's magick.\nAfter a set duration, special magick is activated."]],
+    "buff_234"
+  ],
+  427530841: ["Bind", [["Bound by nightmares.\nMovement is restricted."]], "buff_286"],
+  427530851: ["Bind", [["Bound by nightmares.\nMovement is restricted."]], "buff_286"],
+  427530911: ["Bind", [["Bound by nightmares.\nMovement is restricted."]], "buff_286"],
+  427530951: ["Bind", [["Bound by nightmares.\nMovement is restricted."]], "buff_286"],
+  427531031: ["Nightmare Wave", [["Consumed by nightmares.\nEmit nightmare energy to those nearby."]], "buff_221"],
+  427531033: ["Darkness", [["Phantom Sphere explodes and reduces vision."]], "buff_13"],
+  427531131: ["Frost Release", [["Consumed by nightmares.\nEmit frost to those nearby."]], "buff_322"],
+  427531133: [
+    "Phantom Brand",
+    [["Branded by Brelshaza's magick.\nAfter a set duration, special magick is activated."]],
+    "buff_234"
+  ],
+  427531301: [
+    "Dominion",
+    [["Dominated by the phantom.\nPossessed by Brelshaza's phantom, you cannot recognize your allies."]],
+    "buff_254"
+  ],
+  427531302: ["Nightmare Wave", [["Consumed by nightmares.\nEmit nightmare energy to those nearby."]], "buff_221"],
+  427531305: [
+    "Magick Afterimage",
+    [["Exposed to Brelshaza's magick.\nRecovery is temporarily greatly reduced while the afterimage lingers."]],
+    "buff_774"
+  ],
+  427531071: ["Numbing", [["Exposed to cold magick.\nYour body slows down as Move Speed is reduced."]], "buff_64"],
+  427531921: ["Numbing", [["Exposed to cold magick.\nYour body slows down as Move Speed is reduced."]], "buff_64"],
+  427532431: [
+    "Phantom Brand",
+    [["Branded by Brelshaza's magick.\nAfter a set duration, special magick is activated."]],
+    "buff_234"
+  ],
+  427532451: [
+    "Phantom Brand",
+    [["Branded by Brelshaza's magick.\nAfter a set duration, special magick is activated."]],
+    "buff_234"
+  ],
+  427535100: [
+    "Nightmare Brand",
+    [["Branded by Brelshaza's magick.\nAfter a set duration, a powerful magick activates at the target's location."]],
+    "buff_423"
+  ],
+  427535200: ["Manifester's Gaze", [["Brelshaza is gazing at you."]], "buff_234"],
+  427820210: [
+    "Magick Afterimage",
+    [["Exposed to Brelshaza's magick.\nRecovery is temporarily greatly reduced while the afterimage lingers."]],
+    "buff_774"
+  ],
+  427710383: [
+    "Magick Afterimage",
+    [["Exposed to Brelshaza's magick.\nRecovery is temporarily greatly reduced while the afterimage lingers."]],
+    "buff_774"
+  ],
+  427711401: ["Frost Encroachment", [["Body is frozen due to cold magick."]], "buff_144"],
+  427711402: [
+    "Absolute Freeze",
+    [["Body is completely frozen due to exposure to cold magick.\nBecome Incapacitated."]],
+    "buff_772"
+  ],
+  427711403: [
+    "Freeze",
+    [["Body is frozen due to exposure to cold magick.\nTemporarily become Incapacitated."]],
+    "buff_145"
+  ],
+  427710520: ["Frost Encroachment", [["Body is frozen due to cold magick."]], "buff_144"],
+  427710521: [
+    "Absolute Freeze",
+    [["Body is completely frozen due to exposure to cold magick.\nBecome Incapacitated."]],
+    "buff_772"
+  ],
+  427711101: ["Frostbite", [["Body gradually freezes due to exposure to cold Magick."]], "buff_63"],
+  427711102: [
+    "Freeze",
+    [["Body is frozen due to exposure to cold magick.\nTemporarily become Incapacitated."]],
+    "buff_145"
+  ],
+  427533611: [
+    "Frost Scar",
+    [["Body temperature drops due to exposure to cold magick.\nBecome unable to block certain attacks."]],
+    "buff_144"
+  ],
+  427533612: [
+    "Absolute Freeze",
+    [["Body is completely frozen due to exposure to cold magick.\nBecome Incapacitated."]],
+    "buff_772"
+  ],
+  427535405: [
+    "Freeze",
+    [["Body is frozen due to exposure to cold magick.\nTemporarily become Incapacitated."]],
+    "buff_145"
+  ],
+  427540122: [
+    "Magick Collision",
+    [
+      [
+        "The summoned Nightmare Phantaniclas's magick is colliding.\nThe Phantaniclas's structure weakens, making them easier to destroy."
+      ]
+    ],
+    "buff_27"
+  ],
+  426492102: [
+    "Phantom Encroachment",
+    [["Consumed by the exploded Phantom Sphere's magick.\nAtk. Power and Stagger Point are reduced."]],
+    "buff_31"
+  ],
+  426492103: [
+    "Deepening Nightmare",
+    [
+      [
+        "Brelshaza has absorbed the exploded Phantom Sphere's magick.\nBrelshaza's Atk. Power increases for a set duration."
+      ]
+    ],
+    "buff_15"
+  ],
+  427524105: ["Phantom Barrier", [["Shrouded by a Phantom Barrier, unable to move."]], "buff_48"],
+  427536301: ["Rime Explosion", [["After some time, discharges powerful chill in the surrounding area."]], "buff_249"],
+  427536302: ["Rime Explosion", [["After some time, discharges powerful chill in the surrounding area."]], "buff_249"],
+  427524302: ["Dream Barrier", [["Has created a protective barrier around itself."]], "buff_216"],
+  427524304: ["Encroachment", [["Temporarily unable to move, consumed by the Phantom World."]], "buff_322"],
+  427521303: ["Hallucination", [["Disoriented by Hallucination."]], "buff_59"],
+  427521340: [
+    "Phantom Brand",
+    [["Branded by Brelshaza's magick.\nAfter a set duration, special magick is activated."]],
+    "buff_234"
+  ],
+  427520907: [
+    "Magick Conversion",
+    [
+      [
+        "Has absorbed magick from an Absolute Freeze target.\nIf 5 or more targets become affected by Absolute Freeze, its attacks can no longer be stopped."
+      ]
+    ],
+    "buff_38"
+  ],
+  427711408: [
+    "Absolute Freeze",
+    [["Body is completely frozen due to exposure to cold magick.\nBecome Incapacitated."]],
+    "buff_772"
+  ],
+  427533711: ["Snow Wave", [["Continuously generates Cold Waves in a wide radius."]], "buff_321"],
+  427531181: ["Frost Release", [["Consumed by nightmares.\nEmit frost to those nearby."]], "buff_322"],
+  427531184: [
+    "Absolute Freeze",
+    [["Body is completely frozen due to exposure to cold magick.\nBecome Incapacitated."]],
+    "buff_772"
+  ],
+  427532607: ["Encroachment", [["Temporarily unable to move, consumed by the Phantom World."]], "buff_322"],
+  427530981: ["Gravity Manipulation", [["Powerful gravity temporarily slows Move Speed and Atk. Speed."]], "buff_37"],
+  427550197: ["Deep Shadow", [["At max effect, Prokel's Shadow appears and unleashes a powerful blow."]], "buff_441"],
+  427550199: ["Heavy Bleeding", [["Vitality is greatly reduced by a Fatal Strike."]], "buff_95"],
+  427530713: ["Silence", [["Become Silenced and unable to use Skills."]], "buff_53"],
+  427530714: ["Silence", [["Become Silenced and unable to use Skills."]], "buff_53"],
+  427530872: [
+    "Frost Enhancement",
+    [["Phantaniclas is further hardened by cold energy.\nInflicts Damage to nearby foes."]],
+    "buff_239"
+  ],
+  427536405: [
+    "Chill",
+    [["Touched by Brelshaza's Nightmare Shadow.\nMove Speed and Atk. Speed are temporarily reduced."]],
+    "buff_37"
+  ],
+  427536406: ["Rime Explosion", [["After some time, discharges powerful chill in the surrounding area."]], "buff_144"],
+  427530991: ["Magick Barrier", [["Incoming Stagger Damage is reduced."]], "buff_89"],
+  427536000: [
+    "Spatial Distortion",
+    [["Released from Encroachment. Space appears distorted. Increases incoming Damage."]],
+    "buff_322"
+  ],
+  428450011: [
+    "Dark Encroachment",
+    [["Overcome by Infernas's darkness.\nBecome Incapacitated. Take Damage after some time."]],
+    "buff_808"
+  ],
+  428450012: [
+    "Traces of the Dark",
+    [
+      [
+        "Traces of being Encroached by darkness linger on the body.\nEach stack enhances the effect of the next ",
+        [2, "#A566FF", ["Dark Encroachment"]],
+        "."
+      ]
+    ],
+    "buff_809"
+  ],
+  428450021: [
+    "Dark Encroachment",
+    [["Overcome by Infernas's darkness.\nBecome Incapacitated. Take Damage after some time."]],
+    "buff_808"
+  ],
+  428450022: [
+    "Traces of the Dark",
+    [
+      [
+        "Traces of being Encroached by darkness linger on the body.\nEach stack enhances the effect of the next ",
+        [2, "#A566FF", ["Dark Encroachment"]],
+        "."
+      ]
+    ],
+    "buff_809"
+  ],
+  428450031: [
+    "Dark Encroachment",
+    [["Overcome by Infernas's darkness.\nBecome Incapacitated. Take Damage after some time."]],
+    "buff_808"
+  ],
+  428450032: [
+    "Traces of the Dark",
+    [
+      [
+        "Traces of being Encroached by darkness linger on the body.\nEach stack enhances the effect of the next ",
+        [2, "#A566FF", ["Dark Encroachment"]],
+        "."
+      ]
+    ],
+    "buff_809"
+  ],
+  428450041: [
+    "Dark Encroachment",
+    [["Overcome by Infernas's darkness.\nBecome Incapacitated. Take Damage after some time."]],
+    "buff_808"
+  ],
+  428450042: [
+    "Traces of the Dark",
+    [
+      [
+        "Traces of being Encroached by darkness linger on the body.\nEach stack enhances the effect of the next ",
+        [2, "#A566FF", ["Dark Encroachment"]],
+        "."
+      ]
+    ],
+    "buff_809"
+  ],
+  428450051: [
+    "Dark Encroachment",
+    [["Overcome by Infernas's darkness.\nBecome Incapacitated. Take Damage after some time."]],
+    "buff_808"
+  ],
+  428450052: [
+    "Traces of the Dark",
+    [
+      [
+        "Traces of being Encroached by darkness linger on the body.\nEach stack enhances the effect of the next ",
+        [2, "#A566FF", ["Dark Encroachment"]],
+        "."
+      ]
+    ],
+    "buff_809"
+  ],
+  428455201: [
+    "Recoil",
+    [["Infernas is in recoil.\nStagger Point per stack +", [2, "#ff9999", ["20%"]], "."]],
+    "buff_27"
+  ],
+  428430311: [
+    "Life Snatch",
+    [["HP taken by Thaemine.\nEach time you deal damage to Thaemine, you restore some HP."]],
+    "buff_220"
+  ],
+  428430312: ["Silence", [["Battle Item cannot be used."]], "buff_88"],
+  428430402: ["Spacetime Domination", [["The flow of time and space slows."]], "buff_25"],
+  428430403: ["Spacetime Domination", [["The flow of time and space slows."]], "buff_25"],
+  428430404: ["Spacetime Domination", [["The flow of time and space slows."]], "buff_25"],
+  428430525: [
+    "Weaken",
+    [["Weakened after being hit by a powerful attack.\nStagger Point per stack is slightly reduced."]],
+    "buff_45"
+  ],
+  428430551: ["Dark Barrier", [["Trapped inside the barrier created by Thaemine."]], "buff_634"],
+  428430552: ["Dark Barrier", [["Trapped inside the barrier created by Thaemine."]], "buff_634"],
+  428430553: ["Dark Barrier", [["Trapped inside the barrier created by Thaemine."]], "buff_634"],
+  428430554: ["Dark Barrier", [["Trapped inside the barrier created by Thaemine."]], "buff_634"],
+  428430555: ["Dark Barrier", [["Trapped inside the barrier created by Thaemine."]], "buff_634"],
+  428430556: ["Dark Barrier", [["Trapped inside the barrier created by Thaemine."]], "buff_634"],
+  428430557: ["Dark Barrier", [["Trapped inside the barrier created by Thaemine."]], "buff_634"],
+  428430558: ["Dark Barrier", [["Trapped inside the barrier created by Thaemine."]], "buff_634"],
+  428432133: ["Earthquake", [["Become Incapacitated by an Earthquake."]], "buff_49"],
+  428432711: ["Stun", [["Temporarily Stunned by Thaemine's ferocious attack.\nBecome Incapacitated."]], "buff_39"],
+  428432901: [
+    "Target Gaze",
+    [["The target becomes prioritized as the attack target.\nBecome Petrified soon after."]],
+    "buff_234"
+  ],
+  428432903: ["Petrification", [["Become Incapacitated."]], "buff_36"],
+  428435301: [
+    "Target of Darkness",
+    [
+      [
+        "Marked by Thaemine's deep darkness.\nBecome Silenced. Only able to use ",
+        [2, "#ffff99", ["Perfect Block"]],
+        "."
+      ]
+    ],
+    "buff_641"
+  ],
+  428435891: [
+    "Overwhelm",
+    [
+      [
+        "Paralyzed by Thaemine's overwhelming power.\nBecome Incapacitated. Only able to use ",
+        [2, "#ffff99", ["Perfect Block"]],
+        "."
+      ]
+    ],
+    "buff_653"
+  ],
+  428438902: ["Spacetime Domination", [["The flow of time and space slows."]], "buff_25"],
+  428438903: ["Spacetime Domination", [["The flow of time and space slows."]], "buff_25"],
+  428438904: ["Spacetime Domination", [["The flow of time and space slows."]], "buff_25"],
+  428610421: ["Azakiel's Grace", [["Protected by Azakiel's Grace.\nGain Push Immunity."]], "buff_21"],
+  428610811: ["Confusion", [["Confused due to Infernas.\nMove Speed is fixed. Becomes Silenced."]], "buff_638"],
+  428611201: ["Gaze of Darkness", [["The thick darkness gazes upon you."]], "buff_234"],
+  428460101: [
+    "Parasitic Infection",
+    [["In a state of infection due to a parasitic invasion from Naitreya."]],
+    "buff_794"
+  ],
+  428460102: ["Paralyze", [["Unable to move due to paralysis."]], "buff_795"],
+  428460103: ["Imprisonment", [["Become Incapacitated due to Naitreya's fierce attack. "]], "buff_48"],
+  428460104: ["Predation Preparation", [["The ravenous Naitreya begins preparing to devour everything. "]], "buff_794"],
+  428460201: [
+    "Power of Light",
+    [["The Guardian's sacred power purifies the darkness emitted by Naitreya. "]],
+    "buff_339"
+  ],
+  428460210: ["Dark Might", [["Encroached by the tainted darkness released by Naitreya."]], "buff_796"],
+  428460211: ["Gluttony Preparation", [["The ravenous Naitreya begins preparing to consume everything. "]], "buff_796"],
+  428460213: ["Imprisonment", [["Become Incapacitated due to Naitreya's Sharp Attack. "]], "buff_48"],
+  428460214: ["Daze", [["Exposed to Naitreya's darkness. Vision gradually becomes blurry."]], "buff_13"],
+  428460215: ["Paralyze", [["Unable to move due to paralysis."]], "buff_795"],
+  428460802: [
+    "Poison",
+    [["Poisoned by Naitreya's deadly poison. Move Speed is reduced. Become Silenced."]],
+    "buff_797"
+  ],
+  428460803: ["Toxic Explosion", [["Inflict poison Damage to nearby targets. "]], "buff_798"],
+  428460816: ["Stun", [["Temporarily Stunned from exhaustion. Become Incapacitated."]], "buff_39"],
+  428461009: [
+    "Encroachment",
+    [["Encroached by Naitreya's magick. Inflict poison Damage to nearby targets, then fall under mind control.  "]],
+    "buff_798"
+  ],
+  428461010: [
+    "Curse",
+    [["Become unable to move freely after being afflicted by Naitreya's powerful curse."]],
+    "buff_452"
+  ],
+  428461011: [
+    "Enchanting Poison",
+    [["Move Speed increases after being afflicted by the poison scattered by Naitreya."]],
+    "buff_10"
+  ],
+  428461012: [
+    "Lethal Poison",
+    [["Move Speed decreases after being afflicted by the deadly poison spread by Naitreya. "]],
+    "buff_43"
+  ],
+  428461013: [
+    "Toxic Swamp",
+    [["Completely Encroached by the deadly poison spread by Naitreya. Become unable to move freely. "]],
+    "buff_43"
+  ],
+  428461050: [
+    "Encroachment",
+    [["Encroached by Naitreya's magick. Inflict poison Damage to nearby targets."]],
+    "buff_798"
+  ],
+  428462601: [
+    "Burn",
+    [
+      [
+        "Burned due to being hit by Naitreya's deadly flames. Receive [Fire] Mag. Damage every ",
+        [2, "#ffff99", ["1s"]],
+        "."
+      ]
+    ],
+    "buff_56"
+  ],
+  428463204: [
+    "Stun",
+    [["Temporarily Stunned due to being hit by Naitreya's powerful attack. Become Incapacitated."]],
+    "buff_39"
+  ],
+  428464101: ["Energy of Blessing", [["The blessed energy of Alberhastic infused into Naitreya."]], "buff_792"],
+  428464102: ["Unyielding Energy", [["The steadfast energy of Alberhastic infused into Naitreya."]], "buff_793"],
+  428465903: ["Energy of Blessing", [["The blessed energy of Alberhastic infused into Naitreya."]], "buff_792"],
+  428465904: ["Unyielding Energy", [["The steadfast energy of Alberhastic infused into Naitreya."]], "buff_793"],
+  428466005: [
+    "Unstable Heat",
+    [["The energy of Alberhastic infused into Naitreya. It radiates intense heat."]],
+    "buff_215"
+  ],
+  428466429: ["Stun", [["Hit by Naitreya's Sharp Attack. Become unable to move freely."]], "buff_50"],
+  428466430: ["Domination", [["Blocked Naitreya's Ferocious Attack, temporarily increasing Stagger. "]], "buff_425"],
+  428466602: ["Tracking", [["Encroached by fear under the predator's gaze."]], "buff_38"],
+  428469140: [
+    "Waned Gluttony",
+    [["Naitreya is weakened due to the Allied Forces' fierce attack. Naitreya's incoming Damage increases."]],
+    "buff_492"
+  ],
+  428469141: [
+    "Devour Yearning",
+    [["The ravenous Naitreya desires to feast. Naitreya's Atk. Power increase."]],
+    "buff_321"
+  ],
+  428469161: [
+    "Piercing Poison",
+    [["Exposed to Naitreya's deadly poison. Being captured by Naitreya once more will lead to death."]],
+    "buff_434"
+  ],
+  428469163: [
+    "Death by Poison",
+    [["Completely Encroached by Naitreya's deadly poison. Lethal injuries result in death."]],
+    "buff_435"
+  ],
+  428577101: ["Banish", [["Leaving Naitreya's line of sight prevents skill usage."]], "buff_88"],
+  428577113: [
+    "Infected",
+    [
+      [
+        "Infected after being drenched in Naitreya's expelled bile. After a short time, the contamination spreads, causing severe Damage around the infected. "
+      ]
+    ],
+    "buff_189"
+  ],
+  428575505: [
+    "Blossoming Fear",
+    [["Overwhelmed by the horrifying terror spread by Naitreya. Become unable to move freely. "]],
+    "buff_452"
+  ],
+  428530101: ["Positive Charge", [["A positive electrical charge flows through the body."]], "buff_781"],
+  428530102: ["Negative Charge", [["A negative electrical charge flows through the body."]], "buff_782"],
+  428530104: ["Charge Area", [["Inflict Damage in the vicinity of the charge area."]], "buff_783"],
+  428530105: ["Charge Area", [["Inflict Damage in the vicinity of the charge area."]], "buff_783"],
+  428530106: ["Skirmish", [["Under Mordum's gaze. Able to engage in a duel with Mordum."]], "buff_786"],
+  428530109: ["Open Weakness", [["Mordum's armor is destroyed, exposing its weakness to attacks."]], "buff_791"],
+  428530111: [
+    "Negative Charge Area",
+    [["Inflict Damage to positively charged targets around the charge area."]],
+    "buff_785"
+  ],
+  428530112: [
+    "Positive Charge Area",
+    [["Inflict Damage to negatively charged targets around the charge area."]],
+    "buff_784"
+  ],
+  428530114: ["Charge Conversion", [["Convert the charge of nearby allies after a short time."]], "buff_787"],
+  428530123: [
+    "Striking Lightning",
+    [["Generate an electric field at the previous location after a short time."]],
+    "buff_712"
+  ],
+  428530124: [
+    "Electric Wave Bomb",
+    [["Detonate an Electric Wave bomb, inflicting wide-area Damage after a short time."]],
+    "buff_788"
+  ],
+  428530127: ["Negative Overcharge", [["Negatively overcharged."]], "buff_789"],
+  428530128: ["Blue Overcharge", [["Positively overcharged."]], "buff_790"],
+  428530136: [
+    "Level 1 Overload",
+    [
+      [
+        "Lv. 1 Overload. Atk. Power +",
+        [2, "#99ff99", ["3%"]],
+        ". Generate a shield equal to ",
+        [2, "#99ff99", ["1%"]],
+        " of Max HP."
+      ]
+    ],
+    "buff_18"
+  ],
+  428530137: [
+    "Level 2 Overload",
+    [
+      [
+        "Lv. 2 Overload. Atk. Power +",
+        [2, "#99ff99", ["6%"]],
+        ". Generate a shield equal to ",
+        [2, "#99ff99", ["2%"]],
+        " of Max HP."
+      ]
+    ],
+    "buff_18"
+  ],
+  428530138: [
+    "Level 3 Overload",
+    [
+      [
+        "Lv. 3 Overload. Atk. Power +",
+        [2, "#99ff99", ["9%"]],
+        ". Generate a shield equal to ",
+        [2, "#99ff99", ["3%"]],
+        " of Max HP."
+      ]
+    ],
+    "buff_18"
+  ],
+  428530139: [
+    "Level 4 Overload",
+    [
+      [
+        "Lv. 4 Overload. Atk. Power +",
+        [2, "#99ff99", ["12%"]],
+        ". Generate a shield equal to ",
+        [2, "#99ff99", ["4%"]],
+        " of Max HP."
+      ]
+    ],
+    "buff_18"
+  ],
+  428530140: [
+    "Level 5 Overload",
+    [
+      [
+        "Lv. 5 Overload. Atk. Power +",
+        [2, "#99ff99", ["15%"]],
+        ". Generate a shield equal to ",
+        [2, "#99ff99", ["5%"]],
+        " of Max HP."
+      ]
+    ],
+    "buff_18"
+  ],
+  428530141: [
+    "Level 6 Overload",
+    [
+      [
+        "Lv. 6 Overload. Atk. Power +",
+        [2, "#99ff99", ["18%"]],
+        ". Generate a shield equal to ",
+        [2, "#99ff99", ["6%"]],
+        " of Max HP."
+      ]
+    ],
+    "buff_18"
+  ],
+  428530142: [
+    "Level 7 Overload",
+    [
+      [
+        "Lv. 7 Overload. Atk. Power +",
+        [2, "#99ff99", ["21%"]],
+        ". Generate a shield equal to ",
+        [2, "#99ff99", ["7%"]],
+        " of Max HP."
+      ]
+    ],
+    "buff_18"
+  ],
+  428530143: [
+    "Level 8 Overload",
+    [
+      [
+        "Lv. 8 Overload. Atk. Power +",
+        [2, "#99ff99", ["24%"]],
+        ". Generate a shield equal to ",
+        [2, "#99ff99", ["8%"]],
+        " of Max HP."
+      ]
+    ],
+    "buff_18"
+  ],
+  428530144: [
+    "Level 9 Overload",
+    [
+      [
+        "Lv. 9 Overload. Atk. Power +",
+        [2, "#99ff99", ["27%"]],
+        ". Generate a shield equal to ",
+        [2, "#99ff99", ["9%"]],
+        " of Max HP."
+      ]
+    ],
+    "buff_18"
+  ],
+  428530145: [
+    "Level 10 Overload",
+    [
+      [
+        "Lv. 10 Overload. Atk. Power +",
+        [2, "#99ff99", ["30%"]],
+        ". Generate a shield equal to ",
+        [2, "#99ff99", ["10%"]],
+        " of Max HP."
+      ]
+    ],
+    "buff_18"
+  ],
+  428530146: [
+    "Level 11 Overload",
+    [
+      [
+        "Lv. 11 Overload. Atk. Power +",
+        [2, "#99ff99", ["33%"]],
+        ". Generate a shield equal to ",
+        [2, "#99ff99", ["11%"]],
+        " of Max HP."
+      ]
+    ],
+    "buff_18"
+  ],
+  428530147: [
+    "Level 12 Overload",
+    [
+      [
+        "Lv. 12 Overload. Atk. Power +",
+        [2, "#99ff99", ["36%"]],
+        ". Generate a shield equal to ",
+        [2, "#99ff99", ["12%"]],
+        " of Max HP."
+      ]
+    ],
+    "buff_18"
+  ],
+  428530148: [
+    "Level 13 Overload",
+    [
+      [
+        "Lv. 13 Overload. Atk. Power +",
+        [2, "#99ff99", ["39%"]],
+        ". Generate a shield equal to ",
+        [2, "#99ff99", ["13%"]],
+        " of Max HP."
+      ]
+    ],
+    "buff_18"
+  ],
+  428530149: [
+    "Level 14 Overload",
+    [
+      [
+        "Lv. 14 Overload. Atk. Power +",
+        [2, "#99ff99", ["42%"]],
+        ". Generate a shield equal to ",
+        [2, "#99ff99", ["14%"]],
+        " of Max HP."
+      ]
+    ],
+    "buff_18"
+  ],
+  428530150: [
+    "Level 15 Overload",
+    [
+      [
+        "Lv. 15 Overload. Atk. Power +",
+        [2, "#99ff99", ["45%"]],
+        ". Generate a shield equal to ",
+        [2, "#99ff99", ["15%"]],
+        " of Max HP."
+      ]
+    ],
+    "buff_18"
+  ],
+  428530151: [
+    "Level 16 Overload",
+    [
+      [
+        "Lv. 16 Overload. Atk. Power +",
+        [2, "#99ff99", ["48%"]],
+        ". Generate a shield equal to ",
+        [2, "#99ff99", ["16%"]],
+        " of Max HP."
+      ]
+    ],
+    "buff_18"
+  ],
+  428530152: [
+    "Level 17 Overload",
+    [
+      [
+        "Lv. 17 Overload. Atk. Power +",
+        [2, "#99ff99", ["51%"]],
+        ". Generate a shield equal to ",
+        [2, "#99ff99", ["17%"]],
+        " of Max HP."
+      ]
+    ],
+    "buff_18"
+  ],
+  428530153: [
+    "Level 18 Overload",
+    [
+      [
+        "Lv. 18 Overload. Atk. Power +",
+        [2, "#99ff99", ["54%"]],
+        ". Generate a shield equal to ",
+        [2, "#99ff99", ["18%"]],
+        " of Max HP."
+      ]
+    ],
+    "buff_18"
+  ],
+  428530154: [
+    "Level 19 Overload",
+    [
+      [
+        "Lv. 19 Overload. Atk. Power +",
+        [2, "#99ff99", ["57%"]],
+        ". Generate a shield equal to ",
+        [2, "#99ff99", ["19%"]],
+        " of Max HP."
+      ]
+    ],
+    "buff_18"
+  ],
+  428530155: [
+    "Level 20 Overload",
+    [
+      [
+        "Lv. 20 Overload. Atk. Power +",
+        [2, "#99ff99", ["60%"]],
+        ". Generate a shield equal to ",
+        [2, "#99ff99", ["20%"]],
+        " of Max HP."
+      ]
+    ],
+    "buff_18"
+  ],
+  428530166: ["Electrocution Shock", [["Become Incapacitated while Electrocuted."]], "buff_51"],
+  428530167: ["Electrocution Damage", [["Take Damage from Electrocution for the entire duration."]], "buff_392"],
+  428530168: ["Blind", [["Become Incapacitated while Blinded."]], "buff_39"],
+  428530177: ["Earthquake", [["Become Incapacitated due to Earthquake."]], "buff_49"],
+  428530194: ["Overcurrent", [["Atk. Power slightly increases per stack due to Overcurrent."]], "buff_310"],
+  428530201: ["Charge Area", [["Inflict Damage in the vicinity of the charge area."]], "buff_783"],
+  428530222: [
+    "Negative Charge Area",
+    [["Inflict Damage to positively charged targets around the charge area."]],
+    "buff_785"
+  ],
+  428530223: [
+    "Positive Charge Area",
+    [["Inflict Damage to negatively charged targets around the charge area."]],
+    "buff_784"
+  ],
+  428530224: [
+    "Positive Charge",
+    [
+      [
+        "Check the Allied Forces' Positive Charge state and ensure that the balance of the flowing charges is maintained."
+      ]
+    ],
+    "buff_781"
+  ],
+  428530225: [
+    "Negative Charge",
+    [
+      [
+        "Check the Allied Forces' Negative Charge state and ensure that the balance of the flowing charges is maintained."
+      ]
+    ],
+    "buff_782"
+  ],
+  428530244: ["Permanent Electrocution Damage", [["Take Damage from Electrocution until death."]], "buff_392"],
+  428530252: [
+    "Positive Charge",
+    [
+      [
+        "Check the Allied Forces' Positive Charge state and ensure that the balance of the flowing charges is maintained."
+      ]
+    ],
+    "buff_781"
+  ],
+  428530253: [
+    "Negative Charge",
+    [
+      [
+        "Check the Allied Forces' Negative Charge state and ensure that the balance of the flowing charges is maintained."
+      ]
+    ],
+    "buff_782"
+  ],
+  428530256: [
+    "Positive Charge",
+    [
+      [
+        "Check the Allied Forces' Positive Charge state and ensure that the balance of the flowing charges is maintained."
+      ]
+    ],
+    "buff_781"
+  ],
+  428530257: [
+    "Negative Charge",
+    [
+      [
+        "Check the Allied Forces' Negative Charge state and ensure that the balance of the flowing charges is maintained."
+      ]
+    ],
+    "buff_782"
+  ],
+  428530260: [
+    "Positive Charge",
+    [
+      [
+        "Check the Allied Forces' Positive Charge state and ensure that the balance of the flowing charges is maintained."
+      ]
+    ],
+    "buff_781"
+  ],
+  428530261: [
+    "Negative Charge",
+    [
+      [
+        "Check the Allied Forces' Negative Charge state and ensure that the balance of the flowing charges is maintained."
+      ]
+    ],
+    "buff_782"
+  ],
+  428530269: ["Electrocution", [["Become Incapacitated while Electrocuted."]], "buff_51"],
+  428530280: ["Overcurrent", [["Atk. Power slightly increases per stack due to Overcurrent."]], "buff_310"],
+  428530295: [
+    "Striking Lightning",
+    [["Generate an electric field at the previous location after a short time."]],
+    "buff_712"
+  ],
+  428530299: ["Charge Area", [["Inflict Damage in the vicinity of the charge area."]], "buff_783"],
+  428530302: ["Charge Area", [["Inflict Damage in the vicinity of the charge area."]], "buff_783"],
+  426950101: [
+    "Poisoning",
+    [["Receives ", [2, "#99ff99", ["2%"]], "-", [2, "#99ff99", ["3%"]], " of Vitality as Damage every 1s. "]],
+    "buff_429"
+  ],
+  427010105: ["Encroachment", [["Kazeros's poison corrodes the ship."]], "buff_429"],
+  427010106: ["Bind", [["Prolonged corrosion by Kazeros's poison binds the ship."]], "buff_37"],
+  427010116: ["Poison", [["Become poisoned, decreasing Move Speed."]], "buff_37"],
+  427010117: ["Poison", [["Become poisoned, decreasing Move Speed."]], "buff_37"],
+  427290130: [
+    "Burn",
+    [
+      [
+        "You got a critical burn from a high-temperature fire.\nReceive [Fire] Mag. Damage every ",
+        [2, "#ffff99", ["1s"]],
+        "."
+      ]
+    ],
+    "buff_56"
+  ],
+  427290131: ["Infectious Burn", [["Transfer Burn to nearby targets. "]], "buff_333"],
+  427290140: ["Tenacity", [["Temporarily gain Push Immunity on a successful Counterattack."]], "buff_306"],
+  427290150: [
+    "Incoming Damage Increase",
+    [["Sevek Atun's incoming Damage increases. At max stack, receive even more Damage. "]],
+    "buff_27"
+  ],
+  426010903: ["Armen's Help", [["Periodically recovers HP and gains a shield."]], "buff_8"],
+  426010910: ["Airship Support", [["Receiving cover from the airship Mari specially modified."]], "buff_134"],
+  426010911: ["Mystic's Support", [["Receiving protection from the Solar Guardian Mystic."]], "buff_134"],
+  427060601: [
+    "Abyss Fog",
+    [["Abyssal fog emanates from the resurrected Kazeros. It feels like it's slowly suffocating you."]],
+    "buff_628"
+  ],
+  427060701: ["Damage Reduction", [["Incoming Damage is decreased."]], "buff_19"],
+  45660505: ["Incoming Damage Reduction", [["Incoming Damage is decreased."]], "buff_19"],
+  427060801: ["Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
+  425830201: ["Shield", [["Absorbs Damage equal to ", [2, "#99ff99", ["5%"]], " of Max HP."]], "buff_18"],
+  427900405: ["Fear", [["Become Incapacitated while struck with fear."]], "buff_38"],
+  427900409: ["Fear", [["Become Incapacitated while struck with fear."]], "buff_38"],
+  427900413: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
+  427860102: ["Incoming Damage Reduction", [["Incoming Damage decreased."]], "buff_19"],
+  428410001: ["Incoming Damage Reduction", [["Incoming Damage decreased."]], "buff_19"],
+  428410203: ["Fear", [["Become Incapacitated while struck with fear."]], "buff_38"],
+  414789411: ["Sleep Illusion", [["Enter the Illusion state to see mysterious items."]], "buff_180"],
+  426011404: ["Abyssal Domination", [["Outgoing Damage is significantly reduced by abyssal energy."]], "buff_334"],
+  426011557: [
+    "Elzowin's Grace",
+    [["Gain Push Immunity while the barrier effect is active and gradually recover HP."]],
+    "buff_440"
+  ],
+  426011639: ["Stun", [["Becomes Stunned and Incapacitated."]], "buff_39"],
+  533200001: ["Balthorr's Protection", [["Gain Push Immunity and greatly decrease all incoming Damage."]], "buff_412"],
+  427980604: ["Stun", [["Becomes Stunned and Incapacitated."]], "buff_39"],
+  455901000: ["Wary", [["The priest is feeling something is not right."]], "buff_82"],
+  455901001: ["Wary", [["The priest is feeling something is not right."]], "buff_82"],
+  455901002: ["Wary", [["The priest is feeling something is not right."]], "buff_82"],
+  455901003: ["Wary", [["The priest is feeling something is not right."]], "buff_82"],
+  455901004: ["Wary", [["The priest is feeling something is not right."]], "buff_82"],
+  455901005: ["Wary", [["The priest is feeling something is not right."]], "buff_82"],
+  455901006: ["Stealthy", [["Well-hidden from sight."]], "buff_148"],
+  455901007: ["Danger", [["Any more attacks could be dangerous."]], "buff_167"],
+  455901008: ["Danger", [["Any more attacks could be dangerous."]], "buff_167"],
+  455901010: ["Discovered", [["Discovered by a priest."]], "buff_58"],
+  455901011: ["Discovered", [["Discovered by a priest."]], "buff_58"],
+  455901012: ["Discovered", [["Discovered by a priest."]], "buff_58"],
+  455901013: ["Discovered", [["Discovered by a priest."]], "buff_58"],
+  455901014: ["Discovered", [["Discovered by a priest."]], "buff_58"],
+  455901015: ["Discovered", [["Discovered by a priest."]], "buff_58"],
+  455901017: ["Discovered", [["Discovered by a priest."]], "buff_58"],
+  455901018: ["Discovered", [["Discovered by a priest."]], "buff_58"],
+  430350600: ["Earthquake", [["Become Incapacitated by an Earthquake."]], "buff_49"],
   430320000: [
     "Darkness",
     [
@@ -42351,6 +42536,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   430321057: ["Blood Pool", [["Decreases Move Speed while in pool of blood."]], "buff_43"],
   430322430: ["Stun", [["Become Stunned and Incapacitated."]], "buff_39"],
   430323921: ["Earthquake", [["Become Incapacitated by an Earthquake."]], "buff_49"],
+  430652712: ["Telekinesis", [["Immobilized by Kazeros."]], "buff_855"],
   430332803: ["Agony of Blood", [["Pierced by Serca's attack, take Continuous Damage from Bleed."]], "buff_165"],
   430332804: ["Stun", [["Stunned by a powerful attack, temporarily unable to move."]], "buff_39"],
   430332805: ["Burning Pain", [["Hit by Serca's explosion, take Continuous Damage from Burn."]], "buff_56"],
@@ -42500,340 +42686,206 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   4310501: ["Dead Drunk", [["Becomes plastered, fascinated by the subtle aroma of malt."]], "buff_39"],
   429770200: ["Darkness", [["Blurs vision due to the darkness of the abyss."]], "buff_13"],
   428414401: ["Darkness", [["Blurs vision."]], "buff_13"],
-  41393850: ["Incapacitation", [["Fall deep into the image and become Incapacitated. "]], "buff_36"],
-  41393852: ["Incapacitation", [["Fall deep into the image and become Incapacitated."]], "buff_36"],
-  41393856: ["Precipitation", [["Sink into darkness."]], "buff_222"],
-  41393859: ["Encroachment", [["Frozen in terror as darkness grips on the mind."]], "buff_38"],
-  419146307: [
-    "Tired",
-    [["Fatigue grows and slows you down.\nMove Speed -30% per stack. Changes to Sleep at 2 stacks."]],
-    "buff_43"
+  20500000: ["Acceleration", [["The Phase Dial flows faster, accelerating the Dimensionalist."]], "ark_passive_di_4"],
+  20501010: [
+    "Party: Armor Destruction",
+    [["Phy. Defense -", [2, "#ff9999", ["12.0%"]], ". Mag. Defense -", [2, "#ff9999", ["12.0%"]], "."]],
+    "buff_61"
   ],
-  419146337: [
-    "Tired",
-    [["Fatigue grows and slows you down.\nMove Speed -30% per stack. Changes to Sleep at 2 stacks."]],
-    "buff_43"
+  20501103: ["Forewarning", [["Move Speed -", [2, "#ff9999", ["20%"]], "."]], "buff_43"],
+  20501110: [
+    "Party: Armor Destruction",
+    [["Phy. Defense -", [2, "#ff9999", ["12.0%"]], ". Mag. Defense -", [2, "#ff9999", ["12.0%"]], "."]],
+    "buff_61"
   ],
-  419146308: ["Sleep", [["Fatigue overwhelms you and you fall to Sleep."]], "buff_40"],
-  419146320: ["Sleep", [["Fatigue overwhelms you and you fall to Sleep."]], "buff_40"],
-  419146306: ["Floral Scent", [["I want to go closer to where the Fragrant Flower scent is coming from."]], "buff_431"],
-  419146311: ["Stun", [["Temporarily unable to move."]], "buff_39"],
-  419146314: [
-    "Chronic Fatigue",
-    [["Your body feels heavy.\nReceive Damage temporarily, and Atk. Speed and Move Speed -40%."]],
-    "buff_23"
+  20501141: ["Temporal Isolation", [["Become Incapacitated by Time Isolation."]], "buff_909"],
+  20501410: [
+    "Party: Armor Destruction",
+    [["Phy. Defense -", [2, "#ff9999", ["12.0%"]], ". Mag. Defense -", [2, "#ff9999", ["12.0%"]], "."]],
+    "buff_61"
   ],
-  418940613: [
-    "Stable Heart",
-    [["Incoming Damage decreased during the fight against yourself with an unwavering heart."]],
-    "buff_19"
-  ],
-  419146700: ["Flame", [["Kaltaya is engulfed by fire and weakened."]], "buff_489"],
-  419146701: ["Great Flame", [["Kaltaya is engulfed by a fierce inferno and greatly weakened."]], "buff_56"],
-  419146207: [
-    "Sharp Thorn",
-    [["Stabbed by Kaltaya's thorns.\nStagger Damage greatly increases temporarily."]],
-    "buff_584"
-  ],
-  419146240: [
-    "Rotten Thorn",
+  20501606: [
+    "Inflict Slow",
     [
       [
-        "Stabbed deeply by Kaltaya's Rotten Thorns.\nAt 3 stacks, the thorns will grow inside the body and ensnare the target if not removed in time."
-      ]
-    ],
-    "buff_585"
-  ],
-  419146261: [
-    "Rotten Thorn",
-    [
-      [
-        "Stabbed deeply by Kaltaya's Rotten Thorns.\nAt 3 stacks, the thorns will grow inside the body and ensnare the target if not removed in time."
-      ]
-    ],
-    "buff_585"
-  ],
-  419146241: [
-    "Thorn",
-    [
-      [
-        "Kaltaya's Thorns have pierced your body.\nMove Speed +10% per stack.\nThis effect can stack up to ",
-        [2, "#ffff99", ["3"]],
-        " times."
-      ]
-    ],
-    "buff_583"
-  ],
-  419146208: [
-    "Vine Prison",
-    [["Kaltaya's thorns have taken root in the body.\nInflicts massive Damage if not freed within the duration."]],
-    "buff_48"
-  ],
-  419146260: [
-    "Vine Prison",
-    [["Kaltaya's thorns have taken root in the body.\nInflicts massive Damage if not freed within the duration."]],
-    "buff_48"
-  ],
-  425810301: ["Dust", [["Enough Combustible Dust to light a fire is sticking to the body."]], "buff_309"],
-  425810304: [
-    "Thick Dust",
-    [["A thick layer of Combustible Dust that can light a large fire is sticking to the body."]],
-    "buff_310"
-  ],
-  419146704: [
-    "Defensive Stance",
-    [["Kaltaya is protected by thorns.\nReflects all attacks and ignores Atk. Speed."]],
-    "buff_172"
-  ],
-  425810305: ["Thin Dust", [["A little bit of Combustible Dust is sticking to the body."]], "buff_314"],
-  419146717: [
-    "Body Enhancement",
-    [["Kaltaya's body is enhanced.\nKaltaya's Atk. Power and Atk. Speed are strengthened."]],
-    "buff_15"
-  ],
-  426250110: ["Zeherade's Protection", [["Overload Debuff slowly decreases due to Zeherade's Protection."]], "buff_1"],
-  426250111: [
-    "Wisdom's Protection",
-    [
-      [
-        "Shield created by the Homunculus.\nAll Overload Debuffs disappear due to the Authority of Wisdom, and temporarily become immune."
-      ]
-    ],
-    "buff_167"
-  ],
-  426250120: [
-    "Overload",
-    [
-      [
-        "Umbellae's great knowledge collapses their own ego.\nMove Speed slowly decreases. Gains a stack every 10 stacks. At 10 stacks, becomes Stunned every 10s."
-      ]
-    ],
-    "buff_43"
-  ],
-  426250122: ["Stun", [["Becomes Incapacitated by the Curse of Knowledge."]], "buff_39"],
-  426250125: [
-    "Curse of Knowledge",
-    [["Currently under the Curse of Knowledge. Will be continuously inflicted by the Overload Debuff."]],
-    "buff_357"
-  ],
-  41393896: ["Elemental Energy Discovery", [["You found the hidden Element Space."]], "buff_58"],
-  426250131: ["Zeherade's Will", [["The Absolute Law engraved onto Zeherade creates a miracle."]], "buff_19"],
-  45926001: ["Burn", [["Periodically inflicts Burn Damage."]], "buff_56"],
-  40362224: ["Concussion", [["Become Stunned and Incapacitated."]], "buff_39"],
-  40369916: [
-    "Rift",
-    [
-      [
-        "Receive a Powerful Shock, which increases Weak Point Damage by ",
-        [2, "#ff9999", ["1"]],
-        " level.\nDoes not stack with Corrosive Bomb."
-      ]
-    ],
-    "buff_392"
-  ],
-  40369951: [
-    "Ferocious Flame",
-    [
-      [
-        "The higher the stacks, the more damage dealt by Firehorn's Undying Flame.\nReceive the energy of fire to increase Atk. Power +",
-        [2, "#99ff99", ["5%"]],
-        ", Atk. Speed +",
-        [2, "#99ff99", ["1%"]],
-        ", Move Speed +",
-        [2, "#99ff99", ["1%"]],
-        " for every stack up to 5 stacks.\nCan be canceled by going in the water."
-      ]
-    ],
-    "buff_564"
-  ],
-  40369971: ["Drown Damage", [["The higher the stacks, the more difficult the minigame becomes."]], "buff_342"],
-  40369972: ["Shred", [["Incoming Damage +", [2, "#ff9999", ["80%"]], " per stack."]], "buff_27"],
-  426131020: ["Dimensional Interference", [["Move Speed -", [2, "#ff9999", ["30%"]], "."]], "buff_448"],
-  426131021: ["Pull", [["Pushes outwards."]], "buff_448"],
-  426021226: ["Dimensional Sword", [["Causes Damage to a certain area."]], "buff_6"],
-  426021403: ["Target Gaze", [["Become prioritized as the attack target."]], "buff_234"],
-  426022312: ["Imprisonment", [["Your allies must help you escape."]], "buff_48"],
-  426021721: ["Accumulating Dimension", [["After a certain number of stacks, become Imprisoned."]], "buff_48"],
-  426021722: ["Imprisonment", [["Your allies must help you escape."]], "buff_48"],
-  426021723: ["Stagger Decrease (S)", [["Stagger Damage -", [2, "#ff9999", ["5%"]], "."]], "buff_31"],
-  426021724: ["Atk. Power Reduction (S)", [["Atk. Power -", [2, "#ff9999", ["10%"]], "."]], "buff_31"],
-  426021725: ["Atk. Power Reduction (M)", [["Atk. Power -", [2, "#ff9999", ["30%"]], "."]], "buff_31"],
-  426024321: ["X Target Tracking", [["Magick explodes toward the target with the X mark."]], "buff_341"],
-  426024322: ["X Target Tracking", [["Magick explodes toward the target with the X mark."]], "buff_341"],
-  426024323: ["X Target Tracking", [["Magick explodes toward the target with the X mark."]], "buff_341"],
-  426024324: ["X Target Tracking", [["Magick explodes toward the target with the X mark."]], "buff_341"],
-  426024331: ["X Target Tracking", [["Magick explodes toward the target with the X mark."]], "buff_341"],
-  426024332: ["X Target Tracking", [["Magick explodes toward the target with the X mark."]], "buff_341"],
-  426024333: ["X Target Tracking", [["Magick explodes toward the target with the X mark."]], "buff_341"],
-  426024334: ["X Target Tracking", [["Magick explodes toward the target with the X mark."]], "buff_341"],
-  426024700: [
-    "Magick Core Burst",
-    [["The Magick Core bursts and causes periodic waves that inflict Damage."]],
-    "buff_429"
-  ],
-  426024720: [
-    "Magick Core Berserk",
-    [["Atk. Power +", [2, "#99ff99", ["100%"]], ". Atk./Move Speed +", [2, "#99ff99", ["50%"]], "."]],
-    "buff_15"
-  ],
-  426024800: ["Magick Core Enhancement", [["The Magick Core is enhanced."]], "buff_134"],
-  426024730: ["Magick Core Wave", [["Magick Core Shock status at 3 stacks."]], "buff_134"],
-  426024731: ["Magick Core Wave", [["The Magick Core Wave causes Paralysis."]], "buff_104"],
-  426024740: [
-    "Magick Core Shock",
-    [["Incoming Phy. Damage +", [2, "#ff9999", ["10%"]], " and Incoming Mag. Damage +", [2, "#ff9999", ["10%"]], "."]],
-    "buff_27"
-  ],
-  426141401: ["Stagger Increase (M)", [["Stagger Damage +", [2, "#99ff99", ["20%"]], "."]], "buff_5"],
-  426141403: ["Stagger Increase (S)", [["Stagger Damage +", [2, "#99ff99", ["10%"]], "."]], "buff_5"],
-  426141402: ["Stagger Increase (M)", [["Stagger Damage +", [2, "#99ff99", ["20%"]], "."]], "buff_5"],
-  426142000: ["Stagger Increase (M)", [["Stagger Damage +", [2, "#99ff99", ["20%"]], "."]], "buff_5"],
-  426141406: [
-    "Stagger Increase",
-    [["Stagger Damage +", [2, "#99ff99", ["30%"]], ". Move Speed +", [2, "#99ff99", ["20%"]], "."]],
-    "buff_5"
-  ],
-  426141407: ["Stagger Decrease", [["Stagger Damage -", [2, "#ff9999", ["20%"]], "."]], "buff_5"],
-  426141410: ["Cooldown Decrease", [[" +", [2, "#99ff99", ["300000"]], "."]], "buff_93"],
-  426141420: ["Origin Defense", [["Incoming Stagger Damage decreases."]], "buff_89"],
-  426020106: [
-    "Dimension Change",
-    [["Lazaram's magick flows in and can be used to open a Dimensional Door."]],
-    "buff_149"
-  ],
-  426020126: ["Spreading Target", [["Can be transferred to another target."]], "buff_451"],
-  426020108: ["Target Gaze", [["Become prioritized as the attack target."]], "buff_234"],
-  426020109: ["Dimension Defense", [["Damage dealt to Lazaram decreases."]], "buff_422"],
-  426142201: ["Dimension Change", [["Moves to another dimension."]], "buff_149"],
-  426142202: ["Dimension Change", [["Moves to another dimension."]], "buff_149"],
-  426020130: ["Spreading Chaos", [["Can be transferred to another target."]], "buff_451"],
-  426020131: ["Accumulating Chaos", [["After a certain number of stacks, become dominated by Chaos."]], "buff_451"],
-  426020132: ["Mind Domination", [["Dominated by Chaos."]], "buff_362"],
-  426020134: ["Faction Change", [["Changes the target's faction summoned by the power of Chaos."]], "buff_452"],
-  426020124: ["Stopping the Chaos", [["Casts Stopping the Chaos after a short time."]], "buff_62"],
-  426020112: ["Recovery", [["Recovers Lazaram's HP."]], "buff_8"],
-  426029000: ["Chaos Resistance", [["Incoming Phy./Mag. Damage -", [2, "#99ff99", ["99.9%"]], "."]], "buff_19"],
-  426023920: ["Target Gaze", [["The target becomes prioritized as the attack target."]], "buff_234"],
-  426131923: ["Imprisonment", [["Your allies must help you escape."]], "buff_48"],
-  426131933: ["Imprisonment", [["Your allies must help you escape."]], "buff_48"],
-  426070011: [
-    "Mutated Head",
-    [["Rakathus's ", [2, "#ffff99", ["head"]], " is mutated.\nHead-related attacks are enhanced."]],
-    "buff_575"
-  ],
-  426070013: [
-    "Mutated Fore Feet",
-    [["Rakathus's ", [2, "#ffff99", ["fore feet"]], " are mutated.\nFore feet-related attacks are enhanced."]],
-    "buff_576"
-  ],
-  426070015: [
-    "Mutated Hind Feet",
-    [["Rakathus's ", [2, "#ffff99", ["hind feet"]], " are mutated.\nHind feet-related attacks are enhanced."]],
-    "buff_577"
-  ],
-  426070017: [
-    "Mutated Tail",
-    [["Rakathus's ", [2, "#ffff99", ["tail"]], " is mutated.\nTail-related attacks are enhanced."]],
-    "buff_578"
-  ],
-  426070019: [
-    "Mutated Back",
-    [["Rakathus's ", [2, "#ffff99", ["back"]], " is mutated.\nHP Regen +", [2, "#99ff99", ["100%"]], "."]],
-    "buff_579"
-  ],
-  426070055: [
-    "Rakathus's Blood",
-    [
-      [
-        "Skill Cooldown is drastically reduced. Atk. Speed, Move Speed, and Combat Resource Natural Recovery are greatly increased. When attacked, a ",
-        [2, "#A566FF", ["Blood Encroachment"]],
-        " debuff is applied."
-      ]
-    ],
-    "buff_580"
-  ],
-  426070057: [
-    "Rakathus's Blood",
-    [
-      [
-        "Skill Cooldown is drastically reduced. Atk. Speed, Move Speed, and Combat Resource Natural Recovery are greatly increased. When attacked, a ",
-        [2, "#A566FF", ["Blood Encroachment"]],
-        " debuff is applied."
-      ]
-    ],
-    "buff_580"
-  ],
-  426070061: [
-    "Blood Encroachment",
-    [["Rakathus's HP slowly decreases until he is near death from fatigue."]],
-    "buff_427"
-  ],
-  426070068: [
-    "Blood Encroachment",
-    [["Rakathus's HP slowly decreases until he is near death from fatigue."]],
-    "buff_427"
-  ],
-  426070070: ["Taunt Immunity", [["Becomes immune to Taunt."]], "buff_18"],
-  426070082: ["Gaze", [["Rakathus is watching."]], "buff_234"],
-  426070086: ["Gaze of Arrogance", [["The Divided Parts of Arrogance are watching."]], "buff_234"],
-  426070418: ["Flame", [["Regularly receives [Fire] Mag. Damage proportional to Max HP."]], "buff_56"],
-  426070448: ["Chaos Wildfire", [["Regularly receives [Fire] Mag. Damage proportional to Max HP."]], "buff_586"],
-  426072693: [
-    "Weaken",
-    [["Atk. Power -", [2, "#ff9999", ["15%"]], ", All Inoming Damage +", [2, "#ff9999", ["20%"]], " per stack."]],
-    "buff_45"
-  ],
-  426073301: [
-    "Rage",
-    [
-      [
-        "Rakathus is infuriated.\nStacks at certain intervals, with Atk. Power +",
-        [2, "#99ff99", ["5%"]],
-        ". All incoming Damage +",
-        [2, "#ff9999", ["15%"]],
-        " per stack."
-      ]
-    ],
-    "buff_138"
-  ],
-  426073321: [
-    "Condensed Chaos Wildfire",
-    [
-      [
-        "Blood Flame is condensed.\nUpon dealing certain attacks at ",
-        [2, "#ffff99", ["10"]],
-        " stacks, the condensed Blood Flame unleashes an attack that damages nearby foes."
-      ]
-    ],
-    "buff_582"
-  ],
-  426073351: [
-    "Dense Chaos Wildfire",
-    [
-      [
-        "All incoming Damage +",
-        [2, "#ff9999", ["50%"]],
-        ". Periodically receives [Fire] Mag. Damage proportional to stacks and Max HP. Receives a powerful attack at ",
-        [2, "#ffff99", ["5"]],
-        " stacks."
-      ]
-    ],
-    "buff_581"
-  ],
-  426073355: [
-    "Reversal",
-    [
-      [
-        "Becomes Stunned and Incapacitated due to a powerful Flame Explosion. All incoming Damage +",
-        [2, "#ff9999", ["100%"]],
+        "Move Speed -",
+        [2, "#ff9999", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
         "."
       ]
     ],
-    "buff_39"
+    "buff_43"
   ],
-  426073357: ["Clotting", [["Becomes unable to move because the body is hardened."]], "buff_429"],
-  426170441: ["Cautious", [["Quickly handle the Guardian Restraining Orb in the body."]], "buff_320"],
-  426170443: ["Cautious", [["Quickly handle the Guardian Restraining Orb in the body."]], "buff_320"],
+  20501760: ["Temporal Isolation", [["Become Incapacitated by Time Isolation."]], "buff_909"],
+  20502120: [
+    "Inflict Slow",
+    [
+      [
+        "Move Speed -",
+        [2, "#ff9999", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
+        "."
+      ]
+    ],
+    "buff_43"
+  ],
+  20502330: [
+    "Inflict Slow",
+    [
+      [
+        "Move Speed -",
+        [2, "#ff9999", [[0, "table_skillfeature requires column name, id, level, and kind arguments"], "%"]],
+        "."
+      ]
+    ],
+    "buff_43"
+  ],
+  220500000: [
+    "Split Timeline",
+    [
+      [
+        "In Split Timeline, Awakening or Hyper Awakening Skills cannot be used, and the Phase Dial freezes, disabling the Acceleration state and skill cooldowns after use."
+      ]
+    ],
+    "ark_passive_di_5"
+  ],
+  220500004: [
+    "Timeline Disruption",
+    [["Incoming Damage -", [2, "#99ff99", ["50.0%"]], ". Grants Push Immunity."]],
+    "ark_passive_di_1"
+  ],
+  220500006: [
+    "Party: Armor Destruction",
+    [["Phy. Defense -", [2, "#ff9999", ["12.0%"]], ". Mag. Defense -", [2, "#ff9999", ["12.0%"]], "."]],
+    "buff_61"
+  ],
+  220500110: [
+    "Acceleration Enhancement",
+    [["The Phase Dial flows faster, accelerating the Dimensionalist."]],
+    "ark_passive_di_4"
+  ],
+  220500702: [
+    "Party: Armor Destruction",
+    [["Phy. Defense -", [2, "#ff9999", ["12.0%"]], ". Mag. Defense -", [2, "#ff9999", ["12.0%"]], "."]],
+    "buff_61"
+  ],
+  220501110: ["High-Speed Entry", [["Atk. Speed +", [2, "#99ff99", ["10.0%"]], "."]], "ark_passive_di_12"],
+  320500100: ["Destiny: Timekeeper", [["Crit Rate +", [2, "#99ff99", ["6.0%"]], "."]], "buff_884"],
+  320500101: [
+    "Destiny: Timekeeper",
+    [["Crit Rate +", [2, "#99ff99", ["6.0%"]], ". Damage to foes +", [2, "#99ff99", ["4.0%"]], "."]],
+    "buff_884"
+  ],
+  320500102: [
+    "Destiny: Timekeeper",
+    [["Crit Rate +", [2, "#99ff99", ["6.0%"]], ". Damage to foes +", [2, "#99ff99", ["5.0%"]], "."]],
+    "buff_884"
+  ],
+  320501100: [
+    "Destiny: Tempered Parallel",
+    [["Atk. Speed +", [2, "#99ff99", ["20.0%"]], ". Split Timeline Damage to foes +", [2, "#99ff99", ["3.5%"]], "."]],
+    "buff_884"
+  ],
+  320501101: [
+    "Party: Armor Destruction",
+    [["Phy. Defense -", [2, "#ff9999", ["12.0%"]], ". Mag. Defense -", [2, "#ff9999", ["12.0%"]], "."]],
+    "buff_61"
+  ],
+  320501200: [
+    "Destiny: Dimensional Annihilation",
+    [
+      [
+        "Timeline Collapse Damage +",
+        [2, "#99ff99", ["1.0%"]],
+        " per stack. This effect expires upon returning to the Original Timeline."
+      ]
+    ],
+    "buff_885"
+  ],
+  320501300: [
+    "Destiny: Dimensional Annihilation",
+    [
+      [
+        "Timeline Collapse Damage +",
+        [2, "#99ff99", ["1.6%"]],
+        " per stack. This effect expires upon returning to the Original Timeline."
+      ]
+    ],
+    "buff_885"
+  ],
+  320501600: ["Destiny: Spatial Swordcraft", [["Crit Rate +", [2, "#99ff99", ["6.0%"]], "."]], "buff_884"],
+  320501601: [
+    "Destiny: Spatial Swordcraft",
+    [["Crit Rate +", [2, "#99ff99", ["6.0%"]], ". Directional Attack Damage +", [2, "#99ff99", ["9.5%"]], "."]],
+    "buff_884"
+  ],
+  320501602: [
+    "Destiny: Spatial Swordcraft",
+    [["Crit Rate +", [2, "#99ff99", ["6.0%"]], ". Directional Attack Damage +", [2, "#99ff99", ["10.5%"]], "."]],
+    "buff_884"
+  ],
+  320502100: [
+    "Destiny: Master Impaler",
+    [["Forward Thrust and Retaliate Damage +", [2, "#99ff99", ["40.0%"]], "."]],
+    "buff_884"
+  ],
+  320502200: [
+    "Destiny: Dimensional Vacuum",
+    [["Consumed on Vacuum use, increasing Vacuum Damage by ", [2, "#99ff99", ["27.0%"]], " per stack."]],
+    "buff_885"
+  ],
+  320502300: [
+    "Destiny: Dimensional Vacuum",
+    [["Consumed on Vacuum use, increasing Vacuum Damage by ", [2, "#99ff99", ["29.5%"]], " per stack."]],
+    "buff_885"
+  ],
+  320502600: [
+    "Destiny: Severed Dimension",
+    [
+      [
+        "Minute Hand Skills (excluding Hyper Awakening Technique, Specialty skill, Spatial Slash) Damage -",
+        [2, "#ff9999", ["20.0%"]],
+        ". Spatial Slash Damage +",
+        [2, "#99ff99", ["18.0%"]],
+        ".\nOn using Hour Hand, Minute Hand, Fusion Skills (excluding Hyper Awakening Technique, Specialty skill, and Spatial Slash), gain the ",
+        [2, "#bf9ef6", ["Destiny: Dimensional Fragment"]],
+        " effect for ",
+        [2, "#ffff99", ["60.0s"]],
+        "."
+      ]
+    ],
+    "buff_884"
+  ],
+  320502601: [
+    "Destiny: Dimensional Fragment",
+    [
+      [
+        "At ",
+        [2, "#ffff99", ["6"]],
+        " stacks, gain the ",
+        [2, "#bf9ef6", ["Destiny: Dimensional Distortion"]],
+        " effect for ",
+        [2, "#ffff99", ["60.0s"]],
+        ", and the ",
+        [2, "#ffff99", ["6"]],
+        " stacks are consumed."
+      ]
+    ],
+    "buff_885"
+  ],
+  320502602: [
+    "Destiny: Dimensional Distortion",
+    [
+      [
+        "On Spatial Slash use, consume ",
+        [2, "#ffff99", ["1"]],
+        " stack. Spatial Slash cooldown -",
+        [2, "#99ff99", ["60.0s"]],
+        ". (Max ",
+        [2, "#ffff99", ["2"]],
+        " stacks)"
+      ]
+    ],
+    "buff_890"
+  ],
   480000: ["Target Weak Point", [["On Crit Hit, incoming Damage +", [2, "#ff9999", ["8.0%"]], "."]], "buff_602"],
   480001: ["Target Weak Point", [["On Crit Hit, incoming Damage +", [2, "#ff9999", ["8.0%"]], "."]], "buff_602"],
   480002: ["Target Weak Point", [["On Crit Hit, incoming Damage +", [2, "#ff9999", ["8.0%"]], "."]], "buff_602"],
@@ -43410,12 +43462,12 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   ],
   3472200: [
     "Destiny: Eye of Asura",
-    [["Asura Destruction Basic Attack Damage +", [2, "#99ff99", ["6.0%"]]]],
+    [["Asura Destruction Basic Attack Damage +", [2, "#99ff99", ["8.0%"]]]],
     "buff_885"
   ],
   3472300: [
     "Destiny: Eye of Asura",
-    [["Asura Destruction Basic Attack Damage +", [2, "#99ff99", ["7.5%"]]]],
+    [["Asura Destruction Basic Attack Damage +", [2, "#99ff99", ["9.5%"]]]],
     "buff_885"
   ],
   3472720: [
@@ -43764,6 +43816,11 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   ],
   437320: ["Binding Light", [["Becomes Bound."]], "po_skill_01_158"],
   437401: ["Fast Sailing", [["Greatly increases the ship's speed for a brief moment."]], "voyage_skill_22"],
+  437701: [
+    "Rainbow Umbrella",
+    [["Cahni opens a rainbow umbrella and becomes immune to all attacks for ", [2, "#ffff99", ["3s"]], "."]],
+    "po_skill_01_159"
+  ],
   500760: [
     "Covetous Shard",
     [["The violent desire imbued within the sword speaks to the soul, increasing Atk. Power."]],
@@ -44730,17 +44787,17 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   ],
   2351000: [
     "Enchanted Core",
-    [["Joint Skills refund ", [2, "#99ff99", ["40%"]], " of the Battery used."]],
+    [["Joint Skill Battery consumption -", [2, "#99ff99", ["40%"]], "."]],
     "ark_passive_sc_6"
   ],
   2351001: [
     "Enchanted Core",
-    [["Joint Skills refund ", [2, "#99ff99", ["70%"]], " of the Battery used."]],
+    [["Joint Skill Battery consumption -", [2, "#99ff99", ["70%"]], "."]],
     "ark_passive_sc_6"
   ],
   2351002: [
     "Enchanted Core",
-    [["Joint Skills refund ", [2, "#99ff99", ["100%"]], " of the Battery used."]],
+    [["Joint Skill Battery consumption -", [2, "#99ff99", ["100%"]], "."]],
     "ark_passive_sc_6"
   ],
   2351100: ["Collaboration - Machinist", [["Joint Skill Damage +", [2, "#99ff99", ["1.2%"]], "."]], "ark_passive_sc_7"],
@@ -44839,12 +44896,12 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   3351600: ["Destiny: Astral Suit", [["Crit Rate +", [2, "#99ff99", ["6.0"]], "."]], "buff_884"],
   3351700: [
     "Destiny: Astral Suit",
-    [["Crit Rate +", [2, "#99ff99", ["6.0%"]], ". Enhance Hypersync Skill Damage +", [2, "#99ff99", ["20.0%"]], "."]],
+    [["Crit Rate +", [2, "#99ff99", ["6.0%"]], ". Enhance Hypersync Skill Damage +", [2, "#99ff99", ["18.0%"]], "."]],
     "buff_884"
   ],
   3351800: [
     "Destiny: Astral Suit",
-    [["Crit Rate +", [2, "#99ff99", ["6.0%"]], ". Enhance Hypersync Skill Damage +", [2, "#99ff99", ["22.0%"]], "."]],
+    [["Crit Rate +", [2, "#99ff99", ["6.0%"]], ". Enhance Hypersync Skill Damage +", [2, "#99ff99", ["20.0%"]], "."]],
     "buff_884"
   ],
   3352100: [
@@ -44854,12 +44911,12 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   ],
   3352200: [
     "Destiny: Antimatter Beam",
-    [["Consumed on Quantum Assembly Beam use. Damage +", [2, "#99ff99", ["5.0%"]], " per stack."]],
+    [["Consumed on Quantum Assembly Beam use. Damage +", [2, "#99ff99", ["9.0%"]], " per stack."]],
     "buff_890"
   ],
   3352300: [
     "Destiny: Antimatter Beam",
-    [["Consumed on Quantum Assembly Beam use. Damage +", [2, "#99ff99", ["6.5%"]], " per stack."]],
+    [["Consumed on Quantum Assembly Beam use. Damage +", [2, "#99ff99", ["10.5%"]], " per stack."]],
     "buff_890"
   ],
   3352600: [
@@ -45485,6 +45542,26 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_763"
   ],
+  17000100: [
+    "Blessings of Growth",
+    [["Move Speed +", [2, "#99ff99", ["20%"]], ". Combat Resource Recovery Rate +", [2, "#99ff99", ["50%"]], "."]],
+    "buff_764"
+  ],
+  17000200: [
+    "Blessings of Growth (Support)",
+    [
+      [
+        "Move Speed +",
+        [2, "#99ff99", ["20%"]],
+        ". Combat Resource Recovery Rate and Stagger Damage +",
+        [2, "#99ff99", ["50%"]],
+        ". Brand Power +",
+        [2, "#99ff99", ["500%"]],
+        ". Inflicts powerful Lightning Damage to hit foes."
+      ]
+    ],
+    "buff_764"
+  ],
   370010: ["Burn", [["Receive [Fire] Mag. Damage every ", [2, "#ffff99", ["1s"]], "."]], "buff_56"],
   370011: [
     "Chill",
@@ -45707,7 +45784,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   372120: ["Party: Damage Amplification", [["Damage from foes +", [2, "#ff9999", ["6.0%"]], "."]], "buff_26"],
   372452: ["Party: Damage Amplification", [["Damage from foes +", [2, "#ff9999", ["6.0%"]], "."]], "buff_26"],
   374015: ["Freeze", [["Become Incapacitated while Frozen."]], "buff_35"],
-  3370100: ["Destiny: Magick Catalyst", [["Non-Awakening Skill Damage +", [2, "#99ff99", ["12.0%"]], "."]], "buff_884"],
+  3370100: ["Destiny: Magick Catalyst", [["Non-Awakening Skill Damage +", [2, "#99ff99", ["16.0%"]], "."]], "buff_884"],
   3370200: [
     "Destiny: Magick Acceleration",
     [
@@ -45867,7 +45944,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         " effect. Holding Speed +",
         [2, "#99ff99", ["30.0%"]],
         ". Damage +",
-        [2, "#99ff99", ["72.0%"]],
+        [2, "#99ff99", ["78.0%"]],
         "."
       ]
     ],
@@ -45882,7 +45959,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         " effect. Holding Speed +",
         [2, "#99ff99", ["30.0%"]],
         ". Damage +",
-        [2, "#99ff99", ["79.0%"]],
+        [2, "#99ff99", ["84.0%"]],
         "."
       ]
     ],
@@ -45974,7 +46051,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_19"
   ],
-  3460600: ["Destiny: Swift Demise", [["Damage to foes +", [2, "#99ff99", ["8.0%"]], "."]], "buff_884"],
+  3460600: ["Destiny: Swift Demise", [["Damage to foes +", [2, "#99ff99", ["9.0%"]], "."]], "buff_884"],
   3460610: ["Destiny: Rapid Step", [["Atk./Move Speed +", [2, "#99ff99", ["8.0%"]], "."]], "buff_885"],
   3461101: ["Destiny: Death Step", [["Move Speed +", [2, "#99ff99", ["5.0%"]], "."]], "buff_884"],
   3461200: [
@@ -45982,7 +46059,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [
       [
         "In Deathlord Mode, Stygian Skill Damage +",
-        [2, "#99ff99", ["70.0%"]],
+        [2, "#99ff99", ["54.0%"]],
         " for ",
         [2, "#ffff99", ["2"]],
         " use(s)."
@@ -45995,7 +46072,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [
       [
         "In Deathlord Mode, Stygian Skill Damage +",
-        [2, "#99ff99", ["80.0%"]],
+        [2, "#99ff99", ["64.0%"]],
         " for ",
         [2, "#ffff99", ["2"]],
         " use(s)."
@@ -46008,7 +46085,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   3461602: ["Destiny: Dark Moon", [["Damage to foes +", [2, "#99ff99", ["6.0%"]], "."]], "buff_884"],
   3462200: [
     "Destiny: Deathlord's Call",
-    [["Next Deathlord Skill Damage +", [2, "#99ff99", ["12.0%"]], " for ", [2, "#ffff99", ["2"]], " use(s)."]],
+    [["Next Deathlord Skill Damage +", [2, "#99ff99", ["15.0%"]], " for ", [2, "#ffff99", ["2"]], " use(s)."]],
     "buff_884"
   ],
   3462600: [
@@ -47681,7 +47758,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         ". Atk. Speed +",
         [2, "#99ff99", ["15.0%"]],
         ". Damage to foes +",
-        [2, "#99ff99", ["10.0%"]],
+        [2, "#99ff99", ["17.0%"]],
         ". All incoming Damage -",
         [2, "#99ff99", ["72%"]],
         ". Crit Rate +",
@@ -47700,7 +47777,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         ". Atk. Speed +",
         [2, "#99ff99", ["15.0%"]],
         ". Damage to foes +",
-        [2, "#99ff99", ["17.0%"]],
+        [2, "#99ff99", ["24.0%"]],
         ". All incoming Damage -",
         [2, "#99ff99", ["72%"]],
         ". Crit Rate +",
@@ -47719,7 +47796,7 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
         ". Atk. Speed +",
         [2, "#99ff99", ["15.0%"]],
         ". Damage to foes +",
-        [2, "#99ff99", ["24.0%"]],
+        [2, "#99ff99", ["31.0%"]],
         ". All incoming Damage -",
         [2, "#99ff99", ["72%"]],
         ". Crit Rate +",
@@ -47769,11 +47846,11 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [["Normal Skill Damage +", [2, "#99ff99", [[0, "Missing combateffect entries for ID 2170106"], "%"]], "."]],
     "ark_passive_gl_7"
   ],
-  2170110: ["Strategic Move", [["Atk. Speed +", [2, "#99ff99", ["1.6%"]], "."]], "ark_passive_gl_15"],
-  2170111: ["Strategic Move", [["Atk. Speed +", [2, "#99ff99", ["3.2%"]], "."]], "ark_passive_gl_15"],
-  2170112: ["Strategic Move", [["Atk. Speed +", [2, "#99ff99", ["4.8%"]], "."]], "ark_passive_gl_15"],
-  2170113: ["Strategic Move", [["Atk. Speed +", [2, "#99ff99", ["6.4%"]], "."]], "ark_passive_gl_15"],
-  2170114: ["Strategic Move", [["Atk. Speed +", [2, "#99ff99", ["8.0%"]], "."]], "ark_passive_gl_15"],
+  2170110: ["Strategic Move", [["Atk. Speed +", [2, "#99ff99", ["5.0%"]], "."]], "ark_passive_gl_15"],
+  2170111: ["Strategic Move", [["Atk. Speed +", [2, "#99ff99", ["5.0%"]], "."]], "ark_passive_gl_15"],
+  2170112: ["Strategic Move", [["Atk. Speed +", [2, "#99ff99", ["5.0%"]], "."]], "ark_passive_gl_15"],
+  2170113: ["Strategic Move", [["Atk. Speed +", [2, "#99ff99", ["5.0%"]], "."]], "ark_passive_gl_15"],
+  2170114: ["Strategic Move", [["Atk. Speed +", [2, "#99ff99", ["5.0%"]], "."]], "ark_passive_gl_15"],
   2175700: ["Shield", [["Absorbs Damage equal to ", [2, "#99ff99", ["20%"]], " of Max HP."]], "buff_18"],
   2175800: ["Shield", [["Absorbs Damage equal to ", [2, "#99ff99", ["10%"]], " of Max HP."]], "buff_18"],
   2180100: ["New Core", [["Gravity Core is charged every ", [2, "#ffff99", ["3"]], " hits."]], "ark_passive_dt_5"],
@@ -47809,11 +47886,11 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [["Dark Rush always triggers ", [2, "#ffff99", ["Back Attack"]], " and Damage +", [2, "#99ff99", ["77.0%"]], "."]],
     "buff_884"
   ],
-  3162200: ["Destiny: Power Drive", [["Overdrive Damage +", [2, "#99ff99", ["13.0%"]], " per stack."]], "buff_884"],
-  3162300: ["Destiny: Power Drive", [["Overdrive Damage +", [2, "#99ff99", ["15.0%"]], " per stack."]], "buff_884"],
+  3162200: ["Destiny: Power Drive", [["Overdrive Damage +", [2, "#99ff99", ["20.0%"]], " per stack."]], "buff_884"],
+  3162300: ["Destiny: Power Drive", [["Overdrive Damage +", [2, "#99ff99", ["22.0%"]], " per stack."]], "buff_884"],
   3162600: ["Rage", [["Atk. Power +", [2, "#99ff99", ["24.0%"]], "."]], "ark_passive_bk_5"],
-  3162700: ["Destiny: Holding Edge", [["Holding Skill Damage +", [2, "#99ff99", ["15.0%"]], "."]], "buff_884"],
-  3162800: ["Destiny: Holding Edge", [["Holding Skill Damage +", [2, "#99ff99", ["18.0%"]], "."]], "buff_884"],
+  3162700: ["Destiny: Holding Edge", [["Holding Skill Damage +", [2, "#99ff99", ["24.0%"]], "."]], "buff_884"],
+  3162800: ["Destiny: Holding Edge", [["Holding Skill Damage +", [2, "#99ff99", ["27.0%"]], "."]], "buff_884"],
   3170100: [
     "Destiny: Tactical Control",
     [
@@ -48518,9 +48595,9 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   ],
   457308: ["Earthquake", [["Become Incapacitated by an Earthquake."]], "buff_49"],
   458300: ["Earthquake", [["Become Incapacitated by an Earthquake."]], "buff_49"],
-  2450000: ["Punisher", [["Damage to foes +", [2, "#99ff99", ["20.0%"]], "."]], "ark_passive_bkf_1"],
-  2450001: ["Punisher", [["Damage to foes +", [2, "#99ff99", ["30.0%"]], "."]], "ark_passive_bkf_1"],
-  2450002: ["Punisher", [["Damage to foes +", [2, "#99ff99", ["40.0%"]], "."]], "ark_passive_bkf_1"],
+  2450000: ["Punisher", [["Damage to foes +", [2, "#99ff99", ["22.0%"]], "."]], "ark_passive_bkf_1"],
+  2450001: ["Punisher", [["Damage to foes +", [2, "#99ff99", ["33.0%"]], "."]], "ark_passive_bkf_1"],
+  2450002: ["Punisher", [["Damage to foes +", [2, "#99ff99", ["44.0%"]], "."]], "ark_passive_bkf_1"],
   2450010: ["Predator", [["Crit Damage +", [2, "#99ff99", ["17.0%"]], "."]], "ark_passive_bkf_2"],
   2450011: ["Predator", [["Crit Damage +", [2, "#99ff99", ["34.0%"]], "."]], "ark_passive_bkf_2"],
   2450012: ["Predator", [["Crit Damage +", [2, "#99ff99", ["51.0%"]], "."]], "ark_passive_bkf_2"],
@@ -48541,30 +48618,30 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     [["When the Scaffold effect is consumed, Guillotine cooldown is reset."]],
     "buff_884"
   ],
-  3450600: ["Destiny: Condense", [["Charging Skill Crit Damage +", [2, "#99ff99", ["20.0%"]], "."]], "buff_884"],
-  3450700: ["Destiny: Condense", [["Charging Skill Crit Damage +", [2, "#99ff99", ["20.0%"]], "."]], "buff_884"],
+  3450600: ["Destiny: Condense", [["Charging Skill Crit Damage +", [2, "#99ff99", ["25.0%"]], "."]], "buff_884"],
+  3450700: ["Destiny: Condense", [["Charging Skill Crit Damage +", [2, "#99ff99", ["25.0%"]], "."]], "buff_884"],
   3450701: [
     "Destiny: Compression",
     [
       [
         "Charge Skill Crit Damage +",
-        [2, "#99ff99", ["20.0%"]],
+        [2, "#99ff99", ["25.0%"]],
         ". Charge Skill Damage +",
-        [2, "#99ff99", ["12.0%"]],
+        [2, "#99ff99", ["14.0%"]],
         "."
       ]
     ],
     "buff_885"
   ],
-  3450800: ["Destiny: Condense", [["Charging Skill Crit Damage +", [2, "#99ff99", ["20.0%"]], "."]], "buff_884"],
+  3450800: ["Destiny: Condense", [["Charging Skill Crit Damage +", [2, "#99ff99", ["25.0%"]], "."]], "buff_884"],
   3450801: [
     "Destiny: Compression",
     [
       [
         "Charge Skill Crit Damage +",
-        [2, "#99ff99", ["20.0%"]],
+        [2, "#99ff99", ["25.0%"]],
         ". Charge Skill Damage +",
-        [2, "#99ff99", ["15.0%"]],
+        [2, "#99ff99", ["16.0%"]],
         "."
       ]
     ],
@@ -48579,21 +48656,8 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_884"
   ],
-  3451600: ["Destiny: Pulverize", [["Crit Damage +", [2, "#99ff99", ["18.0%"]], "."]], "buff_884"],
+  3451600: ["Destiny: Pulverize", [["Crit Damage +", [2, "#99ff99", ["25.0%"]], "."]], "buff_884"],
   3451700: [
-    "Destiny: Seething Fury",
-    [
-      [
-        "On Brutal Impact use, consume ",
-        [2, "#bf9ef6", ["Destiny: Seething Fury"]],
-        " to inflict ",
-        [2, "#99ff99", ["36.0%"]],
-        " increased Damage."
-      ]
-    ],
-    "buff_885"
-  ],
-  3451800: [
     "Destiny: Seething Fury",
     [
       [
@@ -48606,15 +48670,28 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
     ],
     "buff_885"
   ],
-  3452600: ["Destiny: Tornado", [["Hurricane Sword Crit Damage +", [2, "#99ff99", ["50.0%"]], "."]], "buff_884"],
+  3451800: [
+    "Destiny: Seething Fury",
+    [
+      [
+        "On Brutal Impact use, consume ",
+        [2, "#bf9ef6", ["Destiny: Seething Fury"]],
+        " to inflict ",
+        [2, "#99ff99", ["44.0%"]],
+        " increased Damage."
+      ]
+    ],
+    "buff_885"
+  ],
+  3452600: ["Destiny: Tornado", [["Hurricane Sword Crit Damage +", [2, "#99ff99", ["60.0%"]], "."]], "buff_884"],
   3452700: [
     "Destiny: Tornado",
-    [["Hurricane Sword Crit Damage +", [2, "#99ff99", ["50.0%"]], ". Damage +", [2, "#99ff99", ["56.0%"]], "."]],
+    [["Hurricane Sword Crit Damage +", [2, "#99ff99", ["60.0%"]], ". Damage +", [2, "#99ff99", ["56.0%"]], "."]],
     "buff_884"
   ],
   3452800: [
     "Destiny: Tornado",
-    [["Hurricane Sword Crit Damage +", [2, "#99ff99", ["50.0%"]], ". Damage +", [2, "#99ff99", ["60.0%"]], "."]],
+    [["Hurricane Sword Crit Damage +", [2, "#99ff99", ["60.0%"]], ". Damage +", [2, "#99ff99", ["60.0%"]], "."]],
     "buff_884"
   ],
   3454600: [
@@ -48751,11 +48828,11 @@ export const EFTable_SkillBuff: Record<number, SkillBuff> = {
   2320700: ["Rain Shield", [["Absorbs Damage equal to ", [2, "#77ff77", ["3.0%"]], " of Max HP."]], "buff_18"],
   2320701: ["Rain Shield", [["Absorbs Damage equal to ", [2, "#77ff77", ["6.0%"]], " of Max HP."]], "buff_18"],
   2320702: ["Rain Shield", [["Absorbs Damage equal to ", [2, "#77ff77", ["9.0%"]], " of Max HP."]], "buff_18"],
-  2320400: ["Path of the Wind", [["Umbrella Skill Damage +", [2, "#99ff99", ["0.6%"]], "."]], "ark_passive_wa_3"],
-  2320401: ["Path of the Wind", [["Umbrella Skill Damage +", [2, "#99ff99", ["1.2%"]], "."]], "ark_passive_wa_3"],
-  2320402: ["Path of the Wind", [["Umbrella Skill Damage +", [2, "#99ff99", ["1.8%"]], "."]], "ark_passive_wa_3"],
-  2320403: ["Path of the Wind", [["Umbrella Skill Damage +", [2, "#99ff99", ["2.4%"]], "."]], "ark_passive_wa_3"],
-  2320404: ["Path of the Wind", [["Umbrella Skill Damage +", [2, "#99ff99", ["3.0%"]], "."]], "ark_passive_wa_3"],
+  2320400: ["Path of the Wind", [["Umbrella Skill Damage +", [2, "#99ff99", ["1.2%"]], "."]], "ark_passive_wa_3"],
+  2320401: ["Path of the Wind", [["Umbrella Skill Damage +", [2, "#99ff99", ["2.4%"]], "."]], "ark_passive_wa_3"],
+  2320402: ["Path of the Wind", [["Umbrella Skill Damage +", [2, "#99ff99", ["3.6%"]], "."]], "ark_passive_wa_3"],
+  2320403: ["Path of the Wind", [["Umbrella Skill Damage +", [2, "#99ff99", ["4.8%"]], "."]], "ark_passive_wa_3"],
+  2320404: ["Path of the Wind", [["Umbrella Skill Damage +", [2, "#99ff99", ["6.0%"]], "."]], "ark_passive_wa_3"],
   2321000: [
     "Rainbow",
     [

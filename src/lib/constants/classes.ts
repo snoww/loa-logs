@@ -39,6 +39,8 @@ export const classesMap: ClassMap = {
   602: "Artist",
   603: "Aeromancer",
   604: "Wildsoul",
+  611: "Specialist (Male)",
+  612: "Dimensionalist",
   701: "Guardianknight",
   702: "Guardianknight"
 };
@@ -82,6 +84,8 @@ export const classNameToClassId: Record<string, number> = {
   Artist: 602,
   Aeromancer: 603,
   Wildsoul: 604,
+  "Specialist (Male)": 611,
+  Dimensionalist: 612,
   Guardianknight: 702
 };
 
@@ -114,6 +118,7 @@ export const classList = [
   "Artist",
   "Aeromancer",
   "Wildsoul",
+  "Dimensionalist",
   "Guardianknight"
 ];
 

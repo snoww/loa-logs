@@ -193,7 +193,7 @@ pub struct ExternalAbilityData {
     pub id: u32,
     #[serde(default, deserialize_with = "null_or_default")]
     pub name: String,
-    #[serde(default, deserialize_with = "null_or_default")]
+    #[serde(default, deserialize_with = "int_or_string_as_string")]
     pub feature_type: String,
     #[serde(default, deserialize_with = "null_or_default")]
     pub levels: HashMap<u32, ExternalAbilityLevelData>,
@@ -510,4 +510,40 @@ pub struct ExternalItemClassOptionData {
     pub id: u32,
     #[serde(default, deserialize_with = "null_or_default")]
     pub class_options: HashMap<u32, ExternalResourceAddon>,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn ability_feature_type_accepts_named_numeric_and_missing_values() {
+        for (feature_type, expected) in [
+            (
+                serde_json::json!("identity_soul_master_ki_control"),
+                "identity_soul_master_ki_control",
+            ),
+            (serde_json::json!(355), "355"),
+        ] {
+            let ability: ExternalAbilityData = serde_json::from_value(serde_json::json!({
+                "id": 0,
+                "featureType": feature_type,
+            }))
+            .unwrap();
+            assert_eq!(ability.feature_type, expected);
+        }
+
+        let ability: ExternalAbilityData =
+            serde_json::from_value(serde_json::json!({"id": 0})).unwrap();
+        assert_eq!(ability.feature_type, "");
+    }
+
+    #[test]
+    fn bundled_abilities_deserialize_with_numeric_feature_types() {
+        let abilities: HashMap<u32, ExternalAbilityData> =
+            serde_json::from_str(include_str!("../../meter-data/Ability.json")).unwrap();
+        assert_eq!(abilities[&220500000].feature_type, "355");
+        assert_eq!(abilities[&220500100].feature_type, "356");
+        assert_eq!(abilities[&220501000].feature_type, "357");
+    }
 }

@@ -66,7 +66,7 @@
       case 2220100:
         return "Esoteric Skill Enhancement";
       case 2240000:
-        return "Energy Overflow";
+        return "Supreme Art";
       case 2240100:
         return "Robust Spirit";
       case 2340000:
@@ -145,6 +145,10 @@
         return "Ferality";
       case 2330100:
         return "Phantom Beast Awakening";
+      case 220500000:
+        return "Time Wielder";
+      case 220500100:
+        return "Space Wielder";
       case 2490000:
         return "Hellfire Successor";
       case 2490100:

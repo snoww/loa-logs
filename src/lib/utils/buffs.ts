@@ -537,6 +537,7 @@ function getHitSupportBuffs(hitDamage: number, buff: StatusEffect, supportBuffs:
   }
 }
 
+// no longer updated for new classes, new logs will have hyperawakening flag inside the skill itself
 export const hyperAwakeningIds: Set<number> = new Set([
   16720,
   16730, // berserker
