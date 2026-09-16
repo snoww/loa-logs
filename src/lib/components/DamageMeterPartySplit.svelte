@@ -69,7 +69,7 @@
       result = [
         ...result,
         {
-          title: "Encounter contributions",
+          title: "Encounter Contributions",
           sortable: false,
           members: contributors.map((entity) => ({
             entity,

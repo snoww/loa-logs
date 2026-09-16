@@ -329,7 +329,7 @@
     {/if}
 
     {#if "additionalDamage1percentDamage" in playerBreakdown}
-      <div class="mt-4 grid grid-cols-2 gap-4 2xl:grid-cols-3">
+      <div class="mt-4 grid grid-cols-2 gap-4 {playerBreakdown.npcWindows ? '2xl:grid-cols-3' : ''}">
         <LogRDPSConversionUtilization split={playerBreakdown} />
         <LogRDPSStatUpgrades split={playerBreakdown} {player} />
       </div>

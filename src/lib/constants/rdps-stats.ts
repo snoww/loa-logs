@@ -48,6 +48,12 @@ export type StatDataGroup =
   | "move_speed_to_damage_rate_"
   | "physical_defense_break_"
   | "magical_defense_break_"
+  | "physical_defense_x_break_"
+  | "magical_defense_x_break_"
+  | "physical_penetration_rate_"
+  | "magical_penetration_rate_"
+  | "identity_penetration_"
+  | "tripod_penetration_"
   | "outgoing_dmg_stat_amp_"
   | "skill_damage_amplify_"
   | "front_attack_amplify_"
@@ -179,12 +185,12 @@ export const statDataDescriptors: Record<StatDataGroup, StatDataDescriptor> = {
   ally_brand_power_: simpleStat("Brand Power %"),
   evolution_damage_: {
     title: "Evolution-Type Damage Increases",
-    help: 'Damage directly influenced for effects that increase "Evolution-Type Damage", which contains all tier 5 evolution Ark Passive nodes, as well as evolution karma progress.',
+    help: "Damage directly influenced for effects that increase \"Evolution-Type Damage\", which contains all tier 5 evolution Ark Passive nodes, as well as evolution karma progress.",
     type: "additive"
   },
   modify_damage_combat_effect_: {
     title: "On-Hit Damage Multipliers",
-    help: 'Collection group for all flat multiplicative damage modifiers. Most of these effects come from Ark Grid core lines and bracelets. The game usually describes these effects as "[Outgoing/Back Attack/Frontal Attack/Skill] Damage +X%".',
+    help: "Collection group for all flat multiplicative damage modifiers. Most of these effects come from Ark Grid core lines and bracelets. The game usually describes these effects as \"[Outgoing/Back Attack/Frontal Attack/Skill] Damage +X%\".",
     type: "multiplicative"
   },
   spec_bonus_identity_1_: unused("spec_bonus_identity_1_"),
@@ -197,12 +203,12 @@ export const statDataDescriptors: Record<StatDataGroup, StatDataDescriptor> = {
   },
   critical_damage_rate_: {
     title: "Flat Crit Damage %",
-    help: 'Damage directly influenced by additional crit damage sources, such as accessories, synergies, and Keen Blunt Weapon. Multiplicative with effects classified as "on-hit" crit damage increases',
+    help: "Damage directly influenced by additional crit damage sources, such as accessories, synergies, and Keen Blunt Weapon. Multiplicative with effects classified as \"on-hit\" crit damage increases",
     type: "additive"
   },
   critical_damage_rate_2_: {
     title: "On-Hit Crit Damage %",
-    help: 'Damage directly influenced by sources that are classified as "on-hit" crit damage increases. The game usually describes these effects as "On Crit Hit, Damage (to foes) +X%". These effects are multiplicative with flat crit damage increases.',
+    help: "Damage directly influenced by sources that are classified as \"on-hit\" crit damage increases. The game usually describes these effects as \"On Crit Hit, Damage (to foes) +X%\". These effects are multiplicative with flat crit damage increases.",
     type: "additive"
   },
   attack_power_addend_: {
@@ -227,12 +233,12 @@ export const statDataDescriptors: Record<StatDataGroup, StatDataDescriptor> = {
   },
   skill_damage_sub_rate_1_: {
     title: "Damage To Foes % (Base)",
-    help: 'Damage directly influenced by effects that increase damage to foes. The game usually describes these effects as "Damage to Foes +X%". Multiplicative with support "Damage to Foes" increases.',
+    help: "Damage directly influenced by effects that increase damage to foes. The game usually describes these effects as \"Damage to Foes +X%\". Multiplicative with support \"Damage to Foes\" increases.",
     type: "additive"
   },
   skill_damage_sub_rate_2_: {
     title: "Damage To Foes % (Supports)",
-    help: 'Damage directly influenced by effects that increase damage to foes. The game usually describes these effects as "Damage to Foes +X%". This group only contains support buffs. Multiplicative with base "Damage to Foes" increases.',
+    help: "Damage directly influenced by effects that increase damage to foes. The game usually describes these effects as \"Damage to Foes +X%\". This group only contains support buffs. Multiplicative with base \"Damage to Foes\" increases.",
     type: "additive"
   },
   skill_damage_rate_: simpleStat("Additional Damage %"),
@@ -252,14 +258,44 @@ export const statDataDescriptors: Record<StatDataGroup, StatDataDescriptor> = {
     help: "Damage directly influenced by magical defense reduction debuffs on the boss.",
     type: "additive"
   },
+  physical_defense_x_break_: {
+    title: "Physical Defense Reduction % (Stat Effects)",
+    help: "Damage directly influenced by physical defense reduction effects such as Dark Grenade. Effects in this group add together and multiply with other defense reductions on remaining defense.",
+    type: "additive"
+  },
+  magical_defense_x_break_: {
+    title: "Magical Defense Reduction % (Stat Effects)",
+    help: "Damage directly influenced by magical defense reduction effects such as Dark Grenade. Effects in this group add together and multiply with other defense reductions on remaining defense.",
+    type: "additive"
+  },
+  physical_penetration_rate_: {
+    title: "Physical Defense Penetration %",
+    help: "Damage directly influenced by the character's physical defense penetration stat. Sources in this group add together and apply to the enemy's remaining defense.",
+    type: "additive"
+  },
+  magical_penetration_rate_: {
+    title: "Magical Defense Penetration %",
+    help: "Damage directly influenced by the character's magical defense penetration stat. Sources in this group add together and apply to the enemy's remaining defense.",
+    type: "additive"
+  },
+  identity_penetration_: {
+    title: "Identity Defense Penetration %",
+    help: "Damage directly influenced by defense penetration from class identity, such as Gunslinger Shotgun stance's Specialization bonus. Applies to the enemy's remaining defense.",
+    type: "singular"
+  },
+  tripod_penetration_: {
+    title: "Tripod Defense Penetration %",
+    help: "Damage directly influenced by the skill's Ignore Defense tripod. Applies to the enemy's remaining defense.",
+    type: "singular"
+  },
   outgoing_dmg_stat_amp_: {
     title: "Outgoing Damage Amplification %",
-    help: 'Damage directly influenced by any effects that increase incoming damage on the boss. The game usually describes these effects as "Incoming Damage +X%" or "Damage from foes +X%", though it is not very consistent with this.',
+    help: "Damage directly influenced by any effects that increase incoming damage on the boss. The game usually describes these effects as \"Incoming Damage +X%\" or \"Damage from foes +X%\", though it is not very consistent with this.",
     type: "additive"
   },
   skill_damage_amplify_: {
     title: "Damage Dealt Increase %",
-    help: 'Damage directly influenced by any effects that increase damage received. This group includes support brand effects. The game usually describes these effects as "Incoming Damage +X%" or "Damage from foes +X%", though it is not very consistent with this.',
+    help: "Damage directly influenced by any effects that increase damage received. This group includes support brand effects. The game usually describes these effects as \"Incoming Damage +X%\" or \"Damage from foes +X%\", though it is not very consistent with this.",
     type: "additive"
   },
   front_attack_amplify_: {

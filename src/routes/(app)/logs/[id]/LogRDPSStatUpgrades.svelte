@@ -38,20 +38,25 @@
     })
   );
   const miscellaneousGains = $derived.by(() => {
-    const gains: [string, StatDamageContribution][] = [];
+    const gains: Record<"stagger" | "npc_damage" | "atropine", [string, StatDamageContribution][]> = {
+      stagger: [],
+      npc_damage: [],
+      atropine: []
+    };
     if (split.npcWindows && split.npcWindows.trackedHits > 0) {
-      gains.push(
+      gains.stagger.push(
         ["Domination", split.npcWindows.domination],
         ["Broken Bone", split.npcWindows.brokenBone],
-        ["NPC Damage Taken (e.g. Rumble)", split.npcWindows.npcDamageTaken],
-        ["Stagger Combat Effects", split.npcWindows.staggerCombatEffect]
+        ["Bracelet Effects", split.npcWindows.staggerCombatEffect]
       );
+      gains.npc_damage.push(["Boss Damage Taken Increase", split.npcWindows.npcDamageTaken]);
     }
     if (split.atropineDamageBonus && split.atropineDamageBonus.damageDoneByStatPlusValue > 0) {
-      gains.push(["Atropine Attack Power Bonus", split.atropineDamageBonus]);
+      gains.atropine.push(["Atropine Attack Power Bonus", split.atropineDamageBonus]);
     }
     return gains;
   });
+  const hasMiscellaneousGains = $derived(Object.values(miscellaneousGains).some((arr) => arr.length > 0));
 </script>
 
 {#snippet entry(key: keyof ContributionSplit, name: string)}
@@ -112,7 +117,23 @@
   </div>
 </Card>
 
-{#if miscellaneousGains.length > 0}
+{#snippet miscBlock(entries: [string, StatDamageContribution][], title: string)}
+  {#if entries.length > 0}
+    <span class="col-span-full text-sm text-neutral-400 not-first:mt-2">{title}</span>
+
+    {#each entries as [name, value] (name)}
+      {@const gain = value.damageDoneByStatPlusValue - value.damageDoneByStat}
+      <span class="text-sm">{name}</span>
+      <span class="text-right font-mono text-sm">
+        +{abbreviateNumber(gain)} ({value.damageDoneByStat > 0
+          ? ((100 * gain) / value.damageDoneByStat).toFixed(2)
+          : "0.00"}%)
+      </span>
+    {/each}
+  {/if}
+{/snippet}
+
+{#if hasMiscellaneousGains}
   <Card>
     <div class="flex items-center justify-between bg-black/10 px-3 py-2 font-medium">
       <div>Miscellaneous Damage Gains</div>
@@ -128,15 +149,9 @@
       </Tooltipped>
     </div>
     <div class="grid grid-cols-[1fr_max-content] gap-1 p-2">
-      {#each miscellaneousGains as [name, value]}
-        {@const gain = value.damageDoneByStatPlusValue - value.damageDoneByStat}
-        <span class="text-sm">{name}</span>
-        <span class="text-right font-mono text-sm">
-          +{abbreviateNumber(gain)} ({value.damageDoneByStat > 0
-            ? ((100 * gain) / value.damageDoneByStat).toFixed(2)
-            : "0.00"}%)
-        </span>
-      {/each}
+      {@render miscBlock(miscellaneousGains.stagger, "Stagger Bonus Damage")}
+      {@render miscBlock(miscellaneousGains.npc_damage, "Boss Mechanics")}
+      {@render miscBlock(miscellaneousGains.atropine, "Battle Items")}
     </div>
   </Card>
 {/if}
