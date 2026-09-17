@@ -249,11 +249,47 @@ pub fn identity_category_matches(category: &str, expected: &str) -> bool {
             })
 }
 
+#[derive(serde::Deserialize)]
+struct StatOrigins {
+    buff_roots: HashMap<u32, Vec<usize>>,
+    origins: Vec<StatOrigin>,
+}
+
+#[derive(serde::Deserialize)]
+#[serde(tag = "t")]
+enum StatOrigin {
+    #[serde(rename = "s")]
+    Skill { i: u32 },
+    #[serde(other)]
+    Other,
+}
+
+fn add_stat_origin_skills(buffs: &mut HashMap<u32, SkillBuffData>, data: StatOrigins) {
+    for (buff_id, roots) in data.buff_roots {
+        let Some(buff) = buffs.get_mut(&buff_id) else {
+            continue;
+        };
+        for root in roots {
+            let Some(StatOrigin::Skill { i: skill_id }) = data.origins.get(root) else {
+                continue;
+            };
+            // Preserve SkillBuff's candidate order and append only additional skill origins.
+            let source_skills = buff.source_skills.get_or_insert_with(Vec::new);
+            if !source_skills.contains(skill_id) {
+                source_skills.push(*skill_id);
+            }
+        }
+    }
+}
+
 impl AssetPreloader {
     pub fn new(resource_dir: &Path) -> Result<Self> {
         COMBAT_EFFECT_DATA.set(load_meter_data(resource_dir, "CombatEffect.json")?)?;
         ENGRAVING_DATA.set(load_meter_data(resource_dir, "Ability.json")?)?;
-        SKILL_BUFF_DATA.set(load_meter_data(resource_dir, "SkillBuff.json")?)?;
+        let mut skill_buffs = load_meter_data(resource_dir, "SkillBuff.json")?;
+        let stat_origins = load_meter_data(resource_dir, "StatOrigin.json")?;
+        add_stat_origin_skills(&mut skill_buffs, stat_origins);
+        SKILL_BUFF_DATA.set(skill_buffs)?;
         SKILL_DATA.set(load_meter_data(resource_dir, "Skill.json")?)?;
         SKILL_EFFECT_DATA.set(load_meter_data(resource_dir, "SkillEffect.json")?)?;
         let stat_type_data: HashMap<String, u32> = load_meter_data(resource_dir, "StatType.json")?;
@@ -474,6 +510,56 @@ pub fn get_region_from_ip(ip: Ipv4Addr) -> Option<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn stat_origins_extend_skill_candidates_without_replacing_existing_sources() {
+        let data = serde_json::from_str(
+            r#"{
+                "buff_roots": {"1": [0, 1, 1, 2], "2": [2], "3": [1], "4": [1]},
+                "origins": [
+                    {"t": "s", "i": 100},
+                    {"t": "s", "i": 200},
+                    {"t": "ap", "i": 300}
+                ]
+            }"#,
+        )
+        .unwrap();
+        let mut buffs = HashMap::from([
+            (
+                1,
+                SkillBuffData {
+                    source_skills: Some(vec![100, 50]),
+                    ..Default::default()
+                },
+            ),
+            (2, SkillBuffData::default()),
+            (3, SkillBuffData::default()),
+        ]);
+
+        add_stat_origin_skills(&mut buffs, data);
+
+        assert_eq!(
+            buffs[&1].source_skills.as_deref(),
+            Some([100, 50, 200].as_slice())
+        );
+        assert!(buffs[&2].source_skills.is_none());
+        assert_eq!(buffs[&3].source_skills.as_deref(), Some([200].as_slice()));
+        assert!(!buffs.contains_key(&4));
+    }
+
+    #[test]
+    fn stat_origins_supply_phantom_beast_spirit_source() {
+        let data =
+            load_meter_data(Path::new(env!("CARGO_MANIFEST_DIR")), "StatOrigin.json").unwrap();
+        let mut buffs = HashMap::from([(2330601, SkillBuffData::default())]);
+
+        add_stat_origin_skills(&mut buffs, data);
+
+        assert_eq!(
+            buffs[&2330601].source_skills.as_deref(),
+            Some([33050].as_slice())
+        );
+    }
 
     #[test]
     fn ark_grid_choice_indices_repeat_for_each_set_of_three_groups() {
