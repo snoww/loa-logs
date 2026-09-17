@@ -345,8 +345,7 @@
     if (src[0] === StatSourceType.SkillBuff) {
       const origins = normalizeOrigins(getSkillBuffOrigin(+src[1]));
       if (
-        !EFTable_SkillBuff[+src[1]]?.[0]?.trim() ||
-        origins.length === 0 ||
+        (!EFTable_SkillBuff[+src[1]]?.[0]?.trim() && !origins.length) ||
         origins.every((origin) => origin.t === "gr")
       ) {
         return [{ t: "effect", source: src }];
