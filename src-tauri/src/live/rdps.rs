@@ -4724,7 +4724,7 @@ mod tests {
             &tracker,
             None,
             None,
-            crate::live::ATTRIBUTE_ATROPINE_ATTACK_POWER_TO_POTION,
+            false,
         )
         .unwrap();
 
@@ -4774,7 +4774,7 @@ mod tests {
             &tracker,
             None,
             None,
-            crate::live::ATTRIBUTE_ATROPINE_ATTACK_POWER_TO_POTION,
+            false,
         )
         .unwrap();
 
@@ -5104,7 +5104,8 @@ mod tests {
     impl Default for HitOptions {
         fn default() -> Self {
             Self {
-                attribute: crate::live::ATTRIBUTE_ATROPINE_ATTACK_POWER_TO_POTION,
+                // Tests pin the attribution switch themselves; the shipped value is not a requirement here.
+                attribute: true,
                 other_attack_power: 0.0,
                 raid_captain: false,
                 hyper: false,
@@ -5196,7 +5197,15 @@ mod tests {
     #[test]
     fn atropine_attack_power_is_separated_for_each_player() {
         for (player_id, damage, expected) in [(1, 130_000, 30_000), (3, 260_000, 60_000)] {
-            let analysis = run_hit(player_id, damage, &[atropine(player_id)]);
+            let analysis = run_hit_with_options(
+                player_id,
+                damage,
+                &[atropine(player_id)],
+                HitOptions {
+                    attribute: true,
+                    ..Default::default()
+                },
+            );
             let HitRdpsOutcome::Computed(result) = analysis.rdps else {
                 panic!("hit analysis failed: {:?}", analysis.rdps);
             };
@@ -5386,6 +5395,7 @@ mod tests {
             130_000,
             &frozen_buffs,
             HitOptions {
+                attribute: true,
                 buffered: true,
                 ..Default::default()
             },

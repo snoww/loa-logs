@@ -25,6 +25,8 @@ const ROSTER_CRITICAL_HIT_BONUS: f64 = 69.0;
 const SKIN_MAIN_STAT_MULTIPLIER_CAP: f64 = 0.08;
 /// The defense model assumes target defense equals the attacker's level constant.
 const TARGET_NORMALIZED_DEFENSE: f64 = 1.0;
+const DEADEYE_CLASS_ID: u32 = 503;
+const DEADEYE_RIFLE_IDENTITY_CATEGORY: &str = "devil_hunter_rifle";
 const GUNSLINGER_CLASS_ID: u32 = 512;
 const GUNSLINGER_SHOTGUN_IDENTITY_CATEGORY: &str = "devil_hunter_shotgun";
 const PET_MAIN_STAT_MULTIPLIER: f64 = 0.011057;
@@ -3453,23 +3455,39 @@ impl PlayerStats {
             .set_self(tripod_penetration, StatSource::SkillTripods);
     }
 
-    /// Gunslinger Specialization gives Shotgun-stance skills `identity_value2` as defense penetration
-    /// (42.84% at 1198 Specialization); the selected "ignore defense" tripods come from the skill runtime.
+    /// Specialization gives one gunner stance its identity value as defense penetration (42.84% at 1198
+    /// Specialization): Gunslinger Shotgun skills take `identity_value2` and Deadeye Rifle skills take
+    /// `identity_value3`. The slots are not symmetric: Deadeye `identity_value2` is Shotgun skill damage
+    /// and Gunslinger `identity_value3` is Rifle skill damage. The selected "ignore defense" tripods come
+    /// from the skill runtime.
     pub fn apply_attacker_penetration(
         &mut self,
         class_id: u32,
         skill_id: u32,
         runtime_data: Option<&SkillRuntimeData>,
     ) {
-        let identity_penetration = if class_id == GUNSLINGER_CLASS_ID
-            && self
-                .resolve_skill_identity_category(skill_id, runtime_data)
-                .is_some_and(|category| {
-                    category.eq_ignore_ascii_case(GUNSLINGER_SHOTGUN_IDENTITY_CATEGORY)
-                }) {
-            self.spec_bonus_identity_2.value()
-        } else {
-            0.0
+        let (piercing_identity_category, piercing_identity_value) = match class_id {
+            GUNSLINGER_CLASS_ID => (
+                Some(GUNSLINGER_SHOTGUN_IDENTITY_CATEGORY),
+                self.spec_bonus_identity_2.value(),
+            ),
+            DEADEYE_CLASS_ID => (
+                Some(DEADEYE_RIFLE_IDENTITY_CATEGORY),
+                self.spec_bonus_identity_3.value(),
+            ),
+            _ => (None, 0.0),
+        };
+        let identity_penetration = match piercing_identity_category {
+            Some(piercing_identity_category)
+                if self
+                    .resolve_skill_identity_category(skill_id, runtime_data)
+                    .is_some_and(|category| {
+                        category.eq_ignore_ascii_case(piercing_identity_category)
+                    }) =>
+            {
+                piercing_identity_value
+            }
+            _ => 0.0,
         };
         let tripod_penetration =
             runtime_data.map_or(0.0, |runtime| runtime.cached_defense_penetration);
@@ -5993,6 +6011,65 @@ mod defense_reduction_tests {
         assert_eq!(stats.tripod_penetration.value(), 0.0);
         stats.apply_attacker_penetration(102, 38110, None);
         assert_eq!(stats.identity_penetration.value(), 0.0);
+    }
+
+    #[test]
+    fn deadeye_rifle_skills_take_identity_value3_as_penetration() {
+        crate::live::test_data::initialize();
+        let mut stats = stats_with_physical_defense_reductions(&[]);
+        stats
+            .spec_bonus_identity_3
+            .add_self(0.4284, StatSource::Test);
+        let mut runtime = SkillRuntimeData::default();
+        runtime.cached_defense_penetration = 0.7;
+
+        // Catastrophe (Rifle) takes the identity value; the tripod comes from the skill runtime.
+        stats.apply_attacker_penetration(503, 29080, Some(&runtime));
+        assert!((stats.identity_penetration.value() - 0.4284).abs() < 1e-12);
+        assert!((stats.tripod_penetration.value() - 0.7).abs() < 1e-12);
+        // Shotgun Dominator (Shotgun) and Dexterous Shot (Handgun) get no identity penetration.
+        stats.apply_attacker_penetration(503, 29110, None);
+        assert_eq!(stats.identity_penetration.value(), 0.0);
+        assert_eq!(stats.tripod_penetration.value(), 0.0);
+        stats.apply_attacker_penetration(503, 29200, None);
+        assert_eq!(stats.identity_penetration.value(), 0.0);
+        stats.apply_attacker_penetration(102, 29080, None);
+        assert_eq!(stats.identity_penetration.value(), 0.0);
+    }
+
+    #[test]
+    fn gunner_piercing_identity_slot_follows_class_and_stance() {
+        // The piercing slots are not symmetric: Gunslinger Shotgun skills read `identity_value2` and
+        // Deadeye Rifle skills read `identity_value3`. Gunslinger `identity_value3` is Rifle skill damage
+        // and Deadeye `identity_value2` is Shotgun skill damage, so neither pierces.
+        crate::live::test_data::initialize();
+        let mut stats = stats_with_physical_defense_reductions(&[]);
+        stats.spec_bonus_identity_2.add_self(0.30, StatSource::Test);
+        stats
+            .spec_bonus_identity_3
+            .add_self(0.4284, StatSource::Test);
+        let undebuffed = final_attack_power(&stats_with_physical_defense_reductions(&[]));
+        for (class_id, skill_id, expected_penetration) in [
+            // Gunslinger Sharpshooter (Shotgun) and Catastrophe (Rifle).
+            (512, 38110, 0.30),
+            (512, 38080, 0.0),
+            // Deadeye Catastrophe (Rifle), Shotgun Dominator (Shotgun) and Dexterous Shot (Handgun).
+            (503, 29080, 0.4284),
+            (503, 29110, 0.0),
+            (503, 29200, 0.0),
+        ] {
+            stats.apply_attacker_penetration(class_id, skill_id, None);
+            assert!(
+                (stats.identity_penetration.value() - expected_penetration).abs() < 1e-12,
+                "skill {skill_id}: identity penetration {}",
+                stats.identity_penetration.value()
+            );
+            let ratio = final_attack_power(&stats) / undebuffed;
+            assert!(
+                (ratio - 2.0 / (2.0 - expected_penetration)).abs() < 1e-9,
+                "skill {skill_id}: damage ratio {ratio}"
+            );
+        }
     }
 
     #[test]
