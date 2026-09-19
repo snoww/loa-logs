@@ -2308,18 +2308,8 @@ impl PlayerStats {
                     _ => false,
                 },
                 "directional_skill_effect" => {
-                    let base_mask = SKILL_DATA
-                        .get(&skill_id)
-                        .map(|skill| skill.directional_mask)
-                        .unwrap_or_default();
-                    let base_mask_real = SKILL_DATA
-                        .get(&skill_real_id)
-                        .map(|skill| skill.directional_mask)
-                        .unwrap_or_default();
-                    let runtime_mask =
-                        runtime_data.and_then(|runtime| runtime.cached_directional_mask);
-                    ((base_mask != 0 || base_mask_real != 0) && runtime_mask.unwrap_or(1) != 0)
-                        || runtime_mask.is_some_and(|mask| mask > 0)
+                    self.effective_directional_mask_for_hit(skill_id, skill_real_id, runtime_data)
+                        != 0
                 }
                 "npc_grade_greater" | "abnormal_move_immune" => true,
                 "hp_less" => {
@@ -2414,6 +2404,30 @@ impl PlayerStats {
         skill_real_groups: &[u32],
         runtime_data: Option<&SkillRuntimeData>,
     ) {
+        for active in self.active_addon_skill_features_for_hit(runtime_data) {
+            let Some(feature) = EXTERNAL_ADDON_SKILL_FEATURE_DATA.get(&active.feature_id) else {
+                continue;
+            };
+            for row in &feature.rows {
+                if !Self::addon_row_applies_to_hit(
+                    row,
+                    skill_id,
+                    skill_real_id,
+                    skill_groups,
+                    skill_real_groups,
+                    runtime_data,
+                ) {
+                    continue;
+                }
+                self.apply_addon_skill_feature(row, active.owner_id);
+            }
+        }
+    }
+
+    fn active_addon_skill_features_for_hit(
+        &self,
+        runtime_data: Option<&SkillRuntimeData>,
+    ) -> Vec<ActiveAddonSkillFeature> {
         let mut active_features = self.active_addon_skill_features.clone();
         if let Some(runtime_data) = runtime_data {
             for feature_id in &runtime_data.addon_skill_feature_ids {
@@ -2423,29 +2437,106 @@ impl PlayerStats {
                 });
             }
         }
+        active_features
+    }
 
-        for active in active_features {
+    fn addon_row_targets_skill(
+        row: &crate::models::ExternalAddonSkillFeatureRow,
+        skill_id: u32,
+        skill_groups: &[u32],
+    ) -> bool {
+        if row.skill_id != 0 {
+            row.skill_id == skill_id
+        } else if row.skill_group_id != 0 {
+            skill_groups.contains(&row.skill_group_id)
+        } else {
+            true
+        }
+    }
+
+    fn addon_row_applies_to_hit(
+        row: &crate::models::ExternalAddonSkillFeatureRow,
+        skill_id: u32,
+        skill_real_id: u32,
+        skill_groups: &[u32],
+        skill_real_groups: &[u32],
+        runtime_data: Option<&SkillRuntimeData>,
+    ) -> bool {
+        if row.skill_tier_index == 0 {
+            return Self::addon_row_targets_skill(row, skill_real_id, skill_real_groups)
+                || Self::addon_row_targets_skill(row, skill_id, skill_groups);
+        }
+
+        runtime_data.is_some_and(|runtime| {
+            runtime.selected_tripod_keys.contains(&row.skill_tier_index)
+                && Self::addon_row_targets_skill(row, skill_real_id, skill_real_groups)
+        })
+    }
+
+    /// Returns a skill's directional mask after its selected tripod and every applicable addon
+    /// row. Addon rows are applied in authored order, so an explicit zero mask removes eligibility.
+    pub fn effective_directional_mask(
+        &self,
+        skill_id: u32,
+        runtime_skill_id: u32,
+        runtime_data: Option<&SkillRuntimeData>,
+    ) -> i32 {
+        let skill_groups = SKILL_DATA
+            .get(&skill_id)
+            .and_then(|skill| skill.groups.as_deref())
+            .unwrap_or(&[]);
+        let mut mask = SKILL_DATA
+            .get(&skill_id)
+            .map(|skill| skill.directional_mask)
+            .unwrap_or_default();
+        if skill_id == runtime_skill_id
+            && let Some(runtime_mask) =
+                runtime_data.and_then(|runtime| runtime.cached_directional_mask)
+        {
+            mask = runtime_mask;
+        }
+
+        for active in self.active_addon_skill_features_for_hit(runtime_data) {
             let Some(feature) = EXTERNAL_ADDON_SKILL_FEATURE_DATA.get(&active.feature_id) else {
                 continue;
             };
-            let mut conditions_satisfied = true;
-            if feature.skill_id != 0 {
-                conditions_satisfied &=
-                    feature.skill_id == skill_id || feature.skill_id == skill_real_id;
-            } else if feature.skill_group_id != 0 {
-                conditions_satisfied &= skill_groups.contains(&feature.skill_group_id)
-                    || skill_real_groups.contains(&feature.skill_group_id);
+            for row in &feature.rows {
+                if row.feature_type == "change_attack_mask"
+                    && (row.skill_tier_index == 0
+                        || (skill_id == runtime_skill_id
+                            && runtime_data.is_some_and(|runtime| {
+                                runtime.selected_tripod_keys.contains(&row.skill_tier_index)
+                            })))
+                    && Self::addon_row_targets_skill(row, skill_id, skill_groups)
+                {
+                    // The exporter trims trailing zeroes, so an explicit mask 0 is either [] or
+                    // [effect id].
+                    mask = row.parameters.get(1).copied().unwrap_or_default() as i32;
+                }
             }
-            if !conditions_satisfied {
-                continue;
-            }
-            self.apply_addon_skill_feature(feature, active.owner_id);
+        }
+        mask
+    }
+
+    /// Combines the packet skill and its resolved skill after applying only the resolved skill's
+    /// runtime tripod data to the skill that owns it.
+    pub fn effective_directional_mask_for_hit(
+        &self,
+        skill_id: u32,
+        skill_real_id: u32,
+        runtime_data: Option<&SkillRuntimeData>,
+    ) -> i32 {
+        let mask = self.effective_directional_mask(skill_id, skill_real_id, runtime_data);
+        if skill_real_id == skill_id {
+            mask
+        } else {
+            mask | self.effective_directional_mask(skill_real_id, skill_real_id, runtime_data)
         }
     }
 
     fn apply_addon_skill_feature(
         &mut self,
-        feature: &crate::models::ExternalAddonSkillFeature,
+        feature: &crate::models::ExternalAddonSkillFeatureRow,
         owner_id: u64,
     ) {
         match feature.feature_type.as_str() {
@@ -2475,15 +2566,10 @@ impl PlayerStats {
                 }
             }
             "change_attack_stage_speed" => {
-                if let Some(value) = feature.parameters.first() {
-                    self.attack_speed_rate.add(
-                        *value as f64 / 100.0,
-                        self.owner_id,
-                        owner_id,
-                        StatSource::SkillTripods,
-                    );
-                }
+                // Casting speed, not character attack speed. It must not feed Raid Captain or
+                // Supersonic Breakthrough, matching the ordinary tripod path.
             }
+            "change_attack_mask" => {}
             _ => {}
         }
     }

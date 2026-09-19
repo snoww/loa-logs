@@ -177,6 +177,9 @@ pub struct SkillRuntimeData {
     pub cached_critical_hit_damage_bonus_per_skill_effect: HashMap<u32, f64>,
     pub cached_critical_rate_bonus_per_skill_effect: HashMap<u32, f64>,
     pub cached_directional_mask: Option<i32>,
+    /// Tripod keys (1-8) selected on this skill. Addon rows with a non-zero skill-tier index
+    /// apply only while that exact tripod is selected.
+    pub selected_tripod_keys: HashSet<u32>,
     pub cached_identity_category: Option<String>,
     pub buff_stat_changes: HashMap<u32, HashMap<String, (i64, bool)>>,
     pub buff_param_changes: HashMap<u32, (Vec<i64>, bool)>,
@@ -2673,6 +2676,7 @@ fn populate_skill_runtime_data(skill_runtime: &mut SkillRuntimeData, skill_id: u
         .cached_critical_rate_bonus_per_skill_effect
         .clear();
     skill_runtime.cached_directional_mask = None;
+    skill_runtime.selected_tripod_keys.clear();
     skill_runtime.cached_identity_category = None;
     skill_runtime.buff_stat_changes.clear();
     skill_runtime.buff_param_changes.clear();
@@ -2713,6 +2717,7 @@ fn populate_skill_runtime_data(skill_runtime: &mut SkillRuntimeData, skill_id: u
             );
             continue;
         };
+        skill_runtime.selected_tripod_keys.insert(tripod_key);
         for entry in &tripod.entries {
             if (entry.level > 0 && entry.level != 1)
                 || entry.target_mode_type.eq_ignore_ascii_case("b")

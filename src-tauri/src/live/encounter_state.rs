@@ -9,9 +9,10 @@ use crate::live::entity_tracker::AppliedInspectResult;
 use crate::live::entity_tracker::{Entity, EntityTracker, SkillOptionSnapshot};
 use crate::live::player_stats::PlayerStats;
 use crate::live::rdps::{
-    HitCritMetrics, HitRdpsOutcome, HitRdpsResult, HitStatDamageMetrics, RdpsInvalidReason,
-    analyze_hit_rdps, effect_provides_passive_stat, evaluate_stats_with_tracked_buffs,
-    filter_target_effects_for_attacker, is_identity_skill_buff, resolve_skill_effect_flags,
+    HitCritMetrics, HitEntityRdpsAttribution, HitRdpsOutcome, HitRdpsResult, HitStatDamageMetrics,
+    RdpsInvalidReason, analyze_hit_rdps, effect_provides_passive_stat,
+    evaluate_stats_with_tracked_buffs, filter_target_effects_for_attacker, is_identity_skill_buff,
+    resolve_skill_effect_flags,
 };
 use crate::live::skill_tracker::SkillTracker;
 use crate::live::stat_type::StatType;
@@ -211,6 +212,113 @@ struct DamageHitContext {
     hit_option: HitOption,
 }
 
+const INTERFERENCE_SKILL_ID: u32 = 2_050_933;
+const DIMENSIONAL_TRIGGER_EXPLOSION_EFFECT_ID: u32 = 220_501_000;
+const DIMENSIONAL_BREAK_ACTIVE_BUFF_ID: u32 = 220_500_605;
+const DIMENSIONAL_BREAK_ELIGIBLE_SKILL_GROUP_ID: u32 = 220_501_000;
+
+#[derive(Debug, Default)]
+struct DimensionalBreakContribution {
+    damage: i64,
+    is_support: bool,
+}
+
+/// The attributed damage one Dimensionalist accumulated toward the retained break on one target.
+#[derive(Debug, Default)]
+struct DimensionalBreakWindow {
+    target_id: u64,
+    eligible_damage: i64,
+    damage_by_entity_id: HashMap<u64, DimensionalBreakContribution>,
+}
+
+impl DimensionalBreakWindow {
+    fn add_damage(&mut self, entity_id: u64, damage: i64, is_support: bool) {
+        let contribution = self.damage_by_entity_id.entry(entity_id).or_default();
+        contribution.damage += damage;
+        contribution.is_support |= is_support;
+    }
+
+    fn accumulate(&mut self, owner_id: u64, damage: i64, rdps_result: Option<&HitRdpsResult>) {
+        if damage <= 0 {
+            return;
+        }
+        self.eligible_damage += damage;
+        let Some(result) = rdps_result else {
+            self.add_damage(owner_id, damage, false);
+            return;
+        };
+
+        self.add_damage(owner_id, damage - result.rdps_damage_received, false);
+        for attribution in &result.entity_attributions {
+            if attribution.source_entity_id != 0 && attribution.damage > 0 {
+                self.add_damage(
+                    attribution.source_entity_id,
+                    attribution.damage,
+                    attribution.is_support,
+                );
+            }
+        }
+    }
+
+    fn inherited_rdps_result(&self, owner_id: u64, damage: i64) -> Option<HitRdpsResult> {
+        let total = self
+            .damage_by_entity_id
+            .values()
+            .map(|contribution| contribution.damage)
+            .sum::<i64>();
+        if total <= 0 || damage <= 0 {
+            return None;
+        }
+
+        let mut result = HitRdpsResult::default();
+        for (entity_id, contribution) in &self.damage_by_entity_id {
+            if *entity_id == owner_id || contribution.damage <= 0 {
+                continue;
+            }
+            let attributed_damage =
+                (damage as f64 * contribution.damage as f64 / total as f64) as i64;
+            if attributed_damage <= 0 {
+                continue;
+            }
+            result.rdps_damage_received += attributed_damage;
+            if contribution.is_support {
+                result.rdps_damage_received_support += attributed_damage;
+            }
+            result.entity_attributions.push(HitEntityRdpsAttribution {
+                source_entity_id: *entity_id,
+                damage: attributed_damage,
+                is_support: contribution.is_support,
+            });
+        }
+        Some(result)
+    }
+
+    fn rebind_entity_id(&mut self, old_entity_id: u64, new_entity_id: u64) {
+        if let Some(old_contribution) = self.damage_by_entity_id.remove(&old_entity_id) {
+            let new_contribution = self.damage_by_entity_id.entry(new_entity_id).or_default();
+            new_contribution.damage += old_contribution.damage;
+            new_contribution.is_support |= old_contribution.is_support;
+        }
+        if self.target_id == old_entity_id {
+            self.target_id = new_entity_id;
+        }
+    }
+}
+
+fn inherited_dimensional_break_metrics(damage: i64) -> HitStatDamageMetrics {
+    let mut metrics = HitStatDamageMetrics::default();
+    for contribution in [
+        &mut metrics.atropine_damage_bonus,
+        &mut metrics.npc_windows.domination,
+        &mut metrics.npc_windows.broken_bone,
+        &mut metrics.npc_windows.npc_damage_taken,
+        &mut metrics.npc_windows.stagger_combat_effect,
+    ] {
+        contribution.add(damage as f64, damage as f64);
+    }
+    metrics
+}
+
 // An identity buff instance's magnitude is fixed by the server when the instance is created,
 // from owner stats the meter may never have seen: the owner can change build without any
 // observable packet while the server keeps the creation-time value across refreshes and
@@ -327,6 +435,7 @@ pub struct EncounterState {
 
     pub damage_is_valid: bool,
     player_contributions: HashMap<String, DamageDataAccumulator>,
+    dimensional_break_windows: HashMap<u64, DimensionalBreakWindow>,
     lal_debug_zone_id: u32,
     lal_debug_zone_level: u32,
     lal_debug_end_time_ms: Option<i64>,
@@ -376,6 +485,7 @@ impl EncounterState {
 
             damage_is_valid: true,
             player_contributions: HashMap::new(),
+            dimensional_break_windows: HashMap::new(),
             lal_debug_zone_id: 0,
             lal_debug_zone_level: 0,
             lal_debug_end_time_ms: None,
@@ -419,6 +529,7 @@ impl EncounterState {
         self.rearm_startup_barrier_on_next_combat = false;
         self.pending_phase_transition = None;
         self.player_contributions.clear();
+        self.dimensional_break_windows.clear();
         self.lal_debug_zone_id = 0;
         self.lal_debug_zone_level = 0;
         self.lal_debug_end_time_ms = None;
@@ -690,6 +801,14 @@ impl EncounterState {
                 old_entity_id,
                 new_entity_id,
             );
+        }
+        for window in self.dimensional_break_windows.values_mut() {
+            window.rebind_entity_id(old_entity_id, new_entity_id);
+        }
+        if let Some(window) = self.dimensional_break_windows.remove(&old_entity_id) {
+            self.dimensional_break_windows
+                .entry(new_entity_id)
+                .or_insert(window);
         }
     }
 
@@ -1800,6 +1919,75 @@ impl EncounterState {
         }
     }
 
+    fn take_dimensional_break_rdps(
+        &mut self,
+        owner_id: u64,
+        target_id: u64,
+        damage: i64,
+    ) -> Option<HitRdpsResult> {
+        if self
+            .dimensional_break_windows
+            .get(&owner_id)
+            .is_none_or(|window| window.target_id != target_id)
+        {
+            return None;
+        }
+        self.dimensional_break_windows
+            .remove(&owner_id)
+            .and_then(|window| window.inherited_rdps_result(owner_id, damage))
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn record_dimensional_break_hit(
+        &mut self,
+        owner_id: u64,
+        target_id: u64,
+        skill_id_real: u32,
+        is_hyper_awakening: bool,
+        se_on_source: &[StatusEffectDetails],
+        damage: i64,
+        rdps_result: Option<&HitRdpsResult>,
+    ) {
+        if !self.rdps_valid {
+            return;
+        }
+        if skill_id_real == INTERFERENCE_SKILL_ID {
+            if let Some(replaced) = self.dimensional_break_windows.get(&owner_id) {
+                info!(
+                    "replacing open Dimensional Break window: owner={owner_id:X}, old_target={:X}, new_target={target_id:X}, discarded_eligible_damage={}",
+                    replaced.target_id, replaced.eligible_damage
+                );
+            }
+            self.dimensional_break_windows.insert(
+                owner_id,
+                DimensionalBreakWindow {
+                    target_id,
+                    ..Default::default()
+                },
+            );
+            return;
+        }
+
+        let Some(window) = self.dimensional_break_windows.get_mut(&owner_id) else {
+            return;
+        };
+        if window.target_id != target_id {
+            return;
+        }
+        let eligible_skill = !is_hyper_awakening
+            && SKILL_DATA
+                .get(&skill_id_real)
+                .and_then(|skill| skill.groups.as_deref())
+                .is_some_and(|groups| groups.contains(&DIMENSIONAL_BREAK_ELIGIBLE_SKILL_GROUP_ID));
+        let active_break = se_on_source
+            .iter()
+            .any(|effect| effect.status_effect_id == DIMENSIONAL_BREAK_ACTIVE_BUFF_ID);
+        if !eligible_skill || !active_break {
+            return;
+        }
+        window.accumulate(owner_id, damage, rdps_result);
+    }
+
     fn open_startup_barrier(
         &mut self,
         entity_tracker: &mut EntityTracker,
@@ -2019,6 +2207,7 @@ impl EncounterState {
     }
 
     fn scrub_rdps_derived_state(&mut self) {
+        self.dimensional_break_windows.clear();
         for entity in self.encounter.entities.values_mut() {
             entity.damage_stats.rdps_damage_received = 0;
             entity.damage_stats.rdps_damage_received_npc = 0;
@@ -3708,46 +3897,68 @@ impl EncounterState {
 
         let (can_crit, _) =
             resolve_skill_effect_flags(damage_data.skill_effect_id, is_hyper_awakening);
+        let inherited_dimensional_break_rdps = if damage_data.skill_effect_id
+            == DIMENSIONAL_TRIGGER_EXPLOSION_EFFECT_ID
+        {
+            self.take_dimensional_break_rdps(dmg_src_entity.id, dmg_target_entity.id, damage.max(0))
+        } else {
+            None
+        };
         let mut crit_metrics = None;
         let mut stat_damage_metrics = None;
         let mut rdps_result = None;
         if self.rdps_valid {
-            let hit_analysis = analyze_hit_rdps(
-                dmg_src_entity,
-                dmg_target_entity,
-                damage.max(0),
-                damage_data.skill_id,
-                resolved_skill_id,
-                damage_data.skill_effect_id,
-                &hit_option,
-                &hit_flag,
-                damage_data.damage_attribute,
-                damage_data.damage_type,
-                is_hyper_awakening,
-                special,
-                &se_on_source,
-                &se_on_target,
-                timestamp,
-                entity_tracker,
-                buffered_player_entities,
-                buffered_owner_self_effects,
-                super::ATTRIBUTE_NPC_BONUSES_TO_NPC,
-                super::ATTRIBUTE_ATROPINE_ATTACK_POWER_TO_POTION,
-            );
-            crit_metrics = hit_analysis.crit_metrics;
-            stat_damage_metrics = hit_analysis.stat_damage_metrics;
-            match hit_analysis.rdps {
-                HitRdpsOutcome::Computed(result) => {
-                    rdps_result = Some(result);
-                }
-                HitRdpsOutcome::NotApplicable(reason) => {
-                    let _ = reason;
-                }
-                HitRdpsOutcome::Invalid(reason) => {
-                    self.invalidate_rdps(reason);
+            if let Some(inherited_rdps) = inherited_dimensional_break_rdps {
+                stat_damage_metrics = Some(inherited_dimensional_break_metrics(damage.max(0)));
+                rdps_result = Some(inherited_rdps);
+            } else {
+                let hit_analysis = analyze_hit_rdps(
+                    dmg_src_entity,
+                    dmg_target_entity,
+                    damage.max(0),
+                    damage_data.skill_id,
+                    resolved_skill_id,
+                    damage_data.skill_effect_id,
+                    &hit_option,
+                    &hit_flag,
+                    damage_data.damage_attribute,
+                    damage_data.damage_type,
+                    is_hyper_awakening,
+                    special,
+                    &se_on_source,
+                    &se_on_target,
+                    timestamp,
+                    entity_tracker,
+                    buffered_player_entities,
+                    buffered_owner_self_effects,
+                    super::ATTRIBUTE_NPC_BONUSES_TO_NPC,
+                    super::ATTRIBUTE_ATROPINE_ATTACK_POWER_TO_POTION,
+                );
+                crit_metrics = hit_analysis.crit_metrics;
+                stat_damage_metrics = hit_analysis.stat_damage_metrics;
+                match hit_analysis.rdps {
+                    HitRdpsOutcome::Computed(result) => {
+                        rdps_result = Some(result);
+                    }
+                    HitRdpsOutcome::NotApplicable(reason) => {
+                        let _ = reason;
+                    }
+                    HitRdpsOutcome::Invalid(reason) => {
+                        self.invalidate_rdps(reason);
+                    }
                 }
             }
         }
+
+        self.record_dimensional_break_hit(
+            dmg_src_entity.id,
+            dmg_target_entity.id,
+            resolved_skill_id,
+            is_hyper_awakening,
+            &se_on_source,
+            damage.max(0),
+            rdps_result.as_ref(),
+        );
 
         let [Some(source_entity), Some(target_entity)] = self
             .encounter

@@ -445,16 +445,13 @@ pub struct ExternalArkGridData {
 
 #[derive(Debug, Default, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
-pub struct ExternalAddonSkillFeature {
-    pub id: u32,
-    #[serde(default, deserialize_with = "null_or_default")]
-    pub name: String,
-    #[serde(default, deserialize_with = "null_or_default")]
-    pub desc: String,
+pub struct ExternalAddonSkillFeatureRow {
     #[serde(default, deserialize_with = "null_or_default")]
     pub skill_id: u32,
     #[serde(default, deserialize_with = "null_or_default")]
     pub skill_group_id: u32,
+    #[serde(default, deserialize_with = "null_or_default")]
+    pub skill_tier_index: u32,
     #[serde(rename = "type", default, deserialize_with = "null_or_default")]
     pub feature_type: String,
     #[serde(default, deserialize_with = "null_or_default")]
@@ -463,6 +460,17 @@ pub struct ExternalAddonSkillFeature {
     pub parameter_type: String,
     #[serde(default, deserialize_with = "null_or_default")]
     pub parameters: Vec<i64>,
+}
+
+#[derive(Debug, Default, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct ExternalAddonSkillFeature {
+    pub id: u32,
+    #[serde(default, deserialize_with = "null_or_default")]
+    pub name: String,
+    #[serde(default, deserialize_with = "null_or_default")]
+    pub desc: String,
+    pub rows: Vec<ExternalAddonSkillFeatureRow>,
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]

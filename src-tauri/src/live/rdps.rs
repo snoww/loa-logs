@@ -730,7 +730,8 @@ pub fn analyze_hit_rdps(
     };
     if can_crit
         && matches!(hit_option, HitOption::BACK_ATTACK)
-        && is_directional_skill_any(skill_id, skill_id_real, runtime_data, 1)
+        && (stats.effective_directional_mask_for_hit(skill_id, skill_id_real, runtime_data) & 1)
+            != 0
     {
         stats
             .critical_hit_rate
@@ -4019,31 +4020,6 @@ fn resolve_effect_source_id(
                 effect.source_id
             }
         })
-}
-
-fn is_directional_skill(
-    skill_id: u32,
-    runtime_data: Option<&crate::live::entity_tracker::SkillRuntimeData>,
-    mask: i32,
-) -> bool {
-    let base_mask = SKILL_DATA
-        .get(&skill_id)
-        .map(|skill| skill.directional_mask)
-        .unwrap_or_default();
-    let runtime_mask = runtime_data
-        .and_then(|runtime| runtime.cached_directional_mask)
-        .unwrap_or(base_mask);
-    (runtime_mask & mask) != 0
-}
-
-fn is_directional_skill_any(
-    skill_id: u32,
-    skill_id_real: u32,
-    runtime_data: Option<&crate::live::entity_tracker::SkillRuntimeData>,
-    mask: i32,
-) -> bool {
-    is_directional_skill(skill_id, runtime_data, mask)
-        || (skill_id_real != skill_id && is_directional_skill(skill_id_real, runtime_data, mask))
 }
 
 fn select_unique_group_effects(status_effects: &[StatusEffectDetails]) -> Vec<StatusEffectDetails> {
