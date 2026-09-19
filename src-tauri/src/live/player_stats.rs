@@ -18,7 +18,7 @@ const DEFAULT_CRITICAL_DAMAGE_RATE: f64 = 1.0;
 const MOVE_SPEED_ATTACK_SPEED_CAP: f64 = 0.4;
 const DESTROYER_RELEASE_IDENTITY_CATEGORY_ID: &str = "7";
 const DESTROYER_RELEASE_IDENTITY_CATEGORY: &str = "destroyer_release";
-const DESTROYER_HYPERGRAVITY_VORTEX_SKILL_GROUP_ID: u32 = 2160060;
+const DESTROYER_HYPERGRAVITY_VORTEX_SKILL_GROUP_ID: u32 = 2180060;
 const DESTROYER_RECENT_CONSUMED_CORE_WINDOW_MS: i64 = 5_000;
 const ROSTER_MAIN_STAT_BONUS: f64 = 1930.0;
 const ROSTER_CRITICAL_HIT_BONUS: f64 = 69.0;
@@ -5205,6 +5205,44 @@ fn get_damage_splits(damage: f64, factors: &[f64]) -> Vec<f64> {
     });
 
     pieces
+}
+
+#[cfg(test)]
+mod gravity_training_tests {
+    use super::{PlayerStats, StatSource};
+    use crate::live::entity_tracker::SkillRuntimeData;
+
+    fn crit_rate_for_skill_group(skill_group: u32) -> f64 {
+        let mut stats = PlayerStats {
+            owner_id: 1,
+            ..Default::default()
+        };
+        stats.critical_hit_rate.add_self(0.55, StatSource::Test);
+        stats.add_ability_feature("ap_identity_destroyer_gravity_up", 7, &[18011, 3000], 1);
+        let runtime_data = SkillRuntimeData {
+            cached_identity_category: Some("destroyer_normal".to_string()),
+            ..Default::default()
+        };
+        stats.evaluate_addon_ability_features(
+            18030,
+            18030,
+            &[skill_group],
+            &[skill_group],
+            Some(&runtime_data),
+            0,
+        );
+        stats.critical_hit_rate.value()
+    }
+
+    #[test]
+    fn gravity_training_adds_crit_rate_to_hypergravity_and_vortex_group() {
+        assert!((crit_rate_for_skill_group(2180060) - 0.85).abs() < 1e-9);
+    }
+
+    #[test]
+    fn gravity_training_does_not_apply_to_old_destroyer_combat_group() {
+        assert!((crit_rate_for_skill_group(2160060) - 0.55).abs() < 1e-9);
+    }
 }
 
 #[cfg(test)]
