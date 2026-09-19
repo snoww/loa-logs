@@ -182,6 +182,8 @@ pub struct ObservedAction {
     stage: Option<u32>,
     observed_ms: i64,
     start_time: f64,
+    /// ATTACK_SPEED sampled at the stage change, as the client does; later changes wait for the next stage.
+    attack_speed: Option<i64>,
     clock_valid: bool,
 }
 
@@ -303,11 +305,17 @@ impl NpcWindowData {
         if !observed.clock_valid || timestamp < observed.observed_ms {
             return None;
         }
-        if stage.attack_speed && entity.stats.get(&(StatType::ATTACK_SPEED as u8)) != Some(&100) {
-            return None;
-        }
-        let time =
-            observed.start_time + (timestamp - observed.observed_ms) as f64 / 1000.0 * stage.rate;
+        // Client (build 20260916): CEFActionStageAgent::ChangeStage samples ATTACK_SPEED * 0.01 and an
+        // AtkSpeedStage stage runs at StagePlayRate times that factor. An unknown speed leaves the clock unresolved.
+        let rate = if stage.attack_speed {
+            match observed.attack_speed {
+                Some(speed) if speed > 0 => stage.rate * speed as f64 / 100.0,
+                _ => return None,
+            }
+        } else {
+            stage.rate
+        };
+        let time = observed.start_time + (timestamp - observed.observed_ms) as f64 / 1000.0 * rate;
         if stage.length.is_some_and(|length| time > length) {
             return None;
         }
@@ -356,26 +364,15 @@ impl Entity {
             stage: resolved.map(|value| value.1),
             observed_ms: timestamp,
             start_time,
+            attack_speed: self.stats.get(&(StatType::ATTACK_SPEED as u8)).copied(),
             clock_valid: start_time.is_finite() && start_time >= 0.0,
         });
     }
 
+    /// A mid-stage ATTACK_SPEED change keeps the running stage's sampled speed. The client only re-rates
+    /// the stage immediately under a BULLET_TIME status or a pending time-dilation override, neither of
+    /// which is modeled; the next stage packet samples the new value.
     pub fn observe_stat(&mut self, stat_type: u8, value: i64) {
-        if stat_type == StatType::ATTACK_SPEED as u8
-            && self.stats.get(&stat_type) != Some(&value)
-            && let Some(state) = self.npc_action.as_mut()
-        {
-            let uses_speed = NPC_WINDOW_DATA
-                .group(self.npc_id)
-                .and_then(|group| group.actions.get(&state.action_id))
-                .and_then(|action| state.stage.and_then(|index| action.stages.get(&index)))
-                .and_then(|index| NPC_WINDOW_DATA.stages.get(*index))
-                .and_then(Option::as_ref)
-                .is_some_and(|stage| stage.attack_speed);
-            if uses_speed {
-                state.clock_valid = false;
-            }
-        }
         self.stats.insert(stat_type, value);
     }
 }
@@ -521,13 +518,49 @@ pub(super) mod tests {
         npc.observe_stat(StatType::ATTACK_SPEED as u8, 100);
         assert_eq!(
             NPC_WINDOW_DATA.weakness_bonus(&npc, 2000),
-            None,
-            "restored speed cannot repair an unobserved clock"
+            Some(0.2),
+            "a mid-stage speed change keeps the sampled stage clock"
         );
         assert_eq!(NPC_WINDOW_DATA.weakness_bonus(&queued, 2000), Some(0.2));
         assert_eq!(NPC_WINDOW_DATA.weakness_bonus(&queued, 999), None);
         npc.npc_action = None;
         assert_eq!(NPC_WINDOW_DATA.weakness_bonus(&npc, 2000), None);
+    }
+
+    // Client rule (build 20260916): an AtkSpeedStage stage runs at StagePlayRate * ATTACK_SPEED / 100 with the
+    // stat sampled at the stage change. Drextalas 4206760 stage 1 is a 5 s window, so at speed 120 it expires
+    // at 5 / 1.2 = 4.1667 s; stage 2 is 1.3333 s and expires at 1.3333 s once speed 100 is sampled.
+    #[test]
+    fn attack_speed_scales_the_clock_sampled_at_each_stage() {
+        let mut npc = drex();
+        npc.observe_stat(StatType::ATTACK_SPEED as u8, 120);
+        npc.observe_npc_action(4206760, Some(0), 1, 0.0, 1000, false);
+        assert_eq!(NPC_WINDOW_DATA.weakness_bonus(&npc, 5100), Some(0.2));
+        assert_eq!(NPC_WINDOW_DATA.weakness_bonus(&npc, 5200), None);
+        npc.observe_stat(StatType::ATTACK_SPEED as u8, 100);
+        assert_eq!(
+            NPC_WINDOW_DATA.weakness_bonus(&npc, 5100),
+            Some(0.2),
+            "the running stage keeps the speed sampled at its stage change"
+        );
+        assert_eq!(NPC_WINDOW_DATA.weakness_bonus(&npc, 5200), None);
+        npc.observe_npc_action(4206760, None, 2, 0.0, 6000, true);
+        assert_eq!(NPC_WINDOW_DATA.weakness_bonus(&npc, 7300), Some(0.2));
+        assert_eq!(NPC_WINDOW_DATA.weakness_bonus(&npc, 7400), None);
+        npc.stats.clear();
+        npc.observe_npc_action(4206760, Some(0), 1, 0.0, 8000, false);
+        assert_eq!(
+            NPC_WINDOW_DATA.weakness_bonus(&npc, 9000),
+            None,
+            "an attack-speed stage without a known ATTACK_SPEED is unresolved"
+        );
+        npc.observe_stat(StatType::ATTACK_SPEED as u8, 0);
+        npc.observe_npc_action(4206760, Some(0), 1, 0.0, 10000, false);
+        assert_eq!(
+            NPC_WINDOW_DATA.weakness_bonus(&npc, 11000),
+            None,
+            "a non-positive ATTACK_SPEED is no more of a clock rate than an unknown one"
+        );
     }
 
     #[test]
