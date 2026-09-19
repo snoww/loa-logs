@@ -4569,6 +4569,103 @@ mod tests {
     }
 
     #[test]
+    fn loading_party_discovery_preserves_support_scope_for_both_packet_orders() {
+        ensure_rdps_test_data();
+        for (local_character_id, has_local_mapping) in [(0, true), (101, true), (0, false)] {
+            for loading_arrives_first in [false, true] {
+                let id_tracker = Rc::new(RefCell::new(IdTracker::new()));
+                let party_tracker = Rc::new(RefCell::new(PartyTracker::new(id_tracker.clone())));
+                let status_tracker =
+                    Rc::new(RefCell::new(StatusTracker::new(party_tracker.clone())));
+                let mut tracker =
+                    EntityTracker::new(status_tracker, id_tracker.clone(), party_tracker.clone());
+                tracker.local_entity_id = 1;
+                tracker.local_character_id = local_character_id;
+                for entity_id in 1..=8 {
+                    let character_id = 100 + entity_id;
+                    if entity_id != 1 || has_local_mapping {
+                        id_tracker.borrow_mut().add_mapping(character_id, entity_id);
+                    }
+                    tracker.entities.insert(
+                        entity_id,
+                        test_player(entity_id, character_id, "player", None, None),
+                    );
+                }
+
+                let loaded_characters = Some((101..=108).collect());
+                if loading_arrives_first {
+                    tracker.try_derive_party_compositions_from_loading(loaded_characters.clone());
+                }
+                // PartyInfo authoritatively supplies our four members; the loading list
+                // must supply the other party before its status-result packets arrive.
+                for entity_id in 1..=4 {
+                    party_tracker
+                        .borrow_mut()
+                        .add(500, 40, 100 + entity_id, entity_id, None);
+                }
+                tracker.try_derive_party_compositions_from_loading(if loading_arrives_first {
+                    None
+                } else {
+                    loaded_characters
+                });
+
+                if !has_local_mapping {
+                    assert_eq!(party_tracker.borrow().get_party_id_for_character(105), None);
+                    id_tracker.borrow_mut().add_mapping(101, 1);
+                    tracker.try_derive_party_compositions_from_loading(None);
+                }
+                assert_eq!(
+                    party_tracker.borrow().get_party_id_for_character(105),
+                    Some(41)
+                );
+                assert!(tracker.are_same_party_entities(5, 6));
+                assert!(!tracker.are_same_party_entities(1, 5));
+
+                // Real Artist AP, identity, and hyper buffs observed on a damage dealer
+                // must survive source selection immediately, including without InitPC.
+                let effects =
+                    [314010, 310506, 319503].map(|status_effect_id| StatusEffectDetails {
+                        status_effect_id,
+                        unique_group: SKILL_BUFF_DATA[&status_effect_id].unique_group,
+                        source_id: 5,
+                        ..Default::default()
+                    });
+                let selected =
+                    select_source_effects_for_affected_entity(6, 106, &effects, &tracker, None);
+                assert_eq!(selected.len(), 3);
+                assert!(selected.iter().all(|(_, source_id)| *source_id == 5));
+                assert!(
+                    select_source_effects_for_affected_entity(1, 101, &effects, &tracker, None)
+                        .is_empty()
+                );
+
+                let brand = StatusEffectDetails {
+                    status_effect_id: 314260,
+                    unique_group: 210230,
+                    source_id: 5,
+                    ..Default::default()
+                };
+                let boss = Entity {
+                    id: 9,
+                    npc_id: 486101,
+                    entity_type: crate::models::EntityType::Boss,
+                    ..Default::default()
+                };
+                for (attacker_id, expected_effect_count) in [(6, 1), (1, 0)] {
+                    let selected = filter_target_effects_for_attacker(
+                        &tracker.entities[&attacker_id],
+                        &boss,
+                        std::slice::from_ref(&brand),
+                        &tracker,
+                        None,
+                    );
+                    assert_eq!(selected.len(), expected_effect_count);
+                }
+            }
+        }
+    }
+
+    #[test]
     fn party_scoped_owner_resolution_prefers_same_party_dance_owner() {
         let tracker = test_entity_tracker(vec![
             test_player(1, 101, "support_a", Some(vec![2000361]), None),

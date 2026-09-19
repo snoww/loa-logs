@@ -1394,6 +1394,14 @@ impl EntityTracker {
         })
     }
 
+    pub fn try_derive_party_compositions_from_loading(&self, all_characters: Option<Vec<u64>>) {
+        // Starting capture after InitPC can leave only the entity-to-character mapping populated.
+        let local_character_id = self.get_local_character_id();
+        self.party_tracker
+            .borrow_mut()
+            .try_derive_party_compositions_from_loading(all_characters, local_character_id);
+    }
+
     pub fn get_local_character_id(&self) -> u64 {
         if self.local_character_id != 0 {
             self.local_character_id
