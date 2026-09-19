@@ -10,9 +10,9 @@ use crate::live::entity_tracker::{Entity, EntityTracker, SkillOptionSnapshot};
 use crate::live::player_stats::PlayerStats;
 use crate::live::rdps::{
     HitCritMetrics, HitEntityRdpsAttribution, HitRdpsOutcome, HitRdpsResult, HitStatDamageMetrics,
-    RdpsInvalidReason, analyze_hit_rdps, effect_provides_passive_stat,
-    evaluate_stats_with_tracked_buffs, filter_target_effects_for_attacker, is_identity_skill_buff,
-    resolve_skill_effect_flags,
+    RdpsInvalidReason, analyze_hit_rdps, dump_inherited_dimensional_break_hit_trace,
+    effect_provides_passive_stat, evaluate_stats_with_tracked_buffs,
+    filter_target_effects_for_attacker, is_identity_skill_buff, resolve_skill_effect_flags,
 };
 use crate::live::skill_tracker::SkillTracker;
 use crate::live::stat_type::StatType;
@@ -291,6 +291,29 @@ impl DimensionalBreakWindow {
             });
         }
         Some(result)
+    }
+
+    /// The accumulated split as per-entity fractions, in the shape the rDPS hit dump records. Empty when nothing
+    /// eligible was accumulated.
+    fn inherited_entity_portions(&self) -> Vec<(f64, u64)> {
+        let total = self
+            .damage_by_entity_id
+            .values()
+            .map(|contribution| contribution.damage)
+            .sum::<i64>();
+        if total <= 0 {
+            return Vec::new();
+        }
+        let mut portions = self
+            .damage_by_entity_id
+            .iter()
+            .map(|(entity_id, contribution)| {
+                (contribution.damage as f64 / total as f64, *entity_id)
+            })
+            .collect::<Vec<_>>();
+        // HashMap iteration order is arbitrary; keep dumps comparable between runs.
+        portions.sort_by(|left, right| right.0.total_cmp(&left.0).then(left.1.cmp(&right.1)));
+        portions
     }
 
     fn rebind_entity_id(&mut self, old_entity_id: u64, new_entity_id: u64) {
@@ -1924,7 +1947,7 @@ impl EncounterState {
         owner_id: u64,
         target_id: u64,
         damage: i64,
-    ) -> Option<HitRdpsResult> {
+    ) -> Option<(HitRdpsResult, Vec<(f64, u64)>)> {
         if self
             .dimensional_break_windows
             .get(&owner_id)
@@ -1934,7 +1957,11 @@ impl EncounterState {
         }
         self.dimensional_break_windows
             .remove(&owner_id)
-            .and_then(|window| window.inherited_rdps_result(owner_id, damage))
+            .and_then(|window| {
+                window
+                    .inherited_rdps_result(owner_id, damage)
+                    .map(|result| (result, window.inherited_entity_portions()))
+            })
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -2327,7 +2354,7 @@ impl EncounterState {
         skill_id: u32,
         is_skill_cast_notify: bool,
     ) {
-        if !DEBUG_DUMP_DAMAGE_STATE_JSON
+        if !*DEBUG_DUMP_DAMAGE_STATE_JSON
             || source_entity.entity_type != EntityType::Player
             || source_entity.id == 0
         {
@@ -3908,8 +3935,31 @@ impl EncounterState {
         let mut stat_damage_metrics = None;
         let mut rdps_result = None;
         if self.rdps_valid {
-            if let Some(inherited_rdps) = inherited_dimensional_break_rdps {
+            if let Some((inherited_rdps, inherited_portions)) = inherited_dimensional_break_rdps {
                 stat_damage_metrics = Some(inherited_dimensional_break_metrics(damage.max(0)));
+                if *DEBUG_DUMP_DAMAGE_STATE_JSON {
+                    // The detonation skips the buff path, so analyze_hit_rdps writes no trace for it. Record the split it
+                    // inherited from the hits that fed the break, otherwise the dump is silent about a hit the meter did
+                    // attribute to party sources.
+                    dump_inherited_dimensional_break_hit_trace(
+                        dmg_src_entity,
+                        dmg_target_entity,
+                        damage.max(0),
+                        damage_data.skill_id,
+                        resolved_skill_id,
+                        damage_data.skill_effect_id,
+                        &hit_option,
+                        &hit_flag,
+                        damage_data.damage_attribute,
+                        damage_data.damage_type,
+                        is_hyper_awakening,
+                        timestamp,
+                        &se_on_source,
+                        &se_on_target,
+                        inherited_portions.as_slice(),
+                        &inherited_rdps,
+                    );
+                }
                 rdps_result = Some(inherited_rdps);
             } else {
                 let hit_analysis = analyze_hit_rdps(
@@ -3983,7 +4033,7 @@ impl EncounterState {
             target_entity.max_hp = damage_data.target_max_hp;
         }
 
-        let damage_apply_debug_before = if DEBUG_DUMP_DAMAGE_STATE_JSON
+        let damage_apply_debug_before = if *DEBUG_DUMP_DAMAGE_STATE_JSON
             && source_entity.entity_type == EntityType::Player
         {
             Some(json!({
@@ -4543,7 +4593,7 @@ impl EncounterState {
         entity_tracker: &EntityTracker,
     ) {
         for event in events {
-            let mut debug_dump = if DEBUG_DUMP_DAMAGE_STATE_JSON {
+            let mut debug_dump = if *DEBUG_DUMP_DAMAGE_STATE_JSON {
                 Some(json!({
                     "event": {
                         "support_character_id": event.support_character_id,
@@ -5232,7 +5282,7 @@ impl EncounterState {
 
         encounter.current_boss_name = update_current_boss_name(&encounter.current_boss_name);
 
-        if DEBUG_DUMP_DAMAGE_STATE_JSON {
+        if *DEBUG_DUMP_DAMAGE_STATE_JSON {
             let dump = self.build_damage_state_dump();
             let dump_label = format!(
                 "{}-{}-{}",

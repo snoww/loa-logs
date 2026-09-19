@@ -588,7 +588,7 @@ pub fn analyze_hit_rdps(
             rdps: HitRdpsOutcome::NotApplicable(RdpsNotApplicableReason::SpecialSkill),
         };
     }
-    let debug_enabled = DEBUG_DUMP_DAMAGE_STATE_JSON
+    let debug_enabled = *DEBUG_DUMP_DAMAGE_STATE_JSON
         && matches!(attacker.entity_type, crate::models::EntityType::Player);
 
     let (can_crit, is_affected_by_buffs) =
@@ -3439,6 +3439,57 @@ fn compute_skill_group_attributions(
     output
 }
 
+/// Records the rDPS trace for a Dimensional Trigger detonation. The detonation carries no detonation-time stats, so it
+/// never reaches the buff path that writes the ordinary trace; only the split inherited from the hits that fed the break
+/// is known, and every stat-side field stays empty.
+#[allow(clippy::too_many_arguments)]
+pub fn dump_inherited_dimensional_break_hit_trace(
+    attacker: &Entity,
+    target: &Entity,
+    damage: i64,
+    skill_id: u32,
+    skill_id_real: u32,
+    skill_effect_id: u32,
+    hit_option: &HitOption,
+    hit_flag: &HitFlag,
+    damage_attr: Option<u8>,
+    damage_type: u8,
+    is_hyper_awakening: bool,
+    event_timestamp: i64,
+    se_on_source: &[StatusEffectDetails],
+    se_on_target: &[StatusEffectDetails],
+    entity_portions: &[(f64, u64)],
+    result: &HitRdpsResult,
+) {
+    dump_rdps_hit_trace(
+        "dimensional_break_inherited",
+        attacker,
+        target,
+        damage,
+        skill_id,
+        skill_id_real,
+        skill_effect_id,
+        hit_option,
+        hit_flag,
+        damage_attr,
+        damage_type,
+        is_hyper_awakening,
+        event_timestamp,
+        None,
+        None,
+        None,
+        None,
+        None,
+        se_on_source,
+        se_on_target,
+        &[],
+        None,
+        None,
+        Some(entity_portions),
+        result,
+    );
+}
+
 #[allow(clippy::too_many_arguments)]
 fn dump_rdps_hit_trace(
     reason: &str,
@@ -4255,7 +4306,7 @@ fn load_player_stats_from_snapshot(
 ) -> PlayerStats {
     let mut player_stats = PlayerStats::default();
     player_stats.load_from_snapshot(snapshot, owner_id, class_id);
-    if DEBUG_DUMP_DAMAGE_STATE_JSON {
+    if *DEBUG_DUMP_DAMAGE_STATE_JSON {
         write_debug_json_dump(
             "inspect-item-build",
             &format!("owner-{}-class-{}", owner_id, class_id),

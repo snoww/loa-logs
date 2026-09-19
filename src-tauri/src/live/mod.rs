@@ -43,6 +43,7 @@ use nineveh_formats::ipc::{
 use serde::Serialize;
 use std::cell::RefCell;
 use std::rc::Rc;
+use std::sync::LazyLock;
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::time::{Duration, Instant};
 use tauri::{AppHandle, Emitter, Manager};
@@ -53,7 +54,19 @@ use crate::context::AppContext;
 
 // Flip these only when debugging live inspect / attribution issues.
 pub(crate) const DEBUG_TRACE_INSPECT_PACKETS: bool = true;
-pub(crate) const DEBUG_DUMP_DAMAGE_STATE_JSON: bool = false;
+/// Per-hit damage state dumps, enabled through the environment so a shipped build can produce traces without a rebuild.
+pub(crate) static DEBUG_DUMP_DAMAGE_STATE_JSON: LazyLock<bool> =
+    LazyLock::new(|| debug_flag_from_environment("LOGS_DEBUG_DUMP_DAMAGE_STATE_JSON"));
+
+fn debug_flag_from_environment(variable_name: &str) -> bool {
+    std::env::var(variable_name).is_ok_and(|value| {
+        let value = value.trim();
+        value == "1"
+            || value.eq_ignore_ascii_case("true")
+            || value.eq_ignore_ascii_case("yes")
+            || value.eq_ignore_ascii_case("on")
+    })
+}
 
 // Only enabled categories leave the player's nDPS; damage and stat gains are unchanged.
 pub(crate) const ATTRIBUTE_NPC_BONUSES_TO_NPC: npc_windows::NpcDamageAttribution =
