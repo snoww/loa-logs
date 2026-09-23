@@ -1,15 +1,15 @@
 {
-  "version": "v1.50.2",
-  "notes": "### v1.50.2 - September 19th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Vairgrys\n- **Administrator** on Elpon\n- **Poont** on Arcturus\n\n### Note: ExitLag users must check the ExitLag Compatibility setting\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- fixed deadeye spec scaling for rdps\n- fixed npc attack speed scaling\n- added dimensionalist rdps contribution handling\n- fixed gt destroyer crit rate calculation\n- removed strange treasure chest as boss\n- improve source skill mapping for buffs\n",
-  "pub_date": "2026-09-16T10:20:08.001Z",
+  "version": "v1.51.0",
+  "notes": "### v1.51.0 - September 23rd, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Vairgrys\n- **Administrator** on Elpon\n- **Poont** on Arcturus\n\n### Note: ExitLag users must check the ExitLag Compatibility setting\n\n#### NEW FEATURES\n\n- updated meter for weekly patch\n",
+  "pub_date": "2026-09-23T10:20:08.001Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.50.2/LOA.Logs_1.50.2_x64-setup.exe",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlRCb2hZUnVqcDlrY0RlREEvbUpkVmJid1lTdWMrUFJ4bDduRnZPeFlpa3orR1krSTBHMDE1eWlQaUtqYnIrN1BtZlc5TTRSWXZmQ2YwaitOSzBQSXdvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5ODU4MTIxCWZpbGU6TE9BIExvZ3NfMS41MC4yX3g2NC1zZXR1cC5leGUKeFYvaUg0c05NMTRqQkl4bGtkWi9tYWtmcCtpbVl6OEVBelVmY2ZuMXRrWExkRGRmWk44ZWtrVGRTZU1oN3krd3NrRFZRZGJhMXY4MjI3ajZkRlQ4Q2c9PQo="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.51.0/LOA.Logs_1.51.0_x64-setup.exe",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlNjWFB6dzNRWmtWYkUyMEpjRTJvMmkwUFAwNHB1bWdaUFNRZkkyQjJYUnJKeTNiL2haTTUwRXR3cGZQT2IwdlRiZHQ5Z0Nvdy9hNW91U2ZlRmVpaGdNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMTc5NTg2CWZpbGU6TE9BIExvZ3NfMS41MS4wX3g2NC1zZXR1cC5leGUKZnVwRTNoNjhKTlJ5UWs3V2p0OVB5TThNVnZMeW11b1ZJWmlsM25xSExhSFpRQytpYUtlVjhtOUJ5VmpMSXdOajJSZ2VOVjBtVXFnd200K1ljdFVvQ2c9PQo="
     },
     "linux-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.50.2/LOA.Logs_1.50.2_amd64.AppImage",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlFuelhQSHM1dEV2d1dsVnY1T1VMejh4ZkZUN0k1S2lTQm5Vd2dDdElSelhtNFg1aksrdUdsWDVoemU1Q2xkVzJYVU5zeVhHOUJVb2FtVm9jN3FyVndZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5ODU3NzMyCWZpbGU6TE9BIExvZ3NfMS41MC4yX2FtZDY0LkFwcEltYWdlClQ3d2NoUWJvTkREOE5leTJYSGdSRTlVU2M4amFNbDhkcUlROGYyemd0U3JzaVg5KzNscGhGZGpNUEJxTGtOTlRYc3gyVGJlejdDU0dubFdVVGFhc0FBPT0K"
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.51.0/LOA.Logs_1.51.0_amd64.AppImage",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmFvSzUzTHMwd0Jib1RDdmlzcDc5dVZSZytpTTVQaG5JQkhML2xjemUwaUwwb3VmM3g4Z1V0UlVqRDVrN3pkdlc0R21kenhZV3RzaFpvWTNlRWpJSXdNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMTc5MTUwCWZpbGU6TE9BIExvZ3NfMS41MS4wX2FtZDY0LkFwcEltYWdlCnU1KzZXZVdKaER3NmljTm5NMG9Ua2RUOEI4Y1NERUd3VGxSTGZ0NVBpUWw1K1E1NHFXOURCNXVNZTI3UjYvbUZZcGJlSXkwWlJXcFBPWlBSeTM4SERRPT0K"
     }
   }
 }

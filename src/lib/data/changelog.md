@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.50.2 - September 19th, 2026
+    v1.51.0 - September 23rd, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -15,11 +15,6 @@
 
 ### Note: ExitLag users must check the ExitLag Compatibility setting
 
-#### BUG FIXES AND IMPROVEMENTS
+#### NEW FEATURES
 
-- fixed deadeye spec scaling for rdps
-- fixed npc attack speed scaling
-- added dimensionalist rdps contribution handling
-- fixed gt destroyer crit rate calculation
-- removed strange treasure chest as boss
-- improve source skill mapping for buffs
+- updated meter for weekly patch
