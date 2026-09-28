@@ -266,7 +266,7 @@ pub async fn setup_nineveh(app: AppHandle, exitlag_compat: bool) -> Result<Ninev
             }
             error_and_exit(
                 "Backend Failed to Start",
-                "The process that LOA Logs uses to monitor game traffic failed to start. Please ensure that your antivirus or security software is not blocking LOA Logs from running.",
+                "The process that LOA Logs uses to monitor game traffic failed to start. Please start the app before opening the game. Also ensure that your antivirus or security software is not blocking LOA Logs from running.",
             );
         }
     };
@@ -296,7 +296,7 @@ pub async fn setup_nineveh(app: AppHandle, exitlag_compat: bool) -> Result<Ninev
                 );
                 error_and_exit(
                     "Backend Failed to Start",
-                    r#"The process that LOA Logs uses to monitor game traffic failed to start. Please ensure that your antivirus or security software is not blocking LOA Logs from running."#,
+                    r#"The process that LOA Logs uses to monitor game traffic failed to start. Please start the app before opening the game. Also ensure that your antivirus or security software is not blocking LOA Logs from running."#,
                 );
             }
             None => {
