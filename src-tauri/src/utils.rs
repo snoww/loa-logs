@@ -84,7 +84,7 @@ pub fn get_spec_from_ark_passive(node: &ArkPassiveNode) -> String {
         2470000 => "Brawl King Storm",
         2470100 => "Asura's Path",
         2390000 => "Esoteric Flurry",
-        2390010 => "Deathblow",
+        2390100 => "Deathblow",
         2300000 => "Barrage Enhancement",
         2300100 => "Firepower Enhancement",
         2290000 => "Enhanced Weapon",

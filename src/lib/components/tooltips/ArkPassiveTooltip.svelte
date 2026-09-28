@@ -46,7 +46,7 @@
       case 2180010:
         return "Gravity Training";
       case 2360000:
-        return "Judgement";
+        return "Judgment";
       case 2360010:
         return "Blessed Aura";
       case 2450000:
@@ -79,7 +79,7 @@
         return "Asura's Path";
       case 2390000:
         return "Esoteric Flurry";
-      case 2390010:
+      case 2390100:
         return "Deathblow";
       case 2300000:
         return "Barrage Enhancement";
