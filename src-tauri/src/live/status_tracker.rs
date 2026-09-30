@@ -231,7 +231,7 @@ impl StatusTracker {
     /// snapshot re-sends instances created earlier, so its samples only ever lower the estimate;
     /// a direct notify's sample also replaces the estimate inherited from the previous zone.
     fn observe_server_clock_offset(&mut self, se: &StatusEffectDetails) {
-        if se.occur_time == DateTime::<Utc>::default() {
+        if !se.end_tick_on_zone_clock || se.occur_time == DateTime::<Utc>::default() {
             return;
         }
         let sample = se.timestamp - se.occur_time;
