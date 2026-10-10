@@ -60,11 +60,13 @@
         {durationPretty}
       </div>
       <div data-tauri-drag-region class="truncate">
-        {enc.encounter?.currentBoss
-          ? enc.encounter.currentBoss.name
-          : !nineveh.connections.length
-            ? "Go to Server Select"
-            : "No Boss"}
+        {settings.app.general.miniEdit
+          ? "Edit Mode"
+          : enc.encounter?.currentBoss
+            ? enc.encounter.currentBoss.name
+            : !nineveh.connections.length
+              ? "Go to Server Select"
+              : "No Boss"}
       </div>
       <div data-tauri-drag-region class="text-neutral-300">
         {#if boss && settings.app.mini.bossHpBar}

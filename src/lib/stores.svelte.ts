@@ -272,7 +272,8 @@ export const defaultSettings: AppSettings = {
   },
   mini: {
     info: "damage",
-    bossHpBar: false
+    bossHpBar: false,
+    previewPlayers: 8
   },
   logs: {
     abbreviateHeader: false,

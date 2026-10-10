@@ -121,6 +121,7 @@ export interface LogsSettings extends CommonSettings {
 export interface MiniSettings {
   info: string;
   bossHpBar: boolean;
+  previewPlayers: 4 | 8;
 }
 
 export interface BuffSettings {

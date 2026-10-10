@@ -17,20 +17,17 @@
 
   import MiniEncounterInfo from "./MiniEncounterInfo.svelte";
   import MiniPlayers from "./MiniPlayers.svelte";
+  import { createPreviewEncounter } from "./preview";
 
   let enc = $derived(new EncounterState(undefined, true));
+  let displayEnc = $derived(
+    settings.app.general.miniEdit
+      ? new EncounterState(createPreviewEncounter(settings.app.mini.previewPlayers), true)
+      : enc
+  );
   let time = $state(+Date.now());
   let unsubscribe: (() => void) | null = null;
-  let pendingTimeouts: ReturnType<typeof setTimeout>[] = [];
-
-  function trackTimeout(fn: () => void, ms: number) {
-    const id = setTimeout(() => {
-      pendingTimeouts = pendingTimeouts.filter((t) => t !== id);
-      fn();
-    }, ms);
-    pendingTimeouts.push(id);
-    return id;
-  }
+  let zoneTimeout: ReturnType<typeof setTimeout> | undefined;
 
   onMount(() => {
     const interval = setInterval(() => {
@@ -46,8 +43,7 @@
     return () => {
       unsubscribe?.();
       clearInterval(interval);
-      for (const id of pendingTimeouts) clearTimeout(id);
-      pendingTimeouts = [];
+      clearTimeout(zoneTimeout);
     };
   });
 
@@ -62,23 +58,26 @@
     handles.push(handle);
 
     handle = await onRaidStart(() => {
+      clearTimeout(zoneTimeout);
       misc.raidInProgress = true;
     });
     handles.push(handle);
 
     handle = await onZoneChange((event) => {
+      clearTimeout(zoneTimeout);
       misc.raidInProgress = false;
       misc.missingInfo = false;
       if (!event.payload) {
         ninevehStateRequest();
       }
-      trackTimeout(() => {
+      zoneTimeout = setTimeout(() => {
         misc.raidInProgress = true;
       }, 8000);
     });
     handles.push(handle);
 
     handle = await onPhaseTransition((_) => {
+      clearTimeout(zoneTimeout);
       misc.raidInProgress = false;
     });
     handles.push(handle);
@@ -106,10 +105,10 @@
       } else {
         // hide with delay
         hideTimeout = setTimeout(() => {
-          if (!enc.encounter) {
+          if (!misc.raidInProgress || !enc.encounter?.currentBossName) {
             appWindow.hide();
           }
-        }, settings.app.general.autoHideDelay);
+        }, settings.app.general.autoHideDelay * 1000);
       }
     }
     return () => {
@@ -139,5 +138,5 @@
   });
 </script>
 
-<MiniPlayers {enc} />
-<MiniEncounterInfo {enc} />
+<MiniPlayers enc={displayEnc} />
+<MiniEncounterInfo enc={displayEnc} />

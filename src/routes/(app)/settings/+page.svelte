@@ -160,6 +160,15 @@
         <input
           type="checkbox"
           bind:checked={appSettings[category][setting]}
+          onchange={() => {
+            if (category === "general" && setting === "mini") {
+              if (settings.app.general.mini) {
+                currentTab = "Mini";
+              } else {
+                settings.app.general.miniEdit = false;
+              }
+            }
+          }}
           class="form-checkbox size-5 rounded-sm border-0 bg-neutral-700 checked:text-accent-600/80 focus:ring-0"
         />
       {:else}
@@ -238,14 +247,6 @@
       {#if currentTab === "General"}
         {@render themeSetting()}
         {@render settingOption("general", "mini", "Mini Mode", "Experimental horizontal mode for live meter.")}
-        {#if settings.app.general.mini}
-          {@render settingOption(
-            "general",
-            "miniEdit",
-            "Edit Mini Meter",
-            "Enable this setting to drag window to desired position, turn off when finished."
-          )}
-        {/if}
         {@render settingOption(
           "general",
           "autoShow",
@@ -910,6 +911,24 @@
         )}
         {@render settingOption("meter", "hpm", "Skill Hits/min", "Show the hits per minute of the skill", true)}
       {:else if currentTab === "Mini"}
+        {@render settingOption(
+          "general",
+          "miniEdit",
+          "Edit Mini Meter",
+          "Preview sample players and drag or resize the window. Turn off when finished."
+        )}
+        {#if settings.app.general.miniEdit}
+          <label class="flex items-center gap-2">
+            <select
+              bind:value={settings.app.mini.previewPlayers}
+              class="form-select rounded-md border-0 bg-neutral-700 text-sm focus:ring-0"
+            >
+              <option value={4}>4 players</option>
+              <option value={8}>8 players</option>
+            </select>
+            <div class="ml-5 text-sm">Preview Party</div>
+          </label>
+        {/if}
         {@render settingOption(
           "mini",
           "bossHpBar",
