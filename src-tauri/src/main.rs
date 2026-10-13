@@ -58,6 +58,7 @@ async fn main() -> Result<()> {
     async_runtime::set(handle);
 
     tauri::Builder::default()
+        .manage(ui::encounter_updates::EncounterUpdates::default())
         .manage(auto_launch_manager)
         .manage(context)
         .manage(database)

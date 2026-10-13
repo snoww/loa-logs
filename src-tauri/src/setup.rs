@@ -31,6 +31,12 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
 
     let settings = settings_manager.read().expect("Could not read settings");
 
+    let mini = settings
+        .as_ref()
+        .is_some_and(|settings| settings.general.mini);
+    app.state::<crate::ui::encounter_updates::EncounterUpdates>()
+        .set_mini(mini);
+
     initialize_windows_and_settings(app_handle, settings.as_ref(), &shell_manger);
 
     app_handle.manage(shell_manger);

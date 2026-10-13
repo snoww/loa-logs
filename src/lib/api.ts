@@ -255,7 +255,26 @@ export const onIdentityUpdate = (handler: (event: IdentityEvent) => void) =>
     })
   );
 
-export const onEncounterUpdate = (handler: (event: EncounterEvent) => void) => listen("encounter-update", handler);
+export const onEncounterUpdate = async (handler: (event: EncounterEvent) => void) => {
+  const webview = (
+    window as typeof window & {
+      chrome?: {
+        webview?: {
+          addEventListener(type: "message", handler: (event: MessageEvent<EncounterEvent>) => void): void;
+          removeEventListener(type: "message", handler: (event: MessageEvent<EncounterEvent>) => void): void;
+        };
+      };
+    }
+  ).chrome?.webview;
+
+  if (!webview) return listen<Encounter>("encounter-update", handler);
+
+  const listener = (event: MessageEvent<EncounterEvent>) => {
+    if (event.data?.event === "encounter-update") handler(event.data);
+  };
+  webview.addEventListener("message", listener);
+  return () => webview.removeEventListener("message", listener);
+};
 
 export const onPartyUpdate = (handler: (event: PartyEvent) => void) => listen("party-update", handler);
 

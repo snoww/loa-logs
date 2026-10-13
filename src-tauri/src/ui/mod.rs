@@ -1,3 +1,4 @@
+pub mod encounter_updates;
 pub mod events;
 pub mod extensions;
 pub mod tray;

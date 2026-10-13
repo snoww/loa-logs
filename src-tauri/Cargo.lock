@@ -121,6 +121,7 @@ dependencies = [
  "url",
  "uuid",
  "window-vibrancy 0.7.1",
+ "windows-core 0.61.2",
  "winsafe",
 ]
 

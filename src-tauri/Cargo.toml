@@ -67,6 +67,7 @@ tauri-plugin-single-instance = "2.3.4"
 tauri-plugin-http = { version = "~2.6.1", features = ["unsafe-headers"] }
 
 [target.'cfg(target_os = "windows")'.dependencies]
+windows-core = "0.61"
 nt_version = "0.1.3"
 winsafe = { version = "0.0.27", features = ["taskschd"] }
 

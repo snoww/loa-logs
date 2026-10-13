@@ -254,6 +254,9 @@ pub fn toggle_meter_window(app: AppHandle, settings_manager: State<SettingsManag
 
 #[command]
 pub fn set_meter_mode(app_handle: AppHandle, mini: bool) -> Result<()> {
+    app_handle
+        .state::<crate::ui::encounter_updates::EncounterUpdates>()
+        .set_mini(mini);
     if mini {
         if let Some(meter_window) = app_handle.get_meter_window() {
             meter_window.hide()?;
@@ -289,10 +292,16 @@ pub fn open_url(app_handle: AppHandle, url: String) {
 }
 
 #[command]
-pub fn save_settings(settings_manager: State<SettingsManager>, settings: Settings) -> Result<()> {
+pub fn save_settings(
+    settings_manager: State<SettingsManager>,
+    encounter_updates: State<crate::ui::encounter_updates::EncounterUpdates>,
+    settings: Settings,
+) -> Result<()> {
     settings_manager
         .save(&settings)
         .context("could not write to settings file")?;
+
+    encounter_updates.set_mini(settings.general.mini);
 
     Ok(())
 }

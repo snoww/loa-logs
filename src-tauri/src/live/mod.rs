@@ -1539,9 +1539,11 @@ pub fn start(args: StartArgs) -> Result<()> {
                             .emit("invalid-damage", "")
                             .expect("failed to emit invalid-damage");
                     } else {
-                        app_handle
-                            .emit("encounter-update", Some(live_update))
-                            .expect("failed to emit encounter-update");
+                        crate::ui::encounter_updates::send_encounter_update(
+                            &app_handle,
+                            live_update,
+                        )
+                        .expect("failed to send encounter-update");
 
                         if party_info.is_some() {
                             app_handle
