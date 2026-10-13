@@ -64,10 +64,10 @@ tauri-plugin-window-state = "2.4.0"
 tauri-plugin-process = "2.3.0"
 tauri-plugin-global-shortcut = "2.3.0"
 tauri-plugin-single-instance = "2.3.4"
-tauri-plugin-http = { version = "~2.6.1", features = ["unsafe-headers"] }
+tauri-plugin-http = { version = "2", features = ["unsafe-headers"] }
 
 [target.'cfg(target_os = "windows")'.dependencies]
-windows-core = "0.61"
+windows-core = "0.62"
 nt_version = "0.1.3"
 winsafe = { version = "0.0.27", features = ["taskschd"] }
 
