@@ -143,15 +143,14 @@ pub fn on_window_event_inner(label: &str, window: &Window, event: &WindowEvent) 
             }
 
             let app_handle = window.app_handle();
-            let meter_window = app_handle.get_meter_window().unwrap();
             let logs_window = app_handle.get_logs_window().unwrap();
 
             if logs_window.is_minimized()? {
                 logs_window.unminimize()?;
             }
 
-            if meter_window.is_minimized()? {
-                meter_window.unminimize()?;
+            if window.is_minimized()? {
+                window.unminimize()?;
             }
 
             teardown(app_handle);

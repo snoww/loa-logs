@@ -23,6 +23,7 @@
   import Shortcuts from "./Shortcuts.svelte";
 
   let currentTab = $state("General");
+  let meterMode = settings.app.general.mini;
 
   let minDuration = writable([settings.app.logs.minEncounterDuration]);
   const {
@@ -59,7 +60,8 @@
 
   $effect(() => {
     let isMini = settings.app.general.mini;
-    settings.app.general.miniEdit;
+    if (isMini === meterMode) return;
+    meterMode = isMini;
     (async () => {
       await setMeterMode(isMini);
     })();

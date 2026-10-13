@@ -1,6 +1,5 @@
 <script lang="ts">
   import {
-    loadEncounter,
     onEncounterUpdate,
     onPartyUpdate,
     onInvalidDamage,
@@ -12,14 +11,12 @@
     onPhaseTransition,
     onAdmin,
     onBannedEvent,
-    onClearEncounter,
     onNinevehUpdate,
     ninevehStateRequest
   } from "$lib/api";
   import { addToast, removeToast } from "$lib/components/Toaster.svelte";
   import { EncounterState } from "$lib/encounter.svelte";
   import { misc, nineveh, settings } from "$lib/stores.svelte";
-  import { uploadLog } from "$lib/utils/sync";
   import {
     adminAlert,
     bannedEvent,
@@ -173,17 +170,6 @@
 
     handle = await onBannedEvent(() => {
       bannedToastId = addToast(bannedEvent).id;
-    });
-    handles.push(handle);
-
-    handle = await onClearEncounter(async (event) => {
-      if (!settings.sync.auto) {
-        return;
-      }
-
-      let id = event.payload.toString();
-      const encounter = await loadEncounter(id);
-      await uploadLog(id, encounter, false);
     });
     handles.push(handle);
 

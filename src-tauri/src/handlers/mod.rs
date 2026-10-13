@@ -13,7 +13,7 @@ use crate::database::{Database, Repository};
 use crate::models::*;
 use crate::settings::{Settings, SettingsManager};
 use crate::shell::ShellManager;
-use crate::ui::AppHandleExtensions;
+use crate::ui::{AppHandleExtensions, ensure_meter_window};
 
 mod error;
 mod models;
@@ -253,7 +253,8 @@ pub fn toggle_meter_window(app: AppHandle, settings_manager: State<SettingsManag
 }
 
 #[command]
-pub fn set_meter_mode(app_handle: AppHandle, mini: bool) -> Result<()> {
+pub async fn set_meter_mode(app_handle: AppHandle, mini: bool) -> Result<()> {
+    let window = ensure_meter_window(&app_handle, mini)?;
     app_handle
         .state::<crate::ui::encounter_updates::EncounterUpdates>()
         .set_mini(mini);
@@ -261,13 +262,10 @@ pub fn set_meter_mode(app_handle: AppHandle, mini: bool) -> Result<()> {
         if let Some(meter_window) = app_handle.get_meter_window() {
             meter_window.hide()?;
         }
-
-        if let Some(mini_window) = app_handle.get_mini_window() {
-            mini_window.show()?;
-        }
     } else if let Some(mini_window) = app_handle.get_mini_window() {
         mini_window.hide()?;
     }
+    window.show()?;
 
     Ok(())
 }

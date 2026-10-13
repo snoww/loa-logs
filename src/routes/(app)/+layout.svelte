@@ -1,12 +1,14 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-  import { onLatestEncounter, onRedirectUrl } from "$lib/api";
+  import { getSettings, loadEncounter, onClearEncounter, onLatestEncounter, onRedirectUrl, writeLog } from "$lib/api";
   // import BetaWelcome from "$lib/components/BetaWelcome.svelte";
   import NinevehWelcome from "$lib/components/NinevehWelcome.svelte";
   import Toaster from "$lib/components/Toaster.svelte";
   import UpdateAvailable from "$lib/components/UpdateAvailable.svelte";
   import { settings } from "$lib/stores.svelte";
   import { checkForUpdate } from "$lib/utils";
+  import { registerShortcuts } from "$lib/utils/shortcuts";
+  import { uploadLog } from "$lib/utils/sync";
   import { getVersion } from "@tauri-apps/api/app";
   import { type UnlistenFn } from "@tauri-apps/api/event";
   import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
@@ -16,8 +18,40 @@
 
   let events: Set<UnlistenFn> = new Set();
 
+  $effect.pre(() => {
+    settings.app.shortcuts.hideMeter;
+    settings.app.shortcuts.showLogs;
+    settings.app.shortcuts.showLatestEncounter;
+    settings.app.shortcuts.resetSession;
+    settings.app.shortcuts.pauseSession;
+    settings.app.shortcuts.manualSave;
+    settings.app.shortcuts.disableClickthrough;
+
+    (async () => {
+      await registerShortcuts();
+    })();
+  });
+
   onMount(() => {
     (async () => {
+      await writeLog("loading app settings");
+      let data = await getSettings();
+      if (data) {
+        settings.app = data;
+      }
+      await writeLog("finished app settings setup");
+
+      let clearEncounterEvent = await onClearEncounter(async (event) => {
+        if (!settings.sync.auto) {
+          return;
+        }
+
+        let id = event.payload.toString();
+        const encounter = await loadEncounter(id);
+        await uploadLog(id, encounter, false);
+      });
+      events.add(clearEncounterEvent);
+
       let encounterUpdateEvent = await onLatestEncounter(async (event) => {
         await goto("/logs/" + event.payload);
         await showWindow();

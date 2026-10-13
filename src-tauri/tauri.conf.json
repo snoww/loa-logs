@@ -37,6 +37,7 @@
     "windows": [
       {
         "label": "main",
+        "create": false,
         "title": "Meter | LOA Logs",
         "userAgent": "LOA Logs App",
         "url": "live",
@@ -70,6 +71,7 @@
       },
       {
         "label": "mini",
+        "create": false,
         "title": "mini | LOA Logs",
         "userAgent": "LOA Logs App",
         "url": "mini",

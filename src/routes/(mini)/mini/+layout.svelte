@@ -18,12 +18,6 @@
       appWindow.setIgnoreCursorEvents(true);
     }
   });
-
-  $effect.pre(() => {
-    if (!settings.app.general.mini) {
-      getCurrentWebviewWindow().hide();
-    }
-  });
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->

@@ -16,7 +16,7 @@ use crate::{
     context::AppContext,
     settings::*,
     shell::ShellManager,
-    ui::{AppHandleExtensions, WindowExtensions, setup_tray},
+    ui::{AppHandleExtensions, WindowExtensions, ensure_meter_window, setup_tray},
 };
 
 pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
@@ -37,7 +37,7 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
     app.state::<crate::ui::encounter_updates::EncounterUpdates>()
         .set_mini(mini);
 
-    initialize_windows_and_settings(app_handle, settings.as_ref(), &shell_manger);
+    initialize_windows_and_settings(app_handle, settings.as_ref(), &shell_manger)?;
 
     app_handle.manage(shell_manger);
 
@@ -186,25 +186,16 @@ fn initialize_windows_and_settings(
     app_handle: &AppHandle,
     settings: Option<&Settings>,
     shell_manger: &ShellManager,
-) -> u16 {
+) -> Result<u16, Box<dyn Error>> {
     let mut port = DEFAULT_PORT;
-    let meter_window = app_handle.get_meter_window().unwrap();
-    let mini_window = app_handle.get_mini_window().unwrap();
+    let mini = settings.is_some_and(|settings| settings.general.mini);
+    let meter_window = ensure_meter_window(app_handle, mini)?;
     let logs_window = app_handle.get_logs_window().unwrap();
 
     if let Some(settings) = settings {
         info!("settings loaded");
-        if settings.general.mini {
-            meter_window.hide().unwrap();
-            mini_window.restore_default_state();
-            mini_window.show().unwrap();
-        } else if !settings.general.hide_meter_on_start && !settings.general.mini {
-            mini_window.hide().unwrap();
-            meter_window.restore_default_state();
+        if !settings.general.hide_meter_on_start {
             meter_window.show().unwrap();
-        } else {
-            meter_window.hide().unwrap();
-            mini_window.hide().unwrap()
         }
 
         if !settings.general.hide_logs_on_start {
@@ -212,14 +203,6 @@ fn initialize_windows_and_settings(
             logs_window.show().unwrap();
         } else {
             logs_window.hide().unwrap();
-        }
-
-        if settings.general.always_on_top {
-            meter_window.set_always_on_top(true).unwrap();
-            mini_window.set_always_on_top(true).unwrap();
-        } else {
-            meter_window.set_always_on_top(false).unwrap();
-            mini_window.set_always_on_top(false).unwrap();
         }
 
         if settings.general.auto_iface && settings.general.port > 0 {
@@ -231,10 +214,9 @@ fn initialize_windows_and_settings(
             shell_manger.start_loa_process();
         }
     } else {
-        mini_window.hide().unwrap();
         meter_window.show().unwrap();
         logs_window.show().unwrap();
     }
 
-    port
+    Ok(port)
 }
