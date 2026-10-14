@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.51.3 - September 29th, 2026
+    v1.51.3 - October 14th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -17,4 +17,6 @@
 
 #### BUG FIXES AND IMPROVEMENTS
 
-- fixed spec classification bugs from ark passive nodes
+- fixed debuffs failing to be registered in raid
+- improved mini meter setup flow
+- added ui memory leak speculative fix
