@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.51.3 - October 14th, 2026
+    ### v1.52.0 - October 21st, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -15,8 +15,6 @@
 
 ### Note: ExitLag users must check the ExitLag Compatibility setting
 
-#### BUG FIXES AND IMPROVEMENTS
+#### NEW FEATURES
 
-- fixed debuffs failing to be registered in raid
-- improved mini meter setup flow
-- added ui memory leak speculative fix
+- updated meter for belgardin raid
