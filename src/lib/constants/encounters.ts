@@ -107,6 +107,10 @@ export const encounterMap: { [key: string]: { [key: string]: Array<string> } } =
   "Horizon Cathedral": {
     "Horizon Cathedral G1": ["Archbishop Arcenos"],
     "Horizon Cathedral G2": ["Arcenos, Vanguard of Fanaticism"]
+  },
+  Belgardin: {
+    "Belgardin G1": ["Belgardin, Arbiter of Death"],
+    "Belgardin G2": ["Phaetus An Kragma"]
   }
 };
 
@@ -216,7 +220,11 @@ export const bossList = [
   "Hanumatan",
   "Kungelanium",
   "Deskaluda",
-  "Lumencaligo"
+  "Lumencaligo",
+  "Alberhastic",
+  "Igrexion",
+  "Velganos",
+  "Achates"
 ];
 
 export const bossHpBarColors = ["#D16F23", "#9F3930", "#582469", "#2B3A63", "#246977", "#798816", "#E7B826"];

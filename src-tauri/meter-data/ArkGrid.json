@@ -100401,6 +100401,12 @@
           "statType": "none",
           "keyIndex": 3382200,
           "keyValue": 0
+        },
+        {
+          "type": "combat_effect",
+          "statType": "none",
+          "keyIndex": 3382210,
+          "keyValue": 0
         }
       ]
     },
@@ -100414,6 +100420,12 @@
           "type": "combat_effect",
           "statType": "none",
           "keyIndex": 3382300,
+          "keyValue": 0
+        },
+        {
+          "type": "combat_effect",
+          "statType": "none",
+          "keyIndex": 3382210,
           "keyValue": 0
         }
       ]

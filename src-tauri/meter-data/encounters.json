@@ -125,5 +125,9 @@
   "Horizon Cathedral": {
     "Horizon Cathedral G1": ["Archbishop Arcenos"],
     "Horizon Cathedral G2": ["Arcenos, Vanguard of Fanaticism"]
+  },
+  "Belgardin": {
+    "Belgardin G1": ["Belgardin, Arbiter of Death"],
+    "Belgardin G2": ["Phaetus An Kragma"]
   }
 }

@@ -7961,14 +7961,6 @@
             "keyValue": 0,
             "includeEffectNodeId": 0,
             "excludeEffectNodeId": 0
-          },
-          {
-            "type": "skill_feature",
-            "statType": "none",
-            "keyIndex": 0,
-            "keyValue": 0,
-            "includeEffectNodeId": 0,
-            "excludeEffectNodeId": 0
           }
         ]
       },
@@ -7993,14 +7985,6 @@
             "keyValue": 0,
             "includeEffectNodeId": 0,
             "excludeEffectNodeId": 0
-          },
-          {
-            "type": "skill_feature",
-            "statType": "none",
-            "keyIndex": 2491001,
-            "keyValue": 0,
-            "includeEffectNodeId": 0,
-            "excludeEffectNodeId": 0
           }
         ]
       },
@@ -8022,14 +8006,6 @@
             "type": "skill_feature",
             "statType": "none",
             "keyIndex": 2491000,
-            "keyValue": 0,
-            "includeEffectNodeId": 0,
-            "excludeEffectNodeId": 0
-          },
-          {
-            "type": "skill_feature",
-            "statType": "none",
-            "keyIndex": 2491002,
             "keyValue": 0,
             "includeEffectNodeId": 0,
             "excludeEffectNodeId": 0
@@ -8792,7 +8768,7 @@
     "levels": {
       "1": {
         "name": "Orbital Collision",
-        "desc": "Deep Impact Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2495800/> /100 />%</FONT>. Immediately descends after rising and inflicts damage. Inflicts <FONT COLOR='#99ff99'>20%</FONT> Damage to foes hit at the center.",
+        "desc": "Deep Impact Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2495800/> /100 />%</FONT>. Immediately descends after rising and inflicts damage. Inflicts <FONT COLOR='#99ff99'>20%</FONT> increased Damage to foes hit in the center.",
         "icon": "ark_passive_ddk_14.png",
         "level": 1,
         "addons": [
@@ -8816,7 +8792,7 @@
       },
       "2": {
         "name": "Orbital Collision",
-        "desc": "Deep Impact Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2495801/> /100 />%</FONT>. Immediately descends after rising and inflicts damage. Inflicts <FONT COLOR='#99ff99'>20%</FONT> Damage to foes hit at the center.",
+        "desc": "Deep Impact Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2495801/> /100 />%</FONT>. Immediately descends after rising and inflicts damage. Inflicts <FONT COLOR='#99ff99'>20%</FONT> increased Damage to foes hit in the center.",
         "icon": "ark_passive_ddk_14.png",
         "level": 2,
         "addons": [
@@ -8840,7 +8816,7 @@
       },
       "3": {
         "name": "Orbital Collision",
-        "desc": "Deep Impact Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2495802/> /100 />%</FONT>. Immediately descends after rising and inflicts damage. Inflicts <FONT COLOR='#99ff99'>20%</FONT> Damage to foes hit at the center.",
+        "desc": "Deep Impact Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2495802/> /100 />%</FONT>. Immediately descends after rising and inflicts damage. Inflicts <FONT COLOR='#99ff99'>20%</FONT> increased Damage to foes hit in the center.",
         "icon": "ark_passive_ddk_14.png",
         "level": 3,
         "addons": [
@@ -15617,7 +15593,7 @@
     "levels": {
       "1": {
         "name": "Esoteric Combustion",
-        "desc": "When Esoteric Orbs are consumed, Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2220705/> /100 />%</FONT> for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 2220700/>/1000/></FONT>s.",
+        "desc": "When Esoteric Orbs are consumed, Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2220705/> /100 />%</FONT> for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 2220700/>/1000/>s</FONT>.",
         "icon": "ark_passive_01_17.png",
         "level": 1,
         "addons": [
@@ -15633,7 +15609,7 @@
       },
       "2": {
         "name": "Esoteric Combustion",
-        "desc": "When Esoteric Orbs are consumed, Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2220706/> /100 />%</FONT> for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 2220701/>/1000/></FONT>s.",
+        "desc": "When Esoteric Orbs are consumed, Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2220706/> /100 />%</FONT> for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 2220701/>/1000/>s</FONT>.",
         "icon": "ark_passive_01_17.png",
         "level": 2,
         "addons": [
@@ -15649,7 +15625,7 @@
       },
       "3": {
         "name": "Esoteric Combustion",
-        "desc": "When Esoteric Orbs are consumed, Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2220707/> /100 />%</FONT> for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 2220702/>/1000/></FONT>s.",
+        "desc": "When Esoteric Orbs are consumed, Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2220707/> /100 />%</FONT> for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 2220702/>/1000/>s</FONT>.",
         "icon": "ark_passive_01_17.png",
         "level": 3,
         "addons": [
@@ -15665,7 +15641,7 @@
       },
       "4": {
         "name": "Esoteric Combustion",
-        "desc": "When Esoteric Orbs are consumed, Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2220708/> /100 />%</FONT> for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 2220703/>/1000/></FONT>s.",
+        "desc": "When Esoteric Orbs are consumed, Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_COMBATEFFECT Action0ArgA 2220708/> /100 />%</FONT> for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 2220703/>/1000/>s</FONT>.",
         "icon": "ark_passive_01_17.png",
         "level": 4,
         "addons": [
@@ -19661,7 +19637,7 @@
     "levels": {
       "1": {
         "name": "Sky Walk",
-        "desc": "Rule the World changes to a Targeted Skill. After the first step, appear within <FONT COLOR='#ffff99'>8 meters</FONT> of targeted area and strike the foe. On the final downward strike, Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2245704/> />%</FONT>. While moving to the targeted area, ignore collisions with Adventurers, Guardians, and monsters.\nOn using Supreme Technique, Supreme Palm, or Supreme Godfist, Rule the World Cooldown -<FONT COLOR='#99FF99'><$CALC %1 <$TABLE_SKILLEFFECT ValueB 2245700/> /1000 /></FONT>.",
+        "desc": "Rule the World changes to a Targeted Skill. After the first step, appear within <FONT COLOR='#ffff99'>8 meters</FONT> of targeted area and strike the foe. On the final downward strike, Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2245704/> />%</FONT>. While moving to the targeted area, ignore collisions with Adventurers and Guardian monsters.\nOn using Supreme Technique, Supreme Palm, or Supreme Godfist, Rule the World Cooldown -<FONT COLOR='#99FF99'><$CALC %1 <$TABLE_SKILLEFFECT ValueB 2245700/> /1000 /></FONT>.",
         "icon": "ark_passive_so_11.png",
         "level": 1,
         "addons": [
@@ -19701,7 +19677,7 @@
       },
       "2": {
         "name": "Sky Walk",
-        "desc": "Rule the World changes to a Targeted Skill. After the first step, appear within <FONT COLOR='#ffff99'>8 meters</FONT> of targeted area and strike the foe. On the final downward strike, Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2245705/> />%</FONT>. While moving to the targeted area, ignore collisions with Adventurers, Guardians, and monsters.\nOn using Supreme Technique, Supreme Palm, or Supreme Godfist, Rule the World Cooldown -<FONT COLOR='#99FF99'><$CALC %1 <$TABLE_SKILLEFFECT ValueB 2245700/> /1000 /></FONT>.",
+        "desc": "Rule the World changes to a Targeted Skill. After the first step, appear within <FONT COLOR='#ffff99'>8 meters</FONT> of targeted area and strike the foe. On the final downward strike, Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2245705/> />%</FONT>. While moving to the targeted area, ignore collisions with Adventurers and Guardian monsters.\nOn using Supreme Technique, Supreme Palm, or Supreme Godfist, Rule the World Cooldown -<FONT COLOR='#99FF99'><$CALC %1 <$TABLE_SKILLEFFECT ValueB 2245700/> /1000 /></FONT>.",
         "icon": "ark_passive_so_11.png",
         "level": 2,
         "addons": [
@@ -19741,7 +19717,7 @@
       },
       "3": {
         "name": "Sky Walk",
-        "desc": "Rule the World changes to a Targeted Skill. After the first step, appear within <FONT COLOR='#ffff99'>8 meters</FONT> of targeted area and strike the foe. On the final downward strike, Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2245706/> />%</FONT>. While moving to the targeted area, ignore collisions with Adventurers, Guardians, and monsters.\nOn using Supreme Technique, Supreme Palm, or Supreme Godfist, Rule the World Cooldown -<FONT COLOR='#99FF99'><$CALC %1 <$TABLE_SKILLEFFECT ValueB 2245700/> /1000 /></FONT>.",
+        "desc": "Rule the World changes to a Targeted Skill. After the first step, appear within <FONT COLOR='#ffff99'>8 meters</FONT> of targeted area and strike the foe. On the final downward strike, Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_ADDONSKILLFEATURE Param1 2245706/> />%</FONT>. While moving to the targeted area, ignore collisions with Adventurers and Guardian monsters.\nOn using Supreme Technique, Supreme Palm, or Supreme Godfist, Rule the World Cooldown -<FONT COLOR='#99FF99'><$CALC %1 <$TABLE_SKILLEFFECT ValueB 2245700/> /1000 /></FONT>.",
         "icon": "ark_passive_so_11.png",
         "level": 3,
         "addons": [
@@ -43804,10 +43780,10 @@
         "level": 1,
         "addons": [
           {
-            "type": "ability_feature",
+            "type": "combat_effect",
             "statType": "none",
             "keyIndex": 2310900,
-            "keyValue": 2,
+            "keyValue": 0,
             "includeEffectNodeId": 0,
             "excludeEffectNodeId": 0
           }
@@ -43820,10 +43796,10 @@
         "level": 2,
         "addons": [
           {
-            "type": "ability_feature",
+            "type": "combat_effect",
             "statType": "none",
-            "keyIndex": 2310900,
-            "keyValue": 3,
+            "keyIndex": 2310901,
+            "keyValue": 0,
             "includeEffectNodeId": 0,
             "excludeEffectNodeId": 0
           }
@@ -43836,10 +43812,10 @@
         "level": 3,
         "addons": [
           {
-            "type": "ability_feature",
+            "type": "combat_effect",
             "statType": "none",
-            "keyIndex": 2310900,
-            "keyValue": 4,
+            "keyIndex": 2310902,
+            "keyValue": 0,
             "includeEffectNodeId": 0,
             "excludeEffectNodeId": 0
           }
@@ -43852,10 +43828,10 @@
         "level": 4,
         "addons": [
           {
-            "type": "ability_feature",
+            "type": "combat_effect",
             "statType": "none",
-            "keyIndex": 2310900,
-            "keyValue": 5,
+            "keyIndex": 2310903,
+            "keyValue": 0,
             "includeEffectNodeId": 0,
             "excludeEffectNodeId": 0
           }
@@ -43868,10 +43844,10 @@
         "level": 5,
         "addons": [
           {
-            "type": "ability_feature",
+            "type": "combat_effect",
             "statType": "none",
-            "keyIndex": 2310900,
-            "keyValue": 6,
+            "keyIndex": 2310904,
+            "keyValue": 0,
             "includeEffectNodeId": 0,
             "excludeEffectNodeId": 0
           }

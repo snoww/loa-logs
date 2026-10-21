@@ -90660,7 +90660,7 @@
       "4": {
         "key": 0,
         "name": "Absorption Hit",
-        "desc": "The range of the first hit increases to <FONT COLOR='#ffff99'>4 meters</FONT> and pulls foes within that range.",
+        "desc": "The range of the first hit increases to <FONT COLOR='#ffff99'>4m</FONT> and pulls foes within that range.",
         "icon": "tripod_tier_2_71.png",
         "entries": [
           {
@@ -148416,7 +148416,7 @@
       "8": {
         "key": 0,
         "name": "Earth Smite",
-        "desc": "Element is now [Earth]. No longer launches foes, but inflicts Earthquake in a diameter of <FONT COLOR='#ffff99'>8 meters</FONT> for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 457308/>/1000/></FONT>s. A large explosion occurs on the ground, inflicting <FONT COLOR='#99ff99'><$CALC_COMMA %1 40 + 40 * <$TABLE_SKILLFEATURE ParamValue1 45730 8 CHANGE_DAM_VALUE 1 />/100/>%</FONT> damage and launching foes in the air.",
+        "desc": "Element is now [Earth]. No longer launches foes, but inflicts Earthquake in a diameter of <FONT COLOR='#ffff99'>8m</FONT> for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 457308/>/1000/></FONT>s. A large explosion occurs on the ground, inflicting <FONT COLOR='#99ff99'><$CALC_COMMA %1 40 + 40 * <$TABLE_SKILLFEATURE ParamValue1 45730 8 CHANGE_DAM_VALUE 1 />/100/>%</FONT> damage and launching foes in the air.",
         "icon": "tripod_tier_3_15.png",
         "entries": [
           {
@@ -157932,7 +157932,7 @@
       "8": {
         "key": 0,
         "name": "Mutilate",
-        "desc": "Finishing Blow disappears and changes to Holding Mode. AoE Radius +<FONT COLOR='#99ff99'>30%</FONT>. Allows turning slowly. Dual Blades hit count increases. Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 25100 8 CHANGE_DAM_VALUE 1/>/>%</FONT>.",
+        "desc": "Finishing Blow disappears and changes to Holding Mode. AoE Radius +<FONT COLOR='#99ff99'>30.0%</FONT>. Allows turning slowly. Dual Blades hit count increases. Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 25100 8 CHANGE_DAM_VALUE 1/>/>%</FONT>.",
         "icon": "tripod_tier_3_39.png",
         "entries": [
           {
@@ -164297,7 +164297,7 @@
       "6": {
         "key": 0,
         "name": "Wind Storm",
-        "desc": "Instead of attacking surrounding foes, shoots a twister at them. Inflicts a total of +<FONT COLOR='#99ff99'>20%</FONT> Damage.",
+        "desc": "Instead of attacking surrounding foes, shoots a twister at them. Inflicts a total of +<FONT COLOR='#99ff99'>20.0%</FONT> Damage.",
         "icon": "tripod_tier_2_54.png",
         "entries": [
           {
@@ -308223,11 +308223,38 @@
           {
             "type": "reduce_default_cooldown",
             "level": 1,
-            "targetModeType": "common",
+            "targetModeType": "a",
             "passiveOptionValue": 0,
             "parameterType": "absolute",
             "parameters": [
               -19000,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "type": "reduce_default_cooldown",
+            "level": 1,
+            "targetModeType": "b",
+            "passiveOptionValue": 0,
+            "parameterType": "absolute",
+            "parameters": [
+              -14000,
               0,
               0,
               0,
@@ -308277,11 +308304,38 @@
           {
             "type": "change_stack_charge_time",
             "level": 1,
-            "targetModeType": "common",
+            "targetModeType": "a",
             "passiveOptionValue": 0,
             "parameterType": "absolute",
             "parameters": [
               20000,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "type": "change_stack_charge_time",
+            "level": 1,
+            "targetModeType": "b",
+            "passiveOptionValue": 0,
+            "parameterType": "absolute",
+            "parameters": [
+              15000,
               0,
               0,
               0,
@@ -318005,7 +318059,7 @@
       "5": {
         "key": 0,
         "name": "Precise Gravity",
-        "desc": "On hit, the Phase Dial does not accelerate, but the hour and minute hands combine above the target location and crash into the ground, summoning a black hole. The black hole lasts for <FONT COLOR='#ffff99'>2s</FONT>, inflicting continuous damage, and then explodes, increasing Max Damage +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 2050250 5 CHANGE_DAM_VALUE 1/>/1/>%</FONT>.",
+        "desc": "On hit, the Phase Dial does not accelerate, but the hour and minute hands combine above the target location and crash into the ground, summoning a black hole. The black hole lasts for <FONT COLOR='#ffff99'>2s</FONT>, inflicting continuous damage, and then explodes, inflicting Damage by up to <FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 2050250 5 CHANGE_DAM_VALUE 1/>/1/>%</FONT>.",
         "icon": "tripod_tier_2_6.png",
         "entries": [
           {
@@ -346990,7 +347044,7 @@
       "6": {
         "key": 0,
         "name": "Earthen Rage",
-        "desc": "Leap high into the air, transforming into a boulder to slam down. Attack Range +<FONT COLOR='#ffff99'>5 meters</FONT>. Ignores collisions with Adventurers, Guardians, and monsters. Crit Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLFEATURE ParamValue1 33230 6 CHANGE_DAM_CRITICAL 1 />/100/>%</FONT>.",
+        "desc": "Leap high into the air, transforming into a boulder to slam down. Attack Range +<FONT COLOR='#ffff99'>5 meters</FONT>. Ignores collisions with Adventurers and Guardian monsters. Crit Damage +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLFEATURE ParamValue1 33230 6 CHANGE_DAM_CRITICAL 1 />/100/>%</FONT>.",
         "icon": "tripod_tier_2_183.png",
         "entries": [
           {
@@ -466927,7 +466981,7 @@
       "8": {
         "key": 0,
         "name": "Enhanced Tenacity Release",
-        "desc": "Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 23290 8 CHANGE_DAM_VALUE 1 /> />%</FONT>. During Tenacity Release, the attack is instantly fully charged without having to charge it. Damage to foes during Tenacity Release +<FONT COLOR='#99ff99'>20%</FONT>.",
+        "desc": "Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 23290 8 CHANGE_DAM_VALUE 1 /> />%</FONT>. During Tenacity Release, the attack is instantly fully charged without having to charge it. Damage to foes during Tenacity Release +<FONT COLOR='#99ff99'>20.0%</FONT>.",
         "icon": "tripod_tier_3_40.png",
         "entries": [
           {
@@ -469090,7 +469144,7 @@
       "8": {
         "key": 0,
         "name": "Endurance Training",
-        "desc": "Upon landing the last attack, Cooldown -<FONT COLOR='#99ff99'>50%</FONT>.",
+        "desc": "Upon landing the last attack, Cooldown -<FONT COLOR='#99ff99'>50.0%</FONT>.",
         "icon": "tripod_tier_3_56.png",
         "entries": [
           {
@@ -489498,7 +489552,7 @@
       "6": {
         "key": 0,
         "name": "Gassed Up",
-        "desc": "During skill use, gain Push Immunity. Incoming Damage -<FONT COLOR='#99ff99'>50%</FONT>. When hit during Ready Attack, attack immediately. Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 47270 6 CHANGE_DAM_VALUE 1/>/>%</FONT>.",
+        "desc": "During skill use, gain Push Immunity. Incoming Damage -<FONT COLOR='#99ff99'>50.0%</FONT>. When hit during Ready Attack, attack immediately. Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 47270 6 CHANGE_DAM_VALUE 1/>/>%</FONT>.",
         "icon": "tripod_tier_2_171.png",
         "entries": [
           {
@@ -598631,7 +598685,7 @@
       "4": {
         "key": 0,
         "name": "Enhanced Spinning",
-        "desc": "Throws the dagger even faster. AoE Radius +<FONT COLOR='#99ff99'>20%</FONT>. Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 26050 4 CHANGE_DAM_VALUE 1/> />%</FONT>. With Poison: Bleed, <FONT COLOR='#99ff99'>30%</FONT> chance to stack Bleeding Poison <FONT COLOR='#ffff99'>1</FONT> time on the foe.",
+        "desc": "Throws the dagger even faster. AoE Radius +<FONT COLOR='#99ff99'>20.0%</FONT>. Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 26050 4 CHANGE_DAM_VALUE 1/> />%</FONT>. With Poison: Bleed, <FONT COLOR='#99ff99'>30.0%</FONT> chance to stack Bleeding Poison <FONT COLOR='#ffff99'>1</FONT> time on the foe.",
         "icon": "tripod_tier_2_88.png",
         "entries": [
           {
@@ -609895,7 +609949,7 @@
       "8": {
         "key": 0,
         "name": "Tailwind",
-        "desc": "On skill use, Dodge Rate +<FONT COLOR='#99ff99'>30%</FONT>. Move Speed +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$MACRO buffstat0_100 @1:265150/>+ <$MACRO buffstat0_100 @1:265150/> * <$TABLE_SKILLFEATURE ParamValue3 26510 8 CHANGE_BUFF_STAT 1/>/100 />%</FONT> for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 265150/>/1000+<$TABLE_SKILLFEATURE ParamValue2 26510 8 CHANGE_BUFF_DURATION 1/>/1000 />s</FONT>.",
+        "desc": "On skill use, Dodge Rate +<FONT COLOR='#99ff99'>30.0%</FONT>. Move Speed +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$MACRO buffstat0_100 @1:265150/>+ <$MACRO buffstat0_100 @1:265150/> * <$TABLE_SKILLFEATURE ParamValue3 26510 8 CHANGE_BUFF_STAT 1/>/100 />%</FONT> for <FONT COLOR='#ffff99'><$CALC_COMMA %1 <$TABLE_SKILLBUFF Duration 265150/>/1000+<$TABLE_SKILLFEATURE ParamValue2 26510 8 CHANGE_BUFF_DURATION 1/>/1000 /></FONT>s.",
         "icon": "tripod_tier_3_48.png",
         "entries": [
           {
@@ -622845,7 +622899,7 @@
       "4": {
         "key": 0,
         "name": "Concentrated Attack",
-        "desc": "Narrows the attack but the range increases by <FONT COLOR='#ffff99'>3 meters</FONT>. Before stabbing, pulls foe to the front with Dark Energy and inflicts <FONT COLOR='#99ff99'>10%</FONT> of Base Damage. Stabbing attack Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 26810 4 CHANGE_DAM_VALUE 1/> />%</FONT> and knocks back foes.",
+        "desc": "Narrows the attack but the range increases by <FONT COLOR='#ffff99'>3.0m</FONT>. Before stabbing, pulls foe to the front with Dark Energy and inflicts <FONT COLOR='#99ff99'>10.0%</FONT> of Base Damage. Stabbing attack Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 26810 4 CHANGE_DAM_VALUE 1/> />%</FONT> and knocks back foes.",
         "icon": "tripod_tier_2_87.png",
         "entries": [
           {
@@ -622934,7 +622988,7 @@
       "5": {
         "key": 0,
         "name": "Execution",
-        "desc": "Attack range -<FONT COLOR='#ff9999'>4 meters</FONT>. Attacks faster. Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_COMBATEFFECT Action0ArgA 268150 />/100 + <$TABLE_COMBATEFFECT Action0ArgA 268150 />/100 * <$TABLE_SKILLFEATURE ParamValue2 26810 5 CHANGE_COMBAT_EFFECT_ARG 1/>/100/>%</FONT>.",
+        "desc": "Attack range -<FONT COLOR='#ff9999'>4.0m</FONT>. Attacks faster. Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_COMBATEFFECT Action0ArgA 268150 />/100 + <$TABLE_COMBATEFFECT Action0ArgA 268150 />/100 * <$TABLE_SKILLFEATURE ParamValue2 26810 5 CHANGE_COMBAT_EFFECT_ARG 1/>/100/>%</FONT>.",
         "icon": "tripod_tier_2_88.png",
         "entries": [
           {
@@ -623867,7 +623921,7 @@
       "5": {
         "key": 0,
         "name": "Propulsion",
-        "desc": "After jumping <FONT COLOR='#ffff99'>3 meters</FONT> back, attacks foes even harder. Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 26820 5 CHANGE_DAM_VALUE 1/> />%</FONT>. Can change the direction before the attack.",
+        "desc": "After jumping <FONT COLOR='#ffff99'>3m</FONT> back, attacks foes even harder. Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 26820 5 CHANGE_DAM_VALUE 1/> />%</FONT>. Can change the direction before the attack.",
         "icon": "tripod_tier_2_12.png",
         "entries": [
           {
@@ -625302,7 +625356,7 @@
       "7": {
         "key": 0,
         "name": "Shadow Dance",
-        "desc": "Blend into the shadows and gather more Shadow Energy. During skill use, Dodge Rate +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$MACRO buffstat0_100 @1:268307/>/>%</FONT>. AoE Radius +<FONT COLOR='#99ff99'>30%</FONT>. Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 26830 7 CHANGE_DAM_VALUE 1/>/1/>%</FONT>.",
+        "desc": "Blend into the shadows and gather more Shadow Energy. During skill use, Dodge Rate +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$MACRO buffstat0_100 @1:268307/>/>%</FONT>. AoE Radius +<FONT COLOR='#99ff99'>30.0%</FONT>. Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 26830 7 CHANGE_DAM_VALUE 1/>/1/>%</FONT>.",
         "icon": "tripod_tier_3_90.png",
         "entries": [
           {
@@ -668989,7 +669043,7 @@
       "4": {
         "key": 0,
         "name": "Backfire",
-        "desc": "Casting action is reduced, and changed to a Normal skill. Explodes Wildfire on the spot and inflicts Damage to foes in a cone-shape. Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 37330 4 CHANGE_DAM_VALUE 1/>/>%</FONT>. ",
+        "desc": "Casting action is reduced, and changed to a Normal skill. Instantly unleashes a burst of flames on the spot and inflicts Damage to foes in a cone-shape. Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 37330 4 CHANGE_DAM_VALUE 1/>/>%</FONT>. ",
         "icon": "tripod_tier_2_39.png",
         "entries": [
           {
@@ -674622,7 +674676,7 @@
       "5": {
         "key": 0,
         "name": "Leap Attack",
-        "desc": "Strengthens the power of the upward swing. Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 46220 5 CHANGE_DAM_VALUE 1/>/>%</FONT>. Move Distance +<FONT COLOR='#99ff99'>4 meters</FONT>.",
+        "desc": "Strengthens the power of the upward swing. Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 46220 5 CHANGE_DAM_VALUE 1/>/>%</FONT>. Move Distance +<FONT COLOR='#99ff99'>4m</FONT>.",
         "icon": "tripod_tier_2_40.png",
         "entries": [
           {
@@ -674711,7 +674765,7 @@
       "6": {
         "key": 0,
         "name": "Smite Location",
-        "desc": "Changes the first downward attack to a targeted attack which attacks <FONT COLOR='#ffff99'>6 meters</FONT> within target location. Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 46220 6 CHANGE_DAM_VALUE 1/>/>%</FONT>.",
+        "desc": "Changes the first downward attack to a targeted attack which attacks <FONT COLOR='#ffff99'>6m</FONT> within target location. Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 46220 6 CHANGE_DAM_VALUE 1/>/>%</FONT>.",
         "icon": "tripod_tier_2_39.png",
         "entries": [
           {
@@ -676272,7 +676326,7 @@
       "5": {
         "key": 0,
         "name": "Over Turn",
-        "desc": "Changes to a Normal Skill. Charges <FONT COLOR='#ffff99'>3 meters</FONT> forwards and spins diagonally while attacking. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 -10 + 90 * <$TABLE_SKILLFEATURE ParamValue1 46230 5 CHANGE_DAM_VALUE 1/>/100/>%</FONT>.",
+        "desc": "Changes to a Normal Skill. Charges <FONT COLOR='#ffff99'>3m</FONT> forwards and spins diagonally while attacking. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 -10 + 90 * <$TABLE_SKILLFEATURE ParamValue1 46230 5 CHANGE_DAM_VALUE 1/>/100/>%</FONT>.",
         "icon": "tripod_tier_2_80.png",
         "entries": [
           {
@@ -681717,7 +681771,7 @@
       "8": {
         "key": 0,
         "name": "Misery",
-        "desc": "Cooldown -<FONT COLOR='#99ff99'>4s</FONT>. Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 46420 8 CHANGE_DAM_VALUE 1/>/1/>%</FONT>. Inflicts Misery to self, Incoming Damage +<FONT COLOR='#ff9999'>3%</FONT> for <FONT COLOR='#ffff99'>8s</FONT>. The effect stacks up to 4 times.",
+        "desc": "Cooldown -<FONT COLOR='#99ff99'>4</FONT>s. Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 46420 8 CHANGE_DAM_VALUE 1/>/1/>%</FONT>. Inflicts Misery to self, Incoming Damage +<FONT COLOR='#ff9999'>3.0%</FONT> for <FONT COLOR='#ffff99'>8</FONT>s. The effect stacks up to 4 times.",
         "icon": "tripod_tier_3_163.png",
         "entries": [
           {
@@ -682623,7 +682677,7 @@
       "8": {
         "key": 0,
         "name": "Misery",
-        "desc": "Cooldown -<FONT COLOR='#99ff99'>8s</FONT>. Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 46430 8 CHANGE_DAM_VALUE 1/>/1/>%</FONT>. Inflicts Misery to self, Incoming Damage +<FONT COLOR='#ff9999'>3%</FONT> for <FONT COLOR='#ffff99'>8s</FONT>. The effect stacks up to 4 times.",
+        "desc": "Cooldown -<FONT COLOR='#99ff99'>8</FONT>s. Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 46430 8 CHANGE_DAM_VALUE 1/>/1/>%</FONT>. Inflicts Misery to self, Incoming Damage +<FONT COLOR='#ff9999'>3.0%</FONT> for <FONT COLOR='#ffff99'>8</FONT>s. The effect stacks up to 4 times.",
         "icon": "tripod_tier_3_163.png",
         "entries": [
           {
@@ -684168,7 +684222,7 @@
       "5": {
         "key": 0,
         "name": "Cry of the Dead",
-        "desc": "Changes to a Normal Skill. Move <FONT COLOR='#99ff99'>4 meters</FONT> and attack with the Dead empowered by gathering souls of the dead. Foes are knocked back. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLFEATURE ParamValue1 46450 5 CHANGE_DAM_VALUE 1/>/1/>%</FONT>.",
+        "desc": "Changes to a Normal Skill. Move <FONT COLOR='#99ff99'>4m</FONT> and attack with the Dead empowered by gathering Souls of the Dead. Foes are knocked back. Damage to foes +<FONT COLOR='#99ff99'><$CALC %1 <$TABLE_SKILLFEATURE ParamValue1 46450 5 CHANGE_DAM_VALUE 1/>/1/>%</FONT>.",
         "icon": "tripod_tier_2_40.png",
         "entries": [
           {
@@ -685953,7 +686007,7 @@
       "5": {
         "key": 0,
         "name": "Agile Movement",
-        "desc": "Moves <FONT COLOR='#ffff99'>6 meters</FONT> forward then starts attacking.",
+        "desc": "Moves <FONT COLOR='#ffff99'>6m</FONT> forward then starts attacking.",
         "icon": "tripod_tier_2_39.png",
         "entries": [
           {
@@ -697474,7 +697528,7 @@
       "7": {
         "key": 0,
         "name": "Low Shock",
-        "desc": "Skill Casting Speed +<FONT COLOR='#99ff99'>20%</FONT>. Quickly jump to a target location and strike down. Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 17110 7 CHANGE_DAM_VALUE 1 />/>%</FONT>.",
+        "desc": "Skill Casting Speed +<FONT COLOR='#99ff99'>20.0%</FONT>. Quickly jump to a target location and strike down. Damage to foes +<FONT COLOR='#99ff99'><$CALC_COMMA %1 <$TABLE_SKILLFEATURE ParamValue1 17110 7 CHANGE_DAM_VALUE 1 />/>%</FONT>.",
         "icon": "tripod_tier_3_85.png",
         "entries": [
           {

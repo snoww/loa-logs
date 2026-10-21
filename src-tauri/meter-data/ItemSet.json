@@ -1128,7 +1128,7 @@
               ]
             },
             "5": {
-              "desc": "Increases Move Speed by <FONT COLOR='#99FF99'>30%</FONT> for <FONT COLOR='#ffff99'>20</FONT>s when attacking monsters Boss rank or above. If the buff lasts its full duration, Atk. Speed will increase by <FONT COLOR='#99FF99'>30%</FONT> and inflict <FONT COLOR='#99FF99'>20%</FONT> additional Damage for <FONT COLOR='#ffff99'>10</FONT>s. The buff will be removed if attacked. (Cooldown: <FONT COLOR='#ffff99'>30</FONT>s)",
+              "desc": "Increases Move Speed by <FONT COLOR='#99FF99'>30%</FONT> for <FONT COLOR='#ffff99'>20s</FONT> when attacking monsters Boss rank or above. If the buff lasts its full duration, Atk. Speed will increase by <FONT COLOR='#99FF99'>20%</FONT> and inflict <FONT COLOR='#99FF99'>30%</FONT> additional Damage for <FONT COLOR='#ffff99'>10s</FONT>. The buff will be removed if attacked. (Cooldown: <FONT COLOR='#ffff99'>30s</FONT>)",
               "options": [
                 {
                   "type": "combat_effect",
@@ -5278,7 +5278,7 @@
               ]
             },
             "4": {
-              "desc": "On successful hit, gain a chance to trigger a powerful Flame Attack, which applies Electric Vulnerability. (Cooldown: <FONT COLOR='#99ff99'>0.5s</FONT>)\nThis Damage decreases by up to <FONT COLOR='#ff9999'>80%</FONT> when striking multiple foes.\nElectric Vulnerablity: + additional Electric Damage when inflicting Electric Damage. This additional Electric Damage does not give Flame Vulnerability.",
+              "desc": "On successful hit, gain a chance to trigger a powerful Flame Attack, which applies Electric Vulnerability. (Cooldown: <FONT COLOR='#99ff99'>0.5s</FONT>)\nThis Damage decreases by up to <FONT COLOR='#ff9999'>80%</FONT> when striking multiple foes.\nElectric Vulnerability: + additional Electric Damage when inflicting Electric Damage. This additional Electric Damage does not give Flame Vulnerability.",
               "options": [
                 {
                   "type": "combat_effect",
@@ -5482,7 +5482,7 @@
               ]
             },
             "4": {
-              "desc": "On successful hit, gain a chance to trigger an even more powerful Flame Attack, which applies Electric Vulnerability. (Cooldown: <FONT COLOR='#99ff99'>0.5s</FONT>)\nThis Damage decreases by up to <FONT COLOR='#ff9999'>80%</FONT> when striking multiple foes.\nElectric Vulnerablity: + additional Electric Damage when inflicting Electric Damage. This additional Electric Damage does not give Flame Vulnerability.",
+              "desc": "On successful hit, gain a chance to trigger an even more powerful Flame Attack, which applies Electric Vulnerability. (Cooldown: <FONT COLOR='#99ff99'>0.5s</FONT>)\nThis Damage decreases by up to <FONT COLOR='#ff9999'>80%</FONT> when striking multiple foes.\nElectric Vulnerability: + additional Electric Damage when inflicting Electric Damage. This additional Electric Damage does not give Flame Vulnerability.",
               "options": [
                 {
                   "type": "combat_effect",
@@ -6276,15 +6276,7 @@
           114438112,
           114438113,
           114438114,
-          114438115,
-          900000163,
-          900000164,
-          900000165,
-          900000166,
-          900000167,
-          900000168,
-          900000171,
-          900000430
+          114438115
         ],
         "value": {
           "setCountDatas": {
@@ -6488,15 +6480,7 @@
           114438112,
           114438113,
           114438114,
-          114438115,
-          900000163,
-          900000164,
-          900000165,
-          900000166,
-          900000167,
-          900000168,
-          900000171,
-          900000430
+          114438115
         ],
         "value": {
           "setCountDatas": {
@@ -6700,15 +6684,7 @@
           114438112,
           114438113,
           114438114,
-          114438115,
-          900000163,
-          900000164,
-          900000165,
-          900000166,
-          900000167,
-          900000168,
-          900000171,
-          900000430
+          114438115
         ],
         "value": {
           "setCountDatas": {

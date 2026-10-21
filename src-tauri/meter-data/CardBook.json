@@ -18407,6 +18407,74 @@
       }
     ]
   },
+  "261": {
+    "id": 261,
+    "name": "One Unclaimed by Death",
+    "cardIds": [
+      3201008,
+      3201116,
+      3200011,
+      3200041
+    ],
+    "levels": [
+      {
+        "level": 0,
+        "required_card_count_": 4,
+        "required_awakening_level_sum_": 0,
+        "damageAttr": "none",
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "con",
+            "keyIndex": 0,
+            "keyValue": 8
+          }
+        ]
+      },
+      {
+        "level": 1,
+        "required_card_count_": 4,
+        "required_awakening_level_sum_": 8,
+        "damageAttr": "none",
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "npc_species_ancient_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 13
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "required_card_count_": 4,
+        "required_awakening_level_sum_": 16,
+        "damageAttr": "none",
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "npc_species_ancient_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 13
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "required_card_count_": 4,
+        "required_awakening_level_sum_": 20,
+        "damageAttr": "none",
+        "addons": [
+          {
+            "type": "stat",
+            "statType": "npc_species_ancient_dam_rate",
+            "keyIndex": 0,
+            "keyValue": 14
+          }
+        ]
+      }
+    ]
+  },
   "1001": {
     "id": 1001,
     "name": "Guardian's Mayhem",

@@ -8258,6 +8258,225 @@
       }
     ]
   },
+  "11675016": {
+    "id": 11675016,
+    "weapon_power_": 3500,
+    "physical_defense_": 450,
+    "magic_defense_": 450,
+    "strength_": 10500,
+    "dexterity_": 0,
+    "intelligence_": 0,
+    "vitality_": 900,
+    "damageAttr": "none",
+    "damageAttrValue": 0,
+    "addons": []
+  },
+  "11675026": {
+    "id": 11675026,
+    "weapon_power_": 3500,
+    "physical_defense_": 450,
+    "magic_defense_": 450,
+    "strength_": 0,
+    "dexterity_": 10500,
+    "intelligence_": 0,
+    "vitality_": 900,
+    "damageAttr": "none",
+    "damageAttrValue": 0,
+    "addons": []
+  },
+  "11675036": {
+    "id": 11675036,
+    "weapon_power_": 3500,
+    "physical_defense_": 450,
+    "magic_defense_": 450,
+    "strength_": 0,
+    "dexterity_": 0,
+    "intelligence_": 10500,
+    "vitality_": 900,
+    "damageAttr": "none",
+    "damageAttrValue": 0,
+    "addons": []
+  },
+  "11675116": {
+    "id": 11675116,
+    "weapon_power_": 3500,
+    "physical_defense_": 450,
+    "magic_defense_": 450,
+    "strength_": 10500,
+    "dexterity_": 0,
+    "intelligence_": 0,
+    "vitality_": 900,
+    "damageAttr": "none",
+    "damageAttrValue": 0,
+    "addons": [
+      {
+        "type": "stat",
+        "statType": "base_damage_rate",
+        "keyIndex": 0,
+        "keyValue": 100
+      }
+    ]
+  },
+  "11675126": {
+    "id": 11675126,
+    "weapon_power_": 3500,
+    "physical_defense_": 450,
+    "magic_defense_": 450,
+    "strength_": 0,
+    "dexterity_": 10500,
+    "intelligence_": 0,
+    "vitality_": 900,
+    "damageAttr": "none",
+    "damageAttrValue": 0,
+    "addons": [
+      {
+        "type": "stat",
+        "statType": "base_damage_rate",
+        "keyIndex": 0,
+        "keyValue": 100
+      }
+    ]
+  },
+  "11675136": {
+    "id": 11675136,
+    "weapon_power_": 3500,
+    "physical_defense_": 450,
+    "magic_defense_": 450,
+    "strength_": 0,
+    "dexterity_": 0,
+    "intelligence_": 10500,
+    "vitality_": 900,
+    "damageAttr": "none",
+    "damageAttrValue": 0,
+    "addons": [
+      {
+        "type": "stat",
+        "statType": "base_damage_rate",
+        "keyIndex": 0,
+        "keyValue": 100
+      }
+    ]
+  },
+  "11675216": {
+    "id": 11675216,
+    "weapon_power_": 3500,
+    "physical_defense_": 450,
+    "magic_defense_": 450,
+    "strength_": 10500,
+    "dexterity_": 0,
+    "intelligence_": 0,
+    "vitality_": 900,
+    "damageAttr": "none",
+    "damageAttrValue": 0,
+    "addons": [
+      {
+        "type": "stat",
+        "statType": "base_damage_rate",
+        "keyIndex": 0,
+        "keyValue": 200
+      }
+    ]
+  },
+  "11675226": {
+    "id": 11675226,
+    "weapon_power_": 3500,
+    "physical_defense_": 450,
+    "magic_defense_": 450,
+    "strength_": 0,
+    "dexterity_": 10500,
+    "intelligence_": 0,
+    "vitality_": 900,
+    "damageAttr": "none",
+    "damageAttrValue": 0,
+    "addons": [
+      {
+        "type": "stat",
+        "statType": "base_damage_rate",
+        "keyIndex": 0,
+        "keyValue": 200
+      }
+    ]
+  },
+  "11675236": {
+    "id": 11675236,
+    "weapon_power_": 3500,
+    "physical_defense_": 450,
+    "magic_defense_": 450,
+    "strength_": 0,
+    "dexterity_": 0,
+    "intelligence_": 10500,
+    "vitality_": 900,
+    "damageAttr": "none",
+    "damageAttrValue": 0,
+    "addons": [
+      {
+        "type": "stat",
+        "statType": "base_damage_rate",
+        "keyIndex": 0,
+        "keyValue": 200
+      }
+    ]
+  },
+  "11675316": {
+    "id": 11675316,
+    "weapon_power_": 3500,
+    "physical_defense_": 450,
+    "magic_defense_": 450,
+    "strength_": 10500,
+    "dexterity_": 0,
+    "intelligence_": 0,
+    "vitality_": 900,
+    "damageAttr": "none",
+    "damageAttrValue": 0,
+    "addons": [
+      {
+        "type": "stat",
+        "statType": "base_damage_rate",
+        "keyIndex": 0,
+        "keyValue": 300
+      }
+    ]
+  },
+  "11675326": {
+    "id": 11675326,
+    "weapon_power_": 3500,
+    "physical_defense_": 450,
+    "magic_defense_": 450,
+    "strength_": 0,
+    "dexterity_": 10500,
+    "intelligence_": 0,
+    "vitality_": 900,
+    "damageAttr": "none",
+    "damageAttrValue": 0,
+    "addons": [
+      {
+        "type": "stat",
+        "statType": "base_damage_rate",
+        "keyIndex": 0,
+        "keyValue": 300
+      }
+    ]
+  },
+  "11675336": {
+    "id": 11675336,
+    "weapon_power_": 3500,
+    "physical_defense_": 450,
+    "magic_defense_": 450,
+    "strength_": 0,
+    "dexterity_": 0,
+    "intelligence_": 10500,
+    "vitality_": 900,
+    "damageAttr": "none",
+    "damageAttrValue": 0,
+    "addons": [
+      {
+        "type": "stat",
+        "statType": "base_damage_rate",
+        "keyIndex": 0,
+        "keyValue": 300
+      }
+    ]
+  },
   "400000001": {
     "id": 400000001,
     "weapon_power_": 104,
