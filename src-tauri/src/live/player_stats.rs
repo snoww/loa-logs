@@ -938,6 +938,7 @@ impl fmt::Display for StatData {
 
 #[derive(Debug, Clone, Default)]
 pub struct RuntimeState {
+    pub next_skill: super::next_skill::NextSkillSnapshot,
     pub identity_runtime_reliable: bool,
     pub identity_stance: u8,
     pub identity_gauge1: u32,
@@ -966,6 +967,7 @@ impl RuntimeState {
     }
 
     pub fn clear(&mut self) {
+        self.next_skill = Default::default();
         self.identity_runtime_reliable = false;
         self.identity_stance = 0;
         self.identity_gauge1 = 0;
@@ -993,6 +995,7 @@ impl RuntimeState {
 
 #[derive(Debug, Clone)]
 pub struct AbilityFeatureState {
+    pub ability_id: u32,
     pub feature_type: String,
     pub level: u32,
     pub values: Vec<i64>,
@@ -1379,6 +1382,7 @@ impl PlayerStats {
         entries.sort_by(|lhs, rhs| {
             lhs.owner_id
                 .cmp(&rhs.owner_id)
+                .then_with(|| lhs.ability_id.cmp(&rhs.ability_id))
                 .then_with(|| {
                     normalize_feature_type(&lhs.feature_type)
                         .cmp(normalize_feature_type(&rhs.feature_type))
@@ -1772,7 +1776,8 @@ impl PlayerStats {
             self.handle_external_addon(addon, owner_id, class_id, StatSource::InspectDeferred);
         }
         for feature in &snapshot.derived_stats.ability_features {
-            self.add_ability_feature(
+            self.add_identified_ability_feature(
+                feature.ability_id,
                 &feature.feature_type,
                 feature.level,
                 &feature.values,
@@ -1780,8 +1785,8 @@ impl PlayerStats {
             );
         }
         self.damage_conversion_type = snapshot.derived_stats.damage_conversion_type;
-        self.apply_lal_base_inspect_bonuses();
-        self.apply_lal_stat_pair_fallback(&snapshot.stat_pairs);
+        self.apply_base_inspect_bonuses();
+        self.apply_stat_pair_fallback(&snapshot.stat_pairs);
     }
 
     pub fn apply_skill_runtime_data(
@@ -1835,6 +1840,7 @@ impl PlayerStats {
         self_effects: &[StatusEffectDetails],
         target_effects: &[StatusEffectDetails],
         eval_tick_ms: i64,
+        include_next_skill: bool,
     ) {
         self.evaluate_combat_effects(
             skill_id,
@@ -1862,6 +1868,7 @@ impl PlayerStats {
             skill_real_groups,
             runtime_data,
             eval_tick_ms,
+            include_next_skill,
         );
     }
 
@@ -1891,6 +1898,7 @@ impl PlayerStats {
             self_effects,
             target_effects,
             eval_tick_ms,
+            true,
         );
     }
 
@@ -2080,21 +2088,41 @@ impl PlayerStats {
         values: &[i64],
         owner_id: u64,
     ) {
+        self.add_identified_ability_feature(0, feature_type, level, values, owner_id);
+    }
+
+    pub fn add_identified_ability_feature(
+        &mut self,
+        ability_id: u32,
+        feature_type: &str,
+        level: u32,
+        values: &[i64],
+        owner_id: u64,
+    ) {
+        assert!(
+            ability_id != 0 || !super::next_skill::is_feature(feature_type),
+            "next skill ability needs an id"
+        );
         let normalized = normalize_feature_type(feature_type);
-        if let Some(existing) = self
-            .active_ability_features
-            .iter_mut()
-            .find(|feature| normalize_feature_type(&feature.feature_type) == normalized)
-        {
+        if let Some(existing) = self.active_ability_features.iter_mut().find(|feature| {
+            if ability_id == 0 {
+                feature.ability_id == 0
+                    && normalize_feature_type(&feature.feature_type) == normalized
+            } else {
+                feature.ability_id == ability_id
+            }
+        }) {
             if level > existing.level {
                 existing.feature_type = feature_type.to_string();
                 existing.level = level;
                 existing.values = values.to_vec();
                 existing.owner_id = owner_id;
+                Self::sort_active_ability_features(&mut self.active_ability_features);
             }
             return;
         }
         self.active_ability_features.push(AbilityFeatureState {
+            ability_id,
             feature_type: feature_type.to_string(),
             level,
             values: values.to_vec(),
@@ -2582,6 +2610,7 @@ impl PlayerStats {
         skill_real_groups: &[u32],
         runtime_data: Option<&SkillRuntimeData>,
         eval_tick_ms: i64,
+        include_next_skill: bool,
     ) {
         let skill_identity_category = self.resolve_skill_identity_category(skill_id, runtime_data);
         let skill_real_identity_category =
@@ -2612,6 +2641,29 @@ impl PlayerStats {
         };
 
         for active in self.active_ability_features.clone() {
+            if include_next_skill
+                && super::next_skill::is_feature(&active.feature_type)
+                && let Some(definition) = super::next_skill::definition_index()
+                    .and_then(|index| index.definitions.get(&(active.ability_id, active.level)))
+                && self
+                    .runtime_state
+                    .next_skill
+                    .has_cast(definition.key, skill_id, skill_real_id)
+            {
+                let source = StatSource::Ability(active.ability_id);
+                self.critical_hit_rate.add(
+                    definition.critical_rate as f64 / 10000.0,
+                    self.owner_id,
+                    active.owner_id,
+                    source.clone(),
+                );
+                self.skill_damage_rate.add(
+                    definition.damage_rate as f64 / 10000.0,
+                    self.owner_id,
+                    active.owner_id,
+                    source,
+                );
+            }
             match normalize_feature_type(&active.feature_type) {
                 "matt_critical" => {
                     if active.values.len() > 2 {
@@ -3901,6 +3953,7 @@ impl PlayerStats {
                 )),
             },
             "runtime_state": {
+                "next_skill": self.runtime_state.next_skill.debug_value(),
                 "identity_stance": self.runtime_state.identity_stance,
                 "identity_gauge1": self.runtime_state.identity_gauge1,
                 "identity_gauge2": self.runtime_state.identity_gauge2,
@@ -3963,6 +4016,7 @@ impl PlayerStats {
             }).collect::<Vec<_>>(),
             "active_ability_features": self.active_ability_features.iter().map(|entry| {
                 json!({
+                    "ability_id": entry.ability_id,
                     "owner_id": entry.owner_id,
                     "feature_type": entry.feature_type,
                     "level": entry.level,
@@ -4380,7 +4434,7 @@ impl PlayerStats {
                     }
                 }
             }
-            "ability_point" => {
+            "ability_point" | "ability_point_passive" => {
                 self.handle_ability_point(addon, owner_id, class_id, source, source_priority)
             }
             "ability_feature" => self.handle_ability_feature(addon, owner_id),
@@ -4440,7 +4494,8 @@ impl PlayerStats {
         if let Some(ability) = EXTERNAL_ABILITY_DATA.get(&addon.key_index)
             && let Some(level) = ability.levels.get(&(addon.key_value as u32))
         {
-            self.add_ability_feature(
+            self.add_identified_ability_feature(
+                addon.key_index,
                 &ability.feature_type,
                 addon.key_value as u32,
                 &level.values,
@@ -4457,20 +4512,7 @@ impl PlayerStats {
         _source: StatSource,
         source_priority: i32,
     ) {
-        let ability_id = addon
-            .stat_type
-            .parse::<u32>()
-            .ok()
-            .filter(|ability_id| *ability_id != 0)
-            .or_else(|| {
-                EXTERNAL_ABILITY_DATA
-                    .contains_key(&addon.key_index)
-                    .then_some(addon.key_index)
-            });
-        if let Some(ability_id) = ability_id
-            && let Some(ability) = EXTERNAL_ABILITY_DATA.get(&ability_id)
-            && let Some(level) = ability.levels.get(&1)
-        {
+        if let Some((ability_id, level)) = addon.resolve_ability_point(&EXTERNAL_ABILITY_DATA) {
             let nested_source = StatSource::Ability(ability_id);
             for nested in &level.addons {
                 self.handle_external_addon_with_priority(
@@ -4833,7 +4875,7 @@ impl PlayerStats {
         }
     }
 
-    fn apply_lal_base_inspect_bonuses(&mut self) {
+    fn apply_base_inspect_bonuses(&mut self) {
         self.dex_stat
             .add_self(ROSTER_MAIN_STAT_BONUS, StatSource::Roster);
         self.int_stat
@@ -4872,7 +4914,7 @@ impl PlayerStats {
             .add_self(ROSTER_CRITICAL_HIT_BONUS, StatSource::Roster);
     }
 
-    fn apply_lal_stat_pair_fallback(&mut self, stat_pairs: &HashMap<u8, i64>) {
+    fn apply_stat_pair_fallback(&mut self, stat_pairs: &HashMap<u8, i64>) {
         for (stat_id, value) in stat_pairs {
             let Some(ty) = StatType::from_raw(*stat_id as u32) else {
                 log::error!("Unknown stat_id {stat_id} in stat pair fallback.");
@@ -5208,6 +5250,76 @@ fn get_damage_splits(damage: f64, factors: &[f64]) -> Vec<f64> {
 }
 
 #[cfg(test)]
+mod code_port_tests {
+    use super::*;
+    use crate::live::test_data::{POINT_ABILITY_ID, POINT_ABILITY_SKILL_ID};
+    use crate::models::ExternalResourceAddon;
+
+    #[test]
+    fn ability_registration_keeps_distinct_ids_and_the_highest_exact_level() {
+        let mut stats = PlayerStats::default();
+        stats.add_identified_ability_feature(20, "ag_alpha_next_skill_enhance", 1, &[100], 9);
+        stats.add_identified_ability_feature(10, "ag_alpha_next_skill_enhance", 1, &[200], 10);
+        stats.add_identified_ability_feature(20, "ag_alpha_next_skill_enhance", 2, &[300], 3);
+        stats.add_identified_ability_feature(20, "ag_alpha_next_skill_enhance", 1, &[900], 1);
+        let registrations: Vec<_> = stats
+            .active_ability_features
+            .iter()
+            .map(|feature| {
+                (
+                    feature.ability_id,
+                    feature.level,
+                    feature.owner_id,
+                    feature.values[0],
+                )
+            })
+            .collect();
+        assert_eq!(registrations, vec![(20, 2, 3, 300), (10, 1, 10, 200)]);
+    }
+
+    #[test]
+    fn runtime_ability_points_select_the_resolved_level_without_clamping() {
+        crate::live::test_data::initialize();
+        for addon_type in ["ability_point", "ability_point_passive"] {
+            for (points, expected_multiplier) in [
+                (5, Some(0.0125)),
+                (10, Some(0.025)),
+                (15, Some(0.0375)),
+                (0, None),
+                (-5, None),
+                (6, None),
+                (20, None),
+            ] {
+                let addon = ExternalResourceAddon {
+                    addon_type: addon_type.to_string(),
+                    stat_type: "none".to_string(),
+                    key_index: POINT_ABILITY_ID,
+                    key_value: points,
+                    ..Default::default()
+                };
+                let mut stats = PlayerStats {
+                    owner_id: 17,
+                    ..Default::default()
+                };
+                stats.handle_external_addon(&addon, 19, 204, StatSource::Test);
+                assert_eq!(
+                    stats
+                        .skill_status_effect_multiplier
+                        .get(&POINT_ABILITY_SKILL_ID)
+                        .copied(),
+                    expected_multiplier,
+                    "{addon_type} points={points}"
+                );
+                assert_eq!(
+                    stats.skill_status_effect_multiplier.len(),
+                    usize::from(expected_multiplier.is_some())
+                );
+            }
+        }
+    }
+}
+
+#[cfg(test)]
 mod gravity_training_tests {
     use super::{PlayerStats, StatSource};
     use crate::live::entity_tracker::SkillRuntimeData;
@@ -5230,6 +5342,7 @@ mod gravity_training_tests {
             &[skill_group],
             Some(&runtime_data),
             0,
+            true,
         );
         stats.critical_hit_rate.value()
     }

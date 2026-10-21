@@ -2,8 +2,7 @@ use crate::data::{
     EXTERNAL_ABILITY_DATA, EXTERNAL_ARK_GRID_DATA, EXTERNAL_ARK_GRID_GEM_LEVELS_BY_OPTION_ID,
     EXTERNAL_ARK_PASSIVE_DATA, EXTERNAL_ARK_PASSIVE_KARMA_DATA, EXTERNAL_CARD_BOOK_DATA,
     EXTERNAL_ITEM_AMPLIFICATION_BASE_DATA, EXTERNAL_ITEM_DATA,
-    EXTERNAL_ITEM_GRADE_STATIC_OPTION_DATA, EXTERNAL_ITEM_LEVEL_OPTION_DATA, SKILL_DATA,
-    STAT_TYPE_MAP,
+    EXTERNAL_ITEM_GRADE_STATIC_OPTION_DATA, EXTERNAL_ITEM_LEVEL_OPTION_DATA, STAT_TYPE_MAP,
 };
 use crate::live::addon_type::AddonType;
 use crate::live::stat_type::StatType;
@@ -11,9 +10,9 @@ use crate::models::ExternalResourceAddon;
 
 use hashbrown::HashMap;
 use meter_defs::defs::{
-    ArkPassiveItemOption, BraceletItemOption, ItemData, MinMaxItemOption, PKTPCInspectResult,
+    ArkPassiveItemOption, BraceletItemOption, GemItemOption, ItemData, MinMaxItemOption,
+    PKTPCInspectResult,
 };
-use std::sync::OnceLock;
 
 const DEFAULT_ARK_PASSIVE_KARMA_EVOLUTION_DAMAGE: f64 = 0.06;
 const DEFAULT_ARK_PASSIVE_KARMA_BRAND_POWER: f64 = 0.06;
@@ -33,17 +32,9 @@ struct ParsedItemAddon {
     value: i64,
 }
 
-#[derive(Debug, Clone, Copy)]
-struct GemLayoutOffsets {
-    ability_offset: usize,
-    addon_offset: usize,
-    value_offset: usize,
-}
-
-static GEM_LAYOUT_OFFSETS: OnceLock<GemLayoutOffsets> = OnceLock::new();
-
 #[derive(Debug, Default, Clone)]
 pub struct DerivedAbilityFeature {
+    pub ability_id: u32,
     pub feature_type: String,
     pub level: u32,
     pub values: Vec<i64>,
@@ -164,7 +155,13 @@ fn apply_engravings(result: &PKTPCInspectResult, derived: &mut InspectDerivedSta
                 }
             }
             "troop_leader" | "broken_bone" => {
-                add_ability_feature(&ability.feature_type, level, &level_data.values, derived);
+                add_ability_feature(
+                    engraving.id,
+                    &ability.feature_type,
+                    level,
+                    &level_data.values,
+                    derived,
+                );
             }
             "ether_boy" => {
                 push_unique_u32(
@@ -282,22 +279,18 @@ fn apply_item(
             }
         }
 
-        if item_data.b_0 == 7
-            && let Some(gem_bytes) = item_data.bytearraylist_0.as_deref()
-        {
-            item_debug.gem_line_count = split_fixed_chunks(gem_bytes, 9).count();
-            if let Some(gem_layout) = resolve_gem_layout_once(gem_bytes) {
-                for chunk in split_fixed_chunks(gem_bytes, 9) {
-                    apply_gem_addon(chunk, gem_layout, raw_stat_pairs, derived);
-                }
-            } else {
-                item_debug.issues.push("unresolved_gem_layout".to_string());
+        if item_data.b_0 == 7 {
+            let gem_options = item_data.gem_options.as_deref().expect("missing gem stats");
+            assert!(!gem_options.is_empty(), "missing gem stats");
+            item_debug.gem_line_count = gem_options.len();
+            for option in gem_options {
+                apply_gem_addon(option, raw_stat_pairs, derived);
             }
         }
     } else if item_data.equippable_item_data.is_some() || item_data.b_0 == 7 {
         item_debug
             .issues
-            .push("skipped_non_lal_extended_item_parse".to_string());
+            .push("skipped_extended_item_parse".to_string());
     }
 
     let mut bonus_mult = 1.0;
@@ -430,6 +423,7 @@ fn apply_ark_passives(
                         && let Some(ability_level) = ability.levels.get(&(addon.key_value as u32))
                     {
                         add_ability_feature(
+                            addon.key_index,
                             &ability.feature_type,
                             addon.key_value as u32,
                             &ability_level.values,
@@ -625,12 +619,13 @@ fn apply_ark_grid(
     }
 
     for (ability_id, total_points) in pending_ability_points {
-        if total_points <= 0 || total_points % 5 != 0 {
-            continue;
-        }
-        apply_ability_level_addons(
-            ability_id,
-            (total_points / 5) as u32,
+        apply_external_addon(
+            &ExternalResourceAddon {
+                addon_type: "ability_point_passive".to_string(),
+                key_index: ability_id,
+                key_value: total_points,
+                ..Default::default()
+            },
             raw_stat_pairs,
             derived,
         );
@@ -649,14 +644,12 @@ fn apply_external_addon(
             raw_stat_pairs,
             derived,
         ),
-        "ability_point" => {
-            let ability_id = addon
-                .stat_type
-                .parse::<u32>()
-                .ok()
-                .filter(|ability_id| *ability_id != 0)
-                .unwrap_or(addon.key_index);
-            apply_ability_level_addons(ability_id, 1, raw_stat_pairs, derived)
+        "ability_point" | "ability_point_passive" => {
+            if let Some((_, level)) = addon.resolve_ability_point(&EXTERNAL_ABILITY_DATA) {
+                for nested in &level.addons {
+                    apply_external_addon(nested, raw_stat_pairs, derived);
+                }
+            }
         }
         "attack_power_amplify_multiplier" => {
             derived.ally_attack_power_power += addon.key_value as f64 / 10000.0;
@@ -684,6 +677,7 @@ fn apply_external_addon(
                 && let Some(level) = ability.levels.get(&(addon.key_value as u32))
             {
                 add_ability_feature(
+                    addon.key_index,
                     &ability.feature_type,
                     addon.key_value as u32,
                     &level.values,
@@ -704,16 +698,16 @@ fn apply_external_addon(
 }
 
 fn add_ability_feature(
+    ability_id: u32,
     feature_type: &str,
     level: u32,
     values: &[i64],
     derived: &mut InspectDerivedStats,
 ) {
-    let normalized = normalize_feature_type(feature_type);
     if let Some(existing) = derived
         .ability_features
         .iter_mut()
-        .find(|feature| normalize_feature_type(&feature.feature_type) == normalized)
+        .find(|feature| feature.ability_id == ability_id)
     {
         if level > existing.level {
             existing.feature_type = feature_type.to_string();
@@ -723,6 +717,7 @@ fn add_ability_feature(
         return;
     }
     derived.ability_features.push(DerivedAbilityFeature {
+        ability_id,
         feature_type: feature_type.to_string(),
         level,
         values: values.to_vec(),
@@ -753,8 +748,22 @@ fn apply_numeric_addon(
                 *derived.stat_pairs.entry(stat_id).or_default() += value;
             }
         }
-        Some(AddonType::ABILITY_POINT) => {
-            apply_ability_level_addons(stat_or_key, 1, raw_stat_pairs, derived)
+        Some(AddonType::ABILITY_POINT | AddonType::ABILITY_POINT_PASSIVE) => {
+            apply_external_addon(
+                &ExternalResourceAddon {
+                    addon_type: if addon_type == AddonType::ABILITY_POINT as u8 {
+                        "ability_point"
+                    } else {
+                        "ability_point_passive"
+                    }
+                    .to_string(),
+                    key_index: stat_or_key,
+                    key_value: value,
+                    ..Default::default()
+                },
+                raw_stat_pairs,
+                derived,
+            );
         }
         Some(AddonType::ATTACK_POWER_AMPLIFY_MULTIPLIER) => {
             derived.ally_attack_power_power += value as f64 / 10000.0;
@@ -1073,86 +1082,18 @@ fn apply_item_level_option(
     true
 }
 
-fn apply_ability_level_addons(
-    ability_id: u32,
-    level: u32,
-    raw_stat_pairs: &HashMap<u8, i64>,
-    derived: &mut InspectDerivedStats,
-) {
-    let Some(ability) = EXTERNAL_ABILITY_DATA.get(&ability_id) else {
-        return;
-    };
-    let Some(level_data) = ability.levels.get(&level) else {
-        return;
-    };
-    for addon in &level_data.addons {
-        apply_external_addon(addon, raw_stat_pairs, derived);
-    }
-}
-
 fn apply_gem_addon(
-    gem_line: &[u8],
-    gem_layout: GemLayoutOffsets,
+    option: &GemItemOption,
     raw_stat_pairs: &HashMap<u8, i64>,
     derived: &mut InspectDerivedStats,
 ) {
-    let GemLayoutOffsets {
-        ability_offset,
-        addon_offset,
-        value_offset,
-    } = gem_layout;
-    debug_assert!(gem_line.len() >= ability_offset + 4 && gem_line.len() >= value_offset + 4);
-
-    let addon_type = gem_line[addon_offset];
-    let ability_id = read_u32(gem_line, ability_offset);
-    let value = read_i32(gem_line, value_offset) as i64;
-    apply_numeric_addon(addon_type, ability_id, value, raw_stat_pairs, derived);
-}
-
-fn resolve_gem_layout_once(gem_bytes: &[u8]) -> Option<GemLayoutOffsets> {
-    if let Some(layout) = GEM_LAYOUT_OFFSETS.get() {
-        return Some(*layout);
-    }
-
-    let layout = split_fixed_chunks(gem_bytes, 9).find_map(resolve_gem_layout)?;
-    let _ = GEM_LAYOUT_OFFSETS.set(layout);
-    Some(layout)
-}
-
-fn resolve_gem_layout(gem_line: &[u8]) -> Option<GemLayoutOffsets> {
-    let mut ability_offset = None;
-    for idx in 0..=gem_line.len().saturating_sub(4) {
-        let skill_id = read_u32(gem_line, idx);
-        if SKILL_DATA.contains_key(&skill_id) {
-            ability_offset = Some(idx);
-            break;
-        }
-    }
-    let ability_offset = ability_offset?;
-
-    let mut value_offset = None;
-    for idx in 0..=gem_line.len().saturating_sub(4) {
-        if idx >= ability_offset && idx < ability_offset + 4 {
-            continue;
-        }
-        let value = read_u32(gem_line, idx);
-        if (300..=4400).contains(&value) {
-            value_offset = Some(idx);
-            break;
-        }
-    }
-    let value_offset = value_offset?;
-
-    let addon_offset = (0..gem_line.len()).find(|idx| {
-        !(*idx >= ability_offset && *idx < ability_offset + 4)
-            && !(*idx >= value_offset && *idx < value_offset + 4)
-    })?;
-
-    Some(GemLayoutOffsets {
-        ability_offset,
-        addon_offset,
-        value_offset,
-    })
+    apply_numeric_addon(
+        option.addon_type,
+        option.ability_id,
+        option.value as i32 as i64,
+        raw_stat_pairs,
+        derived,
+    );
 }
 
 fn apply_item_option_level<T: ItemOptionLevelLike>(
@@ -1268,24 +1209,6 @@ fn damage_attr_from_name(name: &str) -> Option<u8> {
     }
 }
 
-fn split_fixed_chunks(bytes: &[u8], chunk_len: usize) -> impl Iterator<Item = &[u8]> {
-    bytes
-        .chunks_exact(chunk_len)
-        .filter(|chunk| !chunk.iter().all(|value| *value == 0))
-}
-
-fn read_u32(bytes: &[u8], offset: usize) -> u32 {
-    let mut value = [0u8; 4];
-    value.copy_from_slice(&bytes[offset..offset + 4]);
-    u32::from_le_bytes(value)
-}
-
-fn read_i32(bytes: &[u8], offset: usize) -> i32 {
-    let mut value = [0u8; 4];
-    value.copy_from_slice(&bytes[offset..offset + 4]);
-    i32::from_le_bytes(value)
-}
-
 trait ItemOptionLevelLike {
     fn weapon_power(&self) -> i64;
     fn physical_defense(&self) -> i64;
@@ -1341,6 +1264,156 @@ impl ItemOptionLevelLike for crate::models::ExternalItemGradeStaticOptionData {
     }
     fn vitality(&self) -> i64 {
         self.vitality
+    }
+}
+
+#[cfg(test)]
+mod code_port_tests {
+    use super::*;
+    use crate::live::entity_tracker::InspectSnapshot;
+    use crate::live::player_stats::PlayerStats;
+    use crate::live::test_data::{GEM_ITEM_ID, POINT_ABILITY_ID, POINT_ABILITY_SKILL_ID};
+    use meter_defs::defs::{GemItemOption, ItemDataTyped};
+
+    fn gem_item(options: Option<Vec<GemItemOption>>) -> ItemData {
+        ItemData {
+            item_id: Some(GEM_ITEM_ID),
+            item_data_typed: Some(ItemDataTyped {
+                b_0: 7,
+                gem_options: options,
+                ..Default::default()
+            }),
+            ..Default::default()
+        }
+    }
+
+    #[test]
+    fn typed_gem_options_preserve_keys_signed_values_and_all_lines() {
+        crate::live::test_data::initialize();
+        let item = gem_item(Some(vec![
+            GemItemOption {
+                addon_type: AddonType::SKILL_STATUS_EFFECT_STAT_MULTIPLIER as u8,
+                ability_id: 4_000_000_001,
+                value: 125,
+            },
+            GemItemOption {
+                addon_type: AddonType::SKILL_ATTACK_POWER_AMPLIFY_MULTIPLIER as u8,
+                ability_id: 4_000_000_002,
+                value: 5000,
+            },
+            GemItemOption {
+                addon_type: AddonType::STAT as u8,
+                ability_id: StatType::WEAPON_DAM as u32,
+                value: (-75_i32) as u32,
+            },
+        ]));
+        let mut derived = InspectDerivedStats::default();
+        apply_item(&item, &HashMap::new(), &mut derived);
+
+        assert_eq!(
+            derived.skill_status_effect_multiplier_by_skill[&4_000_000_001],
+            0.0125
+        );
+        assert_eq!(
+            derived.skill_attack_power_multiplier_by_skill[&4_000_000_002],
+            0.5
+        );
+        assert_eq!(derived.stat_pairs[&(StatType::WEAPON_DAM as u8)], -75);
+        assert_eq!(derived.item_build_debug[0].gem_line_count, 3);
+        assert!(derived.item_build_debug[0].issues.is_empty());
+
+        let snapshot = InspectSnapshot {
+            derived_stats: derived,
+            ..Default::default()
+        };
+        let mut stats = PlayerStats::default();
+        stats.load_from_snapshot(&snapshot, 17, 204);
+        assert_eq!(
+            stats.get_skill_status_effect_multiplier(4_000_000_001, &[]),
+            0.0125
+        );
+        assert_eq!(stats.get_skill_attack_power_multiplier(4_000_000_002), 0.5);
+    }
+
+    #[test]
+    fn typed_gem_ability_points_use_the_shared_level_resolution() {
+        crate::live::test_data::initialize();
+        for addon_type in [AddonType::ABILITY_POINT, AddonType::ABILITY_POINT_PASSIVE] {
+            let mut derived = InspectDerivedStats::default();
+            apply_gem_addon(
+                &GemItemOption {
+                    addon_type: addon_type as u8,
+                    ability_id: POINT_ABILITY_ID,
+                    value: 10,
+                },
+                &HashMap::new(),
+                &mut derived,
+            );
+            assert_eq!(
+                derived.skill_status_effect_multiplier_by_skill[&POINT_ABILITY_SKILL_ID], 0.025,
+                "{addon_type:?}"
+            );
+        }
+    }
+
+    #[test]
+    #[should_panic(expected = "missing gem stats")]
+    fn gem_item_rejects_absent_options() {
+        crate::live::test_data::initialize();
+        apply_item(
+            &gem_item(None),
+            &HashMap::new(),
+            &mut InspectDerivedStats::default(),
+        );
+    }
+
+    #[test]
+    #[should_panic(expected = "missing gem stats")]
+    fn gem_item_rejects_empty_options() {
+        crate::live::test_data::initialize();
+        apply_item(
+            &gem_item(Some(vec![])),
+            &HashMap::new(),
+            &mut InspectDerivedStats::default(),
+        );
+    }
+
+    #[test]
+    fn inspect_ability_points_select_the_resolved_level_without_clamping() {
+        crate::live::test_data::initialize();
+        for addon_type in ["ability_point", "ability_point_passive"] {
+            for (points, expected_multiplier) in [
+                (5, Some(0.0125)),
+                (10, Some(0.025)),
+                (15, Some(0.0375)),
+                (0, None),
+                (-5, None),
+                (6, None),
+                (20, None),
+            ] {
+                let addon = ExternalResourceAddon {
+                    addon_type: addon_type.to_string(),
+                    stat_type: "none".to_string(),
+                    key_index: POINT_ABILITY_ID,
+                    key_value: points,
+                    ..Default::default()
+                };
+                let mut derived = InspectDerivedStats::default();
+                apply_external_addon(&addon, &HashMap::new(), &mut derived);
+                assert_eq!(
+                    derived
+                        .skill_status_effect_multiplier_by_skill
+                        .get(&POINT_ABILITY_SKILL_ID)
+                        .copied(),
+                    expected_multiplier,
+                    "{addon_type} points={points}"
+                );
+                assert_eq!(
+                    derived.skill_status_effect_multiplier_by_skill.len(),
+                    usize::from(expected_multiplier.is_some())
+                );
+            }
+        }
     }
 }
 

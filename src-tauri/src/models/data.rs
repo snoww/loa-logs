@@ -165,6 +165,41 @@ pub struct ExternalResourceAddon {
 }
 
 impl ExternalResourceAddon {
+    /// Item lines identify a level-one ability through statType. Point-based addons instead
+    /// identify it through keyIndex, with five points per level and no level clamping.
+    pub(crate) fn resolve_ability_point<'a>(
+        &self,
+        abilities: &'a HashMap<u32, ExternalAbilityData>,
+    ) -> Option<(u32, &'a ExternalAbilityLevelData)> {
+        if !matches!(
+            self.addon_type.as_str(),
+            "ability_point" | "ability_point_passive"
+        ) {
+            return None;
+        }
+        let stat_ability_id = (self.addon_type == "ability_point")
+            .then(|| self.stat_type.parse::<u32>().ok())
+            .flatten()
+            .filter(|id| *id != 0 && abilities.contains_key(id));
+        let ability_id = stat_ability_id.unwrap_or(self.key_index);
+        let level_id = if stat_ability_id.is_some() {
+            1
+        } else {
+            const POINTS_PER_ABILITY_LEVEL: i64 = 5;
+            if self.key_value <= 0 || self.key_value % POINTS_PER_ABILITY_LEVEL != 0 {
+                return None;
+            }
+            u32::try_from(self.key_value / POINTS_PER_ABILITY_LEVEL).ok()?
+        };
+        if ability_id == 0 {
+            return None;
+        }
+        Some((
+            ability_id,
+            abilities.get(&ability_id)?.levels.get(&level_id)?,
+        ))
+    }
+
     /// Whether the addon's Ark Passive node gates admit it for a player who learned
     /// `learned_node_ids`.
     pub fn is_admitted_by_node_gates(
@@ -523,6 +558,80 @@ pub struct ExternalItemClassOptionData {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn ability_point_resolution_preserves_item_ids_and_point_based_levels() {
+        let abilities = HashMap::from([
+            (
+                17,
+                ExternalAbilityData {
+                    id: 17,
+                    levels: HashMap::from([(
+                        1,
+                        ExternalAbilityLevelData {
+                            values: vec![701],
+                            ..Default::default()
+                        },
+                    )]),
+                    ..Default::default()
+                },
+            ),
+            (
+                29,
+                ExternalAbilityData {
+                    id: 29,
+                    levels: HashMap::from([
+                        (
+                            1,
+                            ExternalAbilityLevelData {
+                                values: vec![803],
+                                ..Default::default()
+                            },
+                        ),
+                        (
+                            2,
+                            ExternalAbilityLevelData {
+                                values: vec![907],
+                                ..Default::default()
+                            },
+                        ),
+                    ]),
+                    ..Default::default()
+                },
+            ),
+        ]);
+        for (addon_type, stat_type, key_index, points, expected) in [
+            ("ability_point", "17", 29, 10, Some((17, 701))),
+            ("ability_point", "17", 29, 0, Some((17, 701))),
+            ("ability_point", "none", 29, 5, Some((29, 803))),
+            ("ability_point", "0", 29, 10, Some((29, 907))),
+            ("ability_point", "999", 29, 10, Some((29, 907))),
+            ("ability_point_passive", "17", 29, 10, Some((29, 907))),
+            ("ability_point_passive", "none", 29, 0, None),
+            ("ability_point_passive", "none", 29, -5, None),
+            ("ability_point_passive", "none", 29, 4, None),
+            ("ability_point_passive", "none", 29, 6, None),
+            ("ability_point_passive", "none", 29, 15, None),
+            ("ability_point_passive", "none", 0, 10, None),
+            ("ability_point_passive", "none", 999, 10, None),
+            ("stat", "17", 29, 10, None),
+        ] {
+            let addon = ExternalResourceAddon {
+                addon_type: addon_type.to_string(),
+                stat_type: stat_type.to_string(),
+                key_index,
+                key_value: points,
+                ..Default::default()
+            };
+            assert_eq!(
+                addon
+                    .resolve_ability_point(&abilities)
+                    .map(|(id, level)| (id, level.values[0])),
+                expected,
+                "type={addon_type} stat={stat_type} key={key_index} points={points}"
+            );
+        }
+    }
 
     #[test]
     fn ability_feature_type_accepts_named_numeric_and_missing_values() {

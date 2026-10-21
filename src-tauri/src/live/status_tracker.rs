@@ -66,6 +66,8 @@ pub struct MeasuredStat {
 }
 
 pub struct StatusTracker {
+    pub next_skill_events: Vec<super::next_skill::MarkerEvent>,
+    pub next_skill_reset_pending: bool,
     party_tracker: Rc<RefCell<PartyTracker>>,
     local_status_effect_registry: HashMap<u64, StatusEffectRegistry>,
     party_status_effect_registry: HashMap<u64, StatusEffectRegistry>,
@@ -100,6 +102,8 @@ pub struct StatusTracker {
 impl StatusTracker {
     pub fn new(party_tracker: Rc<RefCell<PartyTracker>>) -> Self {
         Self {
+            next_skill_events: Vec::new(),
+            next_skill_reset_pending: false,
             party_tracker,
             local_status_effect_registry: HashMap::new(),
             party_status_effect_registry: HashMap::new(),
@@ -147,6 +151,37 @@ impl StatusTracker {
         mut se: StatusEffectDetails,
         runtime_for_carried_skill: impl FnOnce(u32) -> Option<SkillRuntimeData>,
     ) {
+        let previous_marker = self
+            .registry(se.target_type)
+            .get(&se.target_id)
+            .and_then(|effects| effects.get(&se.instance_id))
+            .map(|effect| (effect.status_effect_id, effect.stack_count));
+        if let Some((status_id, _)) = previous_marker
+            && status_id != se.status_effect_id
+            && super::next_skill::is_marker(status_id)
+        {
+            self.next_skill_events.push(super::next_skill::MarkerEvent {
+                target_id: se.target_id,
+                party: se.target_type == StatusEffectTargetType::Party,
+                key: (status_id, se.instance_id),
+                time_ms: se.timestamp.timestamp_millis(),
+                kind: super::next_skill::MarkerEventKind::Remove { consumption: false },
+            });
+        }
+        if super::next_skill::is_marker(se.status_effect_id) {
+            self.next_skill_events.push(super::next_skill::MarkerEvent {
+                target_id: se.target_id,
+                party: se.target_type == StatusEffectTargetType::Party,
+                key: (se.status_effect_id, se.instance_id),
+                time_ms: se.timestamp.timestamp_millis(),
+                kind: super::next_skill::MarkerEventKind::Upsert {
+                    stacks: se.stack_count,
+                    previous_stacks: previous_marker
+                        .filter(|(id, _)| *id == se.status_effect_id)
+                        .map(|(_, count)| count),
+                },
+            });
+        }
         self.prune_retained_entries(se.timestamp);
         let existing = self
             .registry(se.target_type)
@@ -366,8 +401,33 @@ impl StatusTracker {
             }
         }
         for (target_id, effect) in transitions {
-            self.note_stat_sources_changed(target_id, &effect, now);
+            self.note_visibility_changed(target_id, &effect, now);
         }
+    }
+
+    fn note_visibility_changed(
+        &mut self,
+        target_id: u64,
+        effect: &StatusEffectDetails,
+        at: DateTime<Utc>,
+    ) {
+        if super::next_skill::is_marker(effect.status_effect_id) {
+            self.next_skill_events.push(super::next_skill::MarkerEvent {
+                target_id,
+                party: effect.target_type == StatusEffectTargetType::Party,
+                key: (effect.status_effect_id, effect.instance_id),
+                time_ms: at.timestamp_millis(),
+                kind: if effect.packet_expired {
+                    super::next_skill::MarkerEventKind::Remove { consumption: false }
+                } else {
+                    super::next_skill::MarkerEventKind::Upsert {
+                        stacks: effect.stack_count,
+                        previous_stacks: None,
+                    }
+                },
+            });
+        }
+        self.note_stat_sources_changed(target_id, effect, at);
     }
 
     /// Records that a source of an identity stat on `target_id` was added, refreshed, removed,
@@ -475,6 +535,15 @@ impl StatusTracker {
         };
         let now = Utc::now();
         for (instance_id, effect) in effects {
+            if super::next_skill::is_marker(effect.status_effect_id) {
+                self.next_skill_events.push(super::next_skill::MarkerEvent {
+                    target_id: object_id,
+                    party: target_type == StatusEffectTargetType::Party,
+                    key: (effect.status_effect_id, instance_id),
+                    time_ms: now.timestamp_millis(),
+                    kind: super::next_skill::MarkerEventKind::Remove { consumption: false },
+                });
+            }
             self.note_stat_sources_changed(object_id, &effect, now);
             if effect.owner_is_player {
                 self.retained_entries_by_instance_id
@@ -512,6 +581,7 @@ impl StatusTracker {
         Vec<StatusEffectDetails>,
         bool,
     ) {
+        let server_now = self.local_to_server_time(Utc::now());
         let registry = match sett {
             StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
             StatusEffectTargetType::Party => &mut self.party_status_effect_registry,
@@ -545,6 +615,18 @@ impl StatusTracker {
         }
         let now = Utc::now();
         for se in &removed_entries {
+            if super::next_skill::is_marker(se.status_effect_id) {
+                self.next_skill_events.push(super::next_skill::MarkerEvent {
+                    target_id,
+                    party: sett == StatusEffectTargetType::Party,
+                    key: (se.status_effect_id, se.instance_id),
+                    time_ms: now.timestamp_millis(),
+                    kind: super::next_skill::MarkerEventKind::Remove {
+                        consumption: !se.packet_expired
+                            && se.expire_at.is_none_or(|end| end > server_now),
+                    },
+                });
+            }
             self.note_stat_sources_changed(target_id, se, now);
         }
 
@@ -605,7 +687,7 @@ impl StatusTracker {
             effect.name, effect.status_effect_id
         );
         if let Some(effect) = transition {
-            self.note_stat_sources_changed(target_id, &effect, now);
+            self.note_visibility_changed(target_id, &effect, now);
         }
         true
     }
@@ -821,7 +903,7 @@ impl StatusTracker {
         }
         for (se, expire_at) in newly_expired {
             let expired_at = self.server_to_local_time(expire_at);
-            self.note_stat_sources_changed(target_id, &se, expired_at);
+            self.note_visibility_changed(target_id, &se, expired_at);
         }
         visible
     }
@@ -851,6 +933,8 @@ impl StatusTracker {
     /// Zone change: every tracked instance predates the new zone. Player-owned instances are
     /// retained for a re-notify, and their owner may have changed build before entering.
     pub fn clear(&mut self) {
+        self.next_skill_events.clear();
+        self.next_skill_reset_pending = true;
         let targets = self
             .local_status_effect_registry
             .keys()
@@ -1273,6 +1357,90 @@ mod buff_instance_tests {
         tracker.register_status_effect(finite_status(RECEIVER, 9001, 1.0, 0.0));
         tracker.register_status_effect(finite_status(RECEIVER, 9002, 1.0, 0.3));
         assert_eq!(tracker.server_tick_epoch, Some(at(-100.0)));
+    }
+
+    fn flush_next_skill_events(
+        tracker: &mut StatusTracker,
+        state: &mut crate::live::next_skill::NextSkillState,
+    ) {
+        let index = crate::live::next_skill::definition_index().unwrap();
+        for event in std::mem::take(&mut tracker.next_skill_events) {
+            state.marker_event(&event, index);
+        }
+    }
+
+    fn next_skill_status() -> StatusEffectDetails {
+        let mut status = finite_status(RECEIVER, 17, 10.0, 0.0);
+        status.status_effect_id = crate::live::test_data::NEXT_MARKER_ID;
+        status.stack_count = 1;
+        status
+    }
+
+    #[test]
+    fn next_skill_duration_changes_publish_inactivity_before_restoration() {
+        use crate::live::next_skill::{NextSkillState, definition_index};
+        use crate::live::test_data::{NEXT_ABILITY_ID, NEXT_SKILL_ID};
+        crate::live::test_data::initialize();
+        let index = definition_index().unwrap();
+        let mut tracker = tracker();
+        seed_server_tick_epoch(&mut tracker);
+        tracker.register_status_effect(next_skill_status());
+        let mut state = NextSkillState::default();
+        state.begin_fight(1);
+        flush_next_skill_events(&mut tracker, &mut state);
+        state.skill_start(NEXT_SKILL_ID, at(1.0).timestamp_millis(), index);
+        assert!(state.has_cast((NEXT_ABILITY_ID, 1), NEXT_SKILL_ID, NEXT_SKILL_ID));
+        assert!(tracker.update_status_duration(
+            17,
+            RECEIVER,
+            105_000,
+            StatusEffectTargetType::Local,
+            at(6.0)
+        ));
+        assert!(tracker.update_status_duration(
+            17,
+            RECEIVER,
+            120_000,
+            StatusEffectTargetType::Local,
+            at(7.0)
+        ));
+        // No status read or skill start occurs between hiding and restoration.
+        flush_next_skill_events(&mut tracker, &mut state);
+        state.skill_start(NEXT_SKILL_ID, at(8.0).timestamp_millis(), index);
+        assert!(state.has_cast((NEXT_ABILITY_ID, 1), NEXT_SKILL_ID, NEXT_SKILL_ID));
+        // Moving a continuously visible deadline must not replenish this use.
+        assert!(tracker.update_status_duration(
+            17,
+            RECEIVER,
+            125_000,
+            StatusEffectTargetType::Local,
+            at(8.5)
+        ));
+        flush_next_skill_events(&mut tracker, &mut state);
+        state.skill_start(NEXT_SKILL_ID, at(9.0).timestamp_millis(), index);
+        assert!(!state.has_cast((NEXT_ABILITY_ID, 1), NEXT_SKILL_ID, NEXT_SKILL_ID));
+    }
+
+    #[test]
+    fn next_skill_epoch_correction_restores_an_expired_grant() {
+        use crate::live::next_skill::{NextSkillState, definition_index};
+        use crate::live::test_data::{NEXT_ABILITY_ID, NEXT_SKILL_ID};
+        crate::live::test_data::initialize();
+        let index = definition_index().unwrap();
+        let mut tracker = tracker();
+        tracker.register_status_effect(next_skill_status());
+        let mut state = NextSkillState::default();
+        state.begin_fight(1);
+        flush_next_skill_events(&mut tracker, &mut state);
+        state.skill_start(NEXT_SKILL_ID, at(1.0).timestamp_millis(), index);
+        assert!(!has(&mut tracker, RECEIVER, 17, at(11.0)));
+        flush_next_skill_events(&mut tracker, &mut state);
+        tracker.server_tick_epoch = Some(at(-90.0));
+        tracker.refresh_expiry_from_server_end_ticks(at(12.0));
+        assert!(has(&mut tracker, RECEIVER, 17, at(13.0)));
+        flush_next_skill_events(&mut tracker, &mut state);
+        state.skill_start(NEXT_SKILL_ID, at(13.0).timestamp_millis(), index);
+        assert!(state.has_cast((NEXT_ABILITY_ID, 1), NEXT_SKILL_ID, NEXT_SKILL_ID));
     }
 
     #[test]

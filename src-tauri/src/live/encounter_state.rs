@@ -1908,7 +1908,9 @@ impl EncounterState {
         target_type: EntityType,
         skill_key: u32,
         source_entity_id: u64,
+        entity_tracker: &mut EntityTracker,
     ) {
+        entity_tracker.begin_next_skill_fight();
         self.encounter.fight_start = timestamp;
         self.skill_tracker.fight_start = timestamp;
         if target_type == EntityType::Player && skill_key > 0 {
@@ -2786,8 +2788,9 @@ impl EncounterState {
             Self::collect_buffered_owner_self_effects(&buffered_player_entities, status_tracker);
         if let Some(barrier) = self.startup_barrier.as_mut() {
             let pending_damage = PendingDamageEvent {
+                // Freeze cast evidence with the rest of the packet-time attacker state.
                 packet_seq,
-                dmg_src_entity: dmg_src_entity.clone(),
+                dmg_src_entity: entity_tracker.snapshot_entity_for_hit(dmg_src_entity),
                 proj_entity: proj_entity.clone(),
                 dmg_target_entity: dmg_target_entity.clone(),
                 damage_data,
@@ -3116,7 +3119,16 @@ impl EncounterState {
     ) -> HashMap<u64, Entity> {
         let mut buffered_player_entities = HashMap::new();
         if dmg_src_entity.entity_type == EntityType::Player {
-            buffered_player_entities.insert(dmg_src_entity.id, dmg_src_entity.clone());
+            buffered_player_entities.insert(
+                dmg_src_entity.id,
+                entity_tracker.snapshot_entity_for_hit(dmg_src_entity),
+            );
+        } else if dmg_src_entity.owner_id != 0
+            && let Some(owner) = entity_tracker.get_entity_ref(dmg_src_entity.owner_id)
+            && owner.entity_type == EntityType::Player
+        {
+            buffered_player_entities
+                .insert(owner.id, entity_tracker.snapshot_entity_for_hit(owner));
         }
 
         for effect in se_on_source.iter().chain(se_on_target.iter()) {
@@ -3576,7 +3588,6 @@ impl EncounterState {
         else {
             return;
         };
-
         if self.startup_barrier.is_some() {
             self.enqueue_pending_damage(
                 packet_seq,
@@ -3655,6 +3666,7 @@ impl EncounterState {
                             dmg_target_entity.entity_type,
                             damage_data.skill_id,
                             dmg_src_entity.id,
+                            entity_tracker,
                         );
                     }
                     self.rearm_startup_barrier_on_next_combat = false;
@@ -3780,7 +3792,7 @@ impl EncounterState {
         se_on_source: Vec<StatusEffectDetails>,
         se_on_target: Vec<StatusEffectDetails>,
         _target_count: i32,
-        entity_tracker: &EntityTracker,
+        entity_tracker: &mut EntityTracker,
         timestamp: i64,
         buffered_player_entities: Option<&HashMap<u64, Entity>>,
         buffered_owner_self_effects: Option<&HashMap<u64, Vec<StatusEffectDetails>>>,
@@ -3912,7 +3924,13 @@ impl EncounterState {
         }
 
         if self.encounter.fight_start == 0 {
-            self.start_fight(timestamp, target_type, skill_key, dmg_src_entity.id);
+            self.start_fight(
+                timestamp,
+                target_type,
+                skill_key,
+                dmg_src_entity.id,
+                entity_tracker,
+            );
         }
 
         self.encounter.last_combat_packet = timestamp;
@@ -5603,6 +5621,70 @@ fn adjusted_extreme_difficulty(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn queued_hits_freeze_current_cast_evidence_for_players_and_projectile_owners() {
+        use super::*;
+        use crate::live::next_skill::{MarkerEvent, MarkerEventKind, definition_index};
+        use crate::live::test_data::*;
+        use crate::live::{id_tracker::IdTracker, party_tracker::PartyTracker};
+        use std::{cell::RefCell, rc::Rc};
+        crate::live::test_data::initialize();
+        let ids = Rc::new(RefCell::new(IdTracker::new()));
+        let parties = Rc::new(RefCell::new(PartyTracker::new(ids.clone())));
+        let statuses = Rc::new(RefCell::new(StatusTracker::new(parties.clone())));
+        let mut tracker = EntityTracker::new(statuses, ids, parties);
+        let mut owner = Entity {
+            id: 1,
+            entity_type: EntityType::Player,
+            ..Default::default()
+        };
+        let index = definition_index().unwrap();
+        owner.next_skill.marker_event(
+            &MarkerEvent {
+                target_id: 1,
+                party: false,
+                key: (NEXT_MARKER_ID, 17),
+                time_ms: 1000,
+                kind: MarkerEventKind::Upsert {
+                    stacks: 1,
+                    previous_stacks: None,
+                },
+            },
+            index,
+        );
+        owner.next_skill.skill_start(NEXT_SKILL_ID, 2000, index);
+        let before_fight = owner.clone();
+        tracker.entities.insert(1, owner);
+        tracker.begin_next_skill_fight();
+        let projectile = Entity {
+            id: 2,
+            owner_id: 1,
+            entity_type: EntityType::Projectile,
+            ..Default::default()
+        };
+        for source in [&before_fight, &projectile] {
+            let frozen =
+                EncounterState::collect_buffered_player_entities(source, &[], &[], &mut tracker);
+            assert!(frozen[&1].next_skill.has_cast(
+                (NEXT_ABILITY_ID, 1),
+                NEXT_SKILL_ID,
+                NEXT_SKILL_ID
+            ));
+        }
+        let frozen =
+            EncounterState::collect_buffered_player_entities(&projectile, &[], &[], &mut tracker);
+        tracker.end_next_skill_fight();
+        assert!(
+            frozen[&1]
+                .next_skill
+                .has_cast((NEXT_ABILITY_ID, 1), NEXT_SKILL_ID, NEXT_SKILL_ID)
+        );
+        assert!(!tracker.entities[&1].next_skill.has_cast(
+            (NEXT_ABILITY_ID, 1),
+            NEXT_SKILL_ID,
+            NEXT_SKILL_ID
+        ));
+    }
     use super::adjusted_extreme_difficulty;
 
     #[test]

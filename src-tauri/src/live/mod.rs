@@ -4,6 +4,7 @@ mod entity_tracker;
 mod id_tracker;
 mod inspect_stats;
 mod manager;
+mod next_skill;
 pub(crate) mod npc_windows;
 mod party_tracker;
 mod player_stats;
@@ -827,6 +828,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                     );
                     startup_event_seq += 1;
                     if should_buffer_for_startup {
+                        entity_tracker.record_next_skill_start(entity.id, pkt.skill_id, timestamp);
                         state.queue_pending_skill_event(
                             startup_event_seq,
                             &entity,
@@ -1355,6 +1357,9 @@ pub fn start(args: StartArgs) -> Result<()> {
             }
             PKTZoneObjectUnpublishNotify::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTZoneObjectUnpublishNotify>().unwrap() {
+                    if let Some(entity) = entity_tracker.entities.get_mut(&pkt.object_id) {
+                        entity.next_skill.close_fight(false);
+                    }
                     status_tracker
                         .borrow_mut()
                         .remove_local_object(pkt.object_id);
@@ -1440,6 +1445,11 @@ pub fn start(args: StartArgs) -> Result<()> {
                     }
                 }
             }
+            PKTNewZone::OPCODE => {
+                if packet.try_parse::<PKTNewZone>().unwrap().is_some() {
+                    entity_tracker.end_next_skill_fight();
+                }
+            }
             PKTNewTransit::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTNewTransit>().unwrap() {
                     debug_print!("transit zone id: {}", pkt.zone_id);
@@ -1460,6 +1470,7 @@ pub fn start(args: StartArgs) -> Result<()> {
             }
             _ => {}
         }
+        entity_tracker.synchronize_next_skill_markers();
         exceed_process_duration(
             packet.header.opcode,
             "packet_handler",
@@ -1475,6 +1486,7 @@ pub fn start(args: StartArgs) -> Result<()> {
             state.try_flush_startup_barrier(&mut entity_tracker);
             let boss_dead = state.boss_dead_update;
             if state.boss_dead_update {
+                entity_tracker.end_next_skill_fight();
                 state.boss_dead_update = false;
             }
 

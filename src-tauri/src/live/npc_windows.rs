@@ -471,6 +471,7 @@ pub(super) mod tests {
             &[],
             &[],
             0,
+            true,
         );
     }
 

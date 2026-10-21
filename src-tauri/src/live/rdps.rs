@@ -281,6 +281,7 @@ fn compute_hit_stat_damage_metrics(
                     se_on_source,
                     se_on_target,
                     event_timestamp,
+                    true,
                 );
                 let new_final_attack_power = scratch
                     .calculate_final_attack_power(
@@ -695,6 +696,11 @@ pub fn analyze_hit_rdps(
         None
     };
     let mut runtime_state = attacker_context.entity.runtime_state();
+    if buffered_entities.is_none()
+        && let Some(current) = entity_tracker.get_entity_ref(attacker_context.entity_id)
+    {
+        runtime_state.next_skill = current.next_skill.snapshot();
+    }
     runtime_state.identity_runtime_reliable = attacker_context.entity_id != 0
         && attacker_context.entity_id == entity_tracker.local_entity_id;
     stats.apply_runtime_state(runtime_state);
@@ -813,6 +819,7 @@ pub fn analyze_hit_rdps(
         se_on_source,
         se_on_target,
         event_timestamp,
+        true,
     );
     let stats_after_effects = if debug_enabled {
         Some(stats.debug_dump_value())
@@ -1616,6 +1623,7 @@ fn snapshot_owner_player_stats_from_snapshot(
             self_effects,
             &[],
             eval_tick_ms,
+            false,
         );
     }
 
@@ -3676,6 +3684,7 @@ fn inspect_snapshot_debug_value(snapshot: &InspectSnapshot) -> Value {
             }).collect::<Vec<_>>(),
             "ability_features": snapshot.derived_stats.ability_features.iter().map(|feature| {
                 json!({
+                    "ability_id": feature.ability_id,
                     "feature_type": feature.feature_type,
                     "level": feature.level,
                     "values": feature.values,
@@ -3893,6 +3902,9 @@ fn get_level_data_resolved(
     runtime_data: Option<&crate::live::entity_tracker::SkillRuntimeData>,
     stack_count: u8,
 ) -> Option<PerLevelData> {
+    if super::next_skill::is_marker(skill_buff.id as u32) {
+        return None;
+    }
     let mut level_data = get_level_data(skill_buff, skill_level)?.clone();
     if let Some(runtime_data) = runtime_data {
         if let Some((values, relative)) =
@@ -4078,6 +4090,9 @@ fn select_unique_group_effects(status_effects: &[StatusEffectDetails]) -> Vec<St
     let mut selected = Vec::new();
 
     for status_effect in status_effects {
+        if super::next_skill::is_marker(status_effect.status_effect_id) {
+            continue;
+        }
         if status_effect.unique_group == 0 {
             selected.push(status_effect.clone());
             continue;
@@ -5703,5 +5718,30 @@ mod identity_instance_tests {
                 "class {class_id} party copy"
             );
         }
+    }
+}
+#[cfg(test)]
+mod next_skill_tests {
+    use super::*;
+    #[test]
+    fn next_skill_marker_is_not_applied_as_an_ordinary_buff() {
+        crate::live::test_data::initialize();
+        let marker = crate::models::SkillBuffData {
+            id: crate::live::test_data::NEXT_MARKER_ID as i32,
+            per_level_data: HashMap::from([(
+                "1".to_string(),
+                PerLevelData {
+                    passive_options: vec![crate::models::PassiveOption {
+                        option_type: "stat".to_string(),
+                        key_stat: "skill_damage_rate".to_string(),
+                        value: 9000,
+                        ..Default::default()
+                    }],
+                    ..Default::default()
+                },
+            )]),
+            ..Default::default()
+        };
+        assert!(get_level_data_resolved(&marker, 1, None, 1).is_none());
     }
 }

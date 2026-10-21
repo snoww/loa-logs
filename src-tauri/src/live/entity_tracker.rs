@@ -30,6 +30,8 @@ const DESTROYER_HYPERGRAVITY_BASIC_ATTACK_SKILL_ID: u32 = 18030;
 const RECENT_DESTROYER_SKILL_START_WINDOW_MS: i64 = 4_000;
 
 pub struct EntityTracker {
+    next_skill_generation: u64,
+    next_skill_fight_open: bool,
     id_tracker: Rc<RefCell<IdTracker>>,
     party_tracker: Rc<RefCell<PartyTracker>>,
     status_tracker: Rc<RefCell<StatusTracker>>,
@@ -270,6 +272,8 @@ impl EntityTracker {
         party_tracker: Rc<RefCell<PartyTracker>>,
     ) -> Self {
         Self {
+            next_skill_generation: 0,
+            next_skill_fight_open: false,
             status_tracker,
             id_tracker,
             party_tracker,
@@ -333,6 +337,98 @@ impl EntityTracker {
     /// associated, so stale work cannot contaminate later measurements.
     pub fn retire_fight_inspect_requests(&mut self) {
         self.inspect_request_timing_by_name.clear();
+        self.end_next_skill_fight();
+    }
+
+    pub fn end_next_skill_fight(&mut self) {
+        self.next_skill_fight_open = false;
+        for entity in self.entities.values_mut() {
+            entity.next_skill.close_fight(false);
+        }
+    }
+
+    pub fn snapshot_entity_for_hit(&self, entity: &Entity) -> Entity {
+        let mut snapshot = entity.clone();
+        if let Some(current) = self.entities.get(&entity.id) {
+            snapshot.next_skill = current.next_skill.evaluation_state();
+        } else {
+            snapshot.next_skill = entity.next_skill.evaluation_state();
+        }
+        snapshot
+    }
+
+    pub fn begin_next_skill_fight(&mut self) {
+        self.next_skill_generation += 1;
+        self.next_skill_fight_open = true;
+        for entity in self.entities.values_mut() {
+            entity.next_skill.begin_fight(self.next_skill_generation);
+        }
+    }
+
+    pub fn synchronize_next_skill_markers(&mut self) {
+        let (reset, events) = {
+            let mut status_tracker = self.status_tracker.borrow_mut();
+            (
+                std::mem::take(&mut status_tracker.next_skill_reset_pending),
+                std::mem::take(&mut status_tracker.next_skill_events),
+            )
+        };
+        if reset {
+            self.end_next_skill_fight();
+        }
+        let Some(index) = super::next_skill::definition_index() else {
+            return;
+        };
+        for event in events {
+            let entity = if event.party {
+                self.entities
+                    .values_mut()
+                    .find(|entity| entity.character_id == event.target_id)
+            } else {
+                self.entities.get_mut(&event.target_id)
+            };
+            if let Some(entity) = entity {
+                entity.next_skill.marker_event(&event, index);
+            }
+        }
+    }
+
+    pub fn record_next_skill_start(&mut self, entity_id: u64, skill_id: u32, timestamp: i64) {
+        let Some(entity) = self
+            .entities
+            .get(&entity_id)
+            .filter(|entity| entity.entity_type == Player)
+        else {
+            return;
+        };
+        let Some(index) = super::next_skill::definition_index() else {
+            return;
+        };
+        let Some(time) = DateTime::from_timestamp_millis(timestamp) else {
+            return;
+        };
+        let effects = self.status_tracker.borrow_mut().get_source_status_effects(
+            entity,
+            time,
+            DeadlineMode::HideExpired,
+        );
+        self.synchronize_next_skill_markers();
+        let markers: Vec<_> = effects
+            .iter()
+            .filter(|effect| index.is_marker(effect.status_effect_id))
+            .map(|effect| {
+                (
+                    (effect.status_effect_id, effect.instance_id),
+                    effect.stack_count,
+                )
+            })
+            .collect();
+        let state = &mut self.entities.get_mut(&entity_id).unwrap().next_skill;
+        state.reconcile(&markers, timestamp, index);
+        if self.next_skill_fight_open {
+            state.begin_fight(self.next_skill_generation);
+        }
+        state.skill_start(skill_id, timestamp, index);
     }
 
     /// Applies a PKTStatusEffectDurationNotify to the tracked instance on `object_id`, whichever
@@ -486,6 +582,9 @@ impl EntityTracker {
     }
 
     pub fn init_pc(&mut self, pkt: PKTInitPC) -> Entity {
+        if let Some(entity) = self.entities.get_mut(&pkt.player_id) {
+            entity.next_skill.close_fight(false);
+        }
         let player = Entity {
             id: pkt.player_id,
             entity_type: Player,
@@ -1268,6 +1367,7 @@ impl EntityTracker {
     }
 
     pub fn on_new_transit(&mut self) {
+        self.end_next_skill_fight();
         self.bump_visibility_generation();
         self.pending_inspect_results_by_name.clear();
         self.inspect_requested_names.clear();
@@ -1728,6 +1828,7 @@ impl EntityTracker {
         skill_option_data: &meter_defs::types::SkillOptionData,
         timestamp: i64,
     ) {
+        self.record_next_skill_start(entity_id, skill_id, timestamp);
         let Some(entity) = self.entities.get_mut(&entity_id) else {
             return;
         };
@@ -2537,6 +2638,7 @@ fn merge_player_identity_state(target: &mut Entity, previous: Entity) {
 
 #[derive(Debug, Default, Clone)]
 pub struct Entity {
+    pub next_skill: super::next_skill::NextSkillState,
     pub npc_action: Option<crate::live::npc_windows::ObservedAction>,
     pub id: u64,
     pub entity_type: EntityType,
@@ -2618,6 +2720,7 @@ impl Entity {
             self.stats.get(&stat_id).copied().unwrap_or_default()
         };
         RuntimeState {
+            next_skill: self.next_skill.snapshot(),
             identity_stance: self.stance,
             identity_gauge1: self.identity_gauge1,
             identity_gauge2: self.identity_gauge2,
