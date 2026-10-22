@@ -48502,7 +48502,7 @@
   "573700": {
     "id": 573700,
     "name": "Strange Treasure Chest",
-    "grade": "boss",
+    "grade": "normal",
     "type": "monster",
     "species": "substance",
     "hpBars": 1,
