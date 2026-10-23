@@ -31,7 +31,7 @@ const GUNSLINGER_CLASS_ID: u32 = 512;
 const GUNSLINGER_SHOTGUN_IDENTITY_CATEGORY: &str = "devil_hunter_shotgun";
 const PET_MAIN_STAT_MULTIPLIER: f64 = 0.011057;
 const PET_SKILL_DAMAGE_RATE: f64 = 0.01;
-const FIXED_STAT_DATA_COUNT: usize = 61;
+const FIXED_STAT_DATA_COUNT: usize = 62;
 pub const STAT_PRIORITY_SUPPORT: i32 = 0;
 pub const STAT_PRIORITY_DEFAULT: i32 = 100;
 
@@ -1037,6 +1037,7 @@ pub struct PlayerStats {
     pub runtime_state: RuntimeState,
     pub weapon_power: StatData,
     pub weapon_dam_x: StatData,
+    pub base_damage_addend: StatData,
     pub attack_power_base_multiplier: StatData,
     pub attack_power_rate: StatData,
     pub str_stat: StatData,
@@ -1129,6 +1130,7 @@ impl Default for PlayerStats {
             runtime_state: RuntimeState::create(),
             weapon_power: StatData::default(),
             weapon_dam_x: StatData::default(),
+            base_damage_addend: StatData::default(),
             attack_power_base_multiplier: StatData::default(),
             attack_power_rate: StatData::default(),
             str_stat: StatData::default(),
@@ -1225,6 +1227,7 @@ impl PlayerStats {
             runtime_state,
             weapon_power,
             weapon_dam_x,
+            base_damage_addend,
             attack_power_base_multiplier,
             attack_power_rate,
             str_stat,
@@ -3517,13 +3520,14 @@ impl PlayerStats {
         let mut base_attack_power = StatData::default();
         let weapon_power = self.weapon_power.value();
         let main_stat = self.get_main_stat_calculated().value();
-        if weapon_power <= 0.0 || main_stat <= 0.0 {
+        if weapon_power < 0.0 || main_stat < 0.0 {
             return base_attack_power;
         }
         base_attack_power.add_self(
             (weapon_power * (1.0 + self.weapon_dam_x.value()) * (main_stat / 6.0)).sqrt(),
             StatSource::BaseAP,
         );
+        base_attack_power = base_attack_power.added(&self.base_damage_addend);
         base_attack_power.add_self(
             base_attack_power.value() * self.attack_power_base_multiplier.value(),
             StatSource::AttackPowerBaseMultiplier,
@@ -4131,6 +4135,7 @@ impl PlayerStats {
             58 => &self.magical_penetration_rate,
             59 => &self.identity_penetration,
             60 => &self.tripod_penetration,
+            61 => &self.base_damage_addend,
 
             _ => {
                 let index_in_arrays = index.saturating_sub(FIXED_STAT_DATA_COUNT);
@@ -4211,6 +4216,7 @@ impl PlayerStats {
             58 => &mut self.magical_penetration_rate,
             59 => &mut self.identity_penetration,
             60 => &mut self.tripod_penetration,
+            61 => &mut self.base_damage_addend,
 
             _ => {
                 let index_in_arrays = index.saturating_sub(FIXED_STAT_DATA_COUNT);
@@ -4291,6 +4297,7 @@ impl PlayerStats {
             58 => "magical_penetration_rate_".to_string(),
             59 => "identity_penetration_".to_string(),
             60 => "tripod_penetration_".to_string(),
+            61 => "base_damage_addend_".to_string(),
 
             _ => {
                 let index_in_arrays = index.saturating_sub(FIXED_STAT_DATA_COUNT);
@@ -4678,6 +4685,13 @@ impl PlayerStats {
                 source,
                 source_priority,
             ),
+            "base_damage_addend" => self.base_damage_addend.add_with_priority(
+                stat_value as f64,
+                self.owner_id,
+                owner_id,
+                source,
+                source_priority,
+            ),
             "base_damage_rate" => self.attack_power_base_multiplier.add_with_priority(
                 value_as_multiplier,
                 self.owner_id,
@@ -4975,6 +4989,7 @@ impl PlayerStats {
     fn for_each_stat<F: FnMut(&StatData)>(&self, mut f: F) {
         f(&self.weapon_power);
         f(&self.weapon_dam_x);
+        f(&self.base_damage_addend);
         f(&self.attack_power_base_multiplier);
         f(&self.attack_power_rate);
         f(&self.str_stat);
@@ -5042,6 +5057,7 @@ impl PlayerStats {
     fn for_each_stat_mut<F: FnMut(&mut StatData)>(&mut self, mut f: F) {
         f(&mut self.weapon_power);
         f(&mut self.weapon_dam_x);
+        f(&mut self.base_damage_addend);
         f(&mut self.attack_power_base_multiplier);
         f(&mut self.attack_power_rate);
         f(&mut self.str_stat);
@@ -5247,6 +5263,200 @@ fn get_damage_splits(damage: f64, factors: &[f64]) -> Vec<f64> {
     });
 
     pieces
+}
+
+#[cfg(test)]
+mod base_damage_addend_tests {
+    use super::*;
+
+    fn stats(base_rate: i64) -> PlayerStats {
+        let mut stats = PlayerStats {
+            owner_id: 1,
+            ..Default::default()
+        };
+        for (name, value) in [
+            ("int", 6000),
+            ("int_x", 2500),
+            ("weapon_dam", 1000),
+            ("weapon_dam_x", 2500),
+            ("base_damage_rate", base_rate),
+        ] {
+            stats.add_stat(name, value, 1, StatSource::Test);
+        }
+        stats
+    }
+
+    fn final_ap(stats: &PlayerStats) -> f64 {
+        stats
+            .calculate_final_attack_power(
+                &HitOption::NONE,
+                &HitFlag::NORMAL,
+                None,
+                0,
+                false,
+                true,
+                false,
+                false,
+                None,
+            )
+            .value()
+    }
+
+    fn assert_close(actual: f64, expected: f64) {
+        assert!(
+            (actual - expected).abs() < 1e-8,
+            "expected {expected}, got {actual}"
+        );
+    }
+
+    #[test]
+    fn flat_base_ap_is_added_after_the_square_root_before_base_and_later_rates() {
+        // Independently pinned from (1250 + flat base AP) * (1 + base AP rate).
+        for (addend, rate, expected) in [
+            (0, 2000, 1500.0),
+            (850, 2000, 2520.0),
+            (2030, 2000, 3936.0),
+            (9050, 2000, 12360.0),
+            (237, 0, 1487.0),
+        ] {
+            let mut stats = stats(rate);
+            stats.handle_external_addon(
+                &crate::models::ExternalResourceAddon {
+                    addon_type: "stat".to_string(),
+                    stat_type: "base_damage_addend".to_string(),
+                    key_value: addend,
+                    ..Default::default()
+                },
+                1,
+                204,
+                StatSource::Test,
+            );
+            stats.add_stat("attack_power_addend_2", 50, 1, StatSource::Test);
+            stats.add_stat("attack_power_addend", 200, 2, StatSource::Test);
+            stats.add_stat("attack_power_rate", 1000, 1, StatSource::Test);
+            stats.add_stat("attack_power_sub_rate_1", 2000, 1, StatSource::Test);
+            assert_close(stats.calculate_base_attack_power().value(), expected);
+            assert_close(stats.calculate_self_attack_power(), expected + 50.0);
+            assert_close(
+                stats.calculate_attack_power_pre_multipliers().value(),
+                expected + 250.0,
+            );
+            assert_close(
+                stats.calculate_stat_sheet_attack_power(),
+                (expected + 250.0) * 1.1,
+            );
+            assert_close(final_ap(&stats), (expected + 250.0) * 1.32);
+            assert_eq!(
+                stats
+                    .calculate_final_attack_power(
+                        &HitOption::NONE,
+                        &HitFlag::NORMAL,
+                        None,
+                        0,
+                        true,
+                        true,
+                        false,
+                        false,
+                        None
+                    )
+                    .value(),
+                1.0
+            );
+        }
+    }
+
+    #[test]
+    fn flat_base_ap_remains_when_the_square_root_component_is_zero() {
+        for (weapon, main) in [(0, 0), (0, 6000), (1000, 0)] {
+            let mut stats = PlayerStats {
+                owner_id: 1,
+                ..Default::default()
+            };
+            stats.add_stat("weapon_dam", weapon, 1, StatSource::Test);
+            stats.add_stat("int", main, 1, StatSource::Test);
+            stats.add_stat("base_damage_addend", 850, 1, StatSource::Test);
+            stats.add_stat("base_damage_rate", 2000, 1, StatSource::Test);
+            assert_close(stats.calculate_base_attack_power().value(), 1020.0);
+        }
+    }
+
+    #[test]
+    fn flat_base_ap_survives_clone_restore_debug_and_contribution_removal_then_clears() {
+        let mut stats = stats(2000);
+        stats.add_stat("base_damage_addend", 200, 0, StatSource::Inspect);
+        stats.add_stat("base_damage_addend", 300, 1, StatSource::InspectDerived);
+        stats.add_stat_from_source_with_priority(
+            "base_damage_addend",
+            250,
+            2,
+            StatSource::SkillBuff(900_000_115),
+            STAT_PRIORITY_SUPPORT,
+        );
+        assert_close(final_ap(&stats), 2400.0);
+        assert_eq!(stats.get_all_contributing_entity_ids(), vec![2]);
+        assert_close(
+            stats.get_damage_increase_contributed_from_entity_id(
+                2,
+                2400.0,
+                &HitOption::NONE,
+                &HitFlag::NORMAL,
+                None,
+                0,
+                false,
+                true,
+                false,
+                false,
+            ),
+            1.0 / 7.0,
+        );
+        assert_close(
+            stats.get_damage_increase_contributed_from_all_entity_ids(
+                2400.0,
+                &HitOption::NONE,
+                &HitFlag::NORMAL,
+                None,
+                0,
+                false,
+                true,
+                false,
+                false,
+            ),
+            1.0 / 7.0,
+        );
+        let cloned = stats.clone();
+        let mut restored = PlayerStats::default();
+        restored.restore_from(&stats);
+        stats.clear();
+        assert_eq!(stats.calculate_base_attack_power().value(), 0.0);
+        for copy in [cloned, restored.clone()] {
+            assert_close(final_ap(&copy), 2400.0);
+            let indices: Vec<_> = copy
+                .iterate_stat_datas()
+                .into_iter()
+                .filter(|index| copy.get_stat_data_name(*index) == "base_damage_addend_")
+                .collect();
+            assert_eq!(indices.len(), 1);
+            let stat = copy.get_stat_data_ref(indices[0]);
+            assert_eq!(stat.self_value(), 500.0);
+            assert_eq!(stat.self_values.len(), 2);
+            assert_eq!(
+                stat.modified_values[0].source_priority,
+                STAT_PRIORITY_SUPPORT
+            );
+            let debug = copy.debug_dump_value();
+            let row = debug["stat_datas"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .find(|row| row[0] == "base_damage_addend_")
+                .unwrap();
+            assert_eq!(row[1]["value"], 750.0);
+            assert_eq!(row[1]["modified_values"][0]["source_entity_id"], 2);
+        }
+        restored.restore_from(&stats);
+        assert_eq!(restored.calculate_base_attack_power().value(), 0.0);
+        assert!(restored.get_all_contributing_entity_ids().is_empty());
+    }
 }
 
 #[cfg(test)]

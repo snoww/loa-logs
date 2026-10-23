@@ -3,6 +3,7 @@ export type DamageAttributeType = "NONE" | "FIRE" | "ICE" | "ELECTRICITY" | "WIN
 export type StatDataGroup =
   | "weapon_power_"
   | "weapon_dam_x_"
+  | "base_damage_addend_"
   | "attack_power_base_multiplier_"
   | "attack_power_rate_"
   | "str_stat_"
@@ -148,6 +149,10 @@ export const statDataDescriptors: Record<StatDataGroup, StatDataDescriptor> = {
 
   weapon_power_: simpleStat("Weapon Power"),
   weapon_dam_x_: simpleStat("Weapon Power %", "This stat is provided primarily by Earring accessory lines."),
+  base_damage_addend_: simpleStat(
+    "Basic Atk. Power",
+    "This stat includes the flat Basic Atk. Power granted by vambraces. Basic Atk. Power percentage bonuses also apply to it."
+  ),
   attack_power_base_multiplier_: simpleStat(
     "Basic Atk. Power (Gems)",
     "This stat represents the additional Atk. Power percentage provided by tier 4 gems."

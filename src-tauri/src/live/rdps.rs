@@ -4353,6 +4353,85 @@ mod tests {
     use crate::models::EntityType;
 
     #[test]
+    fn base_damage_addend_support_buff_uses_the_owner_snapshot_and_base_ap_rate() {
+        crate::live::test_data::initialize();
+        let tracker = test_entity_tracker(vec![
+            test_player(1, 101, "Support", None, None),
+            test_player(2, 102, "Attacker", None, None),
+        ]);
+        for (base_rate, expected_buff) in [(2000, 630.0), (3250, 695.625)] {
+            let mut owner = PlayerStats {
+                owner_id: 1,
+                ..Default::default()
+            };
+            for (name, value) in [
+                ("int", 6000),
+                ("int_x", 2500),
+                ("weapon_dam", 1000),
+                ("weapon_dam_x", 2500),
+                ("base_damage_rate", base_rate),
+                ("base_damage_addend", 850),
+                ("attack_power_addend_2", 2000),
+                ("attack_power_rate", 7500),
+            ] {
+                owner.add_stat(name, value, 1, StatSource::Test);
+            }
+            owner
+                .ally_attack_power_power
+                .add_self(0.25, StatSource::Test);
+            let mut snapshot = PlayerStats::default();
+            snapshot.restore_from(&owner);
+            owner.clear();
+            let effect = StatusEffectDetails {
+                status_effect_id: crate::live::test_data::BASE_AP_BUFF_ID,
+                source_id: 1,
+                target_id: 2,
+                skill_level: 1,
+                stack_count: 1,
+                owner_player_stats_snapshot: Some(Arc::new(snapshot)),
+                ..Default::default()
+            };
+            let mut attacker = PlayerStats {
+                owner_id: 2,
+                ..Default::default()
+            };
+            attacker
+                .attack_power_addend_2
+                .add_self(1000.0, StatSource::Test);
+            let mut stats = attacker.clone();
+            let mut contributions = Vec::new();
+            append_source_contributions(
+                &mut stats,
+                &mut contributions,
+                2,
+                102,
+                102,
+                &attacker,
+                0,
+                &HitFlag::NORMAL,
+                None,
+                false,
+                None,
+                &[effect],
+                1000,
+                &tracker,
+                None,
+                None,
+                false,
+            )
+            .unwrap();
+            // (1250 + 850) * (1.2 or 1.325) * 20% * 1.25. Keep the existing fractional-AP behavior.
+            assert_approx_eq(stats.attack_power_addend.value(), expected_buff);
+            assert_approx_eq(
+                stats.attack_power_addend.get_value_for_entity_id(1),
+                expected_buff,
+            );
+            assert_eq!(contributions.len(), 1);
+            assert_approx_eq(contributions[0].factor, expected_buff / 1000.0);
+        }
+    }
+
+    #[test]
     fn defense_skill_breakdown_uses_the_same_self_only_baseline() {
         for (damage_type, stat_name) in [
             (0, "physical_defense_break_"),

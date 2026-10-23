@@ -186,6 +186,14 @@ pub fn stat_type_name_from_id(stat_id: u32) -> Option<String> {
     STAT_TYPE_NAME_MAP.get(&stat_id).cloned()
 }
 
+#[cfg(test)]
+pub(crate) fn initialize_test_stat_types(canonical: HashMap<String, u32>) {
+    STAT_TYPE_NAME_MAP
+        .set(build_stat_type_name_map(&canonical))
+        .unwrap();
+    STAT_TYPE_MAP.set(build_stat_type_map(canonical)).unwrap();
+}
+
 fn build_identity_category_name_map(
     enums: HashMap<String, HashMap<String, String>>,
 ) -> HashMap<u32, String> {

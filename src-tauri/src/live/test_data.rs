@@ -9,6 +9,7 @@ pub const NEXT_ABILITY_ID: u32 = 4_000_000_006;
 pub const SECOND_NEXT_ABILITY_ID: u32 = 4_000_000_008;
 pub const NEXT_SKILL_ID: u32 = 7_000_001;
 pub const NEXT_MARKER_ID: u32 = 7_000_003;
+pub const BASE_AP_BUFF_ID: u32 = 900_000_114;
 
 pub fn initialize() {
     static INIT: Once = Once::new();
@@ -20,7 +21,24 @@ pub fn initialize() {
             serde_json::from_slice(&std::fs::read(path).unwrap()).unwrap()
         }
         NPC_WINDOW_DATA.set(read("NpcWindows.json")).unwrap();
-        SKILL_BUFF_DATA.set(read("SkillBuff.json")).unwrap();
+        let mut buffs: HashMap<u32, crate::models::SkillBuffData> = read("SkillBuff.json");
+        buffs.insert(
+            BASE_AP_BUFF_ID,
+            crate::models::SkillBuffData {
+                id: BASE_AP_BUFF_ID as i32,
+                buff_type: "attack_power_amplify".to_string(),
+                target: "self_party".to_string(),
+                per_level_data: HashMap::from([(
+                    "1".to_string(),
+                    crate::models::PerLevelData {
+                        status_effect_values: Some(vec![2000]),
+                        ..Default::default()
+                    },
+                )]),
+                ..Default::default()
+            },
+        );
+        SKILL_BUFF_DATA.set(buffs).unwrap();
         let mut skills: HashMap<u32, crate::models::SkillData> = read("Skill.json");
         skills.insert(
             NEXT_SKILL_ID,
@@ -103,8 +121,7 @@ pub fn initialize() {
                 },
             )]))
             .unwrap();
-        STAT_TYPE_NAME_MAP.set(HashMap::new()).unwrap();
-        STAT_TYPE_MAP.set(read("StatType.json")).unwrap();
+        initialize_test_stat_types(read("StatType.json"));
         SUPPORT_AP_GROUP.set(HashSet::new()).unwrap();
         SUPPORT_IDENTITY_GROUP
             .set(HashSet::from([211400, 368000, 310501, 480018]))

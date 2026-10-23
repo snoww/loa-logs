@@ -1275,6 +1275,54 @@ mod code_port_tests {
     use crate::live::test_data::{GEM_ITEM_ID, POINT_ABILITY_ID, POINT_ABILITY_SKILL_ID};
     use meter_defs::defs::{GemItemOption, ItemDataTyped};
 
+    #[test]
+    fn base_damage_addend_quality_lines_survive_snapshot_refresh_without_double_counting() {
+        crate::live::test_data::initialize();
+        assert_eq!(
+            crate::data::stat_type_name_from_id(114).as_deref(),
+            Some("base_damage_addend")
+        );
+        let mut stats = PlayerStats::default();
+        for addend in [237, 519, 0] {
+            let mut derived = InspectDerivedStats::default();
+            let raw = HashMap::from([(114, i64::from(addend))]);
+            apply_quality_addon(
+                &MinMaxItemOption {
+                    addon_type: AddonType::STAT as u8,
+                    key: 114,
+                    value: addend,
+                    minimum_value: 0,
+                    maximum_value: 1000,
+                    ..Default::default()
+                },
+                &raw,
+                &mut derived,
+            );
+            assert_eq!(derived.stat_pairs[&114], i64::from(addend));
+            let snapshot = InspectSnapshot {
+                derived_stats: derived,
+                stat_pairs: raw,
+                ..Default::default()
+            };
+            for _ in 0..2 {
+                stats.load_from_snapshot(&snapshot, 1, 204);
+                let index = stats
+                    .iterate_stat_datas()
+                    .into_iter()
+                    .find(|index| stats.get_stat_data_name(*index) == "base_damage_addend_")
+                    .unwrap();
+                assert_eq!(stats.get_stat_data_ref(index).value(), f64::from(addend));
+            }
+        }
+        stats.load_from_snapshot(&InspectSnapshot::default(), 1, 204);
+        let index = stats
+            .iterate_stat_datas()
+            .into_iter()
+            .find(|index| stats.get_stat_data_name(*index) == "base_damage_addend_")
+            .unwrap();
+        assert_eq!(stats.get_stat_data_ref(index).value(), 0.0);
+    }
+
     fn gem_item(options: Option<Vec<GemItemOption>>) -> ItemData {
         ItemData {
             item_id: Some(GEM_ITEM_ID),
