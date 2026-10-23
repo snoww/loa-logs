@@ -680,7 +680,7 @@ struct RaidProgressionRow {
     rdps: Option<i64>,
     ndps: Option<i64>,
     player_damage_taken: i64,
-    death_events: Vec<i64>,
+    death_events: Vec<DeathInfo>,
     counters: i64,
     damage_reduced: i64,
     damage_shielded: u64,
@@ -1118,25 +1118,29 @@ fn progression_damage_reduced(skills: &HashMap<u32, Skill>) -> i64 {
         .sum()
 }
 
-fn death_events_from_stats(stats: &DamageStats) -> Vec<i64> {
+fn death_events_from_stats(stats: &DamageStats) -> Vec<DeathInfo> {
     let mut death_events = stats
         .death_info
         .as_ref()
         .map(|deaths| {
             deaths
                 .iter()
-                .filter_map(|death| positive(Some(death.death_time)))
+                .filter(|death| death.death_time > 0)
+                .cloned()
                 .collect::<Vec<_>>()
         })
         .unwrap_or_default();
 
     if death_events.is_empty() && stats.deaths > 0 {
         for _ in 0..stats.deaths {
-            death_events.push(stats.death_time);
+            death_events.push(DeathInfo {
+                death_time: stats.death_time,
+                dead_for: None,
+            });
         }
     }
 
-    death_events.sort_unstable();
+    death_events.sort_by_key(|death| death.death_time);
     death_events
 }
 
@@ -1625,6 +1629,7 @@ fn compare_progress(
 struct ProgressionDeathEvent {
     player_name: String,
     elapsed: i64,
+    revived: bool,
 }
 
 fn progression_death_counts(rows: &[RaidProgressionRow]) -> BTreeMap<String, i32> {
@@ -1633,12 +1638,18 @@ fn progression_death_counts(rows: &[RaidProgressionRow]) -> BTreeMap<String, i32
     let mut events = rows
         .iter()
         .flat_map(|row| {
-            row.death_events.iter().filter_map(|death_time| {
-                normalize_death_elapsed(row, *death_time).map(|elapsed| ProgressionDeathEvent {
-                    player_name: row.player_name.clone(),
-                    elapsed,
+            row.death_events
+                .iter()
+                .enumerate()
+                .filter_map(|(index, death)| {
+                    normalize_death_elapsed(row, death.death_time).map(|elapsed| {
+                        ProgressionDeathEvent {
+                            player_name: row.player_name.clone(),
+                            elapsed,
+                            revived: death.dead_for.is_some() || index + 1 < row.death_events.len(),
+                        }
+                    })
                 })
-            })
         })
         .collect::<Vec<_>>();
 
@@ -1661,8 +1672,38 @@ fn progression_death_counts(rows: &[RaidProgressionRow]) -> BTreeMap<String, i32
         return counts;
     }
 
-    // on a wipe, count everyone in the first death cluster. Later deaths
-    // belong to the wipe or restart and are not counted.
+    if events.iter().any(|event| event.revived) {
+        // Only unrecovered deaths can belong to the final wipe/reset cluster.
+        // An isolated final death is retained because it may have caused the wipe.
+        let final_cluster = events
+            .last()
+            .map(|last| {
+                events
+                    .iter()
+                    .filter(|event| {
+                        !event.revived
+                            && last.elapsed.saturating_sub(event.elapsed)
+                                <= FULL_WIPE_DEATH_WINDOW_MS
+                    })
+                    .map(|event| event.player_name.as_str())
+                    .collect::<BTreeSet<_>>()
+            })
+            .unwrap_or_default();
+
+        for event in &events {
+            if !event.revived
+                && final_cluster.len() > 1
+                && final_cluster.contains(event.player_name.as_str())
+            {
+                continue;
+            }
+            *counts.entry(event.player_name.clone()).or_insert(0) += 1;
+        }
+        return counts;
+    }
+
+    // Without revives, keep the first death cluster. Later deaths belong to
+    // the wipe or restart and are not counted.
     let initial_death_players = events
         .iter()
         .take_while(|event| {
@@ -2986,6 +3027,150 @@ mod tests {
     }
 
     #[test]
+    fn progression_death_history_preserves_revives_and_legacy_counts() {
+        let stats = DamageStats {
+            death_info: Some(vec![
+                DeathInfo {
+                    death_time: 120_000,
+                    dead_for: None,
+                },
+                DeathInfo {
+                    death_time: 50_000,
+                    dead_for: Some(5_000),
+                },
+            ]),
+            ..Default::default()
+        };
+        let events = death_events_from_stats(&stats);
+        assert_eq!(events.len(), 2);
+        assert_eq!(events[0].death_time, 50_000);
+        assert_eq!(events[0].dead_for, Some(5_000));
+        assert_eq!(events[1].dead_for, None);
+
+        let legacy = death_events_from_stats(&DamageStats {
+            deaths: 3,
+            death_time: 120_000,
+            ..Default::default()
+        });
+        assert_eq!(legacy.len(), 3);
+        assert!(legacy.iter().all(|death| death.death_time == 120_000));
+    }
+
+    #[test]
+    fn progression_deaths_count_repeated_revives_before_the_final_wipe() {
+        let rows = vec![
+            progression_row("PlayerA", vec![50_000, 295_000], false),
+            progression_row("PlayerB", vec![100_000, 150_000, 295_500], false),
+            progression_row("WipeOnly", vec![296_000], false),
+        ];
+
+        let statistics =
+            build_raid_progression_statistics(rows, &HashMap::new(), &HashMap::new(), &[]);
+        let deaths = statistics
+            .players
+            .iter()
+            .map(|player| (player.name.as_str(), player.total_deaths))
+            .collect::<BTreeMap<_, _>>();
+        assert_eq!(
+            deaths,
+            BTreeMap::from([("PlayerA", 1), ("PlayerB", 2), ("WipeOnly", 0)])
+        );
+        assert_eq!(statistics.pulls[0].deaths, 3);
+        assert_eq!(statistics.summary.average_deaths, Some(3.0));
+    }
+
+    #[test]
+    fn progression_deaths_keep_an_unrecovered_death_before_the_final_wipe() {
+        let rows = vec![
+            progression_row("PlayerA", vec![50_000, 295_000], false),
+            progression_row("PlayerB", vec![100_000, 150_000], false),
+            progression_row("WipeOnly", vec![296_000], false),
+        ];
+
+        assert_eq!(
+            progression_death_counts(&rows),
+            BTreeMap::from([("PlayerA".to_string(), 1), ("PlayerB".to_string(), 2)])
+        );
+    }
+
+    #[test]
+    fn progression_deaths_detect_a_revive_without_a_second_death() {
+        let mut revived = progression_row("Revived", vec![50_000], false);
+        revived.death_events[0].dead_for = Some(5_000);
+        let rows = vec![
+            revived,
+            progression_row("EarlyDeath", vec![120_000], false),
+            progression_row("WipeA", vec![295_000], false),
+            progression_row("WipeB", vec![296_000], false),
+        ];
+
+        assert_eq!(
+            progression_death_counts(&rows),
+            BTreeMap::from([("EarlyDeath".to_string(), 1), ("Revived".to_string(), 1)])
+        );
+    }
+
+    #[test]
+    fn progression_deaths_keep_an_isolated_final_death_after_a_revive() {
+        let rows = vec![
+            progression_row("PlayerA", vec![50_000, 295_000], false),
+            progression_row("PlayerB", vec![120_000], false),
+        ];
+
+        assert_eq!(
+            progression_death_counts(&rows),
+            BTreeMap::from([("PlayerA".to_string(), 2), ("PlayerB".to_string(), 1)])
+        );
+    }
+
+    #[test]
+    fn progression_deaths_keep_all_recovered_deaths_on_a_manual_restart() {
+        let mut row = progression_row("Revived", vec![50_000, 120_000], false);
+        for death in &mut row.death_events {
+            death.dead_for = Some(5_000);
+        }
+
+        assert_eq!(
+            progression_death_counts(&[row]),
+            BTreeMap::from([("Revived".to_string(), 2)])
+        );
+    }
+
+    #[test]
+    fn progression_deaths_keep_an_earlier_cluster_when_the_last_death_was_revived() {
+        let mut revived = progression_row("Revived", vec![120_000], false);
+        revived.death_events[0].dead_for = Some(5_000);
+        let rows = vec![
+            progression_row("EarlyA", vec![50_000], false),
+            progression_row("EarlyB", vec![50_500], false),
+            revived,
+        ];
+
+        assert_eq!(
+            progression_death_counts(&rows),
+            BTreeMap::from([
+                ("EarlyA".to_string(), 1),
+                ("EarlyB".to_string(), 1),
+                ("Revived".to_string(), 1),
+            ])
+        );
+    }
+
+    #[test]
+    fn progression_deaths_keep_repeated_deaths_on_a_clear() {
+        let rows = vec![progression_row(
+            "Player",
+            vec![50_000, 120_000, 295_000],
+            true,
+        )];
+
+        assert_eq!(
+            progression_death_counts(&rows),
+            BTreeMap::from([("Player".to_string(), 3)])
+        );
+    }
+
+    #[test]
     fn progression_deaths_only_count_the_first_death_before_a_wipe() {
         let rows = vec![
             progression_row("EarlyDeath", vec![50_000], false),
@@ -3235,7 +3420,13 @@ mod tests {
             rdps: None,
             ndps: None,
             player_damage_taken: 0,
-            death_events,
+            death_events: death_events
+                .into_iter()
+                .map(|death_time| DeathInfo {
+                    death_time,
+                    dead_for: None,
+                })
+                .collect(),
             counters: 0,
             damage_reduced: 0,
             damage_shielded: 0,
