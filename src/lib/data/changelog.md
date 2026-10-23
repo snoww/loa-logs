@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    ### v1.52.0 - October 21st, 2026
+    ### v1.52.1 - October 23rd, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -15,6 +15,7 @@
 
 ### Note: ExitLag users must check the ExitLag Compatibility setting
 
-#### NEW FEATURES
+#### BUG FIXES AND IMPROVEMENTS
 
-- updated meter for belgardin raid
+- adjust death counters for raids with revives (i.e. belgardin)
+- added support for vambrace stats in rdps calculations
