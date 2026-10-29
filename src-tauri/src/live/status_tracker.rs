@@ -16,6 +16,7 @@ use meter_defs::defs::StatusEffectData;
 use std::cell::RefCell;
 use std::rc::Rc;
 use std::sync::Arc;
+use std::time::Instant;
 
 pub const WORKSHOP_BUFF_ID: u32 = 9701;
 
@@ -33,6 +34,8 @@ const SERVER_TICK_EPOCH_CANDIDATE_COUNT: usize = 8;
 /// Leeway past a deadline after which an instance the server never removed is dropped for
 /// every reader (LAL `BuffTracker.Update`, `seconds_leeway` 1000).
 const FAIL_SAFE_EXPIRY_LEEWAY_SECONDS: i64 = 1000;
+/// Match the NTP clock's tolerance for wall-clock drift and sampling jitter.
+const WALL_CLOCK_JUMP_THRESHOLD_MS: i64 = 2_000;
 
 /// How a reader treats an instance past its deadline. LAL reads an attacker's own buffs from
 /// its persistent collection, which only a remove packet or the fail-safe prunes, and every
@@ -95,8 +98,11 @@ pub struct StatusTracker {
     /// status notify since the zone change, the sample carrying the least network latency.
     /// Deadlines are server instants and meet the local clock through this offset. The previous
     /// zone's estimate stands in until the first notify of the new zone replaces it.
+    /// PC wall-clock adjustments rebase the offset without moving server-side deadlines.
     server_clock_offset: Option<Duration>,
     server_clock_offset_inherited: bool,
+    /// Paired wall and monotonic times distinguish PC clock adjustments from elapsed time.
+    local_clock_anchor: (DateTime<Utc>, Instant),
 }
 
 impl StatusTracker {
@@ -115,6 +121,7 @@ impl StatusTracker {
             server_tick_epoch_candidate_cursor: 0,
             server_clock_offset: None,
             server_clock_offset_inherited: false,
+            local_clock_anchor: (Utc::now(), Instant::now()),
         }
     }
 
@@ -247,7 +254,7 @@ impl StatusTracker {
     /// PKTStatusEffectDurationNotify moves it on each later extension. The nominal duration,
     /// counted from the arrival time read on the server clock, only covers a finite instance
     /// without a usable end tick.
-    fn expire_at_for(&self, se: &StatusEffectDetails) -> Option<DateTime<Utc>> {
+    fn expire_at_for(&mut self, se: &StatusEffectDetails) -> Option<DateTime<Utc>> {
         if !has_finite_duration(se.expiration_delay) {
             return None;
         }
@@ -266,6 +273,7 @@ impl StatusTracker {
     /// snapshot re-sends instances created earlier, so its samples only ever lower the estimate;
     /// a direct notify's sample also replaces the estimate inherited from the previous zone.
     fn observe_server_clock_offset(&mut self, se: &StatusEffectDetails) {
+        self.rebase_server_clock_offset();
         if !se.end_tick_on_zone_clock || se.occur_time == DateTime::<Utc>::default() {
             return;
         }
@@ -277,16 +285,43 @@ impl StatusTracker {
         {
             self.server_clock_offset = Some(sample);
             self.server_clock_offset_inherited = false;
+            // The accepted sample already includes any wall-clock drift up to this point.
+            self.local_clock_anchor = (Utc::now(), Instant::now());
         }
     }
 
-    fn local_to_server_time(&self, local: DateTime<Utc>) -> DateTime<Utc> {
+    fn rebase_server_clock_offset(&mut self) {
+        let now = Utc::now();
+        let monotonic_now = Instant::now();
+        let elapsed = Duration::from_std(monotonic_now.duration_since(self.local_clock_anchor.1))
+            .expect("status tracker uptime fits in chrono::Duration");
+        let adjustment = now - self.local_clock_anchor.0 - elapsed;
+        if adjustment.num_milliseconds().abs() < WALL_CLOCK_JUMP_THRESHOLD_MS {
+            return;
+        }
+
+        // The minimum-offset rule cannot recover from a forward PC clock correction: every
+        // new sample is larger, making short debuffs appear expired. Rebase by the wall-clock
+        // shift before sampling or comparing deadlines; server-side expiry times stay unchanged.
+        self.local_clock_anchor = (now, monotonic_now);
+        if let Some(offset) = &mut self.server_clock_offset {
+            *offset += adjustment;
+            info!(
+                "Rebased status effect server clock after local wall clock shifted by {}ms.",
+                adjustment.num_milliseconds()
+            );
+        }
+    }
+
+    fn local_to_server_time(&mut self, local: DateTime<Utc>) -> DateTime<Utc> {
+        self.rebase_server_clock_offset();
         self.server_clock_offset.map_or(local, |offset| {
             local.checked_sub_signed(offset).unwrap_or(local)
         })
     }
 
-    fn server_to_local_time(&self, server: DateTime<Utc>) -> DateTime<Utc> {
+    fn server_to_local_time(&mut self, server: DateTime<Utc>) -> DateTime<Utc> {
+        self.rebase_server_clock_offset();
         self.server_clock_offset.map_or(server, |offset| {
             server.checked_add_signed(offset).unwrap_or(server)
         })
