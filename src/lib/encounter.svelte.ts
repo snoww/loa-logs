@@ -134,7 +134,7 @@ export class EncounterState {
       const ds = p.damageStats;
       const ss = p.skillStats;
       if (p.isDead) anyDead = true;
-      if (ds.deaths > 0 && !p.isDead) multipleDeaths = true;
+      if (ds.deaths > 1 || (ds.deaths > 0 && !p.isDead)) multipleDeaths = true;
       if (ss.frontAttacks > 0) anyFrontAtk = true;
       if (ss.backAttacks > 0) anyBackAtk = true;
       if (ss.counters > 0) anyCounters = true;
