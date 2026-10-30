@@ -1367,20 +1367,13 @@ pub fn start(args: StartArgs) -> Result<()> {
             }
             PKTStatusEffectSyncDataNotify::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTStatusEffectSyncDataNotify>().unwrap() {
-                    let (status_effect, old_value) =
-                        status_tracker.borrow_mut().sync_status_effect(
-                            pkt.status_effect_instance_id,
-                            pkt.character_id,
-                            pkt.object_id,
-                            pkt.value,
-                            entity_tracker.local_character_id,
-                        );
-                    if let Some(mut status_effect) = status_effect {
-                        entity_tracker
-                            .refresh_status_effect_snapshots(&mut status_effect, Utc::now());
-                        status_tracker
-                            .borrow_mut()
-                            .register_status_effect(status_effect.clone());
+                    let (status_effect, old_value) = entity_tracker.sync_status_effect(
+                        pkt.status_effect_instance_id,
+                        pkt.character_id,
+                        pkt.object_id,
+                        pkt.value,
+                    );
+                    if let Some(status_effect) = status_effect {
                         if status_effect.status_effect_type == StatusEffectType::Shield {
                             let change = old_value
                                 .checked_sub(status_effect.value)
@@ -1412,22 +1405,13 @@ pub fn start(args: StartArgs) -> Result<()> {
                         }
                         for se in pkt.status_effect_datas.iter() {
                             let val = get_status_effect_value(&se.value.bytearray_0);
-                            let (status_effect, old_value) =
-                                status_tracker.borrow_mut().sync_status_effect(
-                                    se.status_effect_instance_id,
-                                    pkt.character_id,
-                                    object_id,
-                                    val,
-                                    entity_tracker.local_character_id,
-                                );
-                            if let Some(mut status_effect) = status_effect {
-                                entity_tracker.refresh_status_effect_snapshots(
-                                    &mut status_effect,
-                                    Utc::now(),
-                                );
-                                status_tracker
-                                    .borrow_mut()
-                                    .register_status_effect(status_effect.clone());
+                            let (status_effect, old_value) = entity_tracker.sync_status_effect(
+                                se.status_effect_instance_id,
+                                pkt.character_id,
+                                object_id,
+                                val,
+                            );
+                            if let Some(status_effect) = status_effect {
                                 if status_effect.status_effect_type == StatusEffectType::Shield {
                                     let change = old_value
                                         .checked_sub(status_effect.value)

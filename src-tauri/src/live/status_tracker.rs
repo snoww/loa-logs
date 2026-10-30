@@ -34,8 +34,6 @@ const SERVER_TICK_EPOCH_CANDIDATE_COUNT: usize = 8;
 /// Leeway past a deadline after which an instance the server never removed is dropped for
 /// every reader (LAL `BuffTracker.Update`, `seconds_leeway` 1000).
 const FAIL_SAFE_EXPIRY_LEEWAY_SECONDS: i64 = 1000;
-/// Match the NTP clock's tolerance for wall-clock drift and sampling jitter.
-const WALL_CLOCK_JUMP_THRESHOLD_MS: i64 = 2_000;
 
 /// How a reader treats an instance past its deadline. LAL reads an attacker's own buffs from
 /// its persistent collection, which only a remove packet or the fail-safe prunes, and every
@@ -68,6 +66,44 @@ pub struct MeasuredStat {
     pub value: i64,
 }
 
+/// Projects local UTC onto one process-lifetime timeline that advances only with `Instant`.
+/// Packet timestamps remain wall-clock timestamps; calibration and instance history use this
+/// stable timeline so a clock correction cannot change elapsed time or reorder observations.
+struct StatusClock {
+    wall_origin: DateTime<Utc>,
+    instant_origin: Instant,
+    #[cfg(test)]
+    sample: Option<(DateTime<Utc>, Instant)>,
+}
+
+impl StatusClock {
+    fn new() -> Self {
+        Self {
+            wall_origin: Utc::now(),
+            instant_origin: Instant::now(),
+            #[cfg(test)]
+            sample: None,
+        }
+    }
+
+    fn wall_offset(&self) -> Duration {
+        #[cfg(test)]
+        let (wall, instant) = self.sample.unwrap_or_else(|| (Utc::now(), Instant::now()));
+        #[cfg(not(test))]
+        let (wall, instant) = (Utc::now(), Instant::now());
+
+        let elapsed = Duration::from_std(instant.duration_since(self.instant_origin))
+            .expect("process lifetime fits in a chrono duration");
+        wall - (self.wall_origin + elapsed)
+    }
+
+    fn stable_time(&self, wall_time: DateTime<Utc>) -> DateTime<Utc> {
+        wall_time
+            .checked_sub_signed(self.wall_offset())
+            .unwrap_or(wall_time)
+    }
+}
+
 pub struct StatusTracker {
     pub next_skill_events: Vec<super::next_skill::MarkerEvent>,
     pub next_skill_reset_pending: bool,
@@ -81,7 +117,8 @@ pub struct StatusTracker {
     /// Objects seen through a direct status effect notify or an object snapshot since the last
     /// zone change; their party-channel status effects are on this zone's tick clock.
     zone_published_object_ids: HashSet<u64>,
-    /// When a registry target last gained, refreshed or lost a source of an identity stat.
+    /// When a registry target last gained, refreshed or lost a source of an identity stat,
+    /// on the stable local timeline shared with inspect requests.
     stat_source_change_at: HashMap<(u64, StatType), DateTime<Utc>>,
     /// UTC time of status effect tick 0 on the current server. Every finite StatusEffectData
     /// satisfies occur_time + total_time == epoch + end_tick. An instance the server extended
@@ -94,15 +131,12 @@ pub struct StatusTracker {
     server_tick_epoch_candidates:
         [Option<(DateTime<Utc>, DateTime<Utc>)>; SERVER_TICK_EPOCH_CANDIDATE_COUNT],
     server_tick_epoch_candidate_cursor: usize,
-    /// Local clock minus server clock: the smallest local-arrival-minus-`occur_time` seen on a
-    /// status notify since the zone change, the sample carrying the least network latency.
-    /// Deadlines are server instants and meet the local clock through this offset. The previous
+    /// Stable local clock minus server clock: the smallest arrival-minus-`occur_time` seen on a
+    /// status notify since the zone change, after removing wall-clock adjustments. The previous
     /// zone's estimate stands in until the first notify of the new zone replaces it.
-    /// PC wall-clock adjustments rebase the offset without moving server-side deadlines.
     server_clock_offset: Option<Duration>,
     server_clock_offset_inherited: bool,
-    /// Paired wall and monotonic times distinguish PC clock adjustments from elapsed time.
-    local_clock_anchor: (DateTime<Utc>, Instant),
+    clock: StatusClock,
 }
 
 impl StatusTracker {
@@ -121,7 +155,7 @@ impl StatusTracker {
             server_tick_epoch_candidate_cursor: 0,
             server_clock_offset: None,
             server_clock_offset_inherited: false,
-            local_clock_anchor: (Utc::now(), Instant::now()),
+            clock: StatusClock::new(),
         }
     }
 
@@ -158,6 +192,8 @@ impl StatusTracker {
         mut se: StatusEffectDetails,
         runtime_for_carried_skill: impl FnOnce(u32) -> Option<SkillRuntimeData>,
     ) {
+        se.tracked_at = self.stable_local_time(se.timestamp);
+        se.first_tracked = se.tracked_at;
         let previous_marker = self
             .registry(se.target_type)
             .get(&se.target_id)
@@ -238,7 +274,7 @@ impl StatusTracker {
         let epoch_moved_later = se.end_tick_on_zone_clock && self.observe_server_tick_epoch(&se);
         se.expire_at = self.expire_at_for(&se);
         se.packet_expired = false;
-        self.note_stat_sources_changed(se.target_id, &se, now);
+        self.note_stat_sources_changed(se.target_id, &se, se.tracked_at);
 
         self.registry_mut(se.target_type)
             .entry(se.target_id)
@@ -254,7 +290,7 @@ impl StatusTracker {
     /// PKTStatusEffectDurationNotify moves it on each later extension. The nominal duration,
     /// counted from the arrival time read on the server clock, only covers a finite instance
     /// without a usable end tick.
-    fn expire_at_for(&mut self, se: &StatusEffectDetails) -> Option<DateTime<Utc>> {
+    fn expire_at_for(&self, se: &StatusEffectDetails) -> Option<DateTime<Utc>> {
         if !has_finite_duration(se.expiration_delay) {
             return None;
         }
@@ -264,7 +300,9 @@ impl StatusTracker {
             return Some(server_end_at);
         }
         add_duration_clamped(
-            self.local_to_server_time(se.timestamp),
+            se.tracked_at
+                .checked_sub_signed(self.server_clock_offset.unwrap_or_default())
+                .unwrap_or(se.tracked_at),
             f64::from(se.expiration_delay),
         )
     }
@@ -273,58 +311,49 @@ impl StatusTracker {
     /// snapshot re-sends instances created earlier, so its samples only ever lower the estimate;
     /// a direct notify's sample also replaces the estimate inherited from the previous zone.
     fn observe_server_clock_offset(&mut self, se: &StatusEffectDetails) {
-        self.rebase_server_clock_offset();
         if !se.end_tick_on_zone_clock || se.occur_time == DateTime::<Utc>::default() {
             return;
         }
-        let sample = se.timestamp - se.occur_time;
+        let sample = se.tracked_at - se.occur_time;
         if (self.server_clock_offset_inherited && !se.created_before_zone)
             || self
                 .server_clock_offset
                 .is_none_or(|offset| sample < offset)
         {
+            if self.server_clock_offset.is_none() {
+                // Before the first server sample, nominal deadlines use the stable local
+                // timeline. Move them into server time without changing their remaining life.
+                for effect in self
+                    .local_status_effect_registry
+                    .values_mut()
+                    .chain(self.party_status_effect_registry.values_mut())
+                    .flat_map(|effects| effects.values_mut())
+                    .chain(self.retained_entries_by_instance_id.values_mut())
+                {
+                    effect.expire_at = effect
+                        .expire_at
+                        .map(|end| end.checked_sub_signed(sample).unwrap_or(end));
+                }
+            }
             self.server_clock_offset = Some(sample);
             self.server_clock_offset_inherited = false;
-            // The accepted sample already includes any wall-clock drift up to this point.
-            self.local_clock_anchor = (Utc::now(), Instant::now());
         }
     }
 
-    fn rebase_server_clock_offset(&mut self) {
-        let now = Utc::now();
-        let monotonic_now = Instant::now();
-        let elapsed = Duration::from_std(monotonic_now.duration_since(self.local_clock_anchor.1))
-            .expect("status tracker uptime fits in chrono::Duration");
-        let adjustment = now - self.local_clock_anchor.0 - elapsed;
-        if adjustment.num_milliseconds().abs() < WALL_CLOCK_JUMP_THRESHOLD_MS {
-            return;
-        }
-
-        // The minimum-offset rule cannot recover from a forward PC clock correction: every
-        // new sample is larger, making short debuffs appear expired. Rebase by the wall-clock
-        // shift before sampling or comparing deadlines; server-side expiry times stay unchanged.
-        self.local_clock_anchor = (now, monotonic_now);
-        if let Some(offset) = &mut self.server_clock_offset {
-            *offset += adjustment;
-            info!(
-                "Rebased status effect server clock after local wall clock shifted by {}ms.",
-                adjustment.num_milliseconds()
-            );
-        }
+    fn local_to_server_time(&self, local: DateTime<Utc>) -> DateTime<Utc> {
+        let offset = self.clock.wall_offset() + self.server_clock_offset.unwrap_or_default();
+        local.checked_sub_signed(offset).unwrap_or(local)
     }
 
-    fn local_to_server_time(&mut self, local: DateTime<Utc>) -> DateTime<Utc> {
-        self.rebase_server_clock_offset();
-        self.server_clock_offset.map_or(local, |offset| {
-            local.checked_sub_signed(offset).unwrap_or(local)
-        })
+    fn server_to_local_time(&self, server: DateTime<Utc>) -> DateTime<Utc> {
+        let offset = self.clock.wall_offset() + self.server_clock_offset.unwrap_or_default();
+        server.checked_add_signed(offset).unwrap_or(server)
     }
 
-    fn server_to_local_time(&mut self, server: DateTime<Utc>) -> DateTime<Utc> {
-        self.rebase_server_clock_offset();
-        self.server_clock_offset.map_or(server, |offset| {
-            server.checked_add_signed(offset).unwrap_or(server)
-        })
+    /// Instance history and inspect requests share this timeline across wall-clock corrections
+    /// and zone changes. Packet timestamps used by combat logs remain on the local wall clock.
+    pub fn stable_local_time(&self, local: DateTime<Utc>) -> DateTime<Utc> {
+        self.clock.stable_time(local)
     }
 
     pub fn note_zone_published(&mut self, object_id: u64) {
@@ -462,11 +491,12 @@ impl StatusTracker {
                 },
             });
         }
-        self.note_stat_sources_changed(target_id, effect, at);
+        self.note_stat_sources_changed(target_id, effect, self.stable_local_time(at));
     }
 
     /// Records that a source of an identity stat on `target_id` was added, refreshed, removed,
-    /// hidden by its deadline or restored at `at`. A later recorded change never moves back.
+    /// hidden by its deadline or restored at stable local time `at`. A later recorded change
+    /// never moves back.
     fn note_stat_sources_changed(
         &mut self,
         target_id: u64,
@@ -484,7 +514,7 @@ impl StatusTracker {
     }
 
     /// Whether any source of `stat_type` on one of `target_ids` was added, refreshed, removed or
-    /// reset at or after `since`.
+    /// reset at or after `since`, on the stable local timeline used by inspect requests.
     pub fn has_stat_source_changed_since(
         &self,
         target_ids: &[u64],
@@ -569,6 +599,7 @@ impl StatusTracker {
             return;
         };
         let now = Utc::now();
+        let stable_now = self.stable_local_time(now);
         for (instance_id, effect) in effects {
             if super::next_skill::is_marker(effect.status_effect_id) {
                 self.next_skill_events.push(super::next_skill::MarkerEvent {
@@ -579,7 +610,7 @@ impl StatusTracker {
                     kind: super::next_skill::MarkerEventKind::Remove { consumption: false },
                 });
             }
-            self.note_stat_sources_changed(object_id, &effect, now);
+            self.note_stat_sources_changed(object_id, &effect, stable_now);
             if effect.owner_is_player {
                 self.retained_entries_by_instance_id
                     .insert(instance_id, effect);
@@ -649,6 +680,7 @@ impl StatusTracker {
             }
         }
         let now = Utc::now();
+        let stable_now = self.stable_local_time(now);
         for se in &removed_entries {
             if super::next_skill::is_marker(se.status_effect_id) {
                 self.next_skill_events.push(super::next_skill::MarkerEvent {
@@ -662,7 +694,7 @@ impl StatusTracker {
                     },
                 });
             }
-            self.note_stat_sources_changed(target_id, se, now);
+            self.note_stat_sources_changed(target_id, se, stable_now);
         }
 
         (
@@ -763,6 +795,26 @@ impl StatusTracker {
         se.value = value;
 
         (Some(se.clone()), old_value)
+    }
+
+    /// Fills missing creation snapshots after a value sync. This is the same tracked instance,
+    /// so its original observation, deadline, expiry state and calibration samples stay intact.
+    pub fn refresh_synced_status_effect(
+        &mut self,
+        refreshed: StatusEffectDetails,
+    ) -> Option<StatusEffectDetails> {
+        let tracked = self
+            .registry_mut(refreshed.target_type)
+            .get_mut(&refreshed.target_id)?
+            .get_mut(&refreshed.instance_id)?;
+        if tracked.owner_player_stats_snapshot.is_none() {
+            tracked.owner_player_stats_snapshot = refreshed.owner_player_stats_snapshot;
+        }
+        if tracked.source_skill_runtime_snapshot.is_none() {
+            tracked.source_skill_runtime_snapshot = refreshed.source_skill_runtime_snapshot;
+        }
+        tracked.owner_is_player |= refreshed.owner_is_player;
+        Some(tracked.clone())
     }
 
     pub fn get_status_effects(
@@ -868,7 +920,7 @@ impl StatusTracker {
             );
             match merged.entry(key) {
                 hashbrown::hash_map::Entry::Occupied(mut entry) => {
-                    if effect.timestamp > entry.get().timestamp {
+                    if effect.tracked_at > entry.get().tracked_at {
                         entry.insert(effect);
                     }
                 }
@@ -881,7 +933,7 @@ impl StatusTracker {
         let mut effects = merged.into_values().collect::<Vec<_>>();
         effects.sort_by_key(|effect| {
             (
-                effect.timestamp,
+                effect.tracked_at,
                 effect.instance_id,
                 effect.status_effect_id,
                 effect.source_id,
@@ -1139,6 +1191,7 @@ pub fn build_status_effect(
         occur_time: se_data.occur_time,
         name,
         timestamp,
+        tracked_at: timestamp,
         unique_group,
         owner_player_stats_snapshot: None,
         source_skill_runtime_snapshot: None,
@@ -1297,6 +1350,8 @@ pub struct StatusEffectDetails {
     /// Server-reported occurrence time of the instance, from the status effect data.
     pub occur_time: DateTime<Utc>,
     pub timestamp: DateTime<Utc>,
+    /// Most recent registration on the stable local timeline, for ordering merged registries.
+    pub tracked_at: DateTime<Utc>,
     pub name: String,
     pub unique_group: u32,
     pub owner_player_stats_snapshot: Option<Arc<PlayerStats>>,
@@ -1304,8 +1359,8 @@ pub struct StatusEffectDetails {
     /// The resolved source is a player, so the instance carries an owner snapshot worth
     /// resuming across zone and object snapshot resets.
     pub owner_is_player: bool,
-    /// When this status effect instance was first tracked; kept across same-instance
-    /// re-notifies.
+    /// When this status effect instance was first tracked on the stable local timeline; kept
+    /// across same-instance re-notifies and comparable to inspect request times.
     pub first_tracked: DateTime<Utc>,
     /// The instance already existed when the current zone was entered, or was first seen
     /// through an object snapshot, so the owner's build at its creation may differ from the
@@ -1334,7 +1389,10 @@ mod buff_instance_tests {
 
     pub(super) fn tracker() -> StatusTracker {
         let ids = Rc::new(RefCell::new(IdTracker::new()));
-        StatusTracker::new(Rc::new(RefCell::new(PartyTracker::new(ids))))
+        let mut tracker = StatusTracker::new(Rc::new(RefCell::new(PartyTracker::new(ids))));
+        tracker.clock.wall_origin = at(0.0);
+        tracker.clock.sample = Some((at(0.0), tracker.clock.instant_origin));
+        tracker
     }
 
     /// Fixture time `seconds` after a base near now: retained entries are pruned against the
@@ -1891,6 +1949,8 @@ mod clock_domain_tests {
         RECEIVER, at, finite_status, has, seed_server_tick_epoch, tracker,
     };
     use super::*;
+    use crate::live::entity_tracker::EntityTracker;
+    use crate::live::id_tracker::IdTracker;
     use crate::live::test_data::initialize;
 
     const STAT: StatType = StatType::SKILL_DAMAGE_SUB_RATE_2;
@@ -1925,6 +1985,525 @@ mod clock_domain_tests {
             .actually_get_status_effects(RECEIVER, StatusEffectTargetType::Local, time, mode)
             .iter()
             .any(|effect| effect.instance_id == instance_id)
+    }
+
+    fn set_clock(tracker: &mut StatusTracker, elapsed_seconds: f64, wall_step_seconds: f64) {
+        tracker.clock.sample = Some((
+            at(elapsed_seconds + wall_step_seconds),
+            tracker.clock.instant_origin + std::time::Duration::from_secs_f64(elapsed_seconds),
+        ));
+    }
+
+    fn sync_fixture(
+        calibrated: bool,
+        target_type: StatusEffectTargetType,
+        cached_runtime: bool,
+    ) -> (EntityTracker, Rc<RefCell<StatusTracker>>) {
+        initialize();
+        let ids = Rc::new(RefCell::new(IdTracker::new()));
+        ids.borrow_mut().add_mapping(RECEIVER, 777);
+        let parties = Rc::new(RefCell::new(PartyTracker::new(ids.clone())));
+        parties.borrow_mut().add(1, 7, RECEIVER, 777, None);
+        parties.borrow_mut().add(1, 7, 10, 110, None);
+        let mut statuses = StatusTracker::new(parties.clone());
+        statuses.clock.wall_origin = at(0.0);
+        statuses.clock.sample = Some((at(0.0), statuses.clock.instant_origin));
+        if calibrated {
+            seed_server_tick_epoch(&mut statuses);
+        }
+        let target_id = if target_type == StatusEffectTargetType::Party {
+            RECEIVER
+        } else {
+            777
+        };
+        let mut status = finite_status(target_id, 1, 10.0, 0.0);
+        status.target_type = target_type;
+        status.status_effect_type = StatusEffectType::Shield;
+        status.source_skill_id = Some(21160);
+        status.value = 1000;
+        status.owner_player_stats_snapshot = Some(Arc::new(PlayerStats::default()));
+        status.source_skill_runtime_snapshot = cached_runtime.then(|| SkillRuntimeData {
+            skill_level: 7,
+            ..Default::default()
+        });
+        status.measured_stat = Some(MeasuredStat {
+            stat_type: STAT,
+            value: 2345,
+        });
+        if !calibrated {
+            status.occur_time = DateTime::<Utc>::default();
+            status.end_tick_on_zone_clock = false;
+        }
+        statuses.register_status_effect(status);
+        let statuses = Rc::new(RefCell::new(statuses));
+        let mut entities = EntityTracker::new(statuses.clone(), ids, parties);
+        entities.local_character_id = if target_type == StatusEffectTargetType::Party {
+            10
+        } else {
+            RECEIVER
+        };
+        entities.entities.insert(
+            61,
+            Entity {
+                id: 61,
+                entity_type: EntityType::Player,
+                class_id: 204,
+                skill_runtime_data: HashMap::from([(
+                    21160,
+                    SkillRuntimeData {
+                        skill_level: 9,
+                        ..Default::default()
+                    },
+                )]),
+                ..Default::default()
+            },
+        );
+        (entities, statuses)
+    }
+
+    #[test]
+    fn synced_status_effects_keep_deadlines_and_creation_identity_across_clock_steps() {
+        // Both packet callers share EntityTracker::sync_status_effect; cover its local and
+        // party routing, server and nominal deadlines, and missing versus cached snapshots.
+        for calibrated in [false, true] {
+            for target_type in [StatusEffectTargetType::Local, StatusEffectTargetType::Party] {
+                for wall_step in [0.0, 11.4, -4.0] {
+                    for cached_runtime in [false, true] {
+                        let (mut entities, statuses) =
+                            sync_fixture(calibrated, target_type, cached_runtime);
+                        let target_id = if target_type == StatusEffectTargetType::Party {
+                            RECEIVER
+                        } else {
+                            777
+                        };
+                        let before = statuses
+                            .borrow()
+                            .tracked_status_effect(&[target_id], 1)
+                            .unwrap()
+                            .clone();
+                        set_clock(&mut statuses.borrow_mut(), 2.0, wall_step);
+                        let (synced, old_value) =
+                            entities.sync_status_effect(1, RECEIVER, 777, 800);
+                        let synced = synced.unwrap();
+                        assert_eq!(old_value, 1000);
+                        assert_eq!(synced.value, 800);
+                        let state = statuses.borrow();
+                        assert_eq!(
+                            state.server_clock_offset,
+                            calibrated.then_some(Duration::zero())
+                        );
+                        let tracked = state.tracked_status_effect(&[target_id], 1).unwrap();
+                        assert_eq!(tracked.timestamp, before.timestamp);
+                        assert_eq!(tracked.tracked_at, before.tracked_at);
+                        assert_eq!(tracked.first_tracked, before.first_tracked);
+                        assert_eq!(tracked.expire_at, before.expire_at);
+                        assert_eq!(tracked.measured_stat, before.measured_stat);
+                        assert_eq!(
+                            tracked
+                                .source_skill_runtime_snapshot
+                                .as_ref()
+                                .unwrap()
+                                .skill_level,
+                            if cached_runtime { 7 } else { 9 }
+                        );
+                        assert!(Arc::ptr_eq(
+                            tracked.owner_player_stats_snapshot.as_ref().unwrap(),
+                            before.owner_player_stats_snapshot.as_ref().unwrap()
+                        ));
+                        drop(state);
+
+                        for (elapsed, expected) in [(2.0, true), (9.999, true), (10.0, false)] {
+                            set_clock(&mut statuses.borrow_mut(), elapsed, wall_step);
+                            let visible = statuses
+                                .borrow_mut()
+                                .actually_get_status_effects(
+                                    target_id,
+                                    target_type,
+                                    at(elapsed + wall_step),
+                                    DeadlineMode::HideExpired,
+                                )
+                                .into_iter()
+                                .any(|effect| effect.instance_id == 1);
+                            assert_eq!(
+                                visible, expected,
+                                "calibrated {calibrated}, step {wall_step}, elapsed {elapsed}"
+                            );
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn synced_status_effects_do_not_restore_expired_or_removed_instances_after_clock_steps() {
+        for calibrated in [false, true] {
+            for target_type in [StatusEffectTargetType::Local, StatusEffectTargetType::Party] {
+                for wall_step in [-4.0, 11.4] {
+                    let (mut entities, statuses) = sync_fixture(calibrated, target_type, true);
+                    let target_id = if target_type == StatusEffectTargetType::Party {
+                        RECEIVER
+                    } else {
+                        777
+                    };
+                    set_clock(&mut statuses.borrow_mut(), 11.0, 0.0);
+                    assert!(
+                        statuses
+                            .borrow_mut()
+                            .actually_get_status_effects(
+                                target_id,
+                                target_type,
+                                at(11.0),
+                                DeadlineMode::HideExpired
+                            )
+                            .into_iter()
+                            .all(|effect| effect.instance_id != 1)
+                    );
+                    set_clock(&mut statuses.borrow_mut(), 12.0, wall_step);
+                    let (synced, old_value) = entities.sync_status_effect(1, RECEIVER, 777, 600);
+                    assert_eq!(old_value, 1000);
+                    assert!(synced.unwrap().packet_expired);
+                    assert!(
+                        statuses
+                            .borrow_mut()
+                            .actually_get_status_effects(
+                                target_id,
+                                target_type,
+                                at(12.0 + wall_step),
+                                DeadlineMode::HideExpired
+                            )
+                            .into_iter()
+                            .all(|effect| effect.instance_id != 1)
+                    );
+                    statuses
+                        .borrow_mut()
+                        .remove_status_effects(target_id, vec![1], 0, target_type);
+                    let (removed, old_value) = entities.sync_status_effect(1, RECEIVER, 777, 400);
+                    assert!(removed.is_none());
+                    assert_eq!(old_value, 0);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn clock_steps_preserve_existing_and_new_target_effect_deadlines() {
+        for wall_step in [11.4, -4.0] {
+            for target_type in [StatusEffectTargetType::Local, StatusEffectTargetType::Party] {
+                let mut tracker = tracker();
+                seed_server_tick_epoch(&mut tracker);
+                set_clock(&mut tracker, 1.0, 0.0);
+                let mut existing = finite_status(RECEIVER, 1, 8.0, 1.0);
+                existing.target_type = target_type;
+                tracker.register_status_effect(existing);
+
+                // The first operation after the clock step is a read, before any fresh notify.
+                set_clock(&mut tracker, 2.0, wall_step);
+                let visible = tracker.actually_get_status_effects(
+                    RECEIVER,
+                    target_type,
+                    at(2.0 + wall_step),
+                    DeadlineMode::HideExpired,
+                );
+                assert!(visible.iter().any(|effect| effect.instance_id == 1));
+                let mut fresh = skewed_status(2, 10.0, 2.0, wall_step);
+                fresh.target_type = target_type;
+                tracker.register_status_effect(fresh);
+
+                for (time, expected_ids) in [(8.999, vec![1, 2]), (9.0, vec![2]), (12.0, vec![])] {
+                    set_clock(&mut tracker, time, wall_step);
+                    let mut ids = tracker
+                        .actually_get_status_effects(
+                            RECEIVER,
+                            target_type,
+                            at(time + wall_step),
+                            DeadlineMode::HideExpired,
+                        )
+                        .into_iter()
+                        .map(|effect| effect.instance_id)
+                        .collect::<Vec<_>>();
+                    ids.sort_unstable();
+                    assert_eq!(ids, expected_ids, "step {wall_step}, time {time}");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn clock_steps_do_not_prune_live_or_retained_instances_early() {
+        let mut tracker = tracker();
+        seed_server_tick_epoch(&mut tracker);
+        let mut retained = finite_status(RECEIVER, 1, 8.0, 0.0);
+        retained.measured_stat = Some(MeasuredStat {
+            stat_type: STAT,
+            value: 1234,
+        });
+        tracker.register_status_effect(retained);
+        tracker.remove_local_object(RECEIVER);
+
+        set_clock(&mut tracker, 5.0, 11.4);
+        let mut renotified = skewed_status(1, 8.0, 0.0, 16.4);
+        renotified.created_before_zone = true;
+        tracker.register_status_effect(renotified);
+        assert_eq!(
+            tracker
+                .tracked_status_effect(&[RECEIVER], 1)
+                .unwrap()
+                .measured_stat,
+            Some(MeasuredStat {
+                stat_type: STAT,
+                value: 1234
+            })
+        );
+        assert!(has(&mut tracker, RECEIVER, 1, at(16.4)));
+
+        // A larger correction must not activate the existing 1000 s fail-safe either.
+        set_clock(&mut tracker, 6.0, 1200.0);
+        assert!(has(&mut tracker, RECEIVER, 1, at(1206.0)));
+        set_clock(&mut tracker, 8.0, 1200.0);
+        assert!(!has(&mut tracker, RECEIVER, 1, at(1208.0)));
+    }
+
+    #[test]
+    fn clock_steps_preserve_nominal_deadlines_without_server_calibration() {
+        for wall_step in [11.4, -4.0] {
+            let mut tracker = tracker();
+            set_clock(&mut tracker, 1.0, 0.0);
+            let mut status = finite_status(RECEIVER, 1, 3.0, 1.0);
+            status.occur_time = DateTime::<Utc>::default();
+            status.end_tick_on_zone_clock = false;
+            tracker.register_status_effect(status);
+            assert_eq!(tracker.server_clock_offset, None);
+            assert_eq!(tracker.server_tick_epoch, None);
+            set_clock(&mut tracker, 2.0, wall_step);
+            assert!(has(&mut tracker, RECEIVER, 1, at(2.0 + wall_step)));
+            set_clock(&mut tracker, 4.0, wall_step);
+            assert!(!has(&mut tracker, RECEIVER, 1, at(4.0 + wall_step)));
+        }
+    }
+
+    #[test]
+    fn clock_steps_preserve_duration_changes_and_frozen_hit_visibility() {
+        for wall_step in [11.4, -4.0] {
+            let mut tracker = tracker();
+            seed_server_tick_epoch(&mut tracker);
+            tracker.register_status_effect(finite_status(RECEIVER, 1, 8.0, 0.0));
+            set_clock(&mut tracker, 2.0, wall_step);
+            let frozen = hide_expired(tracker.actually_get_status_effects(
+                RECEIVER,
+                StatusEffectTargetType::Local,
+                at(2.0 + wall_step),
+                DeadlineMode::KeepUntilRemoved,
+            ));
+            assert!(frozen.iter().any(|effect| effect.instance_id == 1));
+
+            assert!(tracker.update_status_duration(
+                1,
+                RECEIVER,
+                101_000,
+                StatusEffectTargetType::Local,
+                at(2.0 + wall_step)
+            ));
+            assert!(!has(&mut tracker, RECEIVER, 1, at(2.0 + wall_step)));
+            assert!(tracker.update_status_duration(
+                1,
+                RECEIVER,
+                112_000,
+                StatusEffectTargetType::Local,
+                at(2.0 + wall_step)
+            ));
+            assert!(has(&mut tracker, RECEIVER, 1, at(2.0 + wall_step)));
+            set_clock(&mut tracker, 12.0, wall_step);
+            assert!(!has(&mut tracker, RECEIVER, 1, at(12.0 + wall_step)));
+            // Later expiry must not rewrite the effects captured for an earlier queued hit.
+            assert_eq!(frozen[0].instance_id, 1);
+            assert!(!frozen[0].packet_expired);
+        }
+    }
+
+    #[test]
+    fn clock_steps_keep_identity_history_and_inspect_times_ordered() {
+        initialize();
+        for wall_step in [11.4, -4.0] {
+            let mut tracker = tracker();
+            seed_server_tick_epoch(&mut tracker);
+            let mut original = finite_status(RECEIVER, 1, 30.0, 0.0);
+            original.status_effect_id = 310501;
+            original.source_skill_id = Some(31050);
+            tracker.register_status_effect(original);
+            set_clock(&mut tracker, 1.0, 0.0);
+            let request_before_step = tracker.stable_local_time(at(1.0));
+
+            set_clock(&mut tracker, 2.0, wall_step);
+            assert!(has(&mut tracker, RECEIVER, 1, at(2.0 + wall_step)));
+            assert!(!tracker.has_stat_source_changed_since(&[RECEIVER], STAT, request_before_step));
+            let mut added = skewed_status(2, 8.0, 2.0, wall_step);
+            added.status_effect_id = 211410;
+            added.source_skill_id = Some(21141);
+            tracker.register_status_effect(added);
+            let effect = tracker.tracked_status_effect(&[RECEIVER], 2).unwrap();
+            assert_eq!(effect.first_tracked, at(2.0));
+            assert!(effect.first_tracked > request_before_step);
+            assert!(tracker.has_stat_source_changed_since(&[RECEIVER], STAT, request_before_step));
+            assert_eq!(tracker.stable_local_time(at(2.0 + wall_step)), at(2.0));
+
+            set_clock(&mut tracker, 11.0, wall_step);
+            assert!(!has(&mut tracker, RECEIVER, 2, at(11.0 + wall_step)));
+            assert!(tracker.has_stat_source_changed_since(&[RECEIVER], STAT, at(9.0)));
+            assert!(!tracker.has_stat_source_changed_since(&[RECEIVER], STAT, at(10.1)));
+        }
+    }
+
+    #[test]
+    fn clock_steps_preserve_instance_identity_when_renotified() {
+        for wall_step in [11.4, -4.0] {
+            let mut tracker = tracker();
+            seed_server_tick_epoch(&mut tracker);
+            tracker.register_status_effect(finite_status(RECEIVER, 1, 30.0, 0.0));
+            let sampled = tracker
+                .tracked_status_effect(&[RECEIVER], 1)
+                .unwrap()
+                .clone();
+            set_clock(&mut tracker, 2.0, wall_step);
+            tracker.register_status_effect(skewed_status(1, 30.0, 0.0, 2.0 + wall_step));
+            assert!(tracker.try_apply_measured_stat(
+                &[RECEIVER],
+                &sampled,
+                MeasuredStat {
+                    stat_type: STAT,
+                    value: 2345
+                }
+            ));
+            let effect = tracker.tracked_status_effect(&[RECEIVER], 1).unwrap();
+            assert_eq!(effect.first_tracked, at(0.0));
+            assert_eq!(effect.tracked_at, at(2.0));
+        }
+    }
+
+    #[test]
+    fn clock_steps_keep_the_newest_copy_when_merging_registries() {
+        for wall_step in [11.4, -4.0] {
+            let mut tracker = tracker();
+            seed_server_tick_epoch(&mut tracker);
+            set_clock(&mut tracker, 1.0, 0.0);
+            let mut older = finite_status(RECEIVER, 1, 20.0, 1.0);
+            older.target_type = StatusEffectTargetType::Party;
+            older.value = 111;
+            tracker.register_status_effect(older);
+            set_clock(&mut tracker, 2.0, wall_step);
+            let mut newer = skewed_status(1, 20.0, 2.0, wall_step);
+            newer.value = 222;
+            tracker.register_status_effect(newer);
+            let player = Entity {
+                id: RECEIVER,
+                character_id: RECEIVER,
+                entity_type: EntityType::Player,
+                ..Default::default()
+            };
+            let effects = tracker.get_source_status_effects(
+                &player,
+                at(2.0 + wall_step),
+                DeadlineMode::HideExpired,
+            );
+            assert_eq!(effects.len(), 1);
+            assert_eq!(effects[0].value, 222);
+        }
+    }
+
+    #[test]
+    fn clock_steps_preserve_inherited_calibration_and_stale_snapshot_protection() {
+        for wall_step in [11.4, -4.0] {
+            let mut tracker = tracker();
+            seed_server_tick_epoch(&mut tracker);
+            let original_offset = tracker.server_clock_offset;
+            set_clock(&mut tracker, 1.0, 0.0);
+            tracker.register_status_effect(finite_status(RECEIVER, 1, 30.0, 1.0));
+            tracker.clear();
+            set_clock(&mut tracker, 2.0, wall_step);
+            let mut snapshot = skewed_status(1, 30.0, 1.0, 1.0 + wall_step);
+            snapshot.created_before_zone = true;
+            tracker.register_status_effect(snapshot);
+            assert_eq!(tracker.server_clock_offset, original_offset);
+            assert!(tracker.server_clock_offset_inherited);
+            // A snapshot cannot calibrate the inherited estimate, even after a local clock step.
+            assert_eq!(
+                tracker
+                    .tracked_status_effect(&[RECEIVER], 1)
+                    .unwrap()
+                    .first_tracked,
+                at(1.0)
+            );
+            set_clock(&mut tracker, 3.0, wall_step);
+            tracker.register_status_effect(skewed_status(2, 8.0, 3.0, wall_step));
+            set_clock(&mut tracker, 3.3, wall_step);
+            tracker.register_status_effect(skewed_status(3, 8.0, 3.3, wall_step));
+            assert!(!tracker.server_clock_offset_inherited);
+            assert_eq!(tracker.server_clock_offset, original_offset);
+            assert!(has(&mut tracker, RECEIVER, 1, at(3.3 + wall_step)));
+        }
+    }
+
+    #[test]
+    fn first_server_sample_preserves_existing_nominal_deadlines() {
+        for server_offset in [3.5, -3.5] {
+            let mut tracker = tracker();
+            let mut uncalibrated = finite_status(RECEIVER, 1, 10.0, 0.0);
+            uncalibrated.occur_time = DateTime::<Utc>::default();
+            uncalibrated.end_tick_on_zone_clock = false;
+            let mut party = uncalibrated.clone();
+            party.instance_id = 3;
+            party.target_type = StatusEffectTargetType::Party;
+            tracker.register_status_effect(party);
+            let mut retained = uncalibrated.clone();
+            retained.instance_id = 4;
+            retained.target_id = 777;
+            retained.expiration_delay = 20.0;
+            tracker.register_status_effect(retained);
+            tracker.remove_local_object(777);
+            tracker.register_status_effect(uncalibrated);
+            set_clock(&mut tracker, 2.0, 0.0);
+            tracker.register_status_effect(skewed_status(
+                2,
+                5.0,
+                2.0 - server_offset,
+                server_offset,
+            ));
+            assert_eq!(
+                tracker.server_clock_offset,
+                Some(Duration::milliseconds((server_offset * 1000.0) as i64))
+            );
+            set_clock(&mut tracker, 9.999, 0.0);
+            assert!(has(&mut tracker, RECEIVER, 1, at(9.999)));
+            assert_eq!(
+                tracker
+                    .actually_get_status_effects(
+                        RECEIVER,
+                        StatusEffectTargetType::Party,
+                        at(9.999),
+                        DeadlineMode::HideExpired
+                    )
+                    .len(),
+                1
+            );
+            set_clock(&mut tracker, 10.0, 0.0);
+            assert!(!has(&mut tracker, RECEIVER, 1, at(10.0)));
+            assert!(
+                tracker
+                    .actually_get_status_effects(
+                        RECEIVER,
+                        StatusEffectTargetType::Party,
+                        at(10.0),
+                        DeadlineMode::HideExpired
+                    )
+                    .is_empty()
+            );
+            set_clock(&mut tracker, 19.999, 0.0);
+            tracker.prune_retained_entries(at(19.999));
+            assert!(tracker.retained_entries_by_instance_id.contains_key(&4));
+            set_clock(&mut tracker, 20.0, 0.0);
+            tracker.prune_retained_entries(at(20.0));
+            assert!(!tracker.retained_entries_by_instance_id.contains_key(&4));
+        }
     }
 
     #[test]

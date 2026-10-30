@@ -63,8 +63,8 @@ pub struct EntityTracker {
 pub struct AppliedInspectResult {
     pub name: String,
     pub info: InspectInfo,
-    /// When the meter sent the inspect request this result answers; `None` when the request
-    /// is unknown or overlapped another request for the same name.
+    /// When the meter sent the inspect request, on the status tracker's stable local timeline;
+    /// `None` when the request is unknown or overlapped another request for the same name.
     pub request_sent_at: Option<DateTime<Utc>>,
 }
 
@@ -308,6 +308,7 @@ impl EntityTracker {
     /// Records that the meter sent an inspect request for `name`. A second outstanding request
     /// for the same name makes both replies ambiguous.
     pub fn begin_inspect_request(&mut self, name: &str, sent_at: DateTime<Utc>) {
+        let sent_at = self.status_tracker.borrow().stable_local_time(sent_at);
         let timing = self
             .inspect_request_timing_by_name
             .entry(name.to_string())
@@ -2103,7 +2104,33 @@ impl EntityTracker {
             });
     }
 
-    pub fn refresh_status_effect_snapshots(
+    /// Both status-sync packet types update an existing instance through this path.
+    pub fn sync_status_effect(
+        &mut self,
+        instance_id: u32,
+        character_id: u64,
+        object_id: u64,
+        value: u64,
+    ) -> (Option<StatusEffectDetails>, u64) {
+        let (status_effect, old_value) = self.status_tracker.borrow_mut().sync_status_effect(
+            instance_id,
+            character_id,
+            object_id,
+            value,
+            self.local_character_id,
+        );
+        let Some(mut status_effect) = status_effect else {
+            return (None, old_value);
+        };
+        self.refresh_status_effect_snapshots(&mut status_effect, Utc::now());
+        let status_effect = self
+            .status_tracker
+            .borrow_mut()
+            .refresh_synced_status_effect(status_effect);
+        (status_effect, old_value)
+    }
+
+    fn refresh_status_effect_snapshots(
         &mut self,
         status_effect: &mut StatusEffectDetails,
         timestamp: DateTime<Utc>,
