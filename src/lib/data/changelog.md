@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    ### v1.52.1 - October 23rd, 2026
+    ### v1.52.2 - November 4th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -17,5 +17,5 @@
 
 #### BUG FIXES AND IMPROVEMENTS
 
-- adjust death counters for raids with revives (i.e. belgardin)
-- added support for vambrace stats in rdps calculations
+- fix death counters not showing on wipe pulls
+- fix debuffs missing/not registering on certain players
