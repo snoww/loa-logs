@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    ### v1.52.2 - November 4th, 2026
+    v1.52.3 - November 4th, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -15,7 +15,6 @@
 
 ### Note: ExitLag users must check the ExitLag Compatibility setting
 
-#### BUG FIXES AND IMPROVEMENTS
+#### NEW FEATURES
 
-- fix death counters not showing on wipe pulls
-- fix debuffs missing/not registering on certain players
+- added tracking for number of times grabbed
