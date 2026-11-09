@@ -179,9 +179,12 @@ export class EntityState {
     return {
       total: this.computeIncapacitatedTime(events),
       knockDown: this.computeIncapacitatedTime(events.filter((event) => event.type === "FALL_DOWN")),
-      cc: this.computeIncapacitatedTime(events.filter((event) => event.type === "CROWD_CONTROL"))
+      cc: this.computeIncapacitatedTime(events.filter((event) => event.type === "CROWD_CONTROL")),
+      grab: this.computeIncapacitatedTime(events.filter((event) => event.type === "GRAB"))
     };
   });
+
+  grabCount = $derived(this.entity.damageStats.incapacitations.filter((event) => event.type === "GRAB").length);
 
   skillSort: SkillSort = $state("buffed");
 

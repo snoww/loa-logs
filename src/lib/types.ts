@@ -637,7 +637,8 @@ export interface IncapacitatedEvent {
 
 export enum IncapacitationEventType {
   FALL_DOWN = "FALL_DOWN",
-  CROWD_CONTROL = "CROWD_CONTROL"
+  CROWD_CONTROL = "CROWD_CONTROL",
+  GRAB = "GRAB"
 }
 
 export enum EntityType {

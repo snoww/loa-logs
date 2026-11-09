@@ -964,13 +964,13 @@ impl EntityTracker {
     }
 
     pub fn new_trap(&mut self, pkt: &PKTNewTrap) {
+        // the packet carries a Trap table key, not a skill effect
         let trap: Entity = Entity {
             id: pkt.trap_struct.object_id,
             entity_type: EntityType::Projectile,
             name: format!("{:x}", pkt.trap_struct.object_id),
             owner_id: pkt.trap_struct.owner_id,
             skill_id: pkt.trap_struct.skill_id,
-            skill_effect_id: pkt.trap_struct.skill_effect,
             ..Default::default()
         };
         self.entities.insert(trap.id, trap);
@@ -3203,6 +3203,30 @@ fn ark_grid_order_from_result(result: &PKTPCInspectResult) -> Option<ArkGridOrde
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn trap_entities_do_not_take_the_trap_table_key_as_a_skill_effect() {
+        use crate::live::{id_tracker::IdTracker, party_tracker::PartyTracker};
+        use std::{cell::RefCell, rc::Rc};
+        let ids = Rc::new(RefCell::new(IdTracker::new()));
+        let parties = Rc::new(RefCell::new(PartyTracker::new(ids.clone())));
+        let statuses = Rc::new(RefCell::new(StatusTracker::new(parties.clone())));
+        let mut tracker = EntityTracker::new(statuses, ids, parties);
+        let mut pkt = PKTNewTrap::default();
+        pkt.trap_struct.object_id = 92_072_421;
+        pkt.trap_struct.owner_id = 91_399_301;
+        pkt.trap_struct.skill_id = 19030;
+        // a Trap table key seen in game logs; no SkillEffect row has this id
+        pkt.trap_struct.trap_id = 190310;
+
+        tracker.new_trap(&pkt);
+
+        let trap = &tracker.entities[&92_072_421];
+        assert_eq!(
+            (trap.owner_id, trap.skill_id, trap.skill_effect_id),
+            (91_399_301, 19030, 0)
+        );
+    }
 
     #[test]
     fn ignore_defense_tripod_is_cached_as_skill_penetration() {

@@ -2,6 +2,7 @@ mod addon_type;
 mod encounter_state;
 mod entity_tracker;
 mod id_tracker;
+mod incapacitation;
 mod inspect_stats;
 mod manager;
 mod next_skill;
@@ -340,6 +341,16 @@ pub fn start(args: StartArgs) -> Result<()> {
         let start = Instant::now();
         let handler_start = Instant::now();
         match packet.header.opcode {
+            PKTSkillEffectTargetNotify::OPCODE => {
+                if let Some(pkt) = packet.try_parse::<PKTSkillEffectTargetNotify>().unwrap() {
+                    incapacitation::on_skill_effect_target(
+                        &mut state.encounter,
+                        &entity_tracker.entities,
+                        &pkt,
+                        Utc::now().timestamp_millis(),
+                    );
+                }
+            }
             // PKTBattleItemUseNotify::OPCODE => {
             //     if let Some(pkt) =
             //         parse_pkt(&data, PKTBattleItemUseNotify::new, "PKTBattleItemUseNotify")

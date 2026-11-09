@@ -1716,16 +1716,7 @@ impl EncounterState {
         // record boss hp at time of death
         entity.damage_stats.boss_hp_at_death = Some(boss_hp);
 
-        entity
-            .damage_stats
-            .incapacitations
-            .iter_mut()
-            .rev()
-            .take_while(|x| x.timestamp + x.duration > entity.damage_stats.death_time)
-            .for_each(|x| {
-                // cap duration to death time if it exceeds it
-                x.duration = x.timestamp - entity.damage_stats.death_time;
-            });
+        entity.damage_stats.end_incapacitations(now);
     }
 
     pub fn on_skill_cooldown(&mut self, cooldown_struct: SkillCooldownStruct) {
@@ -1879,7 +1870,7 @@ impl EncounterState {
                 .incapacitations
                 .iter_mut()
                 .rev()
-                .take_while(|x| x.timestamp + x.duration > timestamp)
+                .filter(|x| x.timestamp + x.duration > timestamp)
                 .filter(|x| x.event_type == IncapacitationEventType::FALL_DOWN)
             {
                 info!(
@@ -4605,6 +4596,62 @@ impl EncounterState {
         }
     }
 
+    /// The analyzer does not say which of its two entity IDs is the attacker, and which field holds the
+    /// attacker changes between game builds. One ID is always the party member: the attacker for damage
+    /// contributions (event types 1, 3, 5) and the protected player for shields and damage reduction (4, 6).
+    /// The other is the NPC on the other side of the hit, so the party member is the only player. The
+    /// encounter keeps players that left visibility, which the entity tracker removes.
+    fn combat_analyzer_player_name(
+        event: &CombatAnalyzerEntry,
+        entities: &HashMap<String, EncounterEntity>,
+    ) -> Option<String> {
+        let mut players = entities.values().filter(|entity| {
+            entity.entity_type == EntityType::Player
+                && (entity.id == event.first_entity_id || entity.id == event.second_entity_id)
+        });
+        let player = players.next()?;
+        players.next().is_none().then(|| player.name.clone())
+    }
+
+    /// Credits the support's skill with the contribution and, for damage contributions, the party member
+    /// whose damage it raised. The support is credited even when the party member is unknown.
+    fn credit_combat_analyzer_event(
+        entities: &mut HashMap<String, EncounterEntity>,
+        event: &CombatAnalyzerEntry,
+        contributor_name: &str,
+        player_name: Option<&str>,
+    ) {
+        // add rdps_contributed to the support's skill
+        if let Some(contributor_entity) = entities.get_mut(contributor_name) {
+            if let Some(contributor_skill) = contributor_entity.skills.get_mut(&event.skill_id) {
+                *contributor_skill
+                    .rdps_contributed
+                    .entry(event.event_type)
+                    .or_default() += event.value;
+            } else if let Some(skill_data) = SKILL_DATA.get(&event.skill_id)
+                && let Some(skill_name) = skill_data.name.clone()
+                && let Some(contributor_skill) = contributor_entity
+                    .skills
+                    .values_mut()
+                    .find(|s| s.name == skill_name)
+            {
+                *contributor_skill
+                    .rdps_contributed
+                    .entry(event.event_type)
+                    .or_default() += event.value;
+            }
+        }
+
+        // only track at entity level, can't reliably attribute to a specific skill
+        if let Some(player_entity) = player_name.and_then(|name| entities.get_mut(name)) {
+            if matches!(event.event_type, 1 | 3 | 5) {
+                player_entity.damage_stats.buffed_damage += event.value;
+            }
+            player_entity.damage_stats.unbuffed_damage =
+                player_entity.damage_stats.damage_dealt - player_entity.damage_stats.buffed_damage;
+        }
+    }
+
     pub fn on_support_combat_analyzer_data(
         &mut self,
         events: Vec<CombatAnalyzerEntry>,
@@ -4616,8 +4663,8 @@ impl EncounterState {
                     "event": {
                         "support_character_id": event.support_character_id,
                         "skill_id": event.skill_id,
-                        "source_id": event.source_id,
-                        "target_id": event.target_id,
+                        "first_entity_id": event.first_entity_id,
+                        "second_entity_id": event.second_entity_id,
                         "value": event.value,
                         "event_type": event.event_type,
                     },
@@ -4626,22 +4673,8 @@ impl EncounterState {
             } else {
                 None
             };
-            // find the source entity by source_id
-            let source_name = if let Some(entity) = entity_tracker.entities.get(&event.source_id) {
-                entity.name.clone()
-            } else {
-                if let Some(debug_dump) = debug_dump.as_mut() {
-                    debug_dump["source_lookup"] = json!({
-                        "resolved": false,
-                    });
-                    write_debug_json_dump(
-                        "support-combat-event",
-                        &format!("missing-source-{}-{}", event.source_id, event.skill_id),
-                        debug_dump,
-                    );
-                }
-                continue;
-            };
+            // find the party member on either side of the hit
+            let player_name = Self::combat_analyzer_player_name(&event, &self.encounter.entities);
 
             // find the support (contributor) entity by support_character_id
             let contributor_name = if let Some(name) = entity_tracker
@@ -4658,9 +4691,9 @@ impl EncounterState {
                 entity.name.clone()
             } else {
                 if let Some(debug_dump) = debug_dump.as_mut() {
-                    debug_dump["source_lookup"] = json!({
-                        "resolved": true,
-                        "source_name": source_name,
+                    debug_dump["player_lookup"] = json!({
+                        "resolved": player_name.is_some(),
+                        "player_name": player_name,
                     });
                     debug_dump["contributor_lookup"] = json!({
                         "resolved": false,
@@ -4668,8 +4701,8 @@ impl EncounterState {
                     write_debug_json_dump(
                         "support-combat-event",
                         &format!(
-                            "missing-contributor-{}-{}-{}",
-                            source_name, event.skill_id, event.support_character_id
+                            "missing-contributor-{}-{}",
+                            event.skill_id, event.support_character_id
                         ),
                         debug_dump,
                     );
@@ -4678,10 +4711,10 @@ impl EncounterState {
             };
 
             if let Some(debug_dump) = debug_dump.as_mut() {
-                debug_dump["source_lookup"] = json!({
-                    "resolved": true,
-                    "source_name": source_name,
-                    "source_entity": self.encounter.entities.get(&source_name).map(|entity| json!({
+                debug_dump["player_lookup"] = json!({
+                    "resolved": player_name.is_some(),
+                    "player_name": player_name,
+                    "player_entity": player_name.as_ref().and_then(|name| self.encounter.entities.get(name)).map(|entity| json!({
                         "id": entity.id,
                         "character_id": entity.character_id,
                         "damage_stats": {
@@ -4717,45 +4750,20 @@ impl EncounterState {
                 });
             }
 
-            // add rdps_contributed to the support's skill
-            if let Some(contributor_entity) = self.encounter.entities.get_mut(&contributor_name) {
-                if let Some(contributor_skill) = contributor_entity.skills.get_mut(&event.skill_id)
-                {
-                    *contributor_skill
-                        .rdps_contributed
-                        .entry(event.event_type)
-                        .or_default() += event.value;
-                } else if let Some(skill_data) = SKILL_DATA.get(&event.skill_id)
-                    && let Some(skill_name) = skill_data.name.clone()
-                    && let Some(contributor_skill) = contributor_entity
-                        .skills
-                        .values_mut()
-                        .find(|s| s.name == skill_name)
-                {
-                    *contributor_skill
-                        .rdps_contributed
-                        .entry(event.event_type)
-                        .or_default() += event.value;
-                }
-            }
-
-            // only track at entity level, can't reliably attribute to a specific skill
-            if let Some(source_entity) = self.encounter.entities.get_mut(&source_name) {
-                if matches!(event.event_type, 1 | 3 | 5) {
-                    source_entity.damage_stats.buffed_damage += event.value;
-                }
-                source_entity.damage_stats.unbuffed_damage =
-                    source_entity.damage_stats.damage_dealt
-                        - source_entity.damage_stats.buffed_damage;
-            }
+            Self::credit_combat_analyzer_event(
+                &mut self.encounter.entities,
+                &event,
+                &contributor_name,
+                player_name.as_deref(),
+            );
 
             if let Some(debug_dump) = debug_dump.as_mut() {
                 debug_dump["udps_resolution"] = json!({
                     "event_counts_as_damage_given": matches!(event.event_type, 1 | 3 | 5),
                 });
-                debug_dump["source_after"] = json!({
-                    "source_name": source_name,
-                    "source_entity": self.encounter.entities.get(&source_name).map(|entity| json!({
+                debug_dump["player_after"] = json!({
+                    "player_name": player_name,
+                    "player_entity": player_name.as_ref().and_then(|name| self.encounter.entities.get(name)).map(|entity| json!({
                         "id": entity.id,
                         "character_id": entity.character_id,
                         "damage_stats": {
@@ -4792,7 +4800,10 @@ impl EncounterState {
                     "support-combat-event",
                     &format!(
                         "{}-{}-{}-{}",
-                        source_name, contributor_name, event.skill_id, event.event_type
+                        player_name.as_deref().unwrap_or("no-player"),
+                        contributor_name,
+                        event.skill_id,
+                        event.event_type
                     ),
                     debug_dump,
                 );
@@ -4853,7 +4864,7 @@ impl EncounterState {
             .incapacitations
             .iter_mut()
             .rev()
-            .take_while(|e| e.timestamp + e.duration > timestamp) // stop as soon as we only hit expired events
+            .filter(|e| e.timestamp + e.duration > timestamp)
             .find(|x| x.event_type == IncapacitationEventType::FALL_DOWN); // find an unexpired one that was caused by an abnormal move
         if let Some(prev_incapacitation) = prev_incapacitation {
             info!(
@@ -4868,6 +4879,7 @@ impl EncounterState {
             timestamp,
             duration: incapacitated_time_ms,
             event_type: IncapacitationEventType::FALL_DOWN,
+            grab_source_id: None,
         };
         victim_entity_state
             .damage_stats
@@ -4898,6 +4910,7 @@ impl EncounterState {
             timestamp: status_effect.timestamp.timestamp_millis(),
             duration: duration_ms as i64,
             event_type: IncapacitationEventType::CROWD_CONTROL,
+            grab_source_id: None,
         };
         info!(
             "Player {} will be status-effect incapacitated for {}ms by buff {}",
@@ -4930,6 +4943,7 @@ impl EncounterState {
                 timestamp: status_effect.timestamp.timestamp_millis(),
                 duration: duration_ms,
                 event_type: IncapacitationEventType::CROWD_CONTROL,
+                grab_source_id: None,
             };
             info!(
                 "Player {} was incapacitated by an infinite status effect buff for {}ms",
@@ -4953,7 +4967,7 @@ impl EncounterState {
             .incapacitations
             .iter_mut()
             .rev()
-            .take_while(|e| e.timestamp + e.duration > timestamp)
+            .filter(|e| e.timestamp + e.duration > timestamp)
         {
             if event.event_type == IncapacitationEventType::CROWD_CONTROL
                 && event.timestamp == status_effect.timestamp.timestamp_millis()
@@ -5267,6 +5281,7 @@ impl EncounterState {
 
         self.refresh_encounter_player_damage_totals();
         let mut encounter = self.encounter.clone();
+        encounter.snapshot_incapacitations();
 
         let damage_log = self.damage_log.clone();
         let cast_log = self.cast_log.clone();
@@ -5400,7 +5415,7 @@ impl EncounterState {
             .map(|(name, entity)| (name.clone(), Self::live_snapshot_entity(entity)))
             .collect();
 
-        Encounter {
+        let mut encounter = Encounter {
             last_combat_packet: self.encounter.last_combat_packet,
             fight_start: self.encounter.fight_start,
             local_player: self.encounter.local_player.clone(),
@@ -5436,7 +5451,9 @@ impl EncounterState {
             boss_only_damage: self.encounter.boss_only_damage,
             sync: self.encounter.sync.clone(),
             region: self.encounter.region.clone(),
-        }
+        };
+        encounter.snapshot_incapacitations();
+        encounter
     }
 
     fn live_snapshot_entity(entity: &EncounterEntity) -> EncounterEntity {
@@ -5685,6 +5702,90 @@ mod tests {
             NEXT_SKILL_ID
         ));
     }
+    #[test]
+    fn combat_analyzer_entries_credit_the_player_on_either_side_and_always_the_support() {
+        use super::*;
+        let mut entities: HashMap<String, EncounterEntity> = HashMap::new();
+        for (id, entity_type, name) in [
+            (10, EntityType::Player, "dps"),
+            (11, EntityType::Player, "other dps"),
+            (20, EntityType::Boss, "boss"),
+            (21, EntityType::Summon, "boss summon"),
+            (30, EntityType::Player, "support"),
+        ] {
+            entities.insert(
+                name.into(),
+                EncounterEntity {
+                    id,
+                    entity_type,
+                    name: name.into(),
+                    ..Default::default()
+                },
+            );
+        }
+        entities.get_mut("dps").unwrap().damage_stats.damage_dealt = 1_000;
+        entities
+            .get_mut("support")
+            .unwrap()
+            .skills
+            .insert(21160, Skill::default());
+        let event = |event_type, first_entity_id, second_entity_id| CombatAnalyzerEntry {
+            event_type,
+            first_entity_id,
+            second_entity_id,
+            skill_id: 21160,
+            value: 100,
+            ..Default::default()
+        };
+
+        // the party member is found whichever field the build put it in, against a boss or its summon
+        for (first, second, expected) in [
+            (10, 20, Some("dps")),
+            (20, 10, Some("dps")),
+            (21, 10, Some("dps")),
+            (10, 11, None),
+            (20, 21, None),
+            (99, 20, None),
+        ] {
+            assert_eq!(
+                EncounterState::combat_analyzer_player_name(&event(1, first, second), &entities)
+                    .as_deref(),
+                expected,
+                "fields ({first}, {second})"
+            );
+        }
+
+        // a damage contribution credits the support and raises the attacking party member's buffed damage
+        EncounterState::credit_combat_analyzer_event(
+            &mut entities,
+            &event(1, 20, 10),
+            "support",
+            Some("dps"),
+        );
+        // a shield contribution credits only the support
+        EncounterState::credit_combat_analyzer_event(
+            &mut entities,
+            &event(4, 20, 10),
+            "support",
+            Some("dps"),
+        );
+        // the support is still credited when the party member cannot be found
+        EncounterState::credit_combat_analyzer_event(
+            &mut entities,
+            &event(1, 20, 99),
+            "support",
+            None,
+        );
+
+        let dps = &entities["dps"].damage_stats;
+        assert_eq!((dps.buffed_damage, dps.unbuffed_damage), (100, 900));
+        let contributed = &entities["support"].skills[&21160].rdps_contributed;
+        assert_eq!(
+            (contributed.get(&1), contributed.get(&4)),
+            (Some(&200), Some(&100))
+        );
+    }
+
     use super::adjusted_extreme_difficulty;
 
     #[test]

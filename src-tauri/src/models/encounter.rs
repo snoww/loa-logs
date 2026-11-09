@@ -153,6 +153,65 @@ pub struct DeathInfo {
     pub dead_for: Option<i64>,
 }
 
+impl DamageStats {
+    pub fn start_grab(&mut self, source_id: u64, timestamp: i64) {
+        if let Some(event) = self
+            .incapacitations
+            .iter_mut()
+            .find(|event| event.grab_source_id.is_some())
+        {
+            if event.grab_source_id == Some(source_id) {
+                return;
+            }
+            event.duration = (timestamp - event.timestamp).max(0);
+            event.grab_source_id = None;
+        }
+        self.incapacitations.push(IncapacitatedEvent {
+            event_type: IncapacitationEventType::GRAB,
+            timestamp,
+            duration: 0,
+            grab_source_id: Some(source_id),
+        });
+    }
+
+    pub fn end_grab(&mut self, timestamp: i64) {
+        if let Some(event) = self
+            .incapacitations
+            .iter_mut()
+            .find(|event| event.grab_source_id.is_some())
+        {
+            event.duration = (timestamp - event.timestamp).max(0);
+            event.grab_source_id = None;
+        }
+    }
+
+    pub fn end_incapacitations(&mut self, timestamp: i64) {
+        for event in &mut self.incapacitations {
+            if event.grab_source_id.take().is_some() || event.timestamp + event.duration > timestamp
+            {
+                event.duration = (timestamp - event.timestamp).max(0);
+            }
+        }
+    }
+}
+
+impl Encounter {
+    /// Freeze open grabs at the encounter's last combat packet for both live and saved views.
+    pub fn snapshot_incapacitations(&mut self) {
+        for entity in self
+            .entities
+            .values_mut()
+            .chain(self.current_boss.iter_mut())
+        {
+            for event in &mut entity.damage_stats.incapacitations {
+                if event.grab_source_id.take().is_some() {
+                    event.duration = (self.last_combat_packet - event.timestamp).max(0);
+                }
+            }
+        }
+    }
+}
+
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct SkillStats {
@@ -195,6 +254,8 @@ pub struct IncapacitatedEvent {
     pub event_type: IncapacitationEventType,
     pub timestamp: i64,
     pub duration: i64, // in a live meter, this might be retroactively updated to be shortened if the user uses get up or gets incapacitated with the same type again
+    #[serde(skip)]
+    pub grab_source_id: Option<u64>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
@@ -202,6 +263,7 @@ pub struct IncapacitatedEvent {
 pub enum IncapacitationEventType {
     FALL_DOWN,
     CROWD_CONTROL,
+    GRAB,
 }
 
 pub type IdentityLog = Vec<(i64, (u32, u32, u32))>;
@@ -400,4 +462,44 @@ pub enum HitFlag {
     DAMAGE_SHARE,
     DODGE_HIT,
     MAX,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn death_clips_incapacitation_to_elapsed_time() {
+        let mut stats = DamageStats::default();
+        stats.incapacitations.push(IncapacitatedEvent {
+            event_type: IncapacitationEventType::CROWD_CONTROL,
+            timestamp: 1_000,
+            duration: 5_000,
+            grab_source_id: None,
+        });
+        stats.end_incapacitations(2_500);
+        assert_eq!(stats.incapacitations[0].duration, 1_500);
+    }
+
+    #[test]
+    fn death_clips_ongoing_incapacitation_behind_an_expired_event() {
+        let mut stats = DamageStats::default();
+        stats.incapacitations = vec![
+            IncapacitatedEvent {
+                event_type: IncapacitationEventType::CROWD_CONTROL,
+                timestamp: 1_000,
+                duration: 5_000,
+                grab_source_id: None,
+            },
+            IncapacitatedEvent {
+                event_type: IncapacitationEventType::FALL_DOWN,
+                timestamp: 2_000,
+                duration: 100,
+                grab_source_id: None,
+            },
+        ];
+        stats.end_incapacitations(2_500);
+        assert_eq!(stats.incapacitations[0].duration, 1_500);
+        assert_eq!(stats.incapacitations[1].duration, 100);
+    }
 }

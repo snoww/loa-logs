@@ -820,11 +820,17 @@ export function getPlayerIncapSeries(player: Entity, fightStart: number, lastCom
   const durationSec = Math.ceil((lastCombatPacket - fightStart) / 1000);
   const knockdownData = new Array(durationSec).fill(0);
   const ccData = new Array(durationSec).fill(0);
+  const grabData = new Array(durationSec).fill(0);
 
   for (const event of incaps) {
     const startSec = Math.max(0, Math.floor((event.timestamp - fightStart) / 1000));
     const endSec = Math.min(durationSec - 1, Math.floor((event.timestamp - fightStart + event.duration) / 1000));
-    const arr = event.type === IncapacitationEventType.FALL_DOWN ? knockdownData : ccData;
+    const arr =
+      event.type === IncapacitationEventType.GRAB
+        ? grabData
+        : event.type === IncapacitationEventType.FALL_DOWN
+          ? knockdownData
+          : ccData;
     for (let i = startSec; i <= endSec; i++) {
       arr[i] = 100;
     }
@@ -853,6 +859,19 @@ export function getPlayerIncapSeries(player: Entity, fightStart: number, lastCom
       step: "end",
       lineStyle: { opacity: 0 },
       areaStyle: { color: "rgba(147, 51, 234, 0.2)" },
+      yAxisIndex: 1,
+      z: 1
+    });
+  }
+  if (grabData.some((v) => v > 0)) {
+    series.push({
+      name: "Grabbed",
+      type: "line",
+      data: grabData,
+      showSymbol: false,
+      step: "end",
+      lineStyle: { opacity: 0 },
+      areaStyle: { color: "rgba(236, 72, 153, 0.2)" },
       yAxisIndex: 1,
       z: 1
     });

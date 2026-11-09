@@ -35,6 +35,19 @@
       width: "w-14"
     },
 
+    // Number of grabs
+    {
+      show(enc) {
+        if (!enc.curSettings.incapacitatedTime) return false;
+        return enc.anyPlayerGrabbed;
+      },
+      headerText: "GRAB",
+      headerTooltip: "Number of times grabbed",
+      value: grabs,
+      valueTooltip: null,
+      width: "w-14"
+    },
+
     // Incapacitation time
     {
       show(enc) {
@@ -42,7 +55,7 @@
         return enc.anyPlayerIncapacitated;
       },
       headerText: "INCAP",
-      headerTooltip: "Time spent in the air, on the floor, or affected by crowd control effects.",
+      headerTooltip: "Time spent in the air, on the floor, grabbed, or affected by crowd control effects.",
       value: incap,
       valueTooltip: incapTooltip
     },
@@ -346,6 +359,14 @@
   {/if}
 {/snippet}
 
+{#snippet grabs(state: EntityState)}
+  {#if state.grabCount > 0}
+    {state.grabCount}
+  {:else}
+    -
+  {/if}
+{/snippet}
+
 {#snippet incap(state: EntityState)}
   {#if state.entity.entityType === EntityType.ESTHER}
     -
@@ -358,10 +379,11 @@
   {#if state.entity.entityType === EntityType.ESTHER}
     N/A
   {:else}
-    {@const { knockDown, cc } = state.incapacitatedTimeMs}
+    {@const { knockDown, cc, grab } = state.incapacitatedTimeMs}
     <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
       <span>Knockdowns: {(knockDown / 1000).toFixed(1)}s</span>
       <span>Crowd control: {(cc / 1000).toFixed(1)}s</span>
+      <span>Grabbed: {(grab / 1000).toFixed(1)}s</span>
     </div>
   {/if}
 {/snippet}
@@ -613,7 +635,11 @@
             <div>Atropine Contribution: {customRound((state.atropineDamageReceived / state.damageDealt) * 100)}%</div>
           {/if}
           {#if (state.entity.damageStats.rdpsDamageReceivedNpc ?? 0) > 0}
-            <div>NPC Contribution: {customRound(((state.entity.damageStats.rdpsDamageReceivedNpc ?? 0) / state.damageDealt) * 100)}%</div>
+            <div>
+              NPC Contribution: {customRound(
+                ((state.entity.damageStats.rdpsDamageReceivedNpc ?? 0) / state.damageDealt) * 100
+              )}%
+            </div>
           {/if}
         {/if}
         <div>

@@ -40,6 +40,9 @@ pub struct SkillLevelData {
 #[serde(rename_all = "camelCase")]
 pub struct SkillEffectData {
     pub id: i32,
+    #[serde(rename = "type")]
+    #[serde(deserialize_with = "int_or_string_as_string")]
+    pub effect_type: String,
     pub comment: String,
     #[serde(skip)]
     pub stagger: i32,

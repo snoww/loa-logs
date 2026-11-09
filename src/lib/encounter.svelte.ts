@@ -125,6 +125,7 @@ export class EncounterState {
     let anySupportBrand = false;
     let anySupportHat = false;
     let anyPlayerIncapacitated = false;
+    let anyPlayerGrabbed = false;
     let anyStagger = false;
     let anyUnbuffedDamage = false;
     let anyRdpsContributionsRaw = false;
@@ -143,6 +144,7 @@ export class EncounterState {
       if (ds.debuffedBySupport > 0) anySupportBrand = true;
       if (ds.buffedByHat && ds.buffedByHat > 0) anySupportHat = true;
       if (ds.incapacitations && ds.incapacitations.length > 0) anyPlayerIncapacitated = true;
+      if (ds.incapacitations?.some((event) => event.type === "GRAB")) anyPlayerGrabbed = true;
       if (ds.stagger > 0) anyStagger = true;
       if (ds.unbuffedDamage > 0) anyUnbuffedDamage = true;
       if (ds.rdpsDamageGiven > 0 || ds.rdpsDamageReceived > 0) anyRdpsContributionsRaw = true;
@@ -166,6 +168,7 @@ export class EncounterState {
       anySupportBrand,
       anySupportHat,
       anyPlayerIncapacitated,
+      anyPlayerGrabbed,
       anyStagger,
       anyUnbuffedDamage,
       anyRdpsContributionsRaw,
@@ -185,6 +188,7 @@ export class EncounterState {
   anySupportBrand = $derived(this.aggregates.anySupportBrand);
   anySupportHat = $derived(this.aggregates.anySupportHat);
   anyPlayerIncapacitated = $derived(this.aggregates.anyPlayerIncapacitated);
+  anyPlayerGrabbed = $derived(this.aggregates.anyPlayerGrabbed);
   anyStagger = $derived(this.aggregates.anyStagger);
   anyUnbuffedDamage = $derived(this.aggregates.anyUnbuffedDamage);
   anyUdpsContributions = $derived(this.aggregates.supportNames.size > 0);
