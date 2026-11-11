@@ -11,8 +11,9 @@ import {
   TooltipComponent
 } from "echarts/components";
 import * as echarts from "echarts/core";
-import { LabelLayout } from "echarts/features";
+import { LabelLayout, LegacyGridContainLabel } from "echarts/features";
 import { SVGRenderer } from "echarts/renderers";
+import "echarts/theme/v5";
 
 echarts.use([
   TitleComponent,
@@ -28,7 +29,8 @@ echarts.use([
   LineChart,
   ScatterChart,
   PieChart,
-  LabelLayout
+  LabelLayout,
+  LegacyGridContainLabel
 ]);
 
 export type EChartsOptions = echarts.EChartsCoreOption;
@@ -41,7 +43,7 @@ export type ChartOptions = {
 };
 
 const DEFAULT_OPTIONS: Partial<ChartOptions> = {
-  theme: undefined,
+  theme: "v5",
   renderer: "svg"
 };
 
