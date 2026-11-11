@@ -83,19 +83,19 @@ pub struct SkillBuffData {
 
 #[derive(Debug, Default, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
-pub struct PerLevelData {
-    pub passive_options: Vec<PassiveOption>,
-    pub status_effect_values: Option<Vec<i32>>,
+pub struct PerLevelData<Value = i32> {
+    pub passive_options: Vec<PassiveOption<Value>>,
+    pub status_effect_values: Option<Vec<Value>>,
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
-pub struct PassiveOption {
+pub struct PassiveOption<Value = i32> {
     #[serde(rename(deserialize = "type"))]
     pub option_type: String,
     pub key_stat: String,
     pub key_index: i32,
-    pub value: i32,
+    pub value: Value,
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]
@@ -644,6 +644,8 @@ mod tests {
                 "identity_soul_master_ki_control",
             ),
             (serde_json::json!(355), "355"),
+            (serde_json::json!(356), "356"),
+            (serde_json::json!(357), "357"),
         ] {
             let ability: ExternalAbilityData = serde_json::from_value(serde_json::json!({
                 "id": 0,
@@ -659,11 +661,20 @@ mod tests {
     }
 
     #[test]
-    fn bundled_abilities_deserialize_with_numeric_feature_types() {
-        let abilities: HashMap<u32, ExternalAbilityData> =
-            serde_json::from_str(include_str!("../../meter-data/Ability.json")).unwrap();
-        assert_eq!(abilities[&220500000].feature_type, "355");
-        assert_eq!(abilities[&220500100].feature_type, "356");
-        assert_eq!(abilities[&220501000].feature_type, "357");
+    fn bundled_ability_features_preserve_exported_names_and_numeric_ids() {
+        let json = include_str!("../../meter-data/Ability.json");
+        let abilities: HashMap<u32, ExternalAbilityData> = serde_json::from_str(json).unwrap();
+        let exported: HashMap<u32, serde_json::Value> = serde_json::from_str(json).unwrap();
+        assert_eq!(abilities.len(), exported.len());
+        for (id, ability) in &abilities {
+            match exported[id].get("featureType") {
+                Some(serde_json::Value::String(name)) => assert_eq!(&ability.feature_type, name),
+                Some(serde_json::Value::Number(value)) => {
+                    assert_eq!(ability.feature_type, value.to_string())
+                }
+                None => assert!(ability.feature_type.is_empty()),
+                other => panic!("invalid exported ability feature type for {id}: {other:?}"),
+            }
+        }
     }
 }

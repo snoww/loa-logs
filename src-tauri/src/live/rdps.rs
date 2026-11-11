@@ -1679,7 +1679,7 @@ fn apply_owner_snapshot_self_buffs(
                 }
                 "attack_power_amplify_multiplier" => {
                     stats.add_attack_power_amplify_multiplier(
-                        option.value as f64 / 10000.0,
+                        option.value / 10000.0,
                         source_entity_id,
                         buff_source.clone(),
                     );
@@ -1912,7 +1912,7 @@ fn append_source_contributions(
                 ),
                 "attack_power_amplify_multiplier" => stats
                     .add_attack_power_amplify_multiplier_with_priority(
-                        option.value as f64 / 10000.0,
+                        option.value / 10000.0,
                         source_entity_id,
                         buff_source.clone(),
                         source_priority,
@@ -1935,7 +1935,7 @@ fn append_source_contributions(
             let Some(percent_buff_raw) = status_effect_values.first() else {
                 continue;
             };
-            let percent_buff = *percent_buff_raw as f64 / 10000.0;
+            let percent_buff = *percent_buff_raw / 10000.0;
             if percent_buff <= 0.0 {
                 continue;
             }
@@ -2101,7 +2101,7 @@ pub(crate) fn evaluate_stats_with_tracked_buffs(
 
 fn apply_source_passive_stat(
     stats: &mut PlayerStats,
-    option: &crate::models::PassiveOption,
+    option: &crate::models::PassiveOption<impl Copy + Into<f64>>,
     skill_buff: &crate::models::SkillBuffData,
     source_entity_id: u64,
     status_effect_id: u32,
@@ -2129,7 +2129,7 @@ fn apply_source_passive_stat(
         source_skill_id,
         status_effect_id,
         is_attributable_source
-            && option.value != 0
+            && option.value.into() != 0.0
             && (is_identity_skill_buff(skill_buff)
                 || option
                     .key_stat
@@ -2370,7 +2370,7 @@ fn append_target_contributions(
                 if (skill_id_to_buff == 0 || skill_id_to_buff == skill_id)
                     && (skill_effect_id_to_buff == 0 || skill_effect_id_to_buff == skill_effect_id)
                 {
-                    let mut factor = status_effect_values[1] as f64 / 10000.0;
+                    let mut factor = status_effect_values[1] / 10000.0;
                     if factor <= 0.0 {
                         continue;
                     }
@@ -2448,7 +2448,7 @@ fn append_target_contributions(
 }
 
 fn get_source_passive_factors(
-    passive_options: &[crate::models::PassiveOption],
+    passive_options: &[crate::models::PassiveOption<f64>],
     hit_flag: &HitFlag,
     damage_attr: Option<u8>,
     is_hyper_awakening: bool,
@@ -2458,7 +2458,7 @@ fn get_source_passive_factors(
     let is_critical = is_critical_hit(hit_flag);
 
     for option in passive_options {
-        let factor = option.value as f64 / 10000.0;
+        let factor = option.value.trunc() / 10000.0;
         if factor == 0.0 {
             continue;
         }
@@ -2845,14 +2845,14 @@ enum TargetDamageTakenBonus<'a> {
 }
 
 fn target_damage_taken_bonus(
-    option: &crate::models::PassiveOption,
+    option: &crate::models::PassiveOption<f64>,
     damage_attr: Option<u8>,
 ) -> Option<TargetDamageTakenBonus<'_>> {
     if !option.option_type.eq_ignore_ascii_case("stat") {
         return None;
     }
 
-    let value = option.value as f64 / 10000.0;
+    let value = option.value.trunc() / 10000.0;
     if value == 0.0 {
         return None;
     }
@@ -2884,7 +2884,7 @@ fn apply_defense_x_target_passive_stat(
     stats: &mut PlayerStats,
     attacker_id: u64,
     source_entity_id: u64,
-    option: &crate::models::PassiveOption,
+    option: &crate::models::PassiveOption<f64>,
     damage_type: u8,
     buff_source: StatSource,
     source_priority: i32,
@@ -2893,7 +2893,7 @@ fn apply_defense_x_target_passive_stat(
         return None;
     }
 
-    let value = option.value as f64 / 10000.0;
+    let value = option.value.trunc() / 10000.0;
     if value == 0.0 {
         return None;
     }
@@ -2959,7 +2959,7 @@ fn is_self_target_skill_buff(skill_buff: &crate::models::SkillBuffData) -> bool 
 
 fn get_target_direct_factor(
     skill_buff: &crate::models::SkillBuffData,
-    level_data: &PerLevelData,
+    level_data: &PerLevelData<f64>,
     hit_option: &HitOption,
     _hit_flag: &HitFlag,
     can_crit: bool,
@@ -3019,7 +3019,7 @@ fn apply_target_direct_stats(
     attacker_id: u64,
     source_entity_id: u64,
     skill_buff: &crate::models::SkillBuffData,
-    level_data: &PerLevelData,
+    level_data: &PerLevelData<f64>,
     _hit_option: &HitOption,
     _hit_flag: &HitFlag,
     _damage_attr: Option<u8>,
@@ -3197,20 +3197,20 @@ fn is_critical_hit(hit_flag: &HitFlag) -> bool {
     matches!(hit_flag, HitFlag::CRITICAL | HitFlag::DOT_CRITICAL)
 }
 
-fn get_status_effect_factor(status_effect_values: &[i32], index: usize) -> f64 {
-    status_effect_values.get(index).copied().unwrap_or_default() as f64 / 10000.0
+fn get_status_effect_factor(status_effect_values: &[f64], index: usize) -> f64 {
+    status_effect_values.get(index).copied().unwrap_or_default() / 10000.0
 }
 
 fn get_status_effect_factor_with_divisor(
-    status_effect_values: &[i32],
+    status_effect_values: &[f64],
     index: usize,
     divisor: f64,
 ) -> f64 {
-    status_effect_values.get(index).copied().unwrap_or_default() as f64 / divisor
+    status_effect_values.get(index).copied().unwrap_or_default() / divisor
 }
 
 fn get_passive_option_stat_value(
-    option: &crate::models::PassiveOption,
+    option: &crate::models::PassiveOption<impl Copy + Into<f64>>,
     status_effect_id: u32,
     owner_player_stats: Option<&PlayerStats>,
 ) -> i64 {
@@ -3218,11 +3218,11 @@ fn get_passive_option_stat_value(
 }
 
 fn get_passive_option_value(
-    option: &crate::models::PassiveOption,
+    option: &crate::models::PassiveOption<impl Copy + Into<f64>>,
     status_effect_id: u32,
     owner_player_stats: Option<&PlayerStats>,
 ) -> f64 {
-    let mut value = option.value as f64;
+    let mut value = option.value.into();
     if BERSERKER_BURST_SPEC_SCALING_STATUS_EFFECT_IDS.contains(&status_effect_id)
         && let Some(owner_player_stats) = owner_player_stats
     {
@@ -3233,7 +3233,7 @@ fn get_passive_option_value(
 
 fn apply_passive_addon_option(
     stats: &mut PlayerStats,
-    option: &crate::models::PassiveOption,
+    option: &crate::models::PassiveOption<impl Copy + Into<f64>>,
     source_entity_id: u64,
     owner_class_id: u32,
     buff_source: StatSource,
@@ -3243,7 +3243,7 @@ fn apply_passive_addon_option(
         &option.option_type,
         &option.key_stat,
         option.key_index as u32,
-        i64::from(option.value),
+        option.value.into() as i64,
         source_entity_id,
         owner_class_id,
         buff_source,
@@ -3896,61 +3896,77 @@ fn get_level_data(
         .or_else(|| skill_buff.per_level_data.get("1"))
 }
 
+// Dumped resources retain their integer representation. Buff calculations preserve
+// fractional tripod values through stacking and owner scaling before applying stats.
 fn get_level_data_resolved(
     skill_buff: &crate::models::SkillBuffData,
     skill_level: u8,
     runtime_data: Option<&crate::live::entity_tracker::SkillRuntimeData>,
     stack_count: u8,
-) -> Option<PerLevelData> {
+) -> Option<PerLevelData<f64>> {
     if super::next_skill::is_marker(skill_buff.id as u32) {
         return None;
     }
-    let mut level_data = get_level_data(skill_buff, skill_level)?.clone();
-    if let Some(runtime_data) = runtime_data {
-        if let Some((values, relative)) =
-            runtime_data.buff_param_changes.get(&(skill_buff.id as u32))
+    let raw_level = get_level_data(skill_buff, skill_level)?;
+    let mut level_data = PerLevelData {
+        status_effect_values: raw_level
+            .status_effect_values
+            .as_ref()
+            .map(|values| values.iter().map(|value| f64::from(*value)).collect()),
+        passive_options: Vec::new(),
+    };
+    let added_stats =
+        runtime_data.and_then(|runtime| runtime.buff_added_stats.get(&(skill_buff.id as u32)));
+    for option in raw_level
+        .passive_options
+        .iter()
+        .chain(added_stats.into_iter().flatten())
+    {
+        let mut value = f64::from(option.value);
+        if option.option_type == "stat"
+            && let Some((change, relative)) = runtime_data
+                .and_then(|runtime| runtime.buff_stat_changes.get(&(skill_buff.id as u32)))
+                .and_then(|changes| changes.get(&option.key_stat))
         {
-            let params = level_data.status_effect_values.get_or_insert_with(Vec::new);
-            if params.len() < values.len() {
-                params.resize(values.len(), 0);
-            }
-            for (index, value) in values.iter().enumerate() {
-                params[index] = if *relative {
-                    (params[index] as f64 * (1.0 + (*value as f64 / 100.0))).round() as i32
-                } else {
-                    *value as i32
-                };
-            }
+            value = if *relative {
+                value * (1.0 + *change as f64 / 100.0)
+            } else {
+                *change as f64
+            };
         }
-        if let Some(changes) = runtime_data.buff_stat_changes.get(&(skill_buff.id as u32)) {
-            for option in &mut level_data.passive_options {
-                if let Some((value, relative)) = changes.get(&option.key_stat) {
-                    option.value = if *relative {
-                        (option.value as f64 * (1.0 + (*value as f64 / 100.0))).round() as i32
-                    } else {
-                        *value as i32
-                    };
-                }
-            }
-        }
-        if let Some(added_stats) = runtime_data.buff_added_stats.get(&(skill_buff.id as u32)) {
-            level_data
-                .passive_options
-                .extend(added_stats.iter().cloned());
-        }
-    }
-    let stacks = i32::from(stack_count.max(1));
-    if let Some(values) = level_data.status_effect_values.as_mut() {
-        for value in values {
-            *value *= stacks;
-        }
-    }
-    for option in &mut level_data.passive_options {
         if matches!(
             option.option_type.as_str(),
             "stat" | "attack_power_amplify_multiplier"
         ) {
-            option.value *= stacks;
+            value *= f64::from(stack_count.max(1));
+        }
+        level_data
+            .passive_options
+            .push(crate::models::PassiveOption {
+                option_type: option.option_type.clone(),
+                key_stat: option.key_stat.clone(),
+                key_index: option.key_index,
+                value,
+            });
+    }
+    if let Some((values, relative)) =
+        runtime_data.and_then(|runtime| runtime.buff_param_changes.get(&(skill_buff.id as u32)))
+    {
+        let params = level_data.status_effect_values.get_or_insert_with(Vec::new);
+        if params.len() < values.len() {
+            params.resize(values.len(), 0.0);
+        }
+        for (index, value) in values.iter().enumerate() {
+            params[index] = if *relative {
+                params[index] * (1.0 + *value as f64 / 100.0)
+            } else {
+                *value as f64
+            };
+        }
+    }
+    if let Some(values) = level_data.status_effect_values.as_mut() {
+        for value in values {
+            *value *= f64::from(stack_count.max(1));
         }
     }
     Some(level_data)
@@ -4501,6 +4517,112 @@ mod tests {
     }
 
     #[test]
+    fn tripod_buff_mutations_preserve_fractional_values_until_stat_application() {
+        let buff = crate::models::SkillBuffData {
+            id: 10080101,
+            per_level_data: HashMap::from([(
+                "1".to_string(),
+                PerLevelData {
+                    status_effect_values: Some(vec![13]),
+                    passive_options: vec![crate::models::PassiveOption {
+                        option_type: "stat".to_string(),
+                        key_stat: "critical_hit_rate".to_string(),
+                        value: 107,
+                        ..Default::default()
+                    }],
+                },
+            )]),
+            ..Default::default()
+        };
+        let runtime = SkillRuntimeData {
+            buff_stat_changes: HashMap::from([(
+                10080101,
+                HashMap::from([("critical_hit_rate".to_string(), (25, true))]),
+            )]),
+            buff_param_changes: HashMap::from([(10080101, (vec![15], true))]),
+            ..Default::default()
+        };
+        let resolved = get_level_data_resolved(&buff, 1, Some(&runtime), 3).unwrap();
+        assert!((resolved.status_effect_values.as_ref().unwrap()[0] as f64 - 44.85).abs() < 1e-12);
+        assert_eq!(resolved.passive_options[0].value as f64, 401.25);
+        let mut owner = PlayerStats::default();
+        owner.spec_bonus_identity_2.add_self(0.2, StatSource::Test);
+        assert_eq!(
+            get_passive_option_stat_value(&resolved.passive_options[0], 10080101, Some(&owner)),
+            481
+        );
+        assert_eq!(buff.per_level_data["1"].passive_options[0].value, 107);
+    }
+
+    #[test]
+    fn runtime_added_buff_stats_receive_the_same_tripod_changes() {
+        let buff = crate::models::SkillBuffData {
+            id: 51,
+            per_level_data: HashMap::from([("1".to_string(), PerLevelData::default())]),
+            ..Default::default()
+        };
+        for (relative, changed_value, expected) in [(true, 25, 401.25), (false, 17, 51.0)] {
+            let runtime = SkillRuntimeData {
+                buff_stat_changes: HashMap::from([(
+                    51,
+                    HashMap::from([("critical_hit_rate".to_string(), (changed_value, relative))]),
+                )]),
+                buff_added_stats: HashMap::from([(
+                    51,
+                    vec![crate::models::PassiveOption {
+                        option_type: "stat".to_string(),
+                        key_stat: "critical_hit_rate".to_string(),
+                        value: 107,
+                        ..Default::default()
+                    }],
+                )]),
+                ..Default::default()
+            };
+            let resolved = get_level_data_resolved(&buff, 1, Some(&runtime), 3).unwrap();
+            assert_eq!(resolved.passive_options[0].value as f64, expected);
+        }
+    }
+
+    #[test]
+    fn resolved_passive_stats_truncate_at_application_for_both_signs() {
+        let mut stats = PlayerStats::default();
+        stats.owner_id = 1;
+        for (value, expected) in [(401.75, 0.0401), (-401.75, -0.0401)] {
+            let option = crate::models::PassiveOption {
+                option_type: "stat".to_string(),
+                key_stat: "def_x".to_string(),
+                value,
+                ..Default::default()
+            };
+            assert_eq!(
+                get_passive_option_stat_value(&option, 51, None),
+                (value as i64)
+            );
+            stats.physical_defense_x_break.clear();
+            apply_defense_x_target_passive_stat(
+                &mut stats,
+                1,
+                2,
+                &option,
+                0,
+                StatSource::Test,
+                STAT_PRIORITY_DEFAULT,
+            );
+            assert_eq!(stats.physical_defense_x_break.value(), -expected);
+            let incoming = crate::models::PassiveOption {
+                key_stat: "physical_inc_rate".to_string(),
+                ..option
+            };
+            let Some(TargetDamageTakenBonus::Incoming(_, actual)) =
+                target_damage_taken_bonus(&incoming, None)
+            else {
+                panic!("expected incoming damage stat");
+            };
+            assert_eq!(actual, expected);
+        }
+    }
+
+    #[test]
     fn shining_growth_runtime_adjustment_resolves_full_crit_rate() {
         let status_effect_id = 201618_u32;
         let skill_buff = crate::models::SkillBuffData {
@@ -4530,7 +4652,7 @@ mod tests {
         let resolved = get_level_data_resolved(&skill_buff, 1, Some(&skill_runtime), 1)
             .expect("Shining Growth level data should resolve");
 
-        assert_eq!(resolved.passive_options[0].value, 1182);
+        assert_eq!(resolved.passive_options[0].value, 1182.0);
     }
 
     #[test]

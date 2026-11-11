@@ -2824,10 +2824,18 @@ fn populate_skill_runtime_data(skill_runtime: &mut SkillRuntimeData, skill_id: u
     skill_runtime.changed_combat_effects.clear();
     skill_runtime.addon_skill_feature_ids.clear();
 
-    let Some(skill_option_data) = skill_runtime.skill_option_data.as_ref() else {
+    let Some(skill_feature) = EXTERNAL_SKILL_FEATURE_DATA.get(&skill_id) else {
         return;
     };
-    let Some(skill_feature) = EXTERNAL_SKILL_FEATURE_DATA.get(&skill_id) else {
+    apply_selected_tripod_rows(skill_runtime, skill_id, skill_feature);
+}
+
+fn apply_selected_tripod_rows(
+    skill_runtime: &mut SkillRuntimeData,
+    skill_id: u32,
+    skill_feature: &crate::models::ExternalSkillFeatureData,
+) {
+    let Some(skill_option_data) = skill_runtime.skill_option_data.as_ref() else {
         return;
     };
     let Some(tripod_index) = skill_option_data.tripod_index.as_ref() else {
@@ -2936,7 +2944,8 @@ fn populate_skill_runtime_data(skill_runtime: &mut SkillRuntimeData, skill_id: u
                         let relative = entry.parameters[2] != 0;
                         skill_runtime
                             .buff_param_changes
-                            .insert(buff_id, (entry.parameters[3..].to_vec(), relative));
+                            .entry(buff_id)
+                            .or_insert_with(|| (entry.parameters[3..].to_vec(), relative));
                     }
                 }
                 "add_buff_stat" => {
@@ -3203,6 +3212,47 @@ fn ark_grid_order_from_result(result: &PKTPCInspectResult) -> Option<ArkGridOrde
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn port_regression_duplicate_buff_parameter_rows_keep_the_first_admitted_change() {
+        use crate::models::{
+            ExternalSkillFeatureData, ExternalSkillFeatureTripod, ExternalSkillFeatureTripodEntry,
+        };
+        let entries = [("b", 1, 900), ("a", 2, 800), ("a", 1, 15), ("a", 1, 75)]
+            .into_iter()
+            .map(|(mode, level, value)| ExternalSkillFeatureTripodEntry {
+                feature_type: "change_buff_param".to_string(),
+                level,
+                target_mode_type: mode.to_string(),
+                parameters: vec![0, 51, 1, value],
+                ..Default::default()
+            })
+            .collect();
+        let feature = ExternalSkillFeatureData {
+            tripods: HashMap::from([(
+                1,
+                ExternalSkillFeatureTripod {
+                    entries,
+                    ..Default::default()
+                },
+            )]),
+            ..Default::default()
+        };
+        let mut runtime = SkillRuntimeData {
+            skill_option_data: Some(SkillOptionSnapshot {
+                tripod_index: Some(TripodIndex {
+                    first: 1,
+                    second: 0,
+                    third: 0,
+                }),
+                ..Default::default()
+            }),
+            ..Default::default()
+        };
+        apply_selected_tripod_rows(&mut runtime, 52, &feature);
+        assert_eq!(runtime.buff_param_changes[&51], (vec![15], true));
+        assert_eq!(runtime.selected_tripod_keys, HashSet::from([1]));
+    }
 
     #[test]
     fn trap_entities_do_not_take_the_trap_table_key_as_a_skill_effect() {

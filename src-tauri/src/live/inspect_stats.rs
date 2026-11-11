@@ -533,33 +533,47 @@ fn apply_ark_grid(
     raw_stat_pairs: &HashMap<u8, i64>,
     derived: &mut InspectDerivedStats,
 ) {
+    if result.ark_grid_cores.num == 0 {
+        return;
+    }
+    apply_ark_grid_with_data(
+        result,
+        raw_stat_pairs,
+        derived,
+        &EXTERNAL_ARK_GRID_DATA,
+        &EXTERNAL_ARK_GRID_GEM_LEVELS_BY_OPTION_ID,
+    );
+}
+
+fn apply_ark_grid_with_data(
+    result: &PKTPCInspectResult,
+    raw_stat_pairs: &HashMap<u8, i64>,
+    derived: &mut InspectDerivedStats,
+    ark_grid: &crate::models::ExternalArkGridData,
+    gem_levels: &HashMap<u32, Vec<crate::models::ExternalArkGridGemLevel>>,
+) {
     let mut pending_ability_points: HashMap<u32, i64> = HashMap::new();
     let learned_node_ids = learned_ark_passive_node_ids(result);
     let entry_count = usize::min(
         usize::from(result.ark_grid_cores.num),
         usize::min(
             result.ark_grid_cores.core_entries.len(),
-            usize::min(
-                result.ark_grid_cores.core_ids.len(),
-                result.ark_grid_cores.base_ids.len(),
-            ),
+            result.ark_grid_cores.core_ids.len(),
         ),
     );
 
     for index in 0..entry_count {
         let core_id = result.ark_grid_cores.core_ids[index];
-        let base_id = result.ark_grid_cores.base_ids[index];
-        if core_id > 0 && core_id < base_id {
-            continue;
-        }
-
-        let Some(core) = EXTERNAL_ARK_GRID_DATA.cores.get(&core_id) else {
+        let Some(core) = ark_grid.cores.get(&core_id) else {
             continue;
         };
         let gem_entries = &result.ark_grid_cores.core_entries[index];
+        if gem_entries.is_empty() {
+            continue;
+        }
         let aggregate_rank = gem_entries
             .iter()
-            .filter(|entry| entry.enabled == 1)
+            .filter(|entry| entry.enabled != 0)
             .map(|entry| entry.order_rank)
             .sum::<u32>();
 
@@ -570,10 +584,7 @@ fn apply_ark_grid(
             if aggregate_rank < option_slot.required_points {
                 continue;
             }
-            let Some(core_option) = EXTERNAL_ARK_GRID_DATA
-                .core_options
-                .get(&option_slot.option_id)
-            else {
+            let Some(core_option) = ark_grid.core_options.get(&option_slot.option_id) else {
                 continue;
             };
             // EFTable_ArkGridCoreOption.IncludeEffectNodeId: the option applies only while
@@ -592,11 +603,9 @@ fn apply_ark_grid(
             }
         }
 
-        for gem_entry in gem_entries.iter().filter(|entry| entry.enabled == 1) {
+        for gem_entry in gem_entries.iter().filter(|entry| entry.enabled != 0) {
             for gem_value in &gem_entry.values {
-                let Some(levels) =
-                    EXTERNAL_ARK_GRID_GEM_LEVELS_BY_OPTION_ID.get(&gem_value.option_id)
-                else {
+                let Some(levels) = gem_levels.get(&gem_value.option_id) else {
                     continue;
                 };
                 if let Some(level) = levels.iter().find(|level| level.level == gem_value.rank) {
@@ -757,6 +766,30 @@ fn apply_numeric_addon(
                         "ability_point_passive"
                     }
                     .to_string(),
+                    key_index: stat_or_key,
+                    key_value: value,
+                    ..Default::default()
+                },
+                raw_stat_pairs,
+                derived,
+            );
+        }
+        Some(
+            addon_type @ (AddonType::COMBAT_EFFECT
+            | AddonType::CLASS_OPTION
+            | AddonType::ABILITY_FEATURE
+            | AddonType::SKILL_FEATURE),
+        ) => {
+            let addon_name = match addon_type {
+                AddonType::COMBAT_EFFECT => "combat_effect",
+                AddonType::CLASS_OPTION => "class_option",
+                AddonType::ABILITY_FEATURE => "ability_feature",
+                AddonType::SKILL_FEATURE => "skill_feature",
+                _ => unreachable!(),
+            };
+            apply_external_addon(
+                &ExternalResourceAddon {
+                    addon_type: addon_name.to_string(),
                     key_index: stat_or_key,
                     key_value: value,
                     ..Default::default()
@@ -1384,6 +1417,72 @@ mod code_port_tests {
     }
 
     #[test]
+    fn port_regression_gem_runtime_addons_reach_the_shared_inspect_bridge() {
+        crate::live::test_data::initialize();
+        let mut derived = InspectDerivedStats::default();
+        for addon_type in [
+            AddonType::COMBAT_EFFECT,
+            AddonType::CLASS_OPTION,
+            AddonType::SKILL_FEATURE,
+        ] {
+            apply_gem_addon(
+                &GemItemOption {
+                    addon_type: addon_type as u8,
+                    ability_id: 4_000_000_009,
+                    value: 1,
+                },
+                &HashMap::new(),
+                &mut derived,
+            );
+        }
+        let addons: Vec<_> = derived
+            .deferred_addons
+            .iter()
+            .map(|addon| (addon.addon_type.as_str(), addon.key_index, addon.key_value))
+            .collect();
+        assert_eq!(
+            addons,
+            vec![
+                ("combat_effect", 4_000_000_009, 1),
+                ("class_option", 4_000_000_009, 1),
+                ("skill_feature", 4_000_000_009, 1),
+            ]
+        );
+        apply_gem_addon(
+            &GemItemOption {
+                addon_type: AddonType::ABILITY_FEATURE as u8,
+                ability_id: crate::live::test_data::NEXT_ABILITY_ID,
+                value: 1,
+            },
+            &HashMap::new(),
+            &mut derived,
+        );
+        assert_eq!(derived.ability_features.len(), 1);
+        assert_eq!(
+            derived.ability_features[0].ability_id,
+            crate::live::test_data::NEXT_ABILITY_ID
+        );
+        let mut stats = PlayerStats::default();
+        stats.load_from_snapshot(
+            &InspectSnapshot {
+                derived_stats: InspectDerivedStats {
+                    ability_features: derived.ability_features,
+                    ..Default::default()
+                },
+                ..Default::default()
+            },
+            17,
+            204,
+        );
+        assert!(
+            stats
+                .active_ability_features
+                .iter()
+                .any(|feature| feature.ability_id == crate::live::test_data::NEXT_ABILITY_ID)
+        );
+    }
+
+    #[test]
     fn typed_gem_ability_points_use_the_shared_level_resolution() {
         crate::live::test_data::initialize();
         for addon_type in [AddonType::ABILITY_POINT, AddonType::ABILITY_POINT_PASSIVE] {
@@ -1461,6 +1560,174 @@ mod code_port_tests {
                     usize::from(expected_multiplier.is_some())
                 );
             }
+        }
+    }
+}
+
+#[cfg(test)]
+mod ark_grid_port_tests {
+    use super::*;
+    use crate::models::{
+        ExternalArkGridCoreData, ExternalArkGridCoreOptionData, ExternalArkGridCoreOptionSlot,
+        ExternalArkGridData, ExternalArkGridGemLevel,
+    };
+    use meter_defs::defs::{ArkGridCoreData, ArkGridCoreGemOptionEntry, ArkGridCoreOptionInspect};
+
+    fn core_data(required_points: u32) -> ExternalArkGridData {
+        ExternalArkGridData {
+            cores: HashMap::from([(
+                21,
+                ExternalArkGridCoreData {
+                    options: vec![ExternalArkGridCoreOptionSlot {
+                        option_id: 31,
+                        required_points,
+                    }],
+                    ..Default::default()
+                },
+            )]),
+            core_options: HashMap::from([(
+                31,
+                ExternalArkGridCoreOptionData {
+                    addons: vec![ExternalResourceAddon {
+                        addon_type: "attack_power_amplify_multiplier".to_string(),
+                        key_value: 1250,
+                        ..Default::default()
+                    }],
+                    ..Default::default()
+                },
+            )]),
+            ..Default::default()
+        }
+    }
+
+    fn inspect(base_id: u32, enabled: u8, order_rank: u32) -> PKTPCInspectResult {
+        PKTPCInspectResult {
+            ark_grid_cores: ArkGridCoreData {
+                num: 1,
+                core_ids: vec![21],
+                base_ids: vec![base_id],
+                core_entries: vec![vec![ArkGridCoreOptionInspect {
+                    enabled,
+                    order_rank,
+                    values: vec![ArkGridCoreGemOptionEntry {
+                        option_id: 41,
+                        rank: 2,
+                    }],
+                    ..Default::default()
+                }]],
+            },
+            ..Default::default()
+        }
+    }
+
+    #[test]
+    fn known_core_options_do_not_depend_on_base_id_order() {
+        for base_id in [20, 21, 22] {
+            let mut derived = InspectDerivedStats::default();
+            apply_ark_grid_with_data(
+                &inspect(base_id, 1, 5),
+                &HashMap::new(),
+                &mut derived,
+                &core_data(5),
+                &HashMap::new(),
+            );
+            assert_eq!(derived.ally_attack_power_power, 0.125, "base_id={base_id}");
+        }
+    }
+
+    #[test]
+    fn nonzero_enabled_gems_apply_exact_ranks_and_core_point_boundaries() {
+        let gem_levels = HashMap::from([(
+            41,
+            vec![ExternalArkGridGemLevel {
+                level: 2,
+                addon_type: "attack_power_amplify_multiplier".to_string(),
+                addon_value: 125,
+                ..Default::default()
+            }],
+        )]);
+        for (enabled, order_rank, expected) in
+            [(0, 5, 0.0), (1, 4, 0.0125), (1, 5, 0.1375), (2, 5, 0.1375)]
+        {
+            let mut derived = InspectDerivedStats::default();
+            apply_ark_grid_with_data(
+                &inspect(21, enabled, order_rank),
+                &HashMap::new(),
+                &mut derived,
+                &core_data(5),
+                &gem_levels,
+            );
+            assert!(
+                (derived.ally_attack_power_power - expected).abs() < 1e-12,
+                "enabled={enabled} order_rank={order_rank}"
+            );
+        }
+        let mut result = inspect(21, 1, 5);
+        result.ark_grid_cores.core_entries[0][0].values[0].rank = 3;
+        let mut derived = InspectDerivedStats::default();
+        apply_ark_grid_with_data(
+            &result,
+            &HashMap::new(),
+            &mut derived,
+            &core_data(5),
+            &gem_levels,
+        );
+        assert_eq!(derived.ally_attack_power_power, 0.125);
+    }
+
+    #[test]
+    fn core_without_gem_entries_has_no_active_options() {
+        let mut result = inspect(21, 1, 5);
+        result.ark_grid_cores.core_entries[0].clear();
+        let mut derived = InspectDerivedStats::default();
+        apply_ark_grid_with_data(
+            &result,
+            &HashMap::new(),
+            &mut derived,
+            &core_data(0),
+            &HashMap::new(),
+        );
+        assert_eq!(derived.ally_attack_power_power, 0.0);
+    }
+
+    #[test]
+    fn core_ability_points_resolve_once_after_stacking_without_clamping() {
+        crate::live::test_data::initialize();
+        for (points_per_core, expected) in [(5, Some(0.025)), (10, None)] {
+            let mut data = core_data(5);
+            data.core_options.get_mut(&31).unwrap().addons = vec![ExternalResourceAddon {
+                addon_type: "ability_point".to_string(),
+                key_index: crate::live::test_data::POINT_ABILITY_ID,
+                key_value: points_per_core,
+                ..Default::default()
+            }];
+            let mut result = inspect(22, 1, 5);
+            result.ark_grid_cores.num = 2;
+            result.ark_grid_cores.core_ids.push(21);
+            result.ark_grid_cores.base_ids.push(22);
+            result
+                .ark_grid_cores
+                .core_entries
+                .push(vec![ArkGridCoreOptionInspect {
+                    enabled: 1,
+                    order_rank: 5,
+                    ..Default::default()
+                }]);
+            let mut derived = InspectDerivedStats::default();
+            apply_ark_grid_with_data(
+                &result,
+                &HashMap::new(),
+                &mut derived,
+                &data,
+                &HashMap::new(),
+            );
+            assert_eq!(
+                derived
+                    .skill_status_effect_multiplier_by_skill
+                    .get(&crate::live::test_data::POINT_ABILITY_SKILL_ID)
+                    .copied(),
+                expected,
+            );
         }
     }
 }
