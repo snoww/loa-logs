@@ -1072,6 +1072,24 @@ impl StatusTracker {
                 .any(|effect| effect.status_effect_id == status_effect_id)
         })
     }
+
+    /// Native detach tests retained actor controls, independently of estimated expiry.
+    pub fn has_grab_detach_control(&self, object_id: u64) -> bool {
+        self.local_status_effect_registry
+            .get(&object_id)
+            .is_some_and(|effects| {
+                effects.values().any(|effect| {
+                    SKILL_BUFF_DATA
+                        .get(&effect.status_effect_id)
+                        .is_some_and(|buff| {
+                            matches!(
+                                buff.buff_type.as_str(),
+                                "freeze" | "stone" | "confinement" | "time_lock"
+                            )
+                        })
+                })
+            })
+    }
 }
 
 pub fn build_status_effect(

@@ -89,6 +89,8 @@ pub struct EncounterEntity {
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase", default)]
 pub struct DamageStats {
+    #[serde(skip)]
+    pub(crate) grab_state: super::grab::GrabState,
     pub npc_window_incomplete_hits: i64,
     pub npc_window_tracked_hits: i64,
     pub rdps_damage_received_npc: i64,
@@ -155,6 +157,9 @@ pub struct DeathInfo {
 
 impl DamageStats {
     pub fn start_grab(&mut self, source_id: u64, timestamp: i64) {
+        self.advance_grab_movements(timestamp);
+        self.grab_state.pending_detach = false;
+        self.clip_knockdowns(timestamp);
         if let Some(event) = self
             .incapacitations
             .iter_mut()
@@ -175,6 +180,7 @@ impl DamageStats {
     }
 
     pub fn end_grab(&mut self, timestamp: i64) {
+        self.grab_state.pending_detach = false;
         if let Some(event) = self
             .incapacitations
             .iter_mut()
@@ -186,6 +192,7 @@ impl DamageStats {
     }
 
     pub fn end_incapacitations(&mut self, timestamp: i64) {
+        self.reset_grab(timestamp);
         for event in &mut self.incapacitations {
             if event.grab_source_id.take().is_some() || event.timestamp + event.duration > timestamp
             {
@@ -198,6 +205,7 @@ impl DamageStats {
 impl Encounter {
     /// Freeze open grabs at the encounter's last combat packet for both live and saved views.
     pub fn snapshot_incapacitations(&mut self) {
+        self.advance_grab_movements(self.last_combat_packet);
         for entity in self
             .entities
             .values_mut()

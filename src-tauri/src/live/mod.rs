@@ -117,6 +117,13 @@ fn next_live_event(
     })
 }
 
+fn parse_complete_packet<T: GamePacket>(bytes: &[u8]) -> Result<T> {
+    let mut reader = meter_defs::io::Reader::new(bytes);
+    let packet = T::deserialize(&mut reader)?;
+    anyhow::ensure!(reader.data.is_empty(), "trailing packet bytes");
+    Ok(packet)
+}
+
 pub fn start(args: StartArgs) -> Result<()> {
     info!("live::start");
     let StartArgs {
@@ -340,7 +347,24 @@ pub fn start(args: StartArgs) -> Result<()> {
 
         let start = Instant::now();
         let handler_start = Instant::now();
+        let packet_timestamp = Utc::now().timestamp_millis();
+        state.encounter.advance_grab_movements(packet_timestamp);
         match packet.header.opcode {
+            PKTSkillMoveNotify::OPCODE => {
+                if let Ok(pkt) = parse_complete_packet::<PKTSkillMoveNotify>(&packet.body) {
+                    incapacitation::on_skill_move(
+                        &mut state.encounter,
+                        &entity_tracker.entities,
+                        &pkt,
+                        packet_timestamp,
+                    );
+                }
+            }
+            PKTTeleportFinishNotify::OPCODE => {
+                if let Ok(pkt) = parse_complete_packet::<PKTTeleportFinishNotify>(&packet.body) {
+                    incapacitation::on_teleport(&mut state.encounter, &pkt, packet_timestamp);
+                }
+            }
             PKTSkillEffectTargetNotify::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTSkillEffectTargetNotify>().unwrap() {
                     incapacitation::on_skill_effect_target(
@@ -348,6 +372,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                         &entity_tracker.entities,
                         &pkt,
                         Utc::now().timestamp_millis(),
+                        &status_tracker.borrow(),
                     );
                 }
             }
@@ -739,6 +764,9 @@ pub fn start(args: StartArgs) -> Result<()> {
                 if let Some(pkt) = packet.try_parse::<PKTRemoveObject>().unwrap() {
                     let mut removed_startup_player = false;
                     for upo in pkt.unpublished_objects {
+                        state
+                            .encounter
+                            .remove_grab_actor(upo.object_id, packet_timestamp);
                         let removed_entity = entity_tracker.remove_object(upo.object_id);
                         let removed_player = removed_entity
                             .as_ref()
@@ -807,6 +835,11 @@ pub fn start(args: StartArgs) -> Result<()> {
             }
             PKTSkillStartNotify::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTSkillStartNotify>().unwrap() {
+                    incapacitation::on_skill_start(
+                        &mut state.encounter,
+                        pkt.source_id,
+                        packet_timestamp,
+                    );
                     if let Some(entity) = entity_tracker.entities.get_mut(&pkt.source_id) {
                         entity.observe_npc_action(
                             pkt.skill_id,
@@ -910,24 +943,38 @@ pub fn start(args: StartArgs) -> Result<()> {
                 }
             }
             PKTSkillDamageAbnormalMoveNotify::OPCODE => {
-                if Instant::now() - raid_end_cd < Duration::from_secs(10) {
+                let ignore_damage = Instant::now() - raid_end_cd < Duration::from_secs(10);
+                if ignore_damage {
                     debug_print!("ignoring damage - SkillDamageAbnormalMoveNotify");
-                    continue;
                 }
-                if let Some(pkt) = packet
-                    .try_parse::<PKTSkillDamageAbnormalMoveNotify>()
-                    .unwrap()
+                if let Ok(pkt) =
+                    parse_complete_packet::<PKTSkillDamageAbnormalMoveNotify>(&packet.body)
                 {
                     let now = Utc::now().timestamp_millis();
-                    let mut owner = entity_tracker.get_source_entity(pkt.source_id);
-                    entity_tracker.infer_entity_class_from_skill(&mut owner, pkt.skill_id);
+                    let owner = if ignore_damage {
+                        None
+                    } else {
+                        let mut owner = entity_tracker.get_source_entity(pkt.source_id);
+                        entity_tracker.infer_entity_class_from_skill(&mut owner, pkt.skill_id);
+                        Some(owner)
+                    };
                     let local_character_id = id_tracker
                         .borrow()
                         .get_local_character_id(entity_tracker.local_entity_id);
                     let target_count = pkt.skill_damage_abnormal_move_events.len() as i32;
                     for mut event in pkt.skill_damage_abnormal_move_events.into_iter() {
+                        let decrypted = incapacitation::process_abnormal_damage(
+                            &mut state.encounter,
+                            &entity_tracker.entities,
+                            &mut event,
+                            now,
+                            &damage_handler,
+                        );
+                        let Some(owner) = owner.as_ref() else {
+                            continue;
+                        };
                         startup_event_seq += 1;
-                        if !damage_handler.decrypt_damage_event(&mut event.skill_damage_event) {
+                        if !decrypted {
                             state.damage_is_valid = false;
                             continue;
                         }
@@ -935,12 +982,9 @@ pub fn start(args: StartArgs) -> Result<()> {
                             entity_tracker.get_or_create_entity(event.skill_damage_event.target_id);
                         let source_entity = entity_tracker.get_or_create_entity(pkt.source_id);
 
-                        // track potential knockdown
-                        state.on_abnormal_move(&target_entity, &event.skill_move_option_data, now);
-
                         let (se_on_source, se_on_target) = status_tracker
                             .borrow_mut()
-                            .get_status_effects(&owner, &target_entity, local_character_id);
+                            .get_status_effects(owner, &target_entity, local_character_id);
 
                         let damage_data = DamageData {
                             skill_id: pkt.skill_id,
@@ -959,7 +1003,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                             let mut status_tracker = status_tracker.borrow_mut();
                             state.on_damage(
                                 startup_event_seq,
-                                &owner,
+                                owner,
                                 &source_entity,
                                 &target_entity,
                                 damage_data,
@@ -1368,6 +1412,9 @@ pub fn start(args: StartArgs) -> Result<()> {
             }
             PKTZoneObjectUnpublishNotify::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTZoneObjectUnpublishNotify>().unwrap() {
+                    state
+                        .encounter
+                        .remove_grab_actor(pkt.object_id, packet_timestamp);
                     if let Some(entity) = entity_tracker.entities.get_mut(&pkt.object_id) {
                         entity.next_skill.close_fight(false);
                     }
