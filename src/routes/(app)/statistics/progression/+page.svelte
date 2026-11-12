@@ -76,6 +76,13 @@
     direction: SortDirection;
   } | null;
 
+  type PullSortKey = "id" | "duration" | "result" | "hp" | "teamDps" | "deaths";
+
+  type PullSortState = {
+    key: PullSortKey;
+    direction: SortDirection;
+  };
+
   type DeathRateSummary = {
     names: string[];
     rate: number;
@@ -96,6 +103,15 @@
       averageSupportIdentity: (player) => player.averageSupportIdentity,
       averageSupportHyper: (player) => player.averageSupportHyper
     };
+
+  const pullSortAccessors: Record<PullSortKey, (pull: RaidProgressionPull) => number | null | undefined> = {
+    id: (pull) => pull.id,
+    duration: (pull) => pull.duration,
+    result: (pull) => Number(pull.cleared),
+    hp: (pull) => (pull.cleared ? 0 : pull.progressPercent),
+    teamDps: (pull) => pull.teamDps,
+    deaths: (pull) => pull.deaths
+  };
 
   const gateOptionGroups = Object.entries(encounterMap)
     .reverse()
@@ -132,6 +148,7 @@
   let groupsExpanded = $state(false);
   let dpsSort = $state<PlayerSortState>(null);
   let supportSort = $state<PlayerSortState>(null);
+  let pullSort = $state<PullSortState>({ key: "id", direction: "desc" });
   let requestId = 0;
   let rangeRequestId = 0;
   let keepAppliedDates = false;
@@ -177,6 +194,7 @@
   let leastDeathsPerPull = $derived(deathRateSummary(statistics?.players ?? [], "least"));
   let mostDeathsPerPull = $derived(deathRateSummary(statistics?.players ?? [], "most"));
   let pullRows = $derived(statistics?.pulls ?? []);
+  let sortedPullRows = $derived(sortPulls(pullRows, pullSort));
 
   onMount(() => {
     if (restoreCachedProgressionState()) {
@@ -522,17 +540,27 @@
     return table === "dps" ? dpsSort : supportSort;
   }
 
-  function sortAria(
-    table: ProgressionPlayerTable,
-    key: ProgressionPlayerSortKey
-  ): "ascending" | "descending" | undefined {
-    const sort = playerSort(table);
+  function sortAria(sort: PlayerSortState | PullSortState, key: string): "ascending" | "descending" | undefined {
     if (sort?.key !== key) return undefined;
     return sort.direction === "asc" ? "ascending" : "descending";
   }
 
-  function isActiveSort(table: ProgressionPlayerTable, key: ProgressionPlayerSortKey) {
-    return playerSort(table)?.key === key;
+  function sortPulls(pulls: RaidProgressionPull[], sort: PullSortState) {
+    const direction = sort.direction === "asc" ? 1 : -1;
+    const accessor = pullSortAccessors[sort.key];
+    // toSorted is stable, so ties keep the order the pulls arrive in (newest first)
+    return pulls.toSorted((a, b) => {
+      const aValue = accessor(a) ?? undefined;
+      const bValue = accessor(b) ?? undefined;
+      if (aValue === undefined || bValue === undefined) {
+        return Number(aValue === undefined) - Number(bValue === undefined);
+      }
+      return (aValue - bValue) * direction;
+    });
+  }
+
+  function updatePullSort(key: PullSortKey) {
+    pullSort = { key, direction: pullSort.key === key && pullSort.direction === "desc" ? "asc" : "desc" };
   }
 
   function deathRateSummary(players: RaidProgressionPlayer[], mode: "least" | "most"): DeathRateSummary {
@@ -573,21 +601,25 @@
   }
 </script>
 
-{#snippet sortablePlayerHeader(label: string, table: ProgressionPlayerTable, key: ProgressionPlayerSortKey)}
-  <th class="px-3 py-2 font-medium" aria-sort={sortAria(table, key)}>
-    <button
-      type="button"
-      class="flex items-center gap-1 font-medium hover:text-neutral-100"
-      onclick={() => updatePlayerSort(table, key)}
-    >
+{#snippet sortableHeader(label: string, sort: "ascending" | "descending" | undefined, onclick: () => void)}
+  <th class="px-3 py-2 font-medium" aria-sort={sort}>
+    <button type="button" class="flex items-center gap-1 font-medium hover:text-neutral-100" {onclick}>
       <span>{label}</span>
       <IconArrowUp
-        class={`size-3 transition-opacity ${
-          isActiveSort(table, key) ? "opacity-100" : "opacity-0"
-        } ${playerSort(table)?.direction === "desc" ? "rotate-180" : ""}`}
+        class={`size-3 transition-opacity ${sort ? "opacity-100" : "opacity-0"} ${
+          sort === "descending" ? "rotate-180" : ""
+        }`}
       />
     </button>
   </th>
+{/snippet}
+
+{#snippet sortablePlayerHeader(label: string, table: ProgressionPlayerTable, key: ProgressionPlayerSortKey)}
+  {@render sortableHeader(label, sortAria(playerSort(table), key), () => updatePlayerSort(table, key))}
+{/snippet}
+
+{#snippet sortablePullHeader(label: string, key: PullSortKey)}
+  {@render sortableHeader(label, sortAria(pullSort, key), () => updatePullSort(key))}
 {/snippet}
 
 <div
@@ -989,19 +1021,19 @@
           <table class="w-full min-w-[58rem] text-left text-xs">
             <thead class="sticky top-0 z-10 bg-neutral-900/95 text-neutral-400">
               <tr>
-                <th class="px-3 py-2 font-medium">ID</th>
+                {@render sortablePullHeader("ID", "id")}
                 <th class="px-3 py-2 font-medium">Boss</th>
                 <th class="px-3 py-2 font-medium">Difficulty</th>
-                <th class="px-3 py-2 font-medium">Duration</th>
-                <th class="px-3 py-2 font-medium">Result</th>
-                <th class="px-3 py-2 font-medium">HP</th>
-                <th class="px-3 py-2 font-medium">Team DPS</th>
-                <th class="px-3 py-2 font-medium">Deaths</th>
+                {@render sortablePullHeader("Duration", "duration")}
+                {@render sortablePullHeader("Result", "result")}
+                {@render sortablePullHeader("HP", "hp")}
+                {@render sortablePullHeader("Team DPS", "teamDps")}
+                {@render sortablePullHeader("Deaths", "deaths")}
                 <th class="px-3 py-2 font-medium">Local Player</th>
               </tr>
             </thead>
             <tbody>
-              {#each pullRows as pull (pull.id)}
+              {#each sortedPullRows as pull (pull.id)}
                 <tr class="border-t border-neutral-700/70 hover:bg-neutral-700/30">
                   <td class="px-3 py-2">
                     <a href={resolve(`/logs/${pull.id}`)} class="text-accent-500 hover:text-accent-400">{pull.id}</a>
