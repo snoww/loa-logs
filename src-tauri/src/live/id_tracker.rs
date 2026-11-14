@@ -14,6 +14,9 @@ impl IdTracker {
     }
 
     pub fn add_mapping(&mut self, character_id: u64, entity_id: u64) {
+        if character_id == 0 || entity_id == 0 {
+            return;
+        }
         if let Some(previous_entity_id) = self
             .character_id_to_entity_id
             .insert(character_id, entity_id)

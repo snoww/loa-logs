@@ -2540,7 +2540,7 @@ fn get_buffered_or_live_entity<'a>(
 ) -> Option<&'a Entity> {
     buffered_entities
         .and_then(|entities| entities.get(&entity_id))
-        .or_else(|| entity_tracker.get_entity_ref(entity_id))
+        .or_else(|| entity_tracker.known_effect_owner(entity_id))
 }
 
 fn get_buffered_or_live_snapshot<'a>(
@@ -2687,10 +2687,9 @@ fn is_player_source_entity_id(
         .is_some_and(|entity| matches!(entity.entity_type, crate::models::EntityType::Player))
 }
 
-/// A pre-zone instance keeps the owner snapshot taken at its creation instead of a rebuild from
-/// the fight-start inspect; see `StatusEffectDetails::created_before_zone`.
+/// An established creation snapshot is not revalued by a later inspect.
 fn keeps_creation_owner_snapshot(effect: &StatusEffectDetails) -> bool {
-    effect.created_before_zone && effect.owner_player_stats_snapshot.is_some()
+    effect.owner_player_stats_snapshot.is_some()
 }
 
 fn rebuild_missing_effect_owner_snapshot(
@@ -2931,18 +2930,9 @@ fn is_same_party_target_effect_source(
     entity_tracker: &EntityTracker,
     buffered_entities: Option<&HashMap<u64, Entity>>,
 ) -> bool {
-    if entity_tracker.are_same_party_entities(attacker.id, source_entity_id) {
-        return true;
-    }
-
-    get_buffered_or_live_entity(source_entity_id, buffered_entities, entity_tracker).is_some_and(
-        |source_entity| {
-            entity_tracker
-                .are_same_party_characters(attacker.character_id, source_entity.character_id)
-        },
-    )
+    get_buffered_or_live_entity(source_entity_id, buffered_entities, entity_tracker)
+        .is_some_and(|source| entity_tracker.are_same_party_players(attacker, source))
 }
-
 fn is_party_wide_skill_buff(skill_buff: &crate::models::SkillBuffData) -> bool {
     skill_buff.target.eq_ignore_ascii_case("party")
         || skill_buff.target.eq_ignore_ascii_case("self_party")
@@ -4010,33 +4000,25 @@ fn entity_matches_owner_scope(
     entity: &Entity,
     scope: OwnerScope,
     entity_tracker: &EntityTracker,
+    buffered_entities: Option<&HashMap<u64, Entity>>,
 ) -> bool {
     match scope {
         OwnerScope::Any => true,
         OwnerScope::SamePlayer {
             entity_id,
             character_id,
-        } => {
-            entity.id == entity_id
-                || (character_id != 0
-                    && entity.character_id != 0
-                    && entity.character_id == character_id)
-        }
+        } => entity.id == entity_id || (character_id != 0 && entity.character_id == character_id),
         OwnerScope::SameParty {
             entity_id,
             character_id,
         } => {
             entity.id == entity_id
-                || entity_tracker.are_same_party_entities(entity_id, entity.id)
-                || (character_id != 0
-                    && entity.character_id != 0
-                    && (entity.character_id == character_id
-                        || entity_tracker
-                            .are_same_party_characters(character_id, entity.character_id)))
+                || (character_id != 0 && entity.character_id == character_id)
+                || get_buffered_or_live_entity(entity_id, buffered_entities, entity_tracker)
+                    .is_some_and(|affected| entity_tracker.are_same_party_players(affected, entity))
         }
     }
 }
-
 fn resolve_effect_source_id(
     effect: &StatusEffectDetails,
     skill_buff: &crate::models::SkillBuffData,
@@ -4065,9 +4047,11 @@ fn resolve_effect_source_id(
         }
         if matches!(source_entity.entity_type, crate::models::EntityType::Player) {
             let direct_player_matches_scope =
-                entity_matches_owner_scope(source_entity, scope, entity_tracker);
+                entity_matches_owner_scope(source_entity, scope, entity_tracker, buffered_entities);
             direct_source_player_out_of_scope = !direct_player_matches_scope;
-            if direct_player_matches_scope && owns_effect(source_entity) {
+            if direct_player_matches_scope
+                && (effect.owner_was_selected || owns_effect(source_entity))
+            {
                 return effect.source_id;
             }
         }
@@ -4077,7 +4061,12 @@ fn resolve_effect_source_id(
         && let Some(entity) = buffered_entities.values().find(|entity| {
             matches!(entity.entity_type, crate::models::EntityType::Player)
                 && owns_effect(entity)
-                && entity_matches_owner_scope(entity, scope, entity_tracker)
+                && entity_matches_owner_scope(
+                    entity,
+                    scope,
+                    entity_tracker,
+                    Some(buffered_entities),
+                )
         })
     {
         return entity.id;
@@ -4089,7 +4078,7 @@ fn resolve_effect_source_id(
         .find(|entity| {
             matches!(entity.entity_type, crate::models::EntityType::Player)
                 && owns_effect(entity)
-                && entity_matches_owner_scope(entity, scope, entity_tracker)
+                && entity_matches_owner_scope(entity, scope, entity_tracker, buffered_entities)
         })
         .map(|entity| entity.id)
         .unwrap_or_else(|| {
@@ -4836,7 +4825,7 @@ mod tests {
     }
 
     #[test]
-    fn loading_party_discovery_preserves_support_scope_for_both_packet_orders() {
+    fn loading_discovery_preserves_observed_party_scope_for_both_packet_orders() {
         ensure_rdps_test_data();
         for (local_character_id, has_local_mapping) in [(0, true), (101, true), (0, false)] {
             for loading_arrives_first in [false, true] {
@@ -4859,31 +4848,33 @@ mod tests {
                     );
                 }
 
-                let loaded_characters = Some((101..=108).collect());
+                let loaded_characters = (101..=108).collect::<Vec<_>>();
                 if loading_arrives_first {
-                    tracker.try_derive_party_compositions_from_loading(loaded_characters.clone());
+                    tracker.observe_loading_participants(1, loaded_characters.clone());
                 }
-                // PartyInfo authoritatively supplies our four members; the loading list
-                // must supply the other party before its status-result packets arrive.
+                // Loading order supplies inspect candidates, never party membership.
                 for entity_id in 1..=4 {
                     party_tracker
                         .borrow_mut()
                         .add(500, 40, 100 + entity_id, entity_id, None);
                 }
-                tracker.try_derive_party_compositions_from_loading(if loading_arrives_first {
-                    None
-                } else {
-                    loaded_characters
-                });
-
-                if !has_local_mapping {
-                    assert_eq!(party_tracker.borrow().get_party_id_for_character(105), None);
-                    id_tracker.borrow_mut().add_mapping(101, 1);
-                    tracker.try_derive_party_compositions_from_loading(None);
+                if !loading_arrives_first {
+                    tracker.observe_loading_participants(1, loaded_characters);
+                }
+                assert_eq!(
+                    tracker.inspect_discovery_characters(),
+                    (101..=108).collect::<Vec<_>>()
+                );
+                assert_eq!(party_tracker.borrow().get_party_id_for_character(105), None);
+                // Actual packets can supply nonconsecutive server party IDs.
+                for entity_id in 5..=8 {
+                    party_tracker
+                        .borrow_mut()
+                        .add(500, 900, 100 + entity_id, entity_id, None);
                 }
                 assert_eq!(
                     party_tracker.borrow().get_party_id_for_character(105),
-                    Some(41)
+                    Some(900)
                 );
                 assert!(tracker.are_same_party_entities(5, 6));
                 assert!(!tracker.are_same_party_entities(1, 5));

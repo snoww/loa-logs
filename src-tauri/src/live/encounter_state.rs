@@ -356,6 +356,7 @@ const IDENTITY_BUFF_MISMATCH_TOLERANCE: f64 = 0.10;
 /// A receiver's inspect stat sheet waiting to calibrate the identity buff instances it carried.
 #[derive(Debug, Clone)]
 struct PendingInspectMeasurement {
+    receiver_snapshot: Entity,
     receiver_entity_id: u64,
     receiver_name: String,
     request_sent_at: DateTime<Utc>,
@@ -2871,6 +2872,7 @@ impl EncounterState {
         });
         self.pending_inspect_measurements
             .push(PendingInspectMeasurement {
+                receiver_snapshot: receiver.clone(),
                 receiver_entity_id: receiver.id,
                 receiver_name: receiver.name.clone(),
                 request_sent_at,
@@ -2972,13 +2974,7 @@ impl EncounterState {
         entity_tracker: &EntityTracker,
         samples: &mut Vec<IdentityBuffSample>,
     ) {
-        let Some(receiver) = entity_tracker
-            .entities
-            .get(&measurement.receiver_entity_id)
-            .filter(|entity| entity.inspect_snapshot.is_some())
-        else {
-            return;
-        };
+        let receiver = &measurement.receiver_snapshot;
         let receiver_effects = &measurement.receiver_effects;
         for effect in receiver_effects {
             let Some(stat_type) = unmeasured_identity_stat(effect) else {
@@ -4542,8 +4538,9 @@ impl EncounterState {
                     }
                     continue;
                 }
-                let Some(contributor_name) = entity_tracker
-                    .get_entity_ref(attribution.source_entity_id)
+                let Some(contributor_name) = buffered_player_entities
+                    .and_then(|entities| entities.get(&attribution.source_entity_id))
+                    .or_else(|| entity_tracker.known_effect_owner(attribution.source_entity_id))
                     .map(|entity| entity.name.clone())
                 else {
                     continue;
@@ -5565,6 +5562,95 @@ fn adjusted_extreme_difficulty(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn deferred_measurement_uses_its_receivers_captured_baseline() {
+        use super::*;
+        use crate::live::entity_tracker::{InspectBaseStats, InspectSnapshot};
+        use crate::live::player_stats::StatSource;
+        use crate::live::{id_tracker::IdTracker, party_tracker::PartyTracker};
+        use std::{cell::RefCell, rc::Rc, sync::Arc};
+        crate::live::test_data::initialize();
+        let ids = Rc::new(RefCell::new(IdTracker::new()));
+        let parties = Rc::new(RefCell::new(PartyTracker::new(ids.clone())));
+        let statuses = Rc::new(RefCell::new(StatusTracker::new(parties.clone())));
+        let mut tracker = EntityTracker::new(statuses, ids, parties.clone());
+        for id in [1, 2] {
+            let mut stats = crate::live::npc_windows::tests::base_stats();
+            stats.owner_id = id;
+            let player = Entity {
+                id,
+                character_id: 100 + id,
+                name: format!("Player{id}"),
+                entity_type: EntityType::Player,
+                class_id: 204,
+                inspect_snapshot: Some(InspectSnapshot::default()),
+                inspect_base_stats: Some(InspectBaseStats {
+                    owner_id: id,
+                    class_id: 204,
+                    stats: Arc::new(stats),
+                }),
+                ..Default::default()
+            };
+            parties
+                .borrow_mut()
+                .add(1, 40, player.character_id, id, Some(player.name.clone()));
+            tracker.entities.insert(id, player);
+        }
+        let created_at = Utc::now();
+        let mut effect = crate::live::status_tracker::build_status_effect(
+            &meter_defs::defs::StatusEffectData {
+                status_effect_id: 310501,
+                status_effect_instance_id: 1,
+                source_id: 1,
+                skill_level: 1,
+                stack_count: 1,
+                ..Default::default()
+            },
+            2,
+            1,
+            crate::live::status_tracker::StatusEffectTargetType::Local,
+            created_at,
+            None,
+        );
+        effect.source_skill_id = Some(31050);
+        effect.owner_is_player = true;
+        effect.owner_player_stats_snapshot = Some(
+            tracker.entities[&1]
+                .inspect_base_stats
+                .as_ref()
+                .unwrap()
+                .stats
+                .clone(),
+        );
+        let measurement = PendingInspectMeasurement {
+            receiver_snapshot: tracker.entities[&2].clone(),
+            receiver_entity_id: 2,
+            receiver_name: "Player2".into(),
+            request_sent_at: created_at + chrono::Duration::seconds(1),
+            receiver_effects: vec![effect],
+            server_values: [None, Some(12500)],
+            stat_sources_stable: [true, true],
+        };
+        let mut replacement = tracker.entities[&2].clone();
+        let mut stats = crate::live::npc_windows::tests::base_stats();
+        stats.owner_id = 2;
+        stats
+            .skill_damage_sub_rate_2
+            .set_self(0.15, StatSource::Inspect);
+        replacement.inspect_base_stats = Some(InspectBaseStats {
+            owner_id: 2,
+            class_id: 204,
+            stats: Arc::new(stats),
+        });
+        // A later inspect for the same receiver must not change the baseline of the saved sheet.
+        tracker.entities.insert(2, replacement);
+        let mut samples = Vec::new();
+        EncounterState::collect_identity_buff_samples(&measurement, &tracker, &mut samples);
+        assert_eq!(samples.len(), 1);
+        assert_eq!(samples[0].measured_value, 2500.0);
+        assert_eq!(samples[0].receiver_name, "Player2");
+    }
+
     #[test]
     fn queued_hits_freeze_current_cast_evidence_for_players_and_projectile_owners() {
         use super::*;

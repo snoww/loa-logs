@@ -192,6 +192,22 @@ impl StatusTracker {
         mut se: StatusEffectDetails,
         runtime_for_carried_skill: impl FnOnce(u32) -> Option<SkillRuntimeData>,
     ) {
+        // Local and party notifications describe one logical receiver. Move the existing
+        // instance before carrying creation data, even when membership arrived between packets.
+        if let Some((other_id, other_type)) = self.counterpart_target(se.target_id, se.target_type)
+            && let Some(mut existing) = self
+                .registry_mut(other_type)
+                .get_mut(&other_id)
+                .and_then(|effects| effects.remove(&se.instance_id))
+        {
+            existing.target_id = se.target_id;
+            existing.target_type = se.target_type;
+            self.registry_mut(se.target_type)
+                .entry(se.target_id)
+                .or_default()
+                .entry(se.instance_id)
+                .or_insert(existing);
+        }
         se.tracked_at = self.stable_local_time(se.timestamp);
         se.first_tracked = se.tracked_at;
         let previous_marker = self
@@ -230,21 +246,19 @@ impl StatusTracker {
             .registry(se.target_type)
             .get(&se.target_id)
             .and_then(|effects| effects.get(&se.instance_id))
-            .filter(|existing| existing.status_effect_id == se.status_effect_id)
+            .filter(|existing| existing.has_same_creation_owner(&se))
             .cloned();
         let carried_over = existing.or_else(|| {
             let matches_retained = self
                 .retained_entries_by_instance_id
                 .get(&se.instance_id)
-                .is_some_and(|retained| {
-                    retained.status_effect_id == se.status_effect_id
-                        && retained.source_id == se.source_id
-                });
+                .is_some_and(|retained| retained.has_same_creation_owner(&se));
             matches_retained
                 .then(|| self.retained_entries_by_instance_id.remove(&se.instance_id))
                 .flatten()
         });
         if let Some(carried_over) = carried_over {
+            se.owner_was_selected |= carried_over.owner_was_selected;
             if let Some(carried_skill_id) = carried_over.source_skill_id {
                 // The creation-time runtime cache belongs with the creation-time source skill; a
                 // cache the re-notify resolved for another skill would revalue the instance.
@@ -571,6 +585,51 @@ impl StatusTracker {
         .find_map(|effects| effects.get(&instance_id))
     }
 
+    fn counterpart_target(
+        &self,
+        target_id: u64,
+        target_type: StatusEffectTargetType,
+    ) -> Option<(u64, StatusEffectTargetType)> {
+        let parties = self.party_tracker.borrow();
+        match target_type {
+            StatusEffectTargetType::Local => parties
+                .get_character_id_for_entity(target_id)
+                .map(|id| (id, StatusEffectTargetType::Party)),
+            StatusEffectTargetType::Party => parties
+                .get_entity_id_for_character(target_id)
+                .map(|id| (id, StatusEffectTargetType::Local)),
+        }
+    }
+
+    /// Re-notifications reuse creation ownership without consuming another selection.
+    pub fn creation_owner_for_notification(
+        &mut self,
+        data: &StatusEffectData,
+        target_id: u64,
+        target_type: StatusEffectTargetType,
+        timestamp: DateTime<Utc>,
+    ) -> Option<u64> {
+        self.prune_retained_entries(timestamp);
+        self.registry(target_type)
+            .get(&target_id)
+            .and_then(|effects| effects.get(&data.status_effect_instance_id))
+            .or_else(|| {
+                self.counterpart_target(target_id, target_type)
+                    .and_then(|(id, kind)| self.registry(kind).get(&id))
+                    .and_then(|effects| effects.get(&data.status_effect_instance_id))
+            })
+            .or_else(|| {
+                self.retained_entries_by_instance_id
+                    .get(&data.status_effect_instance_id)
+            })
+            .filter(|effect| {
+                effect.owner_was_selected
+                    && effect.status_effect_id == data.status_effect_id
+                    && effect.raw_source_id == data.source_id
+            })
+            .map(|effect| effect.source_id)
+    }
+
     /// Applies `update` to every tracked effect owned by `source_id`.
     pub fn update_effects_owned_by(
         &mut self,
@@ -635,6 +694,13 @@ impl StatusTracker {
         self.drop_object_effects(StatusEffectTargetType::Party, object_id);
     }
 
+    /// A player snapshot replaces both notification views while preserving creation bundles
+    /// for the instances explicitly supplied again by that snapshot.
+    pub fn reset_player_status_effects(&mut self, character_id: u64, entity_id: u64) {
+        self.drop_object_effects(StatusEffectTargetType::Local, entity_id);
+        self.drop_object_effects(StatusEffectTargetType::Party, character_id);
+    }
+
     pub fn remove_status_effects(
         &mut self,
         target_id: u64,
@@ -648,61 +714,62 @@ impl StatusTracker {
         bool,
     ) {
         let server_now = self.local_to_server_time(Utc::now());
-        let registry = match sett {
-            StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
-            StatusEffectTargetType::Party => &mut self.party_status_effect_registry,
-        };
-
-        let mut has_shield_buff = false;
-        let mut shields_broken: Vec<StatusEffectDetails> = Vec::new();
-        let mut left_workshop = false;
-        let mut effects_removed = Vec::new();
-        let mut removed_entries = Vec::new();
-
-        if let Some(ser) = registry.get_mut(&target_id) {
-            for id in instance_id {
-                // The server ended this instance; a retained copy must not resume it.
-                self.retained_entries_by_instance_id.remove(&id);
-                if let Some(se) = ser.remove(&id) {
-                    removed_entries.push(se.clone());
-                    if se.status_effect_id == WORKSHOP_BUFF_ID {
-                        left_workshop = true;
-                    }
-                    if se.status_effect_type == StatusEffectType::Shield {
-                        has_shield_buff = true;
-                        if reason == 4 {
-                            shields_broken.push(se);
-                            continue;
+        let targets = std::iter::once((target_id, sett))
+            .chain(self.counterpart_target(target_id, sett))
+            .collect::<Vec<_>>();
+        let mut removed = HashMap::<u32, StatusEffectDetails>::new();
+        for instance in instance_id {
+            self.retained_entries_by_instance_id.remove(&instance);
+            for (target, kind) in &targets {
+                if let Some(effect) = self
+                    .registry_mut(*kind)
+                    .get_mut(target)
+                    .and_then(|effects| effects.remove(&instance))
+                {
+                    match removed.entry(instance) {
+                        hashbrown::hash_map::Entry::Occupied(mut previous) => {
+                            if effect.tracked_at > previous.get().tracked_at {
+                                previous.insert(effect);
+                            }
+                        }
+                        hashbrown::hash_map::Entry::Vacant(entry) => {
+                            entry.insert(effect);
                         }
                     }
-                    effects_removed.push(se);
                 }
             }
         }
         let now = Utc::now();
         let stable_now = self.stable_local_time(now);
-        for se in &removed_entries {
-            if super::next_skill::is_marker(se.status_effect_id) {
+        let mut has_shield = false;
+        let mut shields_broken = Vec::new();
+        let mut effects_removed = Vec::new();
+        let mut left_workshop = false;
+        for effect in removed.into_values() {
+            if super::next_skill::is_marker(effect.status_effect_id) {
                 self.next_skill_events.push(super::next_skill::MarkerEvent {
-                    target_id,
-                    party: sett == StatusEffectTargetType::Party,
-                    key: (se.status_effect_id, se.instance_id),
+                    target_id: effect.target_id,
+                    party: effect.target_type == StatusEffectTargetType::Party,
+                    key: (effect.status_effect_id, effect.instance_id),
                     time_ms: now.timestamp_millis(),
                     kind: super::next_skill::MarkerEventKind::Remove {
-                        consumption: !se.packet_expired
-                            && se.expire_at.is_none_or(|end| end > server_now),
+                        consumption: !effect.packet_expired
+                            && effect.expire_at.is_none_or(|end| end > server_now),
                     },
                 });
             }
-            self.note_stat_sources_changed(target_id, se, stable_now);
+            self.note_stat_sources_changed(effect.target_id, &effect, stable_now);
+            left_workshop |= effect.status_effect_id == WORKSHOP_BUFF_ID;
+            if effect.status_effect_type == StatusEffectType::Shield {
+                has_shield = true;
+                if reason == 4 {
+                    shields_broken.push(effect);
+                    continue;
+                }
+            }
+            effects_removed.push(effect);
         }
-
-        (
-            has_shield_buff,
-            shields_broken,
-            effects_removed,
-            left_workshop,
-        )
+        (has_shield, shields_broken, effects_removed, left_workshop)
     }
 
     /// Applies a PKTStatusEffectDurationNotify: the server moved the instance's end tick.
@@ -765,36 +832,30 @@ impl StatusTracker {
         character_id: u64,
         object_id: u64,
         value: u64,
-        local_character_id: u64,
     ) -> (Option<StatusEffectDetails>, u64) {
-        let use_party = self.should_use_party_status_effect(character_id, local_character_id);
-        let (target_id, sett) = if use_party {
-            (character_id, StatusEffectTargetType::Party)
-        } else {
-            (object_id, StatusEffectTargetType::Local)
-        };
-        if target_id == 0 {
+        let current = [
+            (object_id, StatusEffectTargetType::Local),
+            (character_id, StatusEffectTargetType::Party),
+        ]
+        .into_iter()
+        .filter(|(id, _)| *id != 0)
+        .filter_map(|(id, kind)| {
+            self.registry(kind)
+                .get(&id)
+                .and_then(|effects| effects.get(&instance_id))
+        })
+        .max_by_key(|effect| effect.tracked_at)
+        .cloned();
+        let Some(mut effect) = current else {
             return (None, 0);
-        }
-        let registry = match sett {
-            StatusEffectTargetType::Local => &mut self.local_status_effect_registry,
-            StatusEffectTargetType::Party => &mut self.party_status_effect_registry,
         };
-
-        let ser = match registry.get_mut(&target_id) {
-            Some(ser) => ser,
-            None => return (None, 0),
-        };
-
-        let se = match ser.get_mut(&instance_id) {
-            Some(se) => se,
-            None => return (None, 0),
-        };
-
-        let old_value = se.value;
-        se.value = value;
-
-        (Some(se.clone()), old_value)
+        let old_value = effect.value;
+        effect.value = value;
+        self.registry_mut(effect.target_type)
+            .get_mut(&effect.target_id)
+            .unwrap()
+            .insert(instance_id, effect.clone());
+        (Some(effect), old_value)
     }
 
     /// Fills missing creation snapshots after a value sync. This is the same tracked instance,
@@ -807,6 +868,9 @@ impl StatusTracker {
             .registry_mut(refreshed.target_type)
             .get_mut(&refreshed.target_id)?
             .get_mut(&refreshed.instance_id)?;
+        if !tracked.has_same_creation_owner(&refreshed) {
+            return Some(tracked.clone());
+        }
         if tracked.owner_player_stats_snapshot.is_none() {
             tracked.owner_player_stats_snapshot = refreshed.owner_player_stats_snapshot;
         }
@@ -821,51 +885,19 @@ impl StatusTracker {
         &mut self,
         source_entity: &Entity,
         target_entity: &Entity,
-        local_character_id: u64,
     ) -> (Vec<StatusEffectDetails>, Vec<StatusEffectDetails>) {
         let timestamp = Utc::now();
 
-        let use_party_for_source = if source_entity.entity_type == EntityType::Player {
-            self.should_use_party_status_effect(source_entity.character_id, local_character_id)
-        } else {
-            false
-        };
-        // println!("use_party_for_source: {:?}", use_party_for_source);
-        let (source_id, source_type) = if use_party_for_source {
-            (source_entity.character_id, StatusEffectTargetType::Party)
-        } else {
-            (source_entity.id, StatusEffectTargetType::Local)
-        };
-        // println!("source_id: {:?}, source_type: {:?}", source_id, source_type);
-
-        let status_effects_on_source = self.actually_get_status_effects(
-            source_id,
-            source_type,
+        let source_id = source_entity.id;
+        let status_effects_on_source = self.get_source_status_effects(
+            source_entity,
             timestamp,
             DeadlineMode::KeepUntilRemoved,
         );
-
-        // Party filtering for cross-party effects on the target is done downstream
-        // via rdps::filter_target_effects_for_attacker (and analyze_hit_rdps's own
-        // should_apply_target_effect), so we just pull every effect from the right
-        // registry here.
-        let use_party_for_target = source_entity.entity_type == EntityType::Player
-            && self.should_use_party_status_effect(target_entity.character_id, local_character_id);
-        let (target_id, target_type) = if use_party_for_target {
-            (target_entity.character_id, StatusEffectTargetType::Party)
-        } else {
-            (target_entity.id, StatusEffectTargetType::Local)
-        };
-        let mut status_effects_on_target = self.actually_get_status_effects(
-            target_id,
-            target_type,
-            timestamp,
-            DeadlineMode::HideExpired,
-        );
-        // println!("status_effects_on_target: {:?}", status_effects_on_target);
-        // println!(
-        //     "status_effects_on_source: {:?}, status_effects_on_target: {:?}",
-        //     status_effects_on_source, status_effects_on_target);
+        // The same merged receiver view serves damage, calibration and queued-owner snapshots.
+        // Target readers retain their deadline policy and downstream owner-scope filtering.
+        let mut status_effects_on_target =
+            self.get_source_status_effects(target_entity, timestamp, DeadlineMode::HideExpired);
         status_effects_on_target.retain(|se| {
             target_entity.npc_id != 0
                 || !(se.target_type == StatusEffectTargetType::Local
@@ -995,28 +1027,6 @@ impl StatusTracker {
         visible
     }
 
-    fn should_use_party_status_effect(&self, character_id: u64, local_character_id: u64) -> bool {
-        let party_tracker = self.party_tracker.borrow();
-        let local_player_party_id = party_tracker
-            .character_id_to_party_id
-            .get(&local_character_id);
-        let affected_player_party_id = party_tracker.character_id_to_party_id.get(&character_id);
-        // println!("party character_id_to_party_id: {:?}", party_tracker.character_id_to_party_id);
-        // println!("character_id: {}, local_character_id: {}", character_id, local_character_id);
-        // println!(
-        //     "local_player_party_id: {:?}, affected_player_party_id: {:?}",
-        //     local_player_party_id, affected_player_party_id);
-
-        match (
-            local_player_party_id,
-            affected_player_party_id,
-            character_id == local_character_id,
-        ) {
-            (Some(local_party), Some(affected_party), false) => local_party == affected_party,
-            _ => false,
-        }
-    }
-
     /// Zone change: every tracked instance predates the new zone. Player-owned instances are
     /// retained for a re-notify, and their owner may have changed build before entering.
     pub fn clear(&mut self) {
@@ -1052,32 +1062,29 @@ impl StatusTracker {
         &self,
         character_id: u64,
         object_id: u64,
-        local_character_id: u64,
         status_effect_id: u32,
     ) -> bool {
-        let use_party = self.should_use_party_status_effect(character_id, local_character_id);
-        let registry = if use_party {
-            &self.party_status_effect_registry
-        } else {
-            &self.local_status_effect_registry
-        };
-        let target_id = if use_party { character_id } else { object_id };
-        if target_id == 0 {
-            return false;
-        }
-
-        registry.get(&target_id).is_some_and(|effects| {
-            effects
-                .values()
-                .any(|effect| effect.status_effect_id == status_effect_id)
+        [
+            (object_id, StatusEffectTargetType::Local),
+            (character_id, StatusEffectTargetType::Party),
+        ]
+        .into_iter()
+        .filter(|(id, _)| *id != 0)
+        .any(|(id, kind)| {
+            self.registry(kind).get(&id).is_some_and(|effects| {
+                effects
+                    .values()
+                    .any(|effect| effect.status_effect_id == status_effect_id)
+            })
         })
     }
 
     /// Native detach tests retained actor controls, independently of estimated expiry.
     pub fn has_grab_detach_control(&self, object_id: u64) -> bool {
-        self.local_status_effect_registry
-            .get(&object_id)
-            .is_some_and(|effects| {
+        std::iter::once((object_id, StatusEffectTargetType::Local))
+            .chain(self.counterpart_target(object_id, StatusEffectTargetType::Local))
+            .filter_map(|(target_id, target_type)| self.registry(target_type).get(&target_id))
+            .any(|effects| {
                 effects.values().any(|effect| {
                     SKILL_BUFF_DATA
                         .get(&effect.status_effect_id)
@@ -1188,6 +1195,8 @@ pub fn build_status_effect(
 
     StatusEffectDetails {
         instance_id: se_data.status_effect_instance_id,
+        raw_source_id: se_data.source_id,
+        owner_was_selected: false,
         source_id,
         source_skill_id,
         target_id,
@@ -1281,7 +1290,6 @@ pub fn apply_measured_stat(
     effect.measured_stat = Some(measured);
     true
 }
-
 pub fn get_status_effect_value(value: &Option<Vec<u8>>) -> u64 {
     value.as_ref().map_or(0, |v| {
         let c1 = v
@@ -1349,6 +1357,10 @@ pub struct StatusEffectDetails {
     pub custom_id: u32,
     pub target_id: u64,
     pub source_id: u64,
+    /// Original packet source, used to recognize a refresh before remapping ownership.
+    pub raw_source_id: u64,
+    /// Inspect ownership selected this creator; a refresh must not select another one.
+    pub owner_was_selected: bool,
     pub source_skill_id: Option<u32>,
     pub target_type: StatusEffectTargetType,
     pub db_target_type: String,
@@ -1394,6 +1406,12 @@ pub struct StatusEffectDetails {
     /// The deadline passed and the instance's removal from the visible set was recorded as a stat
     /// source change; cleared when a correction restores it.
     pub packet_expired: bool,
+}
+
+impl StatusEffectDetails {
+    fn has_same_creation_owner(&self, other: &Self) -> bool {
+        self.status_effect_id == other.status_effect_id && self.source_id == other.source_id
+    }
 }
 
 #[cfg(test)]
@@ -2731,7 +2749,7 @@ mod clock_domain_tests {
             npc_id: 1,
             ..Default::default()
         };
-        let (on_attacker, on_target) = tracker.get_status_effects(&attacker, &target, 0);
+        let (on_attacker, on_target) = tracker.get_status_effects(&attacker, &target);
         assert!(on_attacker.iter().any(|effect| effect.instance_id == 1));
         assert!(!on_target.iter().any(|effect| effect.instance_id == 2));
     }
