@@ -5557,6 +5557,14 @@ fn adjusted_extreme_difficulty(
         };
     }
 
+    if boss_name == "Mordum, the Abyssal Punisher" {
+        return if max_hp > 5_000_000_000_000 {
+            Some("Extreme Hard")
+        } else {
+            Some("Extreme Normal")
+        };
+    }
+
     None
 }
 
@@ -5937,6 +5945,23 @@ mod tests {
                     "Extreme",
                     max_hp
                 ),
+                Some(expected)
+            );
+        }
+    }
+
+    #[test]
+    fn adjusts_extreme_mordum_difficulty_from_boss_hp() {
+        let cases = [
+            (i64::MAX, "Extreme Hard"),
+            (5_000_000_000_001, "Extreme Hard"),
+            (5_000_000_000_000, "Extreme Normal"),
+            (4_500_000_000_001, "Extreme Normal"),
+        ];
+
+        for (max_hp, expected) in cases {
+            assert_eq!(
+                adjusted_extreme_difficulty("Mordum, the Abyssal Punisher", "Extreme", max_hp),
                 Some(expected)
             );
         }
