@@ -32,7 +32,7 @@ use crate::local::{LocalInfo, LocalPlayer, LocalPlayerRepository};
 use crate::models::{DamageData, EntityType, Identity, TripodIndex};
 use crate::nineveh::NinevehIPCPair;
 use crate::settings::Settings;
-use crate::utils::{get_class_from_id, is_confirmed_player_entity, is_support_class};
+use crate::utils::{get_class_from_id, is_support_class};
 use anyhow::Result;
 use chrono::Utc;
 use hashbrown::HashMap;
@@ -177,7 +177,6 @@ pub fn start(args: StartArgs) -> Result<()> {
     ban_list.refresh();
 
     let mut party_freeze = false;
-    let mut party_cache: Option<Vec<Vec<String>>> = None;
     let mut banned = false;
     let mut ban_toast_sent = false;
     let mut connection_ids_by_port: HashMap<u16, ConnectionId> = HashMap::new();
@@ -185,13 +184,16 @@ pub fn start(args: StartArgs) -> Result<()> {
     while let Some(live_event) = next_live_event(&runtime, &mut command_rx, &mut ipc.1) {
         let event = match live_event {
             LiveEvent::Command(Command::Reset) => {
+                party_freeze = false;
                 if state.soft_reset(true) {
                     entity_tracker.retire_fight_inspect_requests();
                 }
                 continue;
             }
             LiveEvent::Command(Command::Save) => {
-                state.party_info = update_party(&party_tracker, &entity_tracker);
+                if !party_freeze {
+                    state.party_info = update_party(&party_tracker, &entity_tracker);
+                }
                 let saved = if banned {
                     false
                 } else {
@@ -207,7 +209,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                 state.resetting = false;
                 state.saved = false;
                 party_freeze = false;
-                party_cache = None;
 
                 if saved {
                     app.emit("save-encounter", "")?;
@@ -439,10 +440,12 @@ pub fn start(args: StartArgs) -> Result<()> {
                 // 3. InitPC
 
                 if let Some(pkt) = packet.try_parse::<PKTInitEnv>().unwrap() {
-                    party_tracker.borrow_mut().reset_party_mappings();
+                    if !party_freeze {
+                        state.party_info = update_party(&party_tracker, &entity_tracker);
+                    }
                     state.raid_difficulty = "".to_string();
                     state.raid_difficulty_id = 0;
-                    party_cache = None;
+
                     get_and_set_region(&app, &mut state, &mut ban_list);
                     ban_list.refresh();
                     // clear banned if local player isn't on list
@@ -453,6 +456,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                     let fight_was_active = state.encounter.fight_start != 0;
                     let entity = entity_tracker.init_env(pkt);
                     state.on_init_env(entity);
+                    party_freeze = false;
                     if fight_was_active {
                         entity_tracker.retire_fight_inspect_requests();
                     }
@@ -740,12 +744,10 @@ pub fn start(args: StartArgs) -> Result<()> {
                 info!("phase: 1 - RaidBossKillNotify");
             }
             PKTRaidResult::OPCODE => {
+                if !party_freeze {
+                    state.party_info = update_party(&party_tracker, &entity_tracker);
+                }
                 party_freeze = true;
-                state.party_info = if let Some(party) = party_cache.take() {
-                    party
-                } else {
-                    update_party(&party_tracker, &entity_tracker)
-                };
                 if state.request_phase_transition(0, &mut entity_tracker) {
                     queue_missing_party_inspects(
                         &ipc.0,
@@ -958,9 +960,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                         entity_tracker.infer_entity_class_from_skill(&mut owner, pkt.skill_id);
                         Some(owner)
                     };
-                    let local_character_id = id_tracker
-                        .borrow()
-                        .get_local_character_id(entity_tracker.local_entity_id);
                     let target_count = pkt.skill_damage_abnormal_move_events.len() as i32;
                     for mut event in pkt.skill_damage_abnormal_move_events.into_iter() {
                         let decrypted = incapacitation::process_abnormal_damage(
@@ -984,7 +983,7 @@ pub fn start(args: StartArgs) -> Result<()> {
 
                         let (se_on_source, se_on_target) = status_tracker
                             .borrow_mut()
-                            .get_status_effects(owner, &target_entity, local_character_id);
+                            .get_status_effects(owner, &target_entity);
 
                         let damage_data = DamageData {
                             skill_id: pkt.skill_id,
@@ -1038,9 +1037,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                     let now = Utc::now().timestamp_millis();
                     let mut owner = entity_tracker.get_source_entity(pkt.source_id);
                     entity_tracker.infer_entity_class_from_skill(&mut owner, pkt.skill_id);
-                    let local_character_id = id_tracker
-                        .borrow()
-                        .get_local_character_id(entity_tracker.local_entity_id);
                     let target_count = pkt.skill_damage_events.len() as i32;
                     for mut event in pkt.skill_damage_events.into_iter() {
                         startup_event_seq += 1;
@@ -1053,7 +1049,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                         let source_entity = entity_tracker.get_or_create_entity(pkt.source_id);
                         let (se_on_source, se_on_target) = status_tracker
                             .borrow_mut()
-                            .get_status_effects(&owner, &target_entity, local_character_id);
+                            .get_status_effects(&owner, &target_entity);
                         let damage_data = DamageData {
                             skill_id: pkt.skill_id,
                             skill_effect_id: pkt.skill_effect_id.unwrap_or_default(),
@@ -1112,7 +1108,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                     if let Some(entity) = entity_tracker.entities.get(&local_player_id) {
                         state.update_local_player(entity, &entity_tracker);
                     }
-                    entity_tracker.try_derive_party_compositions_from_loading(None);
                     if !banned {
                         for character_id in member_ids {
                             if ban_list.is_banned(character_id) {
@@ -1122,7 +1117,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                             }
                         }
                     }
-                    party_cache = None;
+
                     queue_missing_party_inspects(
                         &ipc.0,
                         &connection_ids_by_port,
@@ -1138,7 +1133,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                     party_tracker
                         .borrow_mut()
                         .remove(pkt.party_instance_id, pkt.name);
-                    party_cache = None;
+
                     state.try_flush_startup_barrier(&mut entity_tracker);
                 }
             }
@@ -1198,14 +1193,15 @@ pub fn start(args: StartArgs) -> Result<()> {
                 {
                     // info!("{:?}", pkt);
                     {
+                        let name =
+                            entity_tracker.get_resolved_player_name_for_character(pkt.character_id);
                         let mut tracker = party_tracker.borrow_mut();
-                        tracker.confirm_party_membership(pkt.character_id, pkt.party_instance_id);
                         tracker.add(
                             pkt.raid_instance_id,
                             pkt.party_instance_id,
                             pkt.character_id,
                             0,
-                            None,
+                            name,
                         );
                     }
                     state.try_flush_startup_barrier(&mut entity_tracker);
@@ -1337,12 +1333,10 @@ pub fn start(args: StartArgs) -> Result<()> {
                 if let Some(pkt) = packet.try_parse::<PKTTriggerStartNotify>().unwrap() {
                     match pkt.signal {
                         57 | 59 | 61 | 63 | 74 | 76 => {
+                            if !party_freeze {
+                                state.party_info = update_party(&party_tracker, &entity_tracker);
+                            }
                             party_freeze = true;
-                            state.party_info = if let Some(party) = party_cache.take() {
-                                party
-                            } else {
-                                update_party(&party_tracker, &entity_tracker)
-                            };
                             state.raid_clear = true;
                             if state.request_phase_transition(2, &mut entity_tracker) {
                                 queue_missing_party_inspects(
@@ -1359,12 +1353,10 @@ pub fn start(args: StartArgs) -> Result<()> {
                             info!("phase: 2 - clear - TriggerStartNotify");
                         }
                         58 | 60 | 62 | 64 | 75 | 77 => {
+                            if !party_freeze {
+                                state.party_info = update_party(&party_tracker, &entity_tracker);
+                            }
                             party_freeze = true;
-                            state.party_info = if let Some(party) = party_cache.take() {
-                                party
-                            } else {
-                                update_party(&party_tracker, &entity_tracker)
-                            };
                             state.raid_clear = false;
                             if state.request_phase_transition(4, &mut entity_tracker) {
                                 queue_missing_party_inspects(
@@ -1389,11 +1381,10 @@ pub fn start(args: StartArgs) -> Result<()> {
             }
             PKTZoneMemberLoadStatusNotify::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTZoneMemberLoadStatusNotify>().unwrap() {
+                    entity_tracker.observe_loading_zone(pkt.zone_id);
                     if pkt.load_complete != 0 {
-                        entity_tracker.try_derive_party_compositions_from_loading(Some(
-                            pkt.all_characters.clone(),
-                        ));
-                        party_cache = None;
+                        entity_tracker
+                            .observe_loading_participants(pkt.zone_id, pkt.all_characters.clone());
                     }
                     if state.raid_difficulty_id >= pkt.zone_id && !state.raid_difficulty.is_empty()
                     {
@@ -1431,19 +1422,17 @@ pub fn start(args: StartArgs) -> Result<()> {
                         pkt.object_id,
                         pkt.value,
                     );
-                    if let Some(status_effect) = status_effect {
-                        if status_effect.status_effect_type == StatusEffectType::Shield {
-                            let change = old_value
-                                .checked_sub(status_effect.value)
-                                .unwrap_or_default();
-                            on_shield_change(
-                                &mut entity_tracker,
-                                &id_tracker,
-                                &mut state,
-                                status_effect,
-                                change,
-                            );
-                        }
+                    if let Some(status_effect) = status_effect
+                        && status_effect.status_effect_type == StatusEffectType::Shield
+                    {
+                        let change = old_value.saturating_sub(status_effect.value);
+                        on_shield_change(
+                            &mut entity_tracker,
+                            &id_tracker,
+                            &mut state,
+                            status_effect,
+                            change,
+                        );
                     }
                 }
             }
@@ -1469,19 +1458,17 @@ pub fn start(args: StartArgs) -> Result<()> {
                                 object_id,
                                 val,
                             );
-                            if let Some(status_effect) = status_effect {
-                                if status_effect.status_effect_type == StatusEffectType::Shield {
-                                    let change = old_value
-                                        .checked_sub(status_effect.value)
-                                        .unwrap_or_default();
-                                    on_shield_change(
-                                        &mut entity_tracker,
-                                        &id_tracker,
-                                        &mut state,
-                                        status_effect,
-                                        change,
-                                    );
-                                }
+                            if let Some(status_effect) = status_effect
+                                && status_effect.status_effect_type == StatusEffectType::Shield
+                            {
+                                let change = old_value.saturating_sub(status_effect.value);
+                                on_shield_change(
+                                    &mut entity_tracker,
+                                    &id_tracker,
+                                    &mut state,
+                                    status_effect,
+                                    change,
+                                );
                             }
                         }
                     }
@@ -1498,14 +1485,14 @@ pub fn start(args: StartArgs) -> Result<()> {
                     state.set_lal_debug_zone(pkt.zone_id, None);
                     state.damage_is_valid = true;
                     damage_handler.update_zone_instance_id(pkt.zone_instance_id);
-                    entity_tracker.on_new_transit();
+                    // Capture the roster before transit cleanup.
                     // update party info
-                    state.party_info = if let Some(party) = party_cache.clone() {
-                        party
-                    } else {
-                        update_party(&party_tracker, &entity_tracker)
-                    };
+                    if !party_freeze {
+                        state.party_info = update_party(&party_tracker, &entity_tracker);
+                    }
+                    entity_tracker.on_new_transit();
                     if state.on_transit(pkt.zone_id) {
+                        party_freeze = false;
                         entity_tracker.retire_fight_inspect_requests();
                     }
                 }
@@ -1546,7 +1533,6 @@ pub fn start(args: StartArgs) -> Result<()> {
                     state.resetting = false;
                     state.saved = false;
                     party_freeze = false;
-                    party_cache = None;
                 }
                 continue;
             }
@@ -1554,35 +1540,14 @@ pub fn start(args: StartArgs) -> Result<()> {
             let damage_valid = state.damage_is_valid;
             let app_handle = app.clone();
 
-            let party_info: Option<Vec<Vec<String>>> = if last_party_update.elapsed()
-                >= party_duration
-                && !party_freeze
-            {
-                last_party_update = Instant::now();
+            let party_info: Option<Vec<Vec<String>>> =
+                if last_party_update.elapsed() >= party_duration && !party_freeze {
+                    last_party_update = Instant::now();
 
-                // use cache if available
-                // otherwise get party info
-                party_cache.clone().or_else(|| {
-                    let party = update_party(&party_tracker, &entity_tracker);
-                    let player_count = state
-                        .encounter
-                        .entities
-                        .values()
-                        .filter(|e| is_confirmed_player_entity(e, &state.encounter.local_player))
-                        .count();
-                    let min_parties = player_count.div_ceil(4).max(1);
-                    if party.len() >= min_parties {
-                        if party.iter().all(|p| p.len() == 4) {
-                            party_cache = Some(party.clone());
-                        }
-                        Some(party)
-                    } else {
-                        None
-                    }
-                })
-            } else {
-                None
-            };
+                    Some(update_party(&party_tracker, &entity_tracker))
+                } else {
+                    None
+                };
 
             let live_update = state.live_snapshot(boss_dead);
 
@@ -1618,7 +1583,6 @@ pub fn start(args: StartArgs) -> Result<()> {
             state.resetting = false;
             state.saved = false;
             party_freeze = false;
-            party_cache = None;
         }
 
         if let Some(ref region) = state.region {
@@ -1641,29 +1605,26 @@ fn update_party(
     party_tracker: &Rc<RefCell<PartyTracker>>,
     entity_tracker: &EntityTracker,
 ) -> Vec<Vec<String>> {
-    let mut party_info = HashMap::new();
-
-    for (entity_id, party_id) in &party_tracker.borrow().entity_id_to_party_id {
-        let members = party_info.entry(*party_id).or_insert_with(Vec::new);
-        if let Some(entity) = entity_tracker.entities.get(entity_id)
-            && entity.character_id > 0
-            && entity.class_id > 0
-            && entity
-                .name
-                .chars()
-                .next()
-                .unwrap_or_default()
-                .is_uppercase()
-        {
-            members.push(entity.name.clone());
+    let tracker = party_tracker.borrow();
+    let mut parties = std::collections::BTreeMap::new();
+    for (character, membership) in tracker.memberships() {
+        let name = entity_tracker
+            .get_resolved_player_name_for_character(character)
+            .or_else(|| tracker.get_name_for_character(character));
+        if let Some(name) = name.filter(|name| !name.is_empty()) {
+            parties
+                .entry(membership)
+                .or_insert_with(Vec::new)
+                .push(name);
         }
     }
-
-    let mut sorted_parties = party_info.into_iter().collect::<Vec<(u32, Vec<String>)>>();
-    sorted_parties.sort_unstable_by_key(|&(party_id, _)| party_id);
-    sorted_parties
-        .into_iter()
-        .map(|(_, members)| members)
+    parties
+        .into_values()
+        .map(|mut names| {
+            names.sort();
+            names.dedup();
+            names
+        })
         .collect()
 }
 
