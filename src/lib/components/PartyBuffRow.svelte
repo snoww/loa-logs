@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { EncounterState } from "$lib/encounter.svelte.js";
-  import { EntityState } from "$lib/entity.svelte.js";
-  import { settings } from "$lib/stores.svelte.js";
-  import type { BuffDetails, Entity } from "$lib/types";
+  import type { EncounterState } from "#lib/encounter.svelte.js";
+  import { EntityState } from "#lib/entity.svelte.js";
+  import { settings } from "#lib/stores.svelte.js";
+  import type { BuffDetails, Entity } from "#lib/types.ts";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
 

@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { EntityState } from "$lib/entity.svelte.js";
-  import { SkillState } from "$lib/skill.svelte.js";
-  import { settings } from "$lib/stores.svelte.js";
-  import type { Skill } from "$lib/types";
-  import { abbreviateNumberSplit, customRound, getSkillIcon, rgbLinearShadeAdjust } from "$lib/utils";
+  import type { EntityState } from "#lib/entity.svelte.js";
+  import { SkillState } from "#lib/skill.svelte.js";
+  import { settings } from "#lib/stores.svelte.js";
+  import type { Skill } from "#lib/types.ts";
+  import { abbreviateNumberSplit, customRound, getSkillIcon, rgbLinearShadeAdjust } from "#lib/utils.ts";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
 

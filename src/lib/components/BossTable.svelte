@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { EncounterState } from "$lib/encounter.svelte.js";
-  import { settings } from "$lib/stores.svelte.js";
+  import type { EncounterState } from "#lib/encounter.svelte.js";
+  import { settings } from "#lib/stores.svelte.js";
   import { flip } from "svelte/animate";
 
   import BossRow from "./BossRow.svelte";

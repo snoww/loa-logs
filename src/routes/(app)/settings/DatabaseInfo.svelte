@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { deleteEncounters, getDbInfo, openDbPath, optimizeDatabase, writeLog } from "$lib/api";
-  import DatePicker from "$lib/components/DatePicker.svelte";
-  import { settings } from "$lib/stores.svelte";
-  import type { EncounterDbInfo } from "$lib/types";
+  import { deleteEncounters, getDbInfo, openDbPath, optimizeDatabase, writeLog } from "#lib/api.ts";
+  import DatePicker from "#lib/components/DatePicker.svelte";
+  import { settings } from "#lib/stores.svelte.ts";
+  import type { EncounterDbInfo } from "#lib/types.ts";
   import { createDialog, melt } from "@melt-ui/svelte";
   import { fade } from "svelte/transition";
 

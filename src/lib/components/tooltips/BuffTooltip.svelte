@@ -1,8 +1,8 @@
 <script lang="ts">
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import { classesMap } from "$lib/constants/classes";
-  import type { StatusEffect } from "$lib/types";
-  import { getSkillIcon, removeUnknownHtmlTags } from "$lib/utils";
+  import QuickTooltip from "#lib/components/QuickTooltip.svelte";
+  import { classesMap } from "#lib/constants/classes.ts";
+  import type { StatusEffect } from "#lib/types.ts";
+  import { getSkillIcon, removeUnknownHtmlTags } from "#lib/utils.ts";
 
   const {
     buff,

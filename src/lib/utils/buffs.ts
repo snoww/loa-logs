@@ -1,6 +1,6 @@
-import { classesMap, classNameToClassId } from "$lib/constants/classes";
-import type { EntityState } from "$lib/entity.svelte";
-import { settings } from "$lib/stores.svelte";
+import { classesMap, classNameToClassId } from "#lib/constants/classes.ts";
+import type { EntityState } from "#lib/entity.svelte.ts";
+import { settings } from "#lib/stores.svelte.ts";
 import {
   Buff,
   BuffDetails,
@@ -13,8 +13,8 @@ import {
   type SkillChartSupportDamage,
   type SkillHit,
   type StatusEffect
-} from "$lib/types";
-import { customRound, getSkillIcon } from "$lib/utils";
+} from "#lib/types.ts";
+import { customRound, getSkillIcon } from "#lib/utils.ts";
 
 export function defaultBuffFilter(buff: StatusEffect): boolean {
   return (

@@ -1,4 +1,4 @@
-import type { ContributionSplit } from "$lib/types";
+import type { ContributionSplit } from "#lib/types.ts";
 
 export const enum StatSourceType {
   Base = 0,

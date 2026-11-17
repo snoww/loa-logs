@@ -18,7 +18,7 @@
 
 <script lang="ts">
   import { page } from "$app/state";
-  import { settings } from "$lib/stores.svelte";
+  import { settings } from "#lib/stores.svelte.ts";
   import { createToaster } from "@melt-ui/svelte";
   import { flip } from "svelte/animate";
 

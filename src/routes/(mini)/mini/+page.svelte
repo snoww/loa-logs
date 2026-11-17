@@ -6,11 +6,11 @@
     onPhaseTransition,
     onRaidStart,
     onZoneChange
-  } from "$lib/api";
-  import { EncounterState } from "$lib/encounter.svelte";
-  import { misc, nineveh, settings } from "$lib/stores.svelte";
-  import type { EncounterEvent } from "$lib/types";
-  import { zoneChange } from "$lib/utils/toasts";
+  } from "#lib/api.ts";
+  import { EncounterState } from "#lib/encounter.svelte.ts";
+  import { misc, nineveh, settings } from "#lib/stores.svelte.ts";
+  import type { EncounterEvent } from "#lib/types.ts";
+  import { zoneChange } from "#lib/utils/toasts.ts";
   import type { UnlistenFn } from "@tauri-apps/api/event";
   import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
   import { onMount } from "svelte";

@@ -6,8 +6,8 @@ import {
   toggleMeterPause,
   toggleWindow,
   Window
-} from "$lib/api";
-import { misc, settings } from "$lib/stores.svelte";
+} from "#lib/api.ts";
+import { misc, settings } from "#lib/stores.svelte.ts";
 import { register, unregisterAll } from "@tauri-apps/plugin-global-shortcut";
 
 export type Shortcut = {

@@ -1,5 +1,5 @@
-import { bossHpMap } from "$lib/constants/encounters";
-import { BossHpLog, type DamageStats, type Entity, EntityType, type IdentityLogType, type IdentityLogTypeValue } from "$lib/types";
+import { bossHpMap } from "#lib/constants/encounters.ts";
+import { BossHpLog, type DamageStats, type Entity, EntityType, type IdentityLogType, type IdentityLogTypeValue } from "#lib/types.ts";
 import { writeImage } from "@tauri-apps/plugin-clipboard-manager";
 import { check as checkUpdate } from "@tauri-apps/plugin-updater";
 import { snapdom } from "@zumer/snapdom";

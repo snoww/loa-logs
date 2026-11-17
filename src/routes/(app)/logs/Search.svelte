@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { deleteEncounters, getLocalCharacters, type CharacterInfo } from "$lib/api";
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import { classList, classNameToClassId } from "$lib/constants/classes";
-  import { bossList, difficultyMap, encounterMap } from "$lib/constants/encounters";
-  import { IconFilter, IconTrash, IconX } from "$lib/icons";
-  import { encounterFilter, settings } from "$lib/stores.svelte";
-  import { getClassIcon } from "$lib/utils";
+  import { deleteEncounters, getLocalCharacters, type CharacterInfo } from "#lib/api.ts";
+  import QuickTooltip from "#lib/components/QuickTooltip.svelte";
+  import { classList, classNameToClassId } from "#lib/constants/classes.ts";
+  import { bossList, difficultyMap, encounterMap } from "#lib/constants/encounters.ts";
+  import { IconFilter, IconTrash, IconX } from "#lib/icons.ts";
+  import { encounterFilter, settings } from "#lib/stores.svelte.ts";
+  import { getClassIcon } from "#lib/utils.ts";
   import { createDialog, createDropdownMenu, melt } from "@melt-ui/svelte";
   import type { FormEventHandler } from "svelte/elements";
   import { SvelteSet } from "svelte/reactivity";

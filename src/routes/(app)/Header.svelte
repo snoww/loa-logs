@@ -1,12 +1,12 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { checkLoaRunning, startLoaProcess } from "$lib/api";
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import { addToast } from "$lib/components/Toaster.svelte";
-  import { IconArrowUp, IconDiscord, IconExternalLink, IconMenu, IconRefresh, IconX } from "$lib/icons";
-  import { settings, updateInfo } from "$lib/stores.svelte";
-  import { checkForUpdate } from "$lib/utils";
-  import { noUpdateAvailable } from "$lib/utils/toasts";
+  import { checkLoaRunning, startLoaProcess } from "#lib/api.ts";
+  import QuickTooltip from "#lib/components/QuickTooltip.svelte";
+  import { addToast } from "#lib/components/Toaster.svelte";
+  import { IconArrowUp, IconDiscord, IconExternalLink, IconMenu, IconRefresh, IconX } from "#lib/icons.ts";
+  import { settings, updateInfo } from "#lib/stores.svelte.ts";
+  import { checkForUpdate } from "#lib/utils.ts";
+  import { noUpdateAvailable } from "#lib/utils/toasts.ts";
   import { createDialog, melt } from "@melt-ui/svelte";
   import { getVersion } from "@tauri-apps/api/app";
   import { onMount, type Snippet } from "svelte";

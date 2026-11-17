@@ -1,17 +1,17 @@
 <script lang="ts">
-  import { chartable, type EChartsOptions } from "$lib/charts";
-  import ArcanistCardTable from "$lib/components/ArcanistCardTable.svelte";
-  import BossBreakdown from "$lib/components/BossBreakdown.svelte";
-  import BossTable from "$lib/components/BossTable.svelte";
-  import Buffs from "$lib/components/Buffs.svelte";
-  import Card from "$lib/components/Card.svelte";
-  import DamageMeterPartySplit from "$lib/components/DamageMeterPartySplit.svelte";
-  import DamageTaken from "$lib/components/DamageTaken.svelte";
-  import LogPlayerBreakdown from "$lib/components/PlayerBreakdown.svelte";
-  import { EncounterState } from "$lib/encounter.svelte.js";
-  import { hasStatSources } from "$lib/rdps-breakdown";
-  import { screenshot } from "$lib/stores.svelte.js";
-  import { ChartType, type Encounter, type Entity, EntityType, MeterState, MeterTab } from "$lib/types";
+  import { chartable, type EChartsOptions } from "#lib/charts.ts";
+  import ArcanistCardTable from "#lib/components/ArcanistCardTable.svelte";
+  import BossBreakdown from "#lib/components/BossBreakdown.svelte";
+  import BossTable from "#lib/components/BossTable.svelte";
+  import Buffs from "#lib/components/Buffs.svelte";
+  import Card from "#lib/components/Card.svelte";
+  import DamageMeterPartySplit from "#lib/components/DamageMeterPartySplit.svelte";
+  import DamageTaken from "#lib/components/DamageTaken.svelte";
+  import LogPlayerBreakdown from "#lib/components/PlayerBreakdown.svelte";
+  import { EncounterState } from "#lib/encounter.svelte.js";
+  import { hasStatSources } from "#lib/rdps-breakdown.ts";
+  import { screenshot } from "#lib/stores.svelte.js";
+  import { ChartType, type Encounter, type Entity, EntityType, MeterState, MeterTab } from "#lib/types.ts";
   import {
     getAllDeathInfo,
     getAverageDpsChart,
@@ -23,8 +23,8 @@
     getPlayerIncapSeries,
     getRollingDpsChart,
     getRollingPlayerSeries
-  } from "$lib/utils/dpsCharts";
-  import { getSupportSynergiesOverTime, getSupportSynergiesOverTimeChart } from "$lib/utils/supportBuffCharts";
+  } from "#lib/utils/dpsCharts.ts";
+  import { getSupportSynergiesOverTime, getSupportSynergiesOverTimeChart } from "#lib/utils/supportBuffCharts.ts";
   import { onDestroy } from "svelte";
 
   import LegacyLogRDPSBreakdown from "./LegacyLogRDPSBreakdown.svelte";

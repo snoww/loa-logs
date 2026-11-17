@@ -1,10 +1,10 @@
 <script lang="ts">
-  import Card from "$lib/components/Card.svelte";
-  import Tooltipped from "$lib/components/Tooltipped.svelte";
-  import { EFTable_ArkPassive } from "$lib/constants/EFTable_ArkPassive";
-  import { Engrave } from "$lib/constants/Engrave";
-  import { IconInfo } from "$lib/icons";
-  import type { ContributionSplit } from "$lib/types";
+  import Card from "#lib/components/Card.svelte";
+  import Tooltipped from "#lib/components/Tooltipped.svelte";
+  import { EFTable_ArkPassive } from "#lib/constants/EFTable_ArkPassive.ts";
+  import { Engrave } from "#lib/constants/Engrave.ts";
+  import { IconInfo } from "#lib/icons.ts";
+  import type { ContributionSplit } from "#lib/types.ts";
   import { type Snippet } from "svelte";
 
   interface Props {

@@ -1,13 +1,13 @@
 <script lang="ts">
-  import Card from "$lib/components/Card.svelte";
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import { middot } from "$lib/components/Snippets.svelte";
-  import BuffTooltip from "$lib/components/tooltips/BuffTooltip.svelte";
-  import { IconChevronLeft, IconChevronRight } from "$lib/icons";
-  import { focusedCast } from "$lib/stores.svelte.js";
-  import type { EncounterDamageStats, Entity } from "$lib/types";
-  import { abbreviateNumber, customRound, getSkillIcon, timestampToMinutesAndSeconds } from "$lib/utils";
-  import { getSkillCastBuffs, getSkillCastSupportBuffs } from "$lib/utils/buffs";
+  import Card from "#lib/components/Card.svelte";
+  import QuickTooltip from "#lib/components/QuickTooltip.svelte";
+  import { middot } from "#lib/components/Snippets.svelte";
+  import BuffTooltip from "#lib/components/tooltips/BuffTooltip.svelte";
+  import { IconChevronLeft, IconChevronRight } from "#lib/icons.ts";
+  import { focusedCast } from "#lib/stores.svelte.js";
+  import type { EncounterDamageStats, Entity } from "#lib/types.ts";
+  import { abbreviateNumber, customRound, getSkillIcon, timestampToMinutesAndSeconds } from "#lib/utils.ts";
+  import { getSkillCastBuffs, getSkillCastSupportBuffs } from "#lib/utils/buffs.ts";
   import { onDestroy } from "svelte";
 
   let {

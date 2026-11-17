@@ -5,8 +5,8 @@
     type FormattedStringParts,
     FormattedStringPartType,
     type FormulaNode
-  } from "$lib/constants/formatted";
-  import { statType } from "$lib/constants/stat-type";
+  } from "#lib/constants/formatted.ts";
+  import { statType } from "#lib/constants/stat-type.ts";
 
   type ScaleMode = "min" | "max" | "range" | "each";
 

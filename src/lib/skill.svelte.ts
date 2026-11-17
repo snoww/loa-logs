@@ -1,4 +1,4 @@
-import { abbreviateNumberSplit, customRound } from "$lib/utils";
+import { abbreviateNumberSplit, customRound } from "#lib/utils.ts";
 
 import type { EntityState } from "./entity.svelte";
 import { settings } from "./stores.svelte";

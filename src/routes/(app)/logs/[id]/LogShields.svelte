@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { BuffState } from "$lib/buffs.svelte.js";
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import ShieldHeader from "$lib/components/ShieldHeader.svelte";
-  import type { EncounterState } from "$lib/encounter.svelte.js";
-  import { settings } from "$lib/stores.svelte.js";
-  import { ShieldTab } from "$lib/types";
+  import { BuffState } from "#lib/buffs.svelte.js";
+  import QuickTooltip from "#lib/components/QuickTooltip.svelte";
+  import ShieldHeader from "#lib/components/ShieldHeader.svelte";
+  import type { EncounterState } from "#lib/encounter.svelte.js";
+  import { settings } from "#lib/stores.svelte.js";
+  import { ShieldTab } from "#lib/types.ts";
 
   import LogPartyShieldRow from "./LogPartyShieldRow.svelte";
 

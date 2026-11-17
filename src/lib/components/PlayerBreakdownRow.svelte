@@ -1,10 +1,10 @@
 <script lang="ts">
-  import type { LogColumn } from "$lib/column";
-  import type { EntityState } from "$lib/entity.svelte.js";
-  import { SkillState } from "$lib/skill.svelte.js";
-  import { settings } from "$lib/stores.svelte.js";
-  import type { Skill } from "$lib/types";
-  import { getSkillIcon, rgbLinearShadeAdjust } from "$lib/utils";
+  import type { LogColumn } from "#lib/column.ts";
+  import type { EntityState } from "#lib/entity.svelte.js";
+  import { SkillState } from "#lib/skill.svelte.js";
+  import { settings } from "#lib/stores.svelte.js";
+  import type { Skill } from "#lib/types.ts";
+  import { getSkillIcon, rgbLinearShadeAdjust } from "#lib/utils.ts";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
 

@@ -8,10 +8,10 @@
     setMeterMode,
     setStartOnBoot,
     stopNineveh
-  } from "$lib/api";
-  import { addToast } from "$lib/components/Toaster.svelte";
-  import { settings } from "$lib/stores.svelte";
-  import { networkSettingsChanged } from "$lib/utils/toasts";
+  } from "#lib/api.ts";
+  import { addToast } from "#lib/components/Toaster.svelte";
+  import { settings } from "#lib/stores.svelte.ts";
+  import { networkSettingsChanged } from "#lib/utils/toasts.ts";
   import { createDialog, createRadioGroup, createSlider, melt } from "@melt-ui/svelte";
   import { onMount } from "svelte";
   import { writable } from "svelte/store";

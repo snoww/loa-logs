@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { classNameToClassId } from "$lib/constants/classes";
-  import { defaultClassColors, settings } from "$lib/stores.svelte";
-  import { getClassIcon } from "$lib/utils";
+  import { classNameToClassId } from "#lib/constants/classes.ts";
+  import { defaultClassColors, settings } from "#lib/stores.svelte.ts";
+  import { getClassIcon } from "#lib/utils.ts";
 </script>
 
 {#snippet colorOption(key: string)}

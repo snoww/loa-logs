@@ -1,17 +1,17 @@
 <script lang="ts">
-  import { chartable, defaultOptions, type EChartsOptions } from "$lib/charts";
-  import Card from "$lib/components/Card.svelte";
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import { BattleItemData } from "$lib/constants/BattleItem";
-  import { EFTable_ArkPassive } from "$lib/constants/EFTable_ArkPassive";
-  import { EFTable_Skill } from "$lib/constants/EFTable_Skill";
-  import { Engrave } from "$lib/constants/Engrave";
-  import { type StatDataGroup, statDataDescriptors } from "$lib/constants/rdps-stats";
-  import type { EncounterState } from "$lib/encounter.svelte";
-  import { IconInfo } from "$lib/icons";
-  import { settings } from "$lib/stores.svelte";
-  import { type Entity } from "$lib/types";
-  import { abbreviateNumber, getClassIcon } from "$lib/utils";
+  import { chartable, defaultOptions, type EChartsOptions } from "#lib/charts.ts";
+  import Card from "#lib/components/Card.svelte";
+  import QuickTooltip from "#lib/components/QuickTooltip.svelte";
+  import { BattleItemData } from "#lib/constants/BattleItem.ts";
+  import { EFTable_ArkPassive } from "#lib/constants/EFTable_ArkPassive.ts";
+  import { EFTable_Skill } from "#lib/constants/EFTable_Skill.ts";
+  import { Engrave } from "#lib/constants/Engrave.ts";
+  import { type StatDataGroup, statDataDescriptors } from "#lib/constants/rdps-stats.ts";
+  import type { EncounterState } from "#lib/encounter.svelte.ts";
+  import { IconInfo } from "#lib/icons.ts";
+  import { settings } from "#lib/stores.svelte.ts";
+  import { type Entity } from "#lib/types.ts";
+  import { abbreviateNumber, getClassIcon } from "#lib/utils.ts";
 
   interface Props {
     player: Entity;

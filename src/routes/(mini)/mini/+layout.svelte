@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { settings } from "$lib/stores.svelte";
-  import { setup } from "$lib/utils/setup";
+  import { settings } from "#lib/stores.svelte.ts";
+  import { setup } from "#lib/utils/setup.ts";
   import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
   import { onMount } from "svelte";
 

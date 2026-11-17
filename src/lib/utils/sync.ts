@@ -1,7 +1,7 @@
-import { sync, writeLog } from "$lib/api";
-import { addToast } from "$lib/components/Toaster.svelte";
-import { settings } from "$lib/stores.svelte";
-import { type Encounter, EntityType } from "$lib/types";
+import { sync, writeLog } from "#lib/api.ts";
+import { addToast } from "#lib/components/Toaster.svelte";
+import { settings } from "#lib/stores.svelte.ts";
+import { type Encounter, EntityType } from "#lib/types.ts";
 import { fetch } from "@tauri-apps/plugin-http";
 import pako from "pako";
 

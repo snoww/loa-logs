@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { IconX } from "$lib/icons";
+  import { IconX } from "#lib/icons.ts";
   import { melt, type Toast, type ToastsElements } from "@melt-ui/svelte";
   import { fly } from "svelte/transition";
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { StatusEffect } from "$lib/types";
+  import type { StatusEffect } from "#lib/types.ts";
 
   import BuffTooltip from "./tooltips/BuffTooltip.svelte";
 

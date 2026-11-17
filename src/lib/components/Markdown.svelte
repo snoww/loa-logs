@@ -1,5 +1,5 @@
 <script lang="ts" module>
-  import { markdownIt } from "$lib/stores.svelte";
+  import { markdownIt } from "#lib/stores.svelte.ts";
 
   export { markdown };
 </script>

@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { getSyncCandidates, loadEncounter } from "$lib/api";
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import { addToast } from "$lib/components/Toaster.svelte";
-  import { settings, syncProgress } from "$lib/stores.svelte";
-  import { LOA_BIBLE_URL } from "$lib/utils";
-  import { checkAccessToken, uploadLog } from "$lib/utils/sync";
-  import { uploadSuccess, uploadTokenError } from "$lib/utils/toasts";
+  import { getSyncCandidates, loadEncounter } from "#lib/api.ts";
+  import QuickTooltip from "#lib/components/QuickTooltip.svelte";
+  import { addToast } from "#lib/components/Toaster.svelte";
+  import { settings, syncProgress } from "#lib/stores.svelte.ts";
+  import { LOA_BIBLE_URL } from "#lib/utils.ts";
+  import { checkAccessToken, uploadLog } from "#lib/utils/sync.ts";
+  import { uploadSuccess, uploadTokenError } from "#lib/utils/toasts.ts";
   import { createRadioGroup } from "@melt-ui/svelte";
 
   import Header from "../Header.svelte";

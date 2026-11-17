@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { screenshot, settings } from "$lib/stores.svelte";
-  import { MeterTab } from "$lib/types";
+  import { screenshot, settings } from "#lib/stores.svelte.ts";
+  import { MeterTab } from "#lib/types.ts";
   import { getVersion } from "@tauri-apps/api/app";
 
   let { tab = $bindable() }: { tab: MeterTab } = $props();

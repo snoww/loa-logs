@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { bossHpMap } from "$lib/constants/encounters";
-import type { EncounterState } from "$lib/encounter.svelte";
-import { type SkillHit, type StatusEffect } from "$lib/types";
-import { abbreviateNumber, customRound, getSkillIcon, timestampToMinutesAndSeconds } from "$lib/utils";
+import { bossHpMap } from "#lib/constants/encounters.ts";
+import type { EncounterState } from "#lib/encounter.svelte.ts";
+import { type SkillHit, type StatusEffect } from "#lib/types.ts";
+import { abbreviateNumber, customRound, getSkillIcon, timestampToMinutesAndSeconds } from "#lib/utils.ts";
 
 import { defaultOptions } from "../charts";
 import {

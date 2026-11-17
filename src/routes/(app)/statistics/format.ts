@@ -1,4 +1,4 @@
-import { abbreviateNumber, timestampToMinutesAndSeconds } from "$lib/utils";
+import { abbreviateNumber, timestampToMinutesAndSeconds } from "#lib/utils.ts";
 
 export function formatDps(value?: number | null) {
   if (value === undefined || value === null || value <= 0) return "-";

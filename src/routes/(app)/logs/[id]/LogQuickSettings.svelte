@@ -1,9 +1,9 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
-  import { deleteEncounter } from "$lib/api";
-  import { IconChevronDown, IconTrash } from "$lib/icons";
-  import { settings } from "$lib/stores.svelte.js";
+  import { deleteEncounter } from "#lib/api.ts";
+  import { IconChevronDown, IconTrash } from "#lib/icons.ts";
+  import { settings } from "#lib/stores.svelte.js";
   import { createDialog, createDropdownMenu, melt } from "@melt-ui/svelte";
   import { fade, fly } from "svelte/transition";
 

@@ -1,4 +1,4 @@
-import type { ToastData } from "$lib/components/Toaster.svelte";
+import type { ToastData } from "#lib/components/Toaster.svelte";
 import type { AddToastProps } from "@melt-ui/svelte";
 
 const success = "border-green-500/30";

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import { IconCalendar, IconChevronLeft, IconChevronRight, IconRotateCcw, IconX } from "$lib/icons";
+  import QuickTooltip from "#lib/components/QuickTooltip.svelte";
+  import { IconCalendar, IconChevronLeft, IconChevronRight, IconRotateCcw, IconX } from "#lib/icons.ts";
   import { CalendarDate, type DateValue } from "@internationalized/date";
   import { createDateRangePicker, melt, type DateRange } from "@melt-ui/svelte";
   import { onDestroy } from "svelte";

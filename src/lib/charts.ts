@@ -11,9 +11,8 @@ import {
   TooltipComponent
 } from "echarts/components";
 import * as echarts from "echarts/core";
-import { LabelLayout, LegacyGridContainLabel } from "echarts/features";
+import { LabelLayout } from "echarts/features";
 import { SVGRenderer } from "echarts/renderers";
-import "echarts/theme/v5";
 
 echarts.use([
   TitleComponent,
@@ -29,8 +28,7 @@ echarts.use([
   LineChart,
   ScatterChart,
   PieChart,
-  LabelLayout,
-  LegacyGridContainLabel
+  LabelLayout
 ]);
 
 export type EChartsOptions = echarts.EChartsCoreOption;
@@ -43,7 +41,7 @@ export type ChartOptions = {
 };
 
 const DEFAULT_OPTIONS: Partial<ChartOptions> = {
-  theme: "v5",
+  theme: undefined,
   renderer: "svg"
 };
 
@@ -79,9 +77,10 @@ export const defaultOptions: EChartsOptions = {
   grid: {
     left: "2%",
     right: "5%",
-    bottom: "16%",
+    bottom: 70,
     top: "15%",
-    containLabel: true
+    outerBoundsMode: "same",
+    outerBoundsContain: "axisLabel"
   },
   tooltip: {
     trigger: "axis"

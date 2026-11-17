@@ -1,4 +1,4 @@
-import type { ClassMap } from "$lib/types";
+import type { ClassMap } from "#lib/types.ts";
 
 export const classesMap: ClassMap = {
   0: "Unknown",

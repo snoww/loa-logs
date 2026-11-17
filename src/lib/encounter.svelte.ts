@@ -1,4 +1,4 @@
-import { type ContributionSplit, type Encounter, type Entity, EntityType } from "$lib/types";
+import { type ContributionSplit, type Encounter, type Entity, EntityType } from "#lib/types.ts";
 
 import { classNameToClassId } from "./constants/classes";
 import { sumUdpsContributed } from "./skill.svelte";

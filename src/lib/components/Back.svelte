@@ -1,6 +1,6 @@
 <script lang="ts">
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import { IconCornerLeftUp } from "$lib/icons";
+  import QuickTooltip from "#lib/components/QuickTooltip.svelte";
+  import { IconCornerLeftUp } from "#lib/icons.ts";
 
   let { handleRightClick }: { handleRightClick: () => void } = $props();
 </script>

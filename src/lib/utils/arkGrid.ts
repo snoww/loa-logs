@@ -1,5 +1,5 @@
-import { ArkGridCore, ArkGridCoreGroup } from "$lib/constants/ArkGrid";
-import type { ArkPassiveNode } from "$lib/types";
+import { ArkGridCore, ArkGridCoreGroup } from "#lib/constants/ArkGrid.ts";
+import type { ArkPassiveNode } from "#lib/types.ts";
 
 type ArkGridOrderNames = [string[], string[], string[]];
 

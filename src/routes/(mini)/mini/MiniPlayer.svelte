@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { damageValue, percentValue } from "$lib/components/Snippets.svelte";
-  import type { EncounterState } from "$lib/encounter.svelte";
-  import { EntityState } from "$lib/entity.svelte";
-  import { settings } from "$lib/stores.svelte";
-  import type { Entity } from "$lib/types";
-  import { customRound, getClassIcon } from "$lib/utils";
+  import { damageValue, percentValue } from "#lib/components/Snippets.svelte";
+  import type { EncounterState } from "#lib/encounter.svelte.ts";
+  import { EntityState } from "#lib/entity.svelte.ts";
+  import { settings } from "#lib/stores.svelte.ts";
+  import type { Entity } from "#lib/types.ts";
+  import { customRound, getClassIcon } from "#lib/utils.ts";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
 

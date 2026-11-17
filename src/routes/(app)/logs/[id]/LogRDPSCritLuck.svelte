@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { chartable, type EChartsOptions } from "$lib/charts";
-  import Card from "$lib/components/Card.svelte";
-  import type { ContributionSplit } from "$lib/types";
-  import { abbreviateNumber } from "$lib/utils";
+  import { chartable, type EChartsOptions } from "#lib/charts.ts";
+  import Card from "#lib/components/Card.svelte";
+  import type { ContributionSplit } from "#lib/types.ts";
+  import { abbreviateNumber } from "#lib/utils.ts";
   import tinygradient from "tinygradient";
 
   const redGreenGradient = tinygradient("#FF85A9", "#5794F2", "#2DC88F");

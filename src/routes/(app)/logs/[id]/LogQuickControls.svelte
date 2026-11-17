@@ -1,13 +1,13 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import { addToast } from "$lib/components/Toaster.svelte";
-  import { IconCamera, IconCloudUpload, IconCloudYes, IconRefresh } from "$lib/icons";
-  import { settings } from "$lib/stores.svelte.js";
-  import type { Encounter } from "$lib/types";
-  import { LOA_BIBLE_URL, takeScreenshot } from "$lib/utils";
-  import { uploadLog } from "$lib/utils/sync";
-  import { uploadSuccess, uploadTokenError } from "$lib/utils/toasts";
+  import QuickTooltip from "#lib/components/QuickTooltip.svelte";
+  import { addToast } from "#lib/components/Toaster.svelte";
+  import { IconCamera, IconCloudUpload, IconCloudYes, IconRefresh } from "#lib/icons.ts";
+  import { settings } from "#lib/stores.svelte.js";
+  import type { Encounter } from "#lib/types.ts";
+  import { LOA_BIBLE_URL, takeScreenshot } from "#lib/utils.ts";
+  import { uploadLog } from "#lib/utils/sync.ts";
+  import { uploadSuccess, uploadTokenError } from "#lib/utils/toasts.ts";
 
   let { encounter = $bindable(), screenshotDiv }: { encounter: Encounter; screenshotDiv?: HTMLElement } = $props();
   let uploading = $state(false);

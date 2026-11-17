@@ -1,11 +1,11 @@
 <script lang="ts">
-  import Card from "$lib/components/Card.svelte";
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import Tooltipped from "$lib/components/Tooltipped.svelte";
-  import { EFTable_PC } from "$lib/constants/EFTable_PC";
-  import { IconInfo } from "$lib/icons";
-  import type { ContributionSplit, Entity, StatDamageContribution } from "$lib/types";
-  import { abbreviateNumber } from "$lib/utils";
+  import Card from "#lib/components/Card.svelte";
+  import QuickTooltip from "#lib/components/QuickTooltip.svelte";
+  import Tooltipped from "#lib/components/Tooltipped.svelte";
+  import { EFTable_PC } from "#lib/constants/EFTable_PC.ts";
+  import { IconInfo } from "#lib/icons.ts";
+  import type { ContributionSplit, Entity, StatDamageContribution } from "#lib/types.ts";
+  import { abbreviateNumber } from "#lib/utils.ts";
 
   interface Props {
     player: Entity;

@@ -1,16 +1,16 @@
 <script lang="ts">
-  import BossOnlyDamage from "$lib/components/BossOnlyDamage.svelte";
-  import { difficultyColor, middot } from "$lib/components/Snippets.svelte";
-  import { raidGates } from "$lib/constants/encounters";
-  import { screenshot, settings } from "$lib/stores.svelte.js";
-  import type { Encounter } from "$lib/types";
+  import BossOnlyDamage from "#lib/components/BossOnlyDamage.svelte";
+  import { difficultyColor, middot } from "#lib/components/Snippets.svelte";
+  import { raidGates } from "#lib/constants/encounters.ts";
+  import { screenshot, settings } from "#lib/stores.svelte.js";
+  import type { Encounter } from "#lib/types.ts";
   import {
     abbreviateNumber,
     formatTimestampDate,
     formatTimestampTime,
     getBossHpBars,
     timestampToMinutesAndSeconds
-  } from "$lib/utils";
+  } from "#lib/utils.ts";
   import { getVersion } from "@tauri-apps/api/app";
 
   let { encounter }: { encounter: Encounter } = $props();

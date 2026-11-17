@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { bossHpBarColors } from "$lib/constants/encounters";
-  import { settings } from "$lib/stores.svelte.js";
-  import type { Entity } from "$lib/types";
-  import { abbreviateNumberSplit, getBossHpBars } from "$lib/utils";
-  import { broadcastLiveMessage } from "$lib/utils/live.svelte.js";
+  import { bossHpBarColors } from "#lib/constants/encounters.ts";
+  import { settings } from "#lib/stores.svelte.js";
+  import type { Entity } from "#lib/types.ts";
+  import { abbreviateNumberSplit, getBossHpBars } from "#lib/utils.ts";
+  import { broadcastLiveMessage } from "#lib/utils/live.svelte.js";
   import { onDestroy } from "svelte";
   import { linear } from "svelte/easing";
   import { Tween } from "svelte/motion";

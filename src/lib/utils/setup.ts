@@ -1,5 +1,5 @@
-import { setBlur } from "$lib/api";
-import { settings } from "$lib/stores.svelte";
+import { setBlur } from "#lib/api.ts";
+import { settings } from "#lib/stores.svelte.ts";
 import { invoke } from "@tauri-apps/api/core";
 
 export async function setup() {

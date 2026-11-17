@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { FontScale } from "$lib/settings";
-  import { settings } from "$lib/stores.svelte";
+  import type { FontScale } from "#lib/settings.ts";
+  import { settings } from "#lib/stores.svelte.ts";
   import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 
   const currentWindow = getCurrentWebviewWindow();

@@ -1,10 +1,10 @@
 <script module lang="ts">
-  import type { LogColumn } from "$lib/column";
-  import { EntityState } from "$lib/entity.svelte.js";
-  import { SkillState } from "$lib/skill.svelte.js";
-  import { settings } from "$lib/stores.svelte.js";
-  import { abbreviateNumber, abbreviateNumberSplit, customRound, isSupportSpec } from "$lib/utils";
-  import { hyperAwakeningIds } from "$lib/utils/buffs";
+  import type { LogColumn } from "#lib/column.ts";
+  import { EntityState } from "#lib/entity.svelte.js";
+  import { SkillState } from "#lib/skill.svelte.js";
+  import { settings } from "#lib/stores.svelte.js";
+  import { abbreviateNumber, abbreviateNumberSplit, customRound, isSupportSpec } from "#lib/utils.ts";
+  import { hyperAwakeningIds } from "#lib/utils/buffs.ts";
 
   import { damageValue, percentValue } from "./Snippets.svelte";
 

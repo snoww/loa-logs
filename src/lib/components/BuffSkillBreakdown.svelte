@@ -1,10 +1,10 @@
 <script lang="ts">
-  import type { EncounterState } from "$lib/encounter.svelte.js";
-  import { EntityState } from "$lib/entity.svelte.js";
-  import { settings } from "$lib/stores.svelte.js";
-  import { BuffDetails, MeterTab, type Entity, type StatusEffect } from "$lib/types";
-  import { rgbLinearShadeAdjust } from "$lib/utils";
-  import { getSynergyPercentageDetailsSum } from "$lib/utils/buffs";
+  import type { EncounterState } from "#lib/encounter.svelte.js";
+  import { EntityState } from "#lib/entity.svelte.js";
+  import { settings } from "#lib/stores.svelte.js";
+  import { BuffDetails, MeterTab, type Entity, type StatusEffect } from "#lib/types.ts";
+  import { rgbLinearShadeAdjust } from "#lib/utils.ts";
+  import { getSynergyPercentageDetailsSum } from "#lib/utils/buffs.ts";
 
   import BuffSkillBreakdownRow from "./BuffSkillBreakdownRow.svelte";
   import QuickTooltip from "./QuickTooltip.svelte";

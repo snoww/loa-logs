@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { EncounterState } from "$lib/encounter.svelte.js";
-  import { EntityState } from "$lib/entity.svelte.js";
-  import { settings } from "$lib/stores.svelte.js";
-  import { BuffDetails, type Entity, type StatusEffect } from "$lib/types";
-  import { getSynergyPercentageDetailsSum } from "$lib/utils/buffs";
+  import type { EncounterState } from "#lib/encounter.svelte.js";
+  import { EntityState } from "#lib/entity.svelte.js";
+  import { settings } from "#lib/stores.svelte.js";
+  import { BuffDetails, type Entity, type StatusEffect } from "#lib/types.ts";
+  import { getSynergyPercentageDetailsSum } from "#lib/utils/buffs.ts";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
 

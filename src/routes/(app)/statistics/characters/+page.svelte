@@ -6,13 +6,13 @@
     writeLog,
     type CharacterInfo,
     type CharacterStatisticsCriteria
-  } from "$lib/api";
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import { difficultyColor } from "$lib/components/Snippets.svelte";
-  import { difficultyMap, encounterMap, raidGates } from "$lib/constants/encounters";
-  import { IconRotateCcw } from "$lib/icons";
-  import type { CharacterStatistics, RaidStatisticsRow, RecentBestEncounter } from "$lib/types";
-  import { getClassIcon, isSupportClassId, isSupportSpec, SUPPORT_SPECS } from "$lib/utils";
+  } from "#lib/api.ts";
+  import QuickTooltip from "#lib/components/QuickTooltip.svelte";
+  import { difficultyColor } from "#lib/components/Snippets.svelte";
+  import { difficultyMap, encounterMap, raidGates } from "#lib/constants/encounters.ts";
+  import { IconRotateCcw } from "#lib/icons.ts";
+  import type { CharacterStatistics, RaidStatisticsRow, RecentBestEncounter } from "#lib/types.ts";
+  import { getClassIcon, isSupportClassId, isSupportSpec, SUPPORT_SPECS } from "#lib/utils.ts";
   import { onMount } from "svelte";
 
   import {
@@ -545,7 +545,7 @@
           {#if recentBestRows.length > 0}
             <div class="divide-y divide-neutral-700/70">
               {#each recentBestRows as best (best.id)}
-                <a href={resolve(`/logs/${best.id}`)} class="block px-3 py-2 hover:bg-neutral-700/30">
+                <a href={resolve(`logs/${best.id}`)} class="block px-3 py-2 hover:bg-neutral-700/30">
                   <div class="flex items-center justify-between gap-2">
                     <span class="truncate">{raidGates[best.bossName] ?? best.bossName}</span>
                     <QuickTooltip

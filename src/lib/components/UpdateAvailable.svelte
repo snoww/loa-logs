@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { checkLoaRunning, checkNinevehRunning, installBetaUpdate, installStableUpdate, relaunchApp } from "$lib/api";
-  import { settings, updateInfo } from "$lib/stores.svelte.js";
+  import { checkLoaRunning, checkNinevehRunning, installBetaUpdate, installStableUpdate, relaunchApp } from "#lib/api.ts";
+  import { settings, updateInfo } from "#lib/stores.svelte.js";
   import { createDialog, melt } from "@melt-ui/svelte";
   import { fade } from "svelte/transition";
 

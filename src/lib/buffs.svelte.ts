@@ -1,4 +1,4 @@
-import { customRound } from "$lib/utils";
+import { customRound } from "#lib/utils.ts";
 
 import type { EncounterState } from "./encounter.svelte";
 import {

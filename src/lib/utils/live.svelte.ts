@@ -1,5 +1,5 @@
-import { addToast } from "$lib/components/Toaster.svelte";
-import { misc } from "$lib/stores.svelte";
+import { addToast } from "#lib/components/Toaster.svelte";
+import { misc } from "#lib/stores.svelte.ts";
 import { Peer, type DataConnection } from "peerjs";
 import { writable } from "svelte/store";
 

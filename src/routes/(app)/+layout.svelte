@@ -1,14 +1,14 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-  import { getSettings, loadEncounter, onClearEncounter, onLatestEncounter, onRedirectUrl, writeLog } from "$lib/api";
-  // import BetaWelcome from "$lib/components/BetaWelcome.svelte";
-  import NinevehWelcome from "$lib/components/NinevehWelcome.svelte";
-  import Toaster from "$lib/components/Toaster.svelte";
-  import UpdateAvailable from "$lib/components/UpdateAvailable.svelte";
-  import { settings } from "$lib/stores.svelte";
-  import { checkForUpdate } from "$lib/utils";
-  import { registerShortcuts } from "$lib/utils/shortcuts";
-  import { uploadLog } from "$lib/utils/sync";
+  import { getSettings, loadEncounter, onClearEncounter, onLatestEncounter, onRedirectUrl, writeLog } from "#lib/api.ts";
+  // import BetaWelcome from "#lib/components/BetaWelcome.svelte";
+  import NinevehWelcome from "#lib/components/NinevehWelcome.svelte";
+  import Toaster from "#lib/components/Toaster.svelte";
+  import UpdateAvailable from "#lib/components/UpdateAvailable.svelte";
+  import { settings } from "#lib/stores.svelte.ts";
+  import { checkForUpdate } from "#lib/utils.ts";
+  import { registerShortcuts } from "#lib/utils/shortcuts.ts";
+  import { uploadLog } from "#lib/utils/sync.ts";
   import { getVersion } from "@tauri-apps/api/app";
   import { type UnlistenFn } from "@tauri-apps/api/event";
   import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";

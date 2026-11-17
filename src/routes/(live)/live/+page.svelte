@@ -13,10 +13,10 @@
     onBannedEvent,
     onNinevehUpdate,
     ninevehStateRequest
-  } from "$lib/api";
-  import { addToast, removeToast } from "$lib/components/Toaster.svelte";
-  import { EncounterState } from "$lib/encounter.svelte";
-  import { misc, nineveh, settings } from "$lib/stores.svelte";
+  } from "#lib/api.ts";
+  import { addToast, removeToast } from "#lib/components/Toaster.svelte";
+  import { EncounterState } from "#lib/encounter.svelte.ts";
+  import { misc, nineveh, settings } from "#lib/stores.svelte.ts";
   import {
     adminAlert,
     bannedEvent,
@@ -28,7 +28,7 @@
     resetting,
     resuming,
     zoneChange
-  } from "$lib/utils/toasts";
+  } from "#lib/utils/toasts.ts";
   import type { UnlistenFn } from "@tauri-apps/api/event";
   import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
   import { onMount } from "svelte";

@@ -1,4 +1,4 @@
-import { loadEncounter } from "$lib/api";
+import { loadEncounter } from "#lib/api.ts";
 
 import type { PageLoad } from "./$types";
 

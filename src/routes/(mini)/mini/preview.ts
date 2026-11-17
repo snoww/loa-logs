@@ -1,5 +1,5 @@
-import { classesMap } from "$lib/constants/classes";
-import { type Encounter, type Entity, EntityType } from "$lib/types";
+import { classesMap } from "#lib/constants/classes.ts";
+import { type Encounter, type Entity, EntityType } from "#lib/types.ts";
 
 export function createPreviewEncounter(playerCount: 4 | 8): Encounter {
   const duration = 120000;

@@ -1,10 +1,10 @@
 <script lang="ts">
-  import Card from "$lib/components/Card.svelte";
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import { IconChevronRight } from "$lib/icons";
-  import type { Skill } from "$lib/types";
-  import { getSkillIcon } from "$lib/utils";
-  import { getOpenerSkills } from "$lib/utils/dpsCharts";
+  import Card from "#lib/components/Card.svelte";
+  import QuickTooltip from "#lib/components/QuickTooltip.svelte";
+  import { IconChevronRight } from "#lib/icons.ts";
+  import type { Skill } from "#lib/types.ts";
+  import { getSkillIcon } from "#lib/utils.ts";
+  import { getOpenerSkills } from "#lib/utils/dpsCharts.ts";
 
   interface Props {
     skills: Record<number, Skill>;

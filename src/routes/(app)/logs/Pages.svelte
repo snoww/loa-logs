@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { IconChevronFirst, IconChevronLast, IconChevronLeft, IconChevronRight } from "$lib/icons";
-  import { settings } from "$lib/stores.svelte";
+  import { IconChevronFirst, IconChevronLast, IconChevronLeft, IconChevronRight } from "#lib/icons.ts";
+  import { settings } from "#lib/stores.svelte.ts";
 
   let { page = $bindable(), total }: { page: number; total?: number } = $props();
   let logsPerPage = $derived(settings.app.general.logsPerPage);

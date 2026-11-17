@@ -1,7 +1,7 @@
 <script lang="ts">
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import type { Entity } from "$lib/types";
-  import { getClassIcon } from "$lib/utils";
+  import QuickTooltip from "#lib/components/QuickTooltip.svelte";
+  import type { Entity } from "#lib/types.ts";
+  import { getClassIcon } from "#lib/utils.ts";
 
   const { entity: entity }: { entity: Entity } = $props();
 </script>

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { bossHpMap } from "$lib/constants/encounters";
-import { focusedCast, settings } from "$lib/stores.svelte";
+import { bossHpMap } from "#lib/constants/encounters.ts";
+import { focusedCast, settings } from "#lib/stores.svelte.ts";
 import {
   BossHpLog,
   EntityType,
@@ -15,7 +15,7 @@ import {
   type SkillCast,
   type SkillChartModInfo,
   type SkillChartSupportDamage
-} from "$lib/types";
+} from "#lib/types.ts";
 import {
   abbreviateNumber,
   customRound,
@@ -25,9 +25,8 @@ import {
   resampleData,
   timestampToMinutesAndSeconds,
   timeToSeconds
-} from "$lib/utils";
+} from "#lib/utils.ts";
 import Heap from "heap-js";
-import BTree from "sorted-btree";
 
 import { defaultOptions } from "../charts";
 import { getFormattedBuffString, getSkillCastBuffs, getSkillCastSupportBuffs } from "./buffs";
@@ -109,6 +108,8 @@ export function getAverageDpsChart(
   return {
     ...defaultOptions,
     legend: {
+      top: 0,
+      bottom: "auto",
       data: legendNames,
       textStyle: {
         color: "white"
@@ -128,14 +129,18 @@ export function getAverageDpsChart(
         const time = params[0].name;
         let tooltipStr = `<div>${time}</div><div style="min-width: 10rem">`;
         const bossTooltips: string[] = [];
-        const tree = new BTree(undefined, (a, b) => b - a);
+        const playerTooltips: { dps: number; html: string }[] = [];
         const length = Object.keys(chartablePlayers).length;
         const totalDps = { value: 0 };
         params.forEach((param) =>
-          generateTooltip(param, bossTooltips, totalDps, tree, deathInfo, time, length, entities)
+          generateTooltip(param, bossTooltips, totalDps, playerTooltips, deathInfo, time, length, entities)
         );
         const totalDpsString = `<div style="display:flex; justify-content: space-between;font-weight: 600;"><div style="padding-right: 1rem">Total DPS</div><div>${abbreviateNumber(totalDps.value, 2)}</div></div>`;
-        tooltipStr += bossTooltips.join("") + totalDpsString + tree.valuesArray().join("") + "</div>";
+        const playerTooltip = playerTooltips
+          .sort((a, b) => b.dps - a.dps)
+          .map((row) => row.html)
+          .join("");
+        tooltipStr += bossTooltips.join("") + totalDpsString + playerTooltip + "</div>";
         return tooltipStr;
       }
     },
@@ -194,6 +199,8 @@ export function getRollingDpsChart(
   return {
     ...defaultOptions,
     legend: {
+      top: 0,
+      bottom: "auto",
       data: legendNames,
       textStyle: {
         color: "white"
@@ -214,13 +221,17 @@ export function getRollingDpsChart(
         let tooltipStr = `<div>${time}</div><div style="min-width: 10rem">`;
         const bossTooltips: string[] = [];
         const length = Object.keys(chartablePlayers).length;
-        const tree = new BTree(undefined, (a, b) => b - a);
+        const playerTooltips: { dps: number; html: string }[] = [];
         const totalDps = { value: 0 };
         params.forEach((param) =>
-          generateTooltip(param, bossTooltips, totalDps, tree, deathInfo, time, length, entities)
+          generateTooltip(param, bossTooltips, totalDps, playerTooltips, deathInfo, time, length, entities)
         );
         const totalDpsString = `<div style="display:flex; justify-content: space-between;font-weight: 600;"><div style="padding-right: 1rem">Total DPS</div><div>${abbreviateNumber(totalDps.value, 2)}</div></div>`;
-        tooltipStr += bossTooltips.join("") + totalDpsString + tree.valuesArray().join("") + "</div>";
+        const playerTooltip = playerTooltips
+          .sort((a, b) => b.dps - a.dps)
+          .map((row) => row.html)
+          .join("");
+        tooltipStr += bossTooltips.join("") + totalDpsString + playerTooltip + "</div>";
         return tooltipStr;
       }
     },
@@ -320,9 +331,10 @@ export function getDetailedSkillLogChart(
     grid: {
       left: "2%",
       right: "5%",
-      bottom: "18%",
+      bottom: 70,
       top: hasOverlays ? "22%" : "10%",
-      containLabel: true
+      outerBoundsMode: "same",
+      outerBoundsContain: "axisLabel"
     },
     dataZoom: [
       {
@@ -359,6 +371,7 @@ export function getDetailedSkillLogChart(
       {
         data: [...skills].reverse(),
         top: 0,
+        bottom: "auto",
         textStyle: { color: "white" },
         type: "scroll",
         width: "90%",
@@ -374,6 +387,7 @@ export function getDetailedSkillLogChart(
             {
               data: overlayNames,
               top: 30,
+              bottom: "auto",
               textStyle: { color: "white" },
               type: "scroll",
               width: "90%",
@@ -514,9 +528,10 @@ export function getBasicSkillLogChart(
     grid: {
       left: "2%",
       right: "5%",
-      bottom: "18%",
+      bottom: 70,
       top: "10%",
-      containLabel: true
+      outerBoundsMode: "same",
+      outerBoundsContain: "axisLabel"
     },
     dataZoom: [
       {
@@ -575,6 +590,8 @@ export function getBasicSkillLogChart(
       }
     } as any,
     legend: {
+      top: 0,
+      bottom: "auto",
       data: [...skills].reverse(),
       textStyle: {
         color: "white"
@@ -688,7 +705,7 @@ function generateTooltip(
   param: any,
   bossTooltips: string[],
   totalDps: { value: number },
-  tree: BTree,
+  playerTooltips: { dps: number; html: string }[],
   deathInfo: Record<string, DeathInfo[]>,
   time: string,
   chartablePlayersLength: number,
@@ -724,10 +741,10 @@ function generateTooltip(
     const coloredLabel =
       `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${param.color}"></span>` +
       labelWithStatus;
-    tree.set(
+    playerTooltips.push({
       dps,
-      `<div style="display:flex; justify-content: space-between;"><div style="padding-right: 1rem">${coloredLabel}</div><div style="">${value}</div></div>`
-    );
+      html: `<div style="display:flex; justify-content: space-between;"><div style="padding-right: 1rem">${coloredLabel}</div><div style="">${value}</div></div>`
+    });
   }
 }
 

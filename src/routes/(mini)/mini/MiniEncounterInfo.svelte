@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { percentValue } from "$lib/components/Snippets.svelte";
-  import { EncounterState } from "$lib/encounter.svelte";
-  import { nineveh, settings } from "$lib/stores.svelte";
-  import { EntityType } from "$lib/types";
-  import { getBossHpBars, timestampToMinutesAndSeconds } from "$lib/utils";
+  import { percentValue } from "#lib/components/Snippets.svelte";
+  import { EncounterState } from "#lib/encounter.svelte.ts";
+  import { nineveh, settings } from "#lib/stores.svelte.ts";
+  import { EntityType } from "#lib/types.ts";
+  import { getBossHpBars, timestampToMinutesAndSeconds } from "#lib/utils.ts";
 
   let { enc }: { enc: EncounterState } = $props();
 

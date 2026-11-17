@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { IconCalendar, IconChevronLeft, IconChevronRight, IconX } from "$lib/icons";
+  import { IconCalendar, IconChevronLeft, IconChevronRight, IconX } from "#lib/icons.ts";
   import { CalendarDate, type DateValue } from "@internationalized/date";
   import { createDatePicker, melt } from "@melt-ui/svelte";
   import { onDestroy, untrack } from "svelte";

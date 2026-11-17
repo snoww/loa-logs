@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { EncounterState } from "$lib/encounter.svelte";
+  import type { EncounterState } from "#lib/encounter.svelte.ts";
   import { flip } from "svelte/animate";
 
   import MiniPlayer from "./MiniPlayer.svelte";

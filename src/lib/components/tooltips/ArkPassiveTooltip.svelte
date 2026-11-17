@@ -1,11 +1,11 @@
 <script lang="ts">
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import { AP, type APTypes } from "$lib/constants/classes";
-  import { EFTable_ArkPassive } from "$lib/constants/EFTable_ArkPassive";
-  import type { EntityState } from "$lib/entity.svelte";
-  import type { ArkPassiveNode } from "$lib/types";
-  import { isSupportSpec, LOA_BIBLE_URL, normalizeIlvl } from "$lib/utils";
-  import { getArkGridOrderNames } from "$lib/utils/arkGrid";
+  import QuickTooltip from "#lib/components/QuickTooltip.svelte";
+  import { AP, type APTypes } from "#lib/constants/classes.ts";
+  import { EFTable_ArkPassive } from "#lib/constants/EFTable_ArkPassive.ts";
+  import type { EntityState } from "#lib/entity.svelte.ts";
+  import type { ArkPassiveNode } from "#lib/types.ts";
+  import { isSupportSpec, LOA_BIBLE_URL, normalizeIlvl } from "#lib/utils.ts";
+  import { getArkGridOrderNames } from "#lib/utils/arkGrid.ts";
   import { openUrl } from "@tauri-apps/plugin-opener";
 
   const { state }: { state: EntityState } = $props();

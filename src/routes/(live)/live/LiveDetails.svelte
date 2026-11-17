@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { emitDetailsRequest, onIdentityUpdate } from "$lib/api";
-  import { customRound } from "$lib/utils";
+  import { emitDetailsRequest, onIdentityUpdate } from "#lib/api.ts";
+  import { customRound } from "#lib/utils.ts";
   import { emit, listen, type UnlistenFn } from "@tauri-apps/api/event";
   import { onDestroy, onMount } from "svelte";
 

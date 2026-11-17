@@ -6,7 +6,7 @@ import {
   getBaseDamage,
   getRDamage,
   isSupportSpec
-} from "$lib/utils";
+} from "#lib/utils.ts";
 
 export type SkillSort = "damage" | "buffed" | "stagger";
 import { cardIds } from "./constants/cards";

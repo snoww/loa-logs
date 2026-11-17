@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { loadEncountersPreview } from "$lib/api";
-  import { classNameToClassId } from "$lib/constants/classes";
-  import { encounterMap } from "$lib/constants/encounters";
-  import { encounterFilter, settings } from "$lib/stores.svelte";
-  import { type EncountersOverview } from "$lib/types";
+  import { loadEncountersPreview } from "#lib/api.ts";
+  import { classNameToClassId } from "#lib/constants/classes.ts";
+  import { encounterMap } from "#lib/constants/encounters.ts";
+  import { encounterFilter, settings } from "#lib/stores.svelte.ts";
+  import { type EncountersOverview } from "#lib/types.ts";
   import { invoke } from "@tauri-apps/api/core";
   import { untrack } from "svelte";
   import { SvelteSet } from "svelte/reactivity";

@@ -1,31 +1,31 @@
 <script lang="ts">
-  import { chartable, type EChartsOptions } from "$lib/charts";
-  import Card from "$lib/components/Card.svelte";
-  import GameMessage from "$lib/components/GameMessage.svelte";
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import Tooltipped from "$lib/components/Tooltipped.svelte";
-  import { ArkGridCore } from "$lib/constants/ArkGrid";
-  import { BattleItemData } from "$lib/constants/BattleItem";
-  import { classesMap as classIdToNiceName } from "$lib/constants/classes";
-  import { EFTable_ArkPassive } from "$lib/constants/EFTable_ArkPassive";
-  import { EFTable_Item } from "$lib/constants/EFTable_Item";
-  import { EFTable_SeasonCardBook } from "$lib/constants/EFTable_SeasonCardBook";
-  import { EFTable_Skill } from "$lib/constants/EFTable_Skill";
-  import { EFTable_SkillBuff } from "$lib/constants/EFTable_SkillBuff";
-  import { Engrave } from "$lib/constants/Engrave";
-  import { type StatDataGroup, statDataDescriptors } from "$lib/constants/rdps-stats";
+  import { chartable, type EChartsOptions } from "#lib/charts.ts";
+  import Card from "#lib/components/Card.svelte";
+  import GameMessage from "#lib/components/GameMessage.svelte";
+  import QuickTooltip from "#lib/components/QuickTooltip.svelte";
+  import Tooltipped from "#lib/components/Tooltipped.svelte";
+  import { ArkGridCore } from "#lib/constants/ArkGrid.ts";
+  import { BattleItemData } from "#lib/constants/BattleItem.ts";
+  import { classesMap as classIdToNiceName } from "#lib/constants/classes.ts";
+  import { EFTable_ArkPassive } from "#lib/constants/EFTable_ArkPassive.ts";
+  import { EFTable_Item } from "#lib/constants/EFTable_Item.js";
+  import { EFTable_SeasonCardBook } from "#lib/constants/EFTable_SeasonCardBook.ts";
+  import { EFTable_Skill } from "#lib/constants/EFTable_Skill.ts";
+  import { EFTable_SkillBuff } from "#lib/constants/EFTable_SkillBuff.ts";
+  import { Engrave } from "#lib/constants/Engrave.ts";
+  import { type StatDataGroup, statDataDescriptors } from "#lib/constants/rdps-stats.ts";
   import {
     getAbilityFeatureOrigin,
     getSkillBuffOrigin,
     normalizeOrigins,
     type StatOrigin
-  } from "$lib/constants/StatOrigin";
-  import type { EncounterState } from "$lib/encounter.svelte";
-  import { IconInfo, IconRefresh } from "$lib/icons";
-  import { extractStatSource, type StatSource, StatSourceType } from "$lib/rdps-breakdown";
-  import { settings } from "$lib/stores.svelte";
-  import { EntityType, type Entity } from "$lib/types";
-  import { abbreviateNumber, formatEncounterEntityName, getClassIcon } from "$lib/utils";
+  } from "#lib/constants/StatOrigin.ts";
+  import type { EncounterState } from "#lib/encounter.svelte.ts";
+  import { IconInfo, IconRefresh } from "#lib/icons.ts";
+  import { extractStatSource, type StatSource, StatSourceType } from "#lib/rdps-breakdown.ts";
+  import { settings } from "#lib/stores.svelte.ts";
+  import { EntityType, type Entity } from "#lib/types.ts";
+  import { abbreviateNumber, formatEncounterEntityName, getClassIcon } from "#lib/utils.ts";
 
   interface Props {
     player: Entity;
@@ -81,7 +81,8 @@
       right: "3%",
       bottom: "2%",
       top: "2%",
-      containLabel: true
+      outerBoundsMode: "same",
+      outerBoundsContain: "axisLabel"
     }
   };
 

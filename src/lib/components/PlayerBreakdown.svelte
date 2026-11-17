@@ -1,10 +1,10 @@
 <script lang="ts">
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import type { EncounterState } from "$lib/encounter.svelte.js";
-  import { EntityState } from "$lib/entity.svelte.js";
-  import { IconExternalLink, IconFileClock } from "$lib/icons";
-  import { settings } from "$lib/stores.svelte.js";
-  import { EntityType, type Entity } from "$lib/types";
+  import QuickTooltip from "#lib/components/QuickTooltip.svelte";
+  import type { EncounterState } from "#lib/encounter.svelte.js";
+  import { EntityState } from "#lib/entity.svelte.js";
+  import { IconExternalLink, IconFileClock } from "#lib/icons.ts";
+  import { settings } from "#lib/stores.svelte.js";
+  import { EntityType, type Entity } from "#lib/types.ts";
   import {
     abbreviateNumberSplit,
     customRound,
@@ -12,7 +12,7 @@
     isSupportSpec,
     LOA_BIBLE_URL,
     rgbLinearShadeAdjust
-  } from "$lib/utils";
+  } from "#lib/utils.ts";
   import { openUrl } from "@tauri-apps/plugin-opener";
   import { flip } from "svelte/animate";
 

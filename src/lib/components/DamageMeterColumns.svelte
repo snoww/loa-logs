@@ -1,9 +1,9 @@
 <script module lang="ts">
-  import type { LogColumn } from "$lib/column";
-  import type { EncounterState } from "$lib/encounter.svelte.js";
-  import { EntityState } from "$lib/entity.svelte.js";
-  import { EntityType } from "$lib/types";
-  import { abbreviateNumber, abbreviateNumberSplit, customRound } from "$lib/utils";
+  import type { LogColumn } from "#lib/column.ts";
+  import type { EncounterState } from "#lib/encounter.svelte.js";
+  import { EntityState } from "#lib/entity.svelte.js";
+  import { EntityType } from "#lib/types.ts";
+  import { abbreviateNumber, abbreviateNumberSplit, customRound } from "#lib/utils.ts";
 
   import { badTooltip, damageValue, fadTooltip, percentValue } from "./Snippets.svelte";
 

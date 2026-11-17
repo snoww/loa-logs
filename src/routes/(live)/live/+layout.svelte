@@ -1,7 +1,7 @@
 <script lang="ts">
-  import Toaster from "$lib/components/Toaster.svelte";
-  import { settings } from "$lib/stores.svelte";
-  import { setup } from "$lib/utils/setup";
+  import Toaster from "#lib/components/Toaster.svelte";
+  import { settings } from "#lib/stores.svelte.ts";
+  import { setup } from "#lib/utils/setup.ts";
   import { onMount } from "svelte";
 
   let { children }: { children?: import("svelte").Snippet } = $props();

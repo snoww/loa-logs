@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { browser } from "$app/environment";
-  import { BETA_MODAL_KEY } from "$lib/api";
-  import { settings } from "$lib/stores.svelte.js";
+  import { browser } from '$app/env';
+  import { BETA_MODAL_KEY } from "#lib/api.ts";
+  import { settings } from "#lib/stores.svelte.js";
   import { createDialog, melt } from "@melt-ui/svelte";
   import { fade } from "svelte/transition";
 
@@ -22,7 +22,12 @@
 
 {#if $open}
   <div use:melt={$portalled}>
-    <div use:melt={$overlay} class="fixed inset-0 z-50 bg-black/50" transition:fade={{ duration: 150 }}></div>
+    <div
+      use:melt={$overlay}
+      class="fixed inset-0 z-50 bg-black/50"
+      transition:fade={{ duration: 150 }}
+    ></div>
+
     <div
       use:melt={$content}
       class="fixed top-1/2 left-1/2 z-50 w-[36rem] max-w-[90vw] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-neutral-800/60 p-6 shadow-lg drop-shadow-xl backdrop-blur-xl

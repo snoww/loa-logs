@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { BuffState } from "$lib/buffs.svelte.js";
-  import type { EncounterState } from "$lib/encounter.svelte.js";
-  import { settings } from "$lib/stores.svelte.js";
-  import { EntityType, MeterTab, type Entity } from "$lib/types";
+  import { BuffState } from "#lib/buffs.svelte.js";
+  import type { EncounterState } from "#lib/encounter.svelte.js";
+  import { settings } from "#lib/stores.svelte.js";
+  import { EntityType, MeterTab, type Entity } from "#lib/types.ts";
   import { flip } from "svelte/animate";
 
   import Back from "./Back.svelte";

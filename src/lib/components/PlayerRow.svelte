@@ -1,12 +1,12 @@
 <script lang="ts">
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import { estherNameToIcon } from "$lib/constants/esthers";
-  import type { EncounterState } from "$lib/encounter.svelte.js";
-  import { EntityState } from "$lib/entity.svelte.js";
-  import { IconExternalLink, IconFileClock } from "$lib/icons";
-  import { screenshot, settings } from "$lib/stores.svelte.js";
-  import { EntityType, type Entity } from "$lib/types";
-  import { getClassIcon, isNameValid, LOA_BIBLE_URL } from "$lib/utils";
+  import QuickTooltip from "#lib/components/QuickTooltip.svelte";
+  import { estherNameToIcon } from "#lib/constants/esthers.ts";
+  import type { EncounterState } from "#lib/encounter.svelte.js";
+  import { EntityState } from "#lib/entity.svelte.js";
+  import { IconExternalLink, IconFileClock } from "#lib/icons.ts";
+  import { screenshot, settings } from "#lib/stores.svelte.js";
+  import { EntityType, type Entity } from "#lib/types.ts";
+  import { getClassIcon, isNameValid, LOA_BIBLE_URL } from "#lib/utils.ts";
   import { openUrl } from "@tauri-apps/plugin-opener";
   import { tick } from "svelte";
   import { cubicOut } from "svelte/easing";

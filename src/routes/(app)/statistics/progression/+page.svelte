@@ -1,13 +1,13 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
-  import { getRaidProgressionRange, getRaidProgressionStatistics } from "$lib/api";
-  import DateRangePicker from "$lib/components/DateRangePicker.svelte";
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import { difficultyColor } from "$lib/components/Snippets.svelte";
-  import { difficultyMap, encounterMap } from "$lib/constants/encounters";
-  import { IconArrowUp, IconChevronDown, IconRotateCcw } from "$lib/icons";
-  import type { RaidProgressionPlayer, RaidProgressionPull, RaidProgressionStatistics } from "$lib/types";
-  import { getClassIcon } from "$lib/utils";
+  import { getRaidProgressionRange, getRaidProgressionStatistics } from "#lib/api.ts";
+  import DateRangePicker from "#lib/components/DateRangePicker.svelte";
+  import QuickTooltip from "#lib/components/QuickTooltip.svelte";
+  import { difficultyColor } from "#lib/components/Snippets.svelte";
+  import { difficultyMap, encounterMap } from "#lib/constants/encounters.ts";
+  import { IconArrowUp, IconChevronDown, IconRotateCcw } from "#lib/icons.ts";
+  import type { RaidProgressionPlayer, RaidProgressionPull, RaidProgressionStatistics } from "#lib/types.ts";
+  import { getClassIcon } from "#lib/utils.ts";
   import { onMount } from "svelte";
 
   import {
@@ -1004,7 +1004,7 @@
               {#each pullRows as pull (pull.id)}
                 <tr class="border-t border-neutral-700/70 hover:bg-neutral-700/30">
                   <td class="px-3 py-2">
-                    <a href={resolve(`/logs/${pull.id}`)} class="text-accent-500 hover:text-accent-400">{pull.id}</a>
+                    <a href={resolve(`logs/${pull.id}`)} class="text-accent-500 hover:text-accent-400">{pull.id}</a>
                   </td>
                   <td class="max-w-56 truncate px-3 py-2" title={pull.bossName}>{pull.bossName}</td>
                   <td class="px-3 py-2">

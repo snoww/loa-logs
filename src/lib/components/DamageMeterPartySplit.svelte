@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { EncounterState } from "$lib/encounter.svelte.js";
-  import { screenshot, settings } from "$lib/stores.svelte.js";
-  import { EntityType } from "$lib/types";
+  import type { EncounterState } from "#lib/encounter.svelte.js";
+  import { screenshot, settings } from "#lib/stores.svelte.js";
+  import { EntityType } from "#lib/types.ts";
   import { flip } from "svelte/animate";
 
   import DamageMeterHeader from "./DamageMeterHeader.svelte";

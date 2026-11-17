@@ -1,10 +1,10 @@
 <script lang="ts">
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import { difficultyColor } from "$lib/components/Snippets.svelte";
-  import { raidGates } from "$lib/constants/encounters";
-  import { IconStar } from "$lib/icons";
-  import { encounterFilter, type sortColumns } from "$lib/stores.svelte";
-  import type { EncounterPreview, EncountersOverview } from "$lib/types";
+  import QuickTooltip from "#lib/components/QuickTooltip.svelte";
+  import { difficultyColor } from "#lib/components/Snippets.svelte";
+  import { raidGates } from "#lib/constants/encounters.ts";
+  import { IconStar } from "#lib/icons.ts";
+  import { encounterFilter, type sortColumns } from "#lib/stores.svelte.ts";
+  import type { EncounterPreview, EncountersOverview } from "#lib/types.ts";
   import {
     abbreviateNumber,
     formatTimestamp,
@@ -13,7 +13,7 @@
     getClassIcon,
     isSupportSpec,
     timestampToMinutesAndSeconds
-  } from "$lib/utils";
+  } from "#lib/utils.ts";
   import type { SvelteSet } from "svelte/reactivity";
 
   let {

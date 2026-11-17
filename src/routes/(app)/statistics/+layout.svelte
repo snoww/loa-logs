@@ -20,7 +20,7 @@
   <div class="border-b border-neutral-800 bg-neutral-900/80">
     <nav class="mx-auto flex h-12 max-w-[180rem] items-center gap-1 px-6" aria-label="Statistics sections">
       <a
-        href={resolve("/statistics/characters")}
+        href={resolve("statistics/characters")}
         class="rounded-md px-3 py-1.5 text-sm text-neutral-400 hover:bg-neutral-800/80 hover:text-neutral-100"
         class:bg-neutral-800={isActive("/statistics/characters")}
         class:text-neutral-100={isActive("/statistics/characters")}
@@ -28,7 +28,7 @@
         Character Stats
       </a>
       <a
-        href={resolve("/statistics/progression")}
+        href={resolve("statistics/progression")}
         class="rounded-md px-3 py-1.5 text-sm text-neutral-400 hover:bg-neutral-800/80 hover:text-neutral-100"
         class:bg-neutral-800={isActive("/statistics/progression")}
         class:text-neutral-100={isActive("/statistics/progression")}

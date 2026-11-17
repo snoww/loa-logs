@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { openMostRecentEncounter, openUrl, resetRequest, saveRequest, toggleMeterPause } from "$lib/api";
-  import LiveShareButton from "$lib/components/LiveShareButton.svelte";
-  import QuickTooltip from "$lib/components/QuickTooltip.svelte";
-  import type { EncounterState } from "$lib/encounter.svelte.js";
+  import { openMostRecentEncounter, openUrl, resetRequest, saveRequest, toggleMeterPause } from "#lib/api.ts";
+  import LiveShareButton from "#lib/components/LiveShareButton.svelte";
+  import QuickTooltip from "#lib/components/QuickTooltip.svelte";
+  import type { EncounterState } from "#lib/encounter.svelte.js";
   import {
     IconCamera,
     IconChevronDown,
@@ -14,10 +14,10 @@
     IconSave,
     IconSettings,
     IconUndo
-  } from "$lib/icons";
-  import { misc, screenshot, settings } from "$lib/stores.svelte.js";
-  import { EntityType } from "$lib/types";
-  import { abbreviateNumber, takeScreenshot, timestampToMinutesAndSeconds } from "$lib/utils";
+  } from "#lib/icons.ts";
+  import { misc, screenshot, settings } from "#lib/stores.svelte.js";
+  import { EntityType } from "#lib/types.ts";
+  import { abbreviateNumber, takeScreenshot, timestampToMinutesAndSeconds } from "#lib/utils.ts";
   import { createDropdownMenu, melt } from "@melt-ui/svelte";
   import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
   import { MediaQuery } from "svelte/reactivity";

@@ -3,8 +3,8 @@
 </script>
 
 <script lang="ts">
-  import { EntityState } from "$lib/entity.svelte";
-  import type { Skill } from "$lib/types";
+  import { EntityState } from "#lib/entity.svelte.ts";
+  import type { Skill } from "#lib/types.ts";
 
   import SkillTooltip from "./tooltips/SkillTooltip.svelte";
 </script>

@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { EntityState } from "$lib/entity.svelte.js";
-  import { settings } from "$lib/stores.svelte.js";
-  import type { BuffDetails, Skill, StatusEffect } from "$lib/types";
-  import { getSkillIcon, rgbLinearShadeAdjust } from "$lib/utils";
-  import { getSynergyPercentageDetails, hyperAwakeningIds } from "$lib/utils/buffs";
+  import type { EntityState } from "#lib/entity.svelte.js";
+  import { settings } from "#lib/stores.svelte.js";
+  import type { BuffDetails, Skill, StatusEffect } from "#lib/types.ts";
+  import { getSkillIcon, rgbLinearShadeAdjust } from "#lib/utils.ts";
+  import { getSynergyPercentageDetails, hyperAwakeningIds } from "#lib/utils/buffs.ts";
   import { cubicOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
 
