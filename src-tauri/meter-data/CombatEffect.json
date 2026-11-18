@@ -235255,6 +235255,68 @@
       }
     ]
   },
+  "423131665": {
+    "id": 423131665,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 1000,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "pc",
+            "actorType": "self",
+            "arg": 0
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_reactive_effect_when_damage",
+            "actorType": "self",
+            "args": [
+              0,
+              0,
+              423131666,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "423131666": {
+    "id": 423131666,
+    "effects": [
+      {
+        "desc": null,
+        "cooldown": 1000,
+        "ratio": 10000,
+        "conditions": [
+          {
+            "conditionType": "pc",
+            "actorType": "self",
+            "arg": 0
+          }
+        ],
+        "actions": [
+          {
+            "actionType": "exec_reactive_effect_when_critical",
+            "actorType": "self",
+            "args": [
+              0,
+              0,
+              423131666,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
   "260400": {
     "id": 260400,
     "effects": [

@@ -44121,7 +44121,7 @@
   },
   "593101": {
     "id": 593101,
-    "name": null,
+    "name": "Mokoko Smeller",
     "grade": "normal",
     "type": "monster",
     "species": "humanoid",
@@ -44131,7 +44131,7 @@
   },
   "593102": {
     "id": 593102,
-    "name": null,
+    "name": "Mokoko Smeller",
     "grade": "normal",
     "type": "monster",
     "species": "humanoid",
@@ -44151,7 +44151,7 @@
   },
   "593104": {
     "id": 593104,
-    "name": null,
+    "name": "Mokoko Smeller",
     "grade": "normal",
     "type": "monster",
     "species": "humanoid",
@@ -44161,7 +44161,7 @@
   },
   "593105": {
     "id": 593105,
-    "name": null,
+    "name": "Mokoko Smeller",
     "grade": "normal",
     "type": "monster",
     "species": "humanoid",
@@ -48599,472 +48599,102 @@
     "staggerPoints": 0,
     "balanceLevel": 500
   },
-  "596800": {
-    "id": 596800,
-    "name": null,
-    "grade": "normal",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596801": {
-    "id": 596801,
-    "name": null,
-    "grade": "normal",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596802": {
-    "id": 596802,
-    "name": null,
-    "grade": "boss",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596803": {
-    "id": 596803,
-    "name": null,
-    "grade": "boss",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596804": {
-    "id": 596804,
-    "name": null,
-    "grade": "boss",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596805": {
-    "id": 596805,
-    "name": null,
-    "grade": "boss",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596806": {
-    "id": 596806,
-    "name": null,
-    "grade": "normal",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596807": {
-    "id": 596807,
-    "name": null,
-    "grade": "normal",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596808": {
-    "id": 596808,
-    "name": null,
-    "grade": "normal",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596809": {
-    "id": 596809,
-    "name": null,
-    "grade": "boss",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596810": {
-    "id": 596810,
-    "name": null,
+  "840001": {
+    "id": 840001,
+    "name": "Celestial Sentinel",
     "grade": "boss",
     "type": "monster",
     "species": "wild_beast",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
+    "hpBars": 100,
+    "staggerPoints": 80000,
+    "balanceLevel": 1730
   },
-  "596811": {
-    "id": 596811,
-    "name": null,
-    "grade": "normal",
+  "840002": {
+    "id": 840002,
+    "name": "Nightmarish Morphe",
+    "grade": "boss",
+    "type": "monster",
+    "species": "devil",
+    "hpBars": 100,
+    "staggerPoints": 80000,
+    "balanceLevel": 1730
+  },
+  "840003": {
+    "id": 840003,
+    "name": "Prokel",
+    "grade": "boss",
+    "type": "monster",
+    "species": "devil",
+    "hpBars": 100,
+    "staggerPoints": 80000,
+    "balanceLevel": 1730
+  },
+  "840004": {
+    "id": 840004,
+    "name": "Ashtarot",
+    "grade": "boss",
+    "type": "monster",
+    "species": "devil",
+    "hpBars": 100,
+    "staggerPoints": 80000,
+    "balanceLevel": 1730
+  },
+  "840005": {
+    "id": 840005,
+    "name": "Firehorn, Trampler of Earth",
+    "grade": "boss",
     "type": "monster",
     "species": "wild_beast",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
+    "hpBars": 100,
+    "staggerPoints": 80000,
+    "balanceLevel": 1730
   },
-  "596812": {
-    "id": 596812,
-    "name": null,
-    "grade": "elite",
+  "840006": {
+    "id": 840006,
+    "name": "Lauriel",
+    "grade": "boss",
     "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
+    "species": "humanoid",
+    "hpBars": 100,
+    "staggerPoints": 32000,
+    "balanceLevel": 1730
   },
-  "596813": {
-    "id": 596813,
-    "name": null,
-    "grade": "elite",
+  "840007": {
+    "id": 840007,
+    "name": "Prokel",
+    "grade": "seed",
     "type": "monster",
-    "species": "none",
-    "hpBars": 0,
+    "species": "devil",
+    "hpBars": 100,
     "staggerPoints": 0,
-    "balanceLevel": 0
+    "balanceLevel": 1730
   },
-  "596814": {
-    "id": 596814,
-    "name": null,
-    "grade": "elite",
+  "840008": {
+    "id": 840008,
+    "name": "Ashtarot",
+    "grade": "seed",
     "type": "monster",
-    "species": "none",
-    "hpBars": 0,
+    "species": "devil",
+    "hpBars": 100,
     "staggerPoints": 0,
-    "balanceLevel": 0
+    "balanceLevel": 1730
   },
-  "596815": {
-    "id": 596815,
-    "name": null,
-    "grade": "elite",
+  "840009": {
+    "id": 840009,
+    "name": "Ashtarot",
+    "grade": "seed",
     "type": "monster",
-    "species": "none",
-    "hpBars": 0,
+    "species": "devil",
+    "hpBars": 100,
     "staggerPoints": 0,
-    "balanceLevel": 0
+    "balanceLevel": 1730
   },
-  "596816": {
-    "id": 596816,
-    "name": null,
-    "grade": "elite",
+  "840010": {
+    "id": 840010,
+    "name": "Firehorn, Trampler of Earth",
+    "grade": "seed",
     "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596817": {
-    "id": 596817,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596818": {
-    "id": 596818,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596819": {
-    "id": 596819,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596820": {
-    "id": 596820,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596821": {
-    "id": 596821,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596822": {
-    "id": 596822,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596823": {
-    "id": 596823,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596824": {
-    "id": 596824,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596825": {
-    "id": 596825,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596826": {
-    "id": 596826,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596827": {
-    "id": 596827,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596828": {
-    "id": 596828,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596829": {
-    "id": 596829,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596830": {
-    "id": 596830,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596831": {
-    "id": 596831,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596832": {
-    "id": 596832,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596833": {
-    "id": 596833,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596834": {
-    "id": 596834,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596835": {
-    "id": 596835,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596836": {
-    "id": 596836,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596837": {
-    "id": 596837,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596838": {
-    "id": 596838,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596839": {
-    "id": 596839,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596840": {
-    "id": 596840,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596841": {
-    "id": 596841,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596842": {
-    "id": 596842,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596843": {
-    "id": 596843,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596844": {
-    "id": 596844,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596845": {
-    "id": 596845,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
-    "hpBars": 0,
-    "staggerPoints": 0,
-    "balanceLevel": 0
-  },
-  "596846": {
-    "id": 596846,
-    "name": null,
-    "grade": "elite",
-    "type": "monster",
-    "species": "none",
+    "species": "devil",
     "hpBars": 0,
     "staggerPoints": 0,
     "balanceLevel": 0
@@ -64429,6 +64059,46 @@
     "staggerPoints": 0,
     "balanceLevel": 1580
   },
+  "860051": {
+    "id": 860051,
+    "name": "Soft Bean Egg Rice Cake",
+    "grade": "underling",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1580
+  },
+  "860052": {
+    "id": 860052,
+    "name": "Soft Bean Chewy Rice Cake",
+    "grade": "underling",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1580
+  },
+  "860053": {
+    "id": 860053,
+    "name": "Soft Bean Bead Rice Cake",
+    "grade": "underling",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1580
+  },
+  "860054": {
+    "id": 860054,
+    "name": "Soft Bean Round Rice Cake",
+    "grade": "underling",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1580
+  },
   "860100": {
     "id": 860100,
     "name": "Phantom Legion Pawn",
@@ -64575,6 +64245,26 @@
     "grade": "normal",
     "type": "monster",
     "species": "devil",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1580
+  },
+  "860151": {
+    "id": 860151,
+    "name": "Soft Bean Pink Flower Sweetcake",
+    "grade": "normal",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1580
+  },
+  "860152": {
+    "id": 860152,
+    "name": "Soft Bean Green Flower Sweetcake",
+    "grade": "normal",
+    "type": "monster",
+    "species": "spirit",
     "hpBars": 1,
     "staggerPoints": 0,
     "balanceLevel": 1580
@@ -64819,6 +64509,36 @@
     "staggerPoints": 0,
     "balanceLevel": 1580
   },
+  "860251": {
+    "id": 860251,
+    "name": "Soft Bean Plump Tricolor Sweetcake",
+    "grade": "named",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1580
+  },
+  "860252": {
+    "id": 860252,
+    "name": "Soft Bean Plump Tricolor Sweetcake",
+    "grade": "named",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1580
+  },
+  "860253": {
+    "id": 860253,
+    "name": "Soft Bean Plump Tricolor Sweetcake",
+    "grade": "named",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1580
+  },
   "860300": {
     "id": 860300,
     "name": "Phantom Legion Rook",
@@ -64989,6 +64709,16 @@
     "staggerPoints": 0,
     "balanceLevel": 1580
   },
+  "860351": {
+    "id": 860351,
+    "name": "Soft Bean Shiny Rainbow Sweetcake",
+    "grade": "seed",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1580
+  },
   "860500": {
     "id": 860500,
     "name": "Allied Forces Ether Elemental",
@@ -65019,6 +64749,46 @@
     "staggerPoints": 0,
     "balanceLevel": 1730
   },
+  "901901": {
+    "id": 901901,
+    "name": "Soft Bean Egg Rice Cake",
+    "grade": "underling",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1730
+  },
+  "901902": {
+    "id": 901902,
+    "name": "Soft Bean Chewy Rice Cake",
+    "grade": "underling",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1730
+  },
+  "901903": {
+    "id": 901903,
+    "name": "Soft Bean Bead Rice Cake",
+    "grade": "underling",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1730
+  },
+  "901904": {
+    "id": 901904,
+    "name": "Soft Bean Round Rice Cake",
+    "grade": "underling",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1730
+  },
   "902001": {
     "id": 902001,
     "name": "Abyssal Remnant",
@@ -65035,6 +64805,46 @@
     "grade": "underling",
     "type": "monster",
     "species": "insect",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1730
+  },
+  "902901": {
+    "id": 902901,
+    "name": "Soft Bean Egg Rice Cake",
+    "grade": "underling",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1730
+  },
+  "902902": {
+    "id": 902902,
+    "name": "Soft Bean Chewy Rice Cake",
+    "grade": "underling",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1730
+  },
+  "902903": {
+    "id": 902903,
+    "name": "Soft Bean Bead Rice Cake",
+    "grade": "underling",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1730
+  },
+  "902904": {
+    "id": 902904,
+    "name": "Soft Bean Round Rice Cake",
+    "grade": "underling",
+    "type": "monster",
+    "species": "spirit",
     "hpBars": 1,
     "staggerPoints": 0,
     "balanceLevel": 1730
@@ -65059,6 +64869,26 @@
     "staggerPoints": 0,
     "balanceLevel": 1730
   },
+  "903901": {
+    "id": 903901,
+    "name": "Soft Bean Pink Flower Sweetcake",
+    "grade": "normal",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1730
+  },
+  "903902": {
+    "id": 903902,
+    "name": "Soft Bean Green Flower Sweetcake",
+    "grade": "normal",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1730
+  },
   "904001": {
     "id": 904001,
     "name": "Abyssal Remnant",
@@ -65075,6 +64905,26 @@
     "grade": "normal",
     "type": "monster",
     "species": "devil",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1730
+  },
+  "904901": {
+    "id": 904901,
+    "name": "Soft Bean Pink Flower Sweetcake",
+    "grade": "normal",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1730
+  },
+  "904902": {
+    "id": 904902,
+    "name": "Soft Bean Green Flower Sweetcake",
+    "grade": "normal",
+    "type": "monster",
+    "species": "spirit",
     "hpBars": 1,
     "staggerPoints": 0,
     "balanceLevel": 1730
@@ -65129,6 +64979,36 @@
     "staggerPoints": 0,
     "balanceLevel": 1730
   },
+  "905901": {
+    "id": 905901,
+    "name": "Soft Bean Plump Tricolor Sweetcake",
+    "grade": "named",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1730
+  },
+  "905902": {
+    "id": 905902,
+    "name": "Soft Bean Plump Tricolor Sweetcake",
+    "grade": "named",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1730
+  },
+  "905903": {
+    "id": 905903,
+    "name": "Soft Bean Plump Tricolor Sweetcake",
+    "grade": "named",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1730
+  },
   "906001": {
     "id": 906001,
     "name": "Abyssal Remnant",
@@ -65179,6 +65059,36 @@
     "staggerPoints": 0,
     "balanceLevel": 1730
   },
+  "906901": {
+    "id": 906901,
+    "name": "Soft Bean Plump Tricolor Sweetcake",
+    "grade": "named",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1730
+  },
+  "906902": {
+    "id": 906902,
+    "name": "Soft Bean Plump Tricolor Sweetcake",
+    "grade": "named",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1730
+  },
+  "906903": {
+    "id": 906903,
+    "name": "Soft Bean Plump Tricolor Sweetcake",
+    "grade": "named",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1730
+  },
   "907001": {
     "id": 907001,
     "name": "Abyssal Remnant",
@@ -65219,6 +65129,16 @@
     "staggerPoints": 0,
     "balanceLevel": 1730
   },
+  "907901": {
+    "id": 907901,
+    "name": "Soft Bean Shiny Rainbow Sweetcake",
+    "grade": "seed",
+    "type": "monster",
+    "species": "spirit",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1730
+  },
   "908001": {
     "id": 908001,
     "name": "Abyssal Remnant",
@@ -65255,6 +65175,16 @@
     "grade": "seed",
     "type": "monster",
     "species": "humanoid",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1730
+  },
+  "908901": {
+    "id": 908901,
+    "name": "Soft Bean Shiny Rainbow Sweetcake",
+    "grade": "seed",
+    "type": "monster",
+    "species": "spirit",
     "hpBars": 1,
     "staggerPoints": 0,
     "balanceLevel": 1730
@@ -179249,6 +179179,16 @@
     "staggerPoints": 0,
     "balanceLevel": 1680
   },
+  "59069": {
+    "id": 59069,
+    "name": "Balthorr",
+    "grade": "normal",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1720
+  },
   "59070": {
     "id": 59070,
     "name": "Shandi",
@@ -179279,6 +179219,16 @@
     "staggerPoints": 0,
     "balanceLevel": 1680
   },
+  "59081": {
+    "id": 59081,
+    "name": "Shandi",
+    "grade": "normal",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1720
+  },
   "58802": {
     "id": 58802,
     "name": "Bastian",
@@ -179308,6 +179258,16 @@
     "hpBars": 1,
     "staggerPoints": 0,
     "balanceLevel": 1680
+  },
+  "58807": {
+    "id": 58807,
+    "name": "Bastian",
+    "grade": "normal",
+    "type": "monster",
+    "species": "none",
+    "hpBars": 1,
+    "staggerPoints": 0,
+    "balanceLevel": 1720
   },
   "59032": {
     "id": 59032,
@@ -183849,6 +183809,86 @@
     "staggerPoints": 0,
     "balanceLevel": 0
   },
+  "10005200": {
+    "id": 10005200,
+    "name": "Nickname Cocahni",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005201": {
+    "id": 10005201,
+    "name": "Nickname Cahnico",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005202": {
+    "id": 10005202,
+    "name": "Nickname Cocahni",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005203": {
+    "id": 10005203,
+    "name": "Nickname Cahnico",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005210": {
+    "id": 10005210,
+    "name": "Nickname Cocahni",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005211": {
+    "id": 10005211,
+    "name": "Nickname Cahnico",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005212": {
+    "id": 10005212,
+    "name": "Nickname Cocahni",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005213": {
+    "id": 10005213,
+    "name": "Nickname Cahnico",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
   "10005300": {
     "id": 10005300,
     "name": "Sodacahni",
@@ -183962,6 +184002,86 @@
   "10005412": {
     "id": 10005412,
     "name": "Mokoranger Blue",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005800": {
+    "id": 10005800,
+    "name": "Cheerful Gentleman Moko",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005801": {
+    "id": 10005801,
+    "name": "Shy Maiden Moko",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005802": {
+    "id": 10005802,
+    "name": "Magnanimous Magistrate Moko",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005803": {
+    "id": 10005803,
+    "name": "Refined Scholar Moko",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005810": {
+    "id": 10005810,
+    "name": "Cheerful Gentleman Moko",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005811": {
+    "id": 10005811,
+    "name": "Shy Maiden Moko",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005812": {
+    "id": 10005812,
+    "name": "Magnanimous Magistrate Moko",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10005813": {
+    "id": 10005813,
+    "name": "Refined Scholar Moko",
     "grade": "underling",
     "type": "pet",
     "species": "none",
@@ -190929,6 +191049,206 @@
     "staggerPoints": 0,
     "balanceLevel": 0
   },
+  "10107300": {
+    "id": 10107300,
+    "name": "Cabin Crew Corgi",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107301": {
+    "id": 10107301,
+    "name": "Captain Corgi",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107302": {
+    "id": 10107302,
+    "name": "Wanderer Corgi",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107303": {
+    "id": 10107303,
+    "name": "Revelry Corgi",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107304": {
+    "id": 10107304,
+    "name": "Security Guard Corgi",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107305": {
+    "id": 10107305,
+    "name": "Cabin Crew Corgi",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107306": {
+    "id": 10107306,
+    "name": "Captain Corgi",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107307": {
+    "id": 10107307,
+    "name": "Wanderer Corgi",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107308": {
+    "id": 10107308,
+    "name": "Revelry Corgi",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107309": {
+    "id": 10107309,
+    "name": "Security Guard Corgi",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107310": {
+    "id": 10107310,
+    "name": "Cabin Crew Corgi",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107311": {
+    "id": 10107311,
+    "name": "Captain Corgi",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107312": {
+    "id": 10107312,
+    "name": "Wanderer Corgi",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107313": {
+    "id": 10107313,
+    "name": "Revelry Corgi",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107314": {
+    "id": 10107314,
+    "name": "Security Guard Corgi",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107315": {
+    "id": 10107315,
+    "name": "Cabin Crew Corgi",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107316": {
+    "id": 10107316,
+    "name": "Captain Corgi",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107317": {
+    "id": 10107317,
+    "name": "Wanderer Corgi",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107318": {
+    "id": 10107318,
+    "name": "Revelry Corgi",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107319": {
+    "id": 10107319,
+    "name": "Security Guard Corgi",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
   "10107400": {
     "id": 10107400,
     "name": "Meticulous Alfred",
@@ -191022,6 +191342,86 @@
   "10107414": {
     "id": 10107414,
     "name": "Easygoing Cedric",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107600": {
+    "id": 10107600,
+    "name": "Hip Moko",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107601": {
+    "id": 10107601,
+    "name": "Evergreen Hip Moko",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107602": {
+    "id": 10107602,
+    "name": "Cherry Blossom Hip Moko",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107603": {
+    "id": 10107603,
+    "name": "Aurora Hip Moko",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107610": {
+    "id": 10107610,
+    "name": "Hip Moko",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107611": {
+    "id": 10107611,
+    "name": "Evergreen Hip Moko",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107612": {
+    "id": 10107612,
+    "name": "Cherry Blossom Hip Moko",
+    "grade": "underling",
+    "type": "pet",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "10107613": {
+    "id": 10107613,
+    "name": "Aurora Hip Moko",
     "grade": "underling",
     "type": "pet",
     "species": "none",
@@ -289179,6 +289579,406 @@
     "staggerPoints": 0,
     "balanceLevel": 0
   },
+  "80148": {
+    "id": 80148,
+    "name": "Luke Atdis",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80149": {
+    "id": 80149,
+    "name": "Umar Customer",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80150": {
+    "id": 80150,
+    "name": "Fashion Designer",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80151": {
+    "id": 80151,
+    "name": "Busy Clerk",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80152": {
+    "id": 80152,
+    "name": "Jeffer",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80153": {
+    "id": 80153,
+    "name": "Chanar",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80154": {
+    "id": 80154,
+    "name": "Platform Guide",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80155": {
+    "id": 80155,
+    "name": "Illusion Thirain",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80156": {
+    "id": 80156,
+    "name": "Arcanist",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80157": {
+    "id": 80157,
+    "name": "Umar Blacksmith",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80159": {
+    "id": 80159,
+    "name": "Green Mage",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80160": {
+    "id": 80160,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80161": {
+    "id": 80161,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80162": {
+    "id": 80162,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80163": {
+    "id": 80163,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80164": {
+    "id": 80164,
+    "name": "Tourist",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80165": {
+    "id": 80165,
+    "name": "Tourist",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80166": {
+    "id": 80166,
+    "name": "Museum Admission Manager",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80167": {
+    "id": 80167,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80168": {
+    "id": 80168,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80169": {
+    "id": 80169,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80170": {
+    "id": 80170,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80171": {
+    "id": 80171,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80172": {
+    "id": 80172,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80173": {
+    "id": 80173,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80174": {
+    "id": 80174,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80175": {
+    "id": 80175,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80176": {
+    "id": 80176,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80178": {
+    "id": 80178,
+    "name": "Boutique Mannequin",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80179": {
+    "id": 80179,
+    "name": "Boutique Mannequin",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80180": {
+    "id": 80180,
+    "name": "Boutique Mannequin",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80181": {
+    "id": 80181,
+    "name": "Mokoko Seed",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80182": {
+    "id": 80182,
+    "name": null,
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80183": {
+    "id": 80183,
+    "name": "Illusory Xereon",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80199": {
+    "id": 80199,
+    "name": "Tourist",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80200": {
+    "id": 80200,
+    "name": "Tourist",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80201": {
+    "id": 80201,
+    "name": "Mechida",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80202": {
+    "id": 80202,
+    "name": "Yumeh",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80203": {
+    "id": 80203,
+    "name": "Sueno",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "80204": {
+    "id": 80204,
+    "name": "Tahoom",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
   "80210": {
     "id": 80210,
     "name": "Nia",
@@ -294095,6 +294895,26 @@
     "grade": "normal",
     "type": "townsfolk",
     "species": "humanoid",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86432": {
+    "id": 86432,
+    "name": "Nunet",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "none",
+    "hpBars": 0,
+    "staggerPoints": 0,
+    "balanceLevel": 0
+  },
+  "86433": {
+    "id": 86433,
+    "name": "Mirror of Eternity",
+    "grade": "normal",
+    "type": "townsfolk",
+    "species": "plant",
     "hpBars": 0,
     "staggerPoints": 0,
     "balanceLevel": 0
