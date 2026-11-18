@@ -532,6 +532,9 @@ impl EntityTracker {
         local_player.inspect_snapshot = None;
         local_player.skill_runtime_data.clear();
         local_player.visibility_generation = self.current_visibility_generation;
+        self.status_tracker
+            .borrow_mut()
+            .rebind_player_source_ids(self.local_entity_id, local_player.id);
         self.local_entity_id = pkt.player_id;
 
         self.entities.clear();
@@ -571,6 +574,17 @@ impl EntityTracker {
     }
 
     pub fn init_pc(&mut self, pkt: PKTInitPC) -> Entity {
+        self.last_reconnect_rebind = None;
+        if pkt.character_id != 0
+            && pkt.character_id == self.get_local_character_id()
+            && self.local_entity_id != 0
+            && self.local_entity_id != pkt.player_id
+        {
+            self.status_tracker
+                .borrow_mut()
+                .rebind_player_source_ids(self.local_entity_id, pkt.player_id);
+            self.last_reconnect_rebind = Some((self.local_entity_id, pkt.player_id));
+        }
         if let Some(entity) = self.entities.get_mut(&pkt.player_id) {
             entity.next_skill.close_fight(false);
         }
@@ -738,6 +752,9 @@ impl EntityTracker {
             self.id_tracker
                 .borrow_mut()
                 .remove_entity_mapping(previous_entity_id);
+            self.status_tracker
+                .borrow_mut()
+                .rebind_player_source_ids(previous_entity_id, entity.id);
         }
 
         self.entities.insert(entity.id, entity.clone());
@@ -1541,8 +1558,10 @@ impl EntityTracker {
     pub fn are_same_party_players(&self, lhs: &Entity, rhs: &Entity) -> bool {
         lhs.id == rhs.id
             || (lhs.character_id != 0 && lhs.character_id == rhs.character_id)
-            || matches!((self.party_membership_for_player(lhs), self.party_membership_for_player(rhs)),
-                (Some(lhs), Some(rhs)) if lhs == rhs)
+            || lhs.party_at_hit.zip(rhs.party_at_hit).map_or_else(
+                || self.are_same_party_characters(lhs.character_id, rhs.character_id),
+                |(lhs, rhs)| lhs == rhs,
+            )
     }
 
     pub fn are_same_party_characters(&self, lhs_character_id: u64, rhs_character_id: u64) -> bool {

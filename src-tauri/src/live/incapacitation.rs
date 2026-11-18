@@ -183,7 +183,6 @@ pub fn on_skill_start(encounter: &mut Encounter, actor_id: u64, timestamp: i64) 
 mod tests {
     use super::*;
     use crate::models::{DamageStats, IncapacitationEventType};
-    use meter_defs::BiSerializable;
 
     fn statuses() -> StatusTracker {
         use crate::live::{id_tracker::IdTracker, party_tracker::PartyTracker};
@@ -225,21 +224,12 @@ mod tests {
     }
 
     fn packet(effect_id: u32, targets: &[u64]) -> PKTSkillEffectTargetNotify {
-        // Current wire order: source, targets, effect, optional release position.
-        let mut bytes = Vec::new();
-        bytes.extend(20_u64.to_le_bytes());
-        bytes.extend((targets.len() as u16).to_le_bytes());
-        for target in targets {
-            bytes.extend(target.to_le_bytes());
+        PKTSkillEffectTargetNotify {
+            source_id: 20,
+            target_ids: targets.to_vec(),
+            skill_effect_id: effect_id,
+            ..Default::default()
         }
-        bytes.extend(effect_id.to_le_bytes());
-        bytes.push(0); // no release position
-        let packet = PKTSkillEffectTargetNotify::from_bytes(&bytes).unwrap();
-        assert_eq!(packet.source_id, 20);
-        assert_eq!(packet.target_ids, targets);
-        assert_eq!(packet.skill_effect_id, effect_id);
-        assert_eq!(packet.has_position, 0);
-        packet
     }
 
     #[test]

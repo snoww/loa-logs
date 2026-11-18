@@ -650,6 +650,27 @@ impl StatusTracker {
         }
     }
 
+    pub fn rebind_player_source_ids(&mut self, old_id: u64, new_id: u64) {
+        if old_id == 0 || new_id == 0 || old_id == new_id {
+            return;
+        }
+
+        for effect in self
+            .local_status_effect_registry
+            .values_mut()
+            .chain(self.party_status_effect_registry.values_mut())
+            .flat_map(|effects| effects.values_mut())
+            .chain(self.retained_entries_by_instance_id.values_mut())
+        {
+            if effect.source_id == old_id {
+                effect.source_id = new_id;
+            }
+            if effect.raw_source_id == old_id {
+                effect.raw_source_id = new_id;
+            }
+        }
+    }
+
     /// Drops an object's tracked effects while retaining player-owned instances for a later
     /// re-notify. The server did not end these instances; only player-owned buffs carry an owner
     /// snapshot worth resuming, and NPC-owned permanent effects would accumulate.
@@ -1357,7 +1378,7 @@ pub struct StatusEffectDetails {
     pub custom_id: u32,
     pub target_id: u64,
     pub source_id: u64,
-    /// Original packet source, used to recognize a refresh before remapping ownership.
+    /// Packet source before ownership selection, updated when that player ID changes.
     pub raw_source_id: u64,
     /// Inspect ownership selected this creator; a refresh must not select another one.
     pub owner_was_selected: bool,

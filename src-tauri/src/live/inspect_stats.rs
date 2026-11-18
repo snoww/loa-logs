@@ -14,10 +14,6 @@ use meter_defs::defs::{
     PKTPCInspectResult,
 };
 
-const DEFAULT_ARK_PASSIVE_KARMA_EVOLUTION_DAMAGE: f64 = 0.06;
-const DEFAULT_ARK_PASSIVE_KARMA_BRAND_POWER: f64 = 0.06;
-const DEFAULT_ARK_PASSIVE_KARMA_WEAPON_DAMAGE_MULTIPLIER: i64 = 250;
-const DEFAULT_ARK_PASSIVE_KARMA_HYPER_DAMAGE: i64 = 1050;
 const FLASH_ORB_UNIQUE_GROUP_ID: u32 = 523501;
 const WIND_ORB_UNIQUE_GROUP_ID: u32 = 523201;
 const STRENGTH_ORB_UNIQUE_GROUP_ID: u32 = 523401;
@@ -455,29 +451,6 @@ fn apply_ark_passive_karma(
     raw_stat_pairs: &HashMap<u8, i64>,
     derived: &mut InspectDerivedStats,
 ) {
-    if result.stigma_layout_datas.is_empty() {
-        add_multiplier_stat(
-            "evolution_dam_rate",
-            DEFAULT_ARK_PASSIVE_KARMA_EVOLUTION_DAMAGE,
-            raw_stat_pairs,
-            derived,
-        );
-        derived.ally_brand_power += DEFAULT_ARK_PASSIVE_KARMA_BRAND_POWER;
-        add_flat_stat(
-            "weapon_dam_x",
-            DEFAULT_ARK_PASSIVE_KARMA_WEAPON_DAMAGE_MULTIPLIER,
-            raw_stat_pairs,
-            derived,
-        );
-        add_flat_stat(
-            "ultimate_awakening_dam_rate",
-            DEFAULT_ARK_PASSIVE_KARMA_HYPER_DAMAGE,
-            raw_stat_pairs,
-            derived,
-        );
-        return;
-    }
-
     for stigma in &result.stigma_layout_datas {
         let Some(karma) = EXTERNAL_ARK_PASSIVE_KARMA_DATA.get(&stigma.stigma_id) else {
             continue;
@@ -1198,20 +1171,6 @@ fn apply_named_stat(
     }
 }
 
-fn add_multiplier_stat(
-    stat_name: &str,
-    value: f64,
-    raw_stat_pairs: &HashMap<u8, i64>,
-    derived: &mut InspectDerivedStats,
-) {
-    add_flat_stat(
-        stat_name,
-        (value * 10000.0).round() as i64,
-        raw_stat_pairs,
-        derived,
-    );
-}
-
 fn add_flat_stat(
     stat_name: &str,
     value: i64,
@@ -1307,6 +1266,19 @@ mod code_port_tests {
     use crate::live::player_stats::PlayerStats;
     use crate::live::test_data::{GEM_ITEM_ID, POINT_ABILITY_ID, POINT_ABILITY_SKILL_ID};
     use meter_defs::defs::{GemItemOption, ItemDataTyped};
+
+    #[test]
+    fn inspect_with_no_karma_entries_applies_no_karma_bonuses() {
+        crate::live::test_data::initialize();
+        let result = PKTPCInspectResult {
+            stigma_layout_datas: Vec::new(),
+            ..Default::default()
+        };
+        let mut derived = InspectDerivedStats::default();
+        apply_ark_passive_karma(&result, &HashMap::new(), &mut derived);
+        assert!(derived.stat_pairs.is_empty());
+        assert_eq!(derived.ally_brand_power, 0.0);
+    }
 
     #[test]
     fn base_damage_addend_quality_lines_survive_snapshot_refresh_without_double_counting() {

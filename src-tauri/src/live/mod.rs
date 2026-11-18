@@ -498,6 +498,11 @@ pub fn start(args: StartArgs) -> Result<()> {
 
                     let character_id = entity.character_id;
                     state.on_init_pc(entity, hp, max_hp, &entity_tracker);
+                    if let Some((old_entity_id, new_entity_id)) =
+                        entity_tracker.take_last_reconnect_rebind()
+                    {
+                        state.rebind_startup_player_entity_ids(old_entity_id, new_entity_id);
+                    }
                     queue_missing_party_inspects(
                         &ipc.0,
                         &connection_ids_by_port,

@@ -357,7 +357,6 @@ const IDENTITY_BUFF_MISMATCH_TOLERANCE: f64 = 0.10;
 #[derive(Debug, Clone)]
 struct PendingInspectMeasurement {
     receiver_snapshot: Entity,
-    receiver_entity_id: u64,
     receiver_name: String,
     request_sent_at: DateTime<Utc>,
     /// The receiver's tracked buffs when the sheet arrived.
@@ -368,8 +367,22 @@ struct PendingInspectMeasurement {
     stat_sources_stable: [bool; 2],
 }
 
+impl PendingInspectMeasurement {
+    fn rebind_player_id(&mut self, old_id: u64, new_id: u64) {
+        if self.receiver_snapshot.id == old_id {
+            self.receiver_snapshot.id = new_id;
+        }
+        for effect in &mut self.receiver_effects {
+            if effect.source_id == old_id {
+                effect.source_id = new_id;
+            }
+        }
+    }
+}
+
 struct IdentityBuffSample {
     receiver_entity_id: u64,
+    receiver_character_id: u64,
     receiver_name: String,
     effect: StatusEffectDetails,
     stat_type: StatType,
@@ -406,10 +419,10 @@ fn identity_stat_value(stats: &PlayerStats, stat_type: StatType) -> f64 {
 }
 
 /// The registry keys a player's status effects may be tracked under.
-fn receiver_target_ids(receiver: &Entity) -> Vec<u64> {
-    let mut target_ids = vec![receiver.id];
-    if receiver.character_id != 0 {
-        target_ids.push(receiver.character_id);
+fn receiver_target_ids(entity_id: u64, character_id: u64) -> Vec<u64> {
+    let mut target_ids = vec![entity_id];
+    if character_id != 0 {
+        target_ids.push(character_id);
     }
     target_ids
 }
@@ -2860,7 +2873,7 @@ impl EncounterState {
             );
             return;
         };
-        let receiver_target_ids = receiver_target_ids(receiver);
+        let receiver_target_ids = receiver_target_ids(receiver.id, receiver.character_id);
         let server_values = IDENTITY_STAT_TYPES
             .map(|stat_type| snapshot.stat_pairs.get(&(stat_type as u8)).copied());
         let stat_sources_stable = IDENTITY_STAT_TYPES.map(|stat_type| {
@@ -2873,7 +2886,6 @@ impl EncounterState {
         self.pending_inspect_measurements
             .push(PendingInspectMeasurement {
                 receiver_snapshot: receiver.clone(),
-                receiver_entity_id: receiver.id,
                 receiver_name: receiver.name.clone(),
                 request_sent_at,
                 receiver_effects,
@@ -2928,11 +2940,8 @@ impl EncounterState {
                 stat_type: sample.stat_type,
                 value: sample.measured_value.round() as i64,
             };
-            let receiver_target_ids = entity_tracker
-                .entities
-                .get(&sample.receiver_entity_id)
-                .map(receiver_target_ids)
-                .unwrap_or_else(|| vec![sample.receiver_entity_id]);
+            let receiver_target_ids =
+                receiver_target_ids(sample.receiver_entity_id, sample.receiver_character_id);
             let applied_to_live = status_tracker.borrow_mut().try_apply_measured_stat(
                 &receiver_target_ids,
                 &sample.effect,
@@ -3055,6 +3064,7 @@ impl EncounterState {
 
             samples.push(IdentityBuffSample {
                 receiver_entity_id: receiver.id,
+                receiver_character_id: receiver.character_id,
                 receiver_name: receiver.name.clone(),
                 effect: effect.clone(),
                 stat_type,
@@ -3109,7 +3119,7 @@ impl EncounterState {
         }
 
         for effect in se_on_source.iter().chain(se_on_target.iter()) {
-            let Some(source_entity) = entity_tracker.get_entity_ref(effect.source_id) else {
+            let Some(source_entity) = entity_tracker.known_effect_owner(effect.source_id) else {
                 continue;
             };
 
@@ -3123,14 +3133,14 @@ impl EncounterState {
                 source_entity.id
             };
             let Some(owner_entity) = entity_tracker
-                .get_entity_ref(owner_entity_id)
+                .known_effect_owner(owner_entity_id)
                 .filter(|entity| entity.entity_type == EntityType::Player)
             else {
                 continue;
             };
             buffered_player_entities
                 .entry(owner_entity.id)
-                .or_insert_with(|| owner_entity.clone());
+                .or_insert_with(|| entity_tracker.snapshot_entity_for_hit(owner_entity));
         }
 
         buffered_player_entities
@@ -3404,7 +3414,7 @@ impl EncounterState {
     }
 
     pub fn rebind_startup_player_entity_ids(&mut self, old_entity_id: u64, new_entity_id: u64) {
-        if old_entity_id == 0 || old_entity_id == new_entity_id {
+        if old_entity_id == 0 || new_entity_id == 0 || old_entity_id == new_entity_id {
             return;
         }
 
@@ -3417,6 +3427,10 @@ impl EncounterState {
             if *owner_id == old_entity_id {
                 *owner_id = new_entity_id;
             }
+        }
+
+        for measurement in &mut self.pending_inspect_measurements {
+            measurement.rebind_player_id(old_entity_id, new_entity_id);
         }
 
         let Some(barrier) = self.startup_barrier.as_mut() else {
@@ -3449,6 +3463,12 @@ impl EncounterState {
                 .se_on_source
                 .iter_mut()
                 .chain(pending_damage.se_on_target.iter_mut())
+                .chain(
+                    pending_damage
+                        .owner_self_effects_by_entity_id
+                        .values_mut()
+                        .flatten(),
+                )
             {
                 if effect.source_id == old_entity_id {
                     effect.source_id = new_entity_id;
@@ -3475,15 +3495,6 @@ impl EncounterState {
                 .owner_self_effects_by_entity_id
                 .remove(&old_entity_id)
             {
-                let owner_self_effects = owner_self_effects
-                    .into_iter()
-                    .map(|mut effect| {
-                        if effect.source_id == old_entity_id {
-                            effect.source_id = new_entity_id;
-                        }
-                        effect
-                    })
-                    .collect();
                 pending_damage
                     .owner_self_effects_by_entity_id
                     .entry(new_entity_id)
@@ -5630,9 +5641,8 @@ mod tests {
                 .stats
                 .clone(),
         );
-        let measurement = PendingInspectMeasurement {
+        let mut measurement = PendingInspectMeasurement {
             receiver_snapshot: tracker.entities[&2].clone(),
-            receiver_entity_id: 2,
             receiver_name: "Player2".into(),
             request_sent_at: created_at + chrono::Duration::seconds(1),
             receiver_effects: vec![effect],
@@ -5657,6 +5667,106 @@ mod tests {
         assert_eq!(samples.len(), 1);
         assert_eq!(samples[0].measured_value, 2500.0);
         assert_eq!(samples[0].receiver_name, "Player2");
+
+        tracker.new_pc(meter_defs::defs::PCStruct {
+            player_id: 10,
+            character_id: 101,
+            name: "Player1".into(),
+            class_id: 204,
+            ..Default::default()
+        });
+        tracker.new_pc(meter_defs::defs::PCStruct {
+            player_id: 20,
+            character_id: 102,
+            name: "Player2".into(),
+            class_id: 204,
+            ..Default::default()
+        });
+        measurement.rebind_player_id(1, 10);
+        measurement.rebind_player_id(2, 20);
+        samples.clear();
+        EncounterState::collect_identity_buff_samples(&measurement, &tracker, &mut samples);
+        assert_eq!(samples.len(), 1);
+        assert_eq!(samples[0].measured_value, 2500.0);
+        assert_eq!(samples[0].effect.source_id, 10);
+        assert_eq!(samples[0].receiver_entity_id, 20);
+        assert_eq!(samples[0].receiver_character_id, 102);
+    }
+
+    #[test]
+    fn queued_hit_captures_target_effect_owner_party_before_replay() {
+        use super::*;
+        use crate::live::rdps::filter_target_effects_for_attacker;
+        use crate::live::{id_tracker::IdTracker, party_tracker::PartyTracker};
+        use std::{cell::RefCell, rc::Rc};
+
+        crate::live::test_data::initialize();
+        let ids = Rc::new(RefCell::new(IdTracker::new()));
+        let parties = Rc::new(RefCell::new(PartyTracker::new(ids.clone())));
+        let statuses = Rc::new(RefCell::new(StatusTracker::new(parties.clone())));
+        let mut tracker = EntityTracker::new(statuses, ids, parties.clone());
+        let attacker = Entity {
+            id: 1,
+            character_id: 101,
+            entity_type: EntityType::Player,
+            ..Default::default()
+        };
+        tracker.entities.insert(1, attacker.clone());
+        tracker.entities.insert(
+            2,
+            Entity {
+                id: 2,
+                character_id: 102,
+                entity_type: EntityType::Player,
+                ..Default::default()
+            },
+        );
+        let boss = Entity {
+            id: 99,
+            entity_type: EntityType::Boss,
+            ..Default::default()
+        };
+        let target_effects = [StatusEffectDetails {
+            status_effect_id: 314260,
+            source_id: 2,
+            owner_is_player: true,
+            ..Default::default()
+        }];
+        for (party_at_hit, attacker_at_replay, owner_at_replay, attributed) in [
+            (Some(40), 40, 900, true),
+            (Some(900), 40, 40, false),
+            (None, 900, 900, true),
+        ] {
+            parties.borrow_mut().add(500, 40, 101, 1, None);
+            if let Some(party) = party_at_hit {
+                parties
+                    .borrow_mut()
+                    .add(500, party, 102, 2, Some("Owner".into()));
+            } else {
+                parties.borrow_mut().remove(40, "Owner".into());
+            }
+            let buffered = EncounterState::collect_buffered_player_entities(
+                &attacker,
+                &[],
+                &target_effects,
+                &mut tracker,
+            );
+            parties
+                .borrow_mut()
+                .add(500, attacker_at_replay, 101, 1, None);
+            parties
+                .borrow_mut()
+                .add(500, owner_at_replay, 102, 2, Some("Owner".into()));
+
+            let effects = filter_target_effects_for_attacker(
+                &buffered[&1],
+                &boss,
+                &target_effects,
+                &tracker,
+                Some(&buffered),
+            );
+            assert_eq!(effects.len(), usize::from(attributed));
+        }
     }
 
     #[test]
