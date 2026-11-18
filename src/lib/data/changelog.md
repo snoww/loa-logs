@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.53.0 - November 11th, 2026
+    v1.54.0 - November 18h, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -17,4 +17,9 @@
 
 #### NEW FEATURES
 
-- update meter for weekly patch
+- update meter for extreme mordum
+
+#### BUG FIXES AND IMPROVEMENTS
+
+- fixed grab duration showing large values on occasion
+- more speculative fixes for party debuffs not registering properly
