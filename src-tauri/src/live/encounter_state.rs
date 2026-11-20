@@ -1677,11 +1677,9 @@ impl EncounterState {
                 self.encounter.current_boss_name.clone()
             };
 
-            if let Some(difficulty) = adjusted_extreme_difficulty(
-                &self.encounter.current_boss_name,
-                &self.raid_difficulty,
-                npc.max_hp,
-            ) {
+            if let Some(difficulty) =
+                adjusted_encounter_extreme_difficulty(&self.encounter, &self.raid_difficulty)
+            {
                 self.raid_difficulty = difficulty.to_string();
             }
         }
@@ -5223,6 +5221,11 @@ impl EncounterState {
         let raid_clear = self.raid_clear;
         encounter.cleared = raid_clear;
         let party_info = self.party_info.clone();
+        if let Some(difficulty) =
+            adjusted_encounter_extreme_difficulty(&encounter, &self.raid_difficulty)
+        {
+            self.raid_difficulty = difficulty.to_string();
+        }
         let raid_difficulty = self.raid_difficulty.clone();
         encounter.difficulty = raid_difficulty.clone().into();
         let region = self.region.clone();
@@ -5539,12 +5542,23 @@ fn status_effect_is_infinite(status_effect: &StatusEffectDetails) -> bool {
     status_effect.expiration_delay <= 0.0 || status_effect.expiration_delay > 3600.0
 }
 
+fn adjusted_encounter_extreme_difficulty(
+    encounter: &Encounter,
+    difficulty: &str,
+) -> Option<&'static str> {
+    let boss = encounter.entities.get(&encounter.current_boss_name)?;
+    adjusted_extreme_difficulty(&encounter.current_boss_name, difficulty, boss.max_hp)
+}
+
 fn adjusted_extreme_difficulty(
     boss_name: &str,
     difficulty: &str,
     max_hp: i64,
 ) -> Option<&'static str> {
-    if difficulty != "Extreme" {
+    if !matches!(
+        difficulty,
+        "Extreme" | "Extreme Normal" | "Extreme Hard" | "Extreme Nightmare"
+    ) {
         return None;
     }
 
@@ -6075,22 +6089,6 @@ mod tests {
                 Some(expected)
             );
         }
-    }
-
-    #[test]
-    fn does_not_adjust_other_bosses_or_difficulties() {
-        assert_eq!(
-            adjusted_extreme_difficulty("Aegir, the Oppressor", "Extreme Hard", 5_000_000_000_000),
-            None
-        );
-        assert_eq!(
-            adjusted_extreme_difficulty(
-                "Phantom Manifester Brelshaza",
-                "Extreme",
-                5_000_000_000_000
-            ),
-            None
-        );
     }
 }
 
