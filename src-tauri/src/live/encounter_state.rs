@@ -28,7 +28,7 @@ use crate::utils::{
     normalize_encounter_damage_totals,
 };
 use chrono::{DateTime, Utc};
-use hashbrown::HashMap;
+use hashbrown::{HashMap, HashSet};
 use log::{info, warn};
 use meter_defs::defs::{CombatAnalyzerEntry, SkillCooldownStruct};
 use serde::Serialize;
@@ -458,6 +458,7 @@ pub struct EncounterState {
 
     pub rdps_valid: bool,
     pub rdps_message: Option<String>,
+    reported_brand_misses: HashSet<u64>,
 
     pub skill_tracker: SkillTracker,
 
@@ -508,6 +509,7 @@ impl EncounterState {
             // todo
             rdps_valid: false,
             rdps_message: None,
+            reported_brand_misses: HashSet::new(),
 
             skill_tracker: SkillTracker::new(),
 
@@ -536,6 +538,7 @@ impl EncounterState {
         let fight_was_active = self.encounter.fight_start != 0;
         // Stale sheets must not calibrate instances of a later fight.
         self.pending_inspect_measurements.clear();
+        self.reported_brand_misses.clear();
 
         self.encounter.fight_start = 0;
         self.encounter.boss_only_damage = self.boss_only_damage;
@@ -4387,6 +4390,46 @@ impl EncounterState {
                     }
                 }
 
+                // An AP buff on the attacker and a brand on the boss share a caster, yet
+                // the brand disappeared from this hit. Sample once per attacker per fight.
+                if is_buffed_by_support
+                    && !is_debuffed_by_support
+                    && !is_hyper_awakening
+                    && dmg_target_entity.entity_type == EntityType::Boss
+                    && damage > 0
+                    && let Some(result) = rdps_result.as_ref()
+                    && self.reported_brand_misses.len() < 16
+                    && !self.reported_brand_misses.contains(&dmg_src_entity.id)
+                    && let Some(brand) = se_on_target.iter().find(|brand| {
+                        brand.unique_group == 210230
+                            && brand.source_id != 0
+                            && se_on_source.iter().any(|buff| {
+                                buff.source_id == brand.source_id
+                                    && SUPPORT_AP_GROUP.contains(&buff.unique_group)
+                            })
+                    })
+                {
+                    self.reported_brand_misses.insert(dmg_src_entity.id);
+                    let caster = buffered_player_entities
+                        .and_then(|players| players.get(&brand.source_id))
+                        .or_else(|| entity_tracker.known_effect_owner(brand.source_id));
+                    info!(
+                        "rdps brand miss fight={} t_ms={} attacker={}({}) party={:?} caster={}({}) party={:?} boss={} brand={} support_credit={} damage={}",
+                        self.encounter.fight_start,
+                        timestamp - self.encounter.fight_start,
+                        dmg_src_entity.name,
+                        dmg_src_entity.id,
+                        entity_tracker.party_membership_for_player(dmg_src_entity),
+                        caster.map_or("?", |entity| entity.name.as_str()),
+                        brand.source_id,
+                        caster
+                            .and_then(|entity| entity_tracker.party_membership_for_player(entity)),
+                        dmg_target_entity.id,
+                        brand.status_effect_id,
+                        result.rdps_damage_received_support,
+                        damage
+                    );
+                }
                 if is_buffed_by_support && !is_hyper_awakening {
                     skill.buffed_by_support += damage;
                     source_entity.damage_stats.buffed_by_support += damage;

@@ -4919,6 +4919,32 @@ mod tests {
                     );
                     assert_eq!(selected.len(), expected_effect_count);
                 }
+                // A late roster entry can change attribution even with both inspect snapshots present.
+                party_tracker
+                    .borrow_mut()
+                    .replace_party_members(500, 900, [(106, "DPS".into())]);
+                for id in [5, 6] {
+                    tracker.entities.get_mut(&id).unwrap().inspect_snapshot =
+                        Some(InspectSnapshot::default());
+                }
+                for registered in [false, true] {
+                    if registered {
+                        party_tracker.borrow_mut().add(500, 900, 105, 5, None);
+                    }
+                    let buffs =
+                        select_source_effects_for_affected_entity(6, 106, &effects, &tracker, None);
+                    assert_eq!(buffs.len(), if registered { 3 } else { 0 });
+                    for (attacker, visible) in [(5, true), (6, registered)] {
+                        let selected = filter_target_effects_for_attacker(
+                            &tracker.entities[&attacker],
+                            &boss,
+                            std::slice::from_ref(&brand),
+                            &tracker,
+                            None,
+                        );
+                        assert_eq!(selected.len(), usize::from(visible));
+                    }
+                }
             }
         }
     }

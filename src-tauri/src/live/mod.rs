@@ -23,7 +23,7 @@ use crate::live::encounter_state::EncounterState;
 use crate::live::entity_tracker::{EntityTracker, get_current_and_max_hp};
 use crate::live::id_tracker::IdTracker;
 use crate::live::manager::{Command, EventManager};
-use crate::live::party_tracker::PartyTracker;
+use crate::live::party_tracker::{PartyTracker, RdpsPartyTrace};
 use crate::live::status_tracker::{
     StatusEffectDetails, StatusEffectTargetType, StatusEffectType, StatusTracker,
     get_status_effect_value,
@@ -177,6 +177,7 @@ pub fn start(args: StartArgs) -> Result<()> {
     ban_list.refresh();
 
     let mut party_freeze = false;
+    let mut rdps_party_trace = RdpsPartyTrace::default();
     let mut banned = false;
     let mut ban_toast_sent = false;
     let mut connection_ids_by_port: HashMap<u16, ConnectionId> = HashMap::new();
@@ -290,7 +291,14 @@ pub fn start(args: StartArgs) -> Result<()> {
         for inspect_event in inspect_results {
             let inspect_name = inspect_event.result.name.clone();
             if DEBUG_TRACE_INSPECT_PACKETS {
-                info!("inspect result received: name={inspect_name}");
+                let result = &inspect_event.result;
+                info!(
+                    "inspect result received: name={inspect_name} stats={} items={} engravings={} gear={:.2}",
+                    result.stat_pairs.len(),
+                    result.equipped_items.len(),
+                    result.engraving_datas.len(),
+                    result.gear_level1.max(result.gear_level2)
+                );
             }
             if let Some(applied) = entity_tracker.apply_inspect_result(inspect_event.result) {
                 if DEBUG_TRACE_INSPECT_PACKETS {
@@ -454,6 +462,11 @@ pub fn start(args: StartArgs) -> Result<()> {
                         ban_toast_sent = false;
                     }
                     let fight_was_active = state.encounter.fight_start != 0;
+                    rdps_party_trace.before_reset(
+                        packet_timestamp,
+                        state.encounter.fight_start,
+                        &party_tracker.borrow(),
+                    );
                     let entity = entity_tracker.init_env(pkt);
                     state.on_init_env(entity);
                     party_freeze = false;
@@ -1101,6 +1114,13 @@ pub fn start(args: StartArgs) -> Result<()> {
                     state.on_support_combat_analyzer_data(pkt.entries, &entity_tracker);
                 }
             }
+            PKTTroopInfo::OPCODE => {
+                rdps_party_trace.troop_info(
+                    packet_timestamp,
+                    state.encounter.fight_start,
+                    &packet.body,
+                );
+            }
             PKTPartyInfo::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTPartyInfo>().unwrap() {
                     let member_ids = pkt
@@ -1503,6 +1523,24 @@ pub fn start(args: StartArgs) -> Result<()> {
                 }
             }
             _ => {}
+        }
+        let fight_start = state.encounter.fight_start;
+        let roster_event = match packet.header.opcode {
+            _ if fight_start != 0 && rdps_party_trace.fight_start != fight_start => {
+                Some("fight_start")
+            }
+            PKTPartyInfo::OPCODE => Some("PartyInfo"),
+            PKTPartyLeaveResult::OPCODE => Some("PartyLeaveResult"),
+            PKTPartyStatusEffectResultNotify::OPCODE => Some("PartyStatusEffectResultNotify"),
+            _ => None,
+        };
+        if let Some(reason) = roster_event {
+            rdps_party_trace.observe(
+                packet_timestamp,
+                fight_start,
+                &party_tracker.borrow(),
+                reason,
+            );
         }
         entity_tracker.synchronize_next_skill_markers();
         exceed_process_duration(

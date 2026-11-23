@@ -1,6 +1,7 @@
 use crate::live::id_tracker::IdTracker;
 use hashbrown::{HashMap, HashSet};
 use std::cell::RefCell;
+use std::collections::VecDeque;
 use std::rc::Rc;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -17,7 +18,186 @@ pub struct PartyTracker {
     name: Option<String>,
 }
 
+#[derive(Default)]
+pub(super) struct RdpsPartyTrace {
+    pub fight_start: i64,
+    lines: usize,
+    previous: HashMap<u64, PartyMembership>,
+    context: VecDeque<RosterObservation>,
+    dropped: usize,
+}
+
+struct RosterObservation {
+    first_ms: i64,
+    last_ms: i64,
+    kind: RosterEvidence,
+    event: String,
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum RosterEvidence {
+    Troop,
+    Reset,
+    Membership,
+}
+
+impl RdpsPartyTrace {
+    const MAX_LINES: usize = 16;
+
+    pub fn observe(
+        &mut self,
+        timestamp: i64,
+        fight_start: i64,
+        tracker: &PartyTracker,
+        reason: &str,
+    ) {
+        let starting = fight_start != 0 && self.fight_start != fight_start;
+        if starting {
+            self.fight_start = fight_start;
+            self.lines = 0;
+            for observation in &self.context {
+                log::info!(
+                    "rdps party fight={fight_start} context first_ms={} last_ms={} {}",
+                    observation.first_ms - fight_start,
+                    observation.last_ms - fight_start,
+                    observation.event
+                );
+            }
+        } else if self.previous == tracker.memberships
+            || (fight_start != 0 && self.lines == Self::MAX_LINES)
+        {
+            return;
+        }
+        self.previous.clone_from(&tracker.memberships);
+        let event = format!("event={reason} {}", tracker.describe_roster());
+        if fight_start == 0 {
+            self.record_context(timestamp, 0, RosterEvidence::Membership, event);
+        } else {
+            self.lines += 1;
+            log::info!(
+                "rdps party fight={fight_start} t_ms={} {event} sample={}/{} context_dropped={}",
+                timestamp - fight_start,
+                self.lines,
+                Self::MAX_LINES,
+                self.dropped
+            );
+        }
+    }
+
+    // Keep setup evidence across wipes: the server may send the raid roster only once.
+    fn record_context(
+        &mut self,
+        timestamp: i64,
+        fight_start: i64,
+        kind: RosterEvidence,
+        event: String,
+    ) {
+        if let Some(last) = self.context.back_mut()
+            && last.event == event
+            && (fight_start == 0 || last.last_ms >= fight_start)
+        {
+            last.last_ms = timestamp;
+            return;
+        }
+        // Frequent single-member updates must not evict the grouped packet or reset evidence.
+        let limit = match kind {
+            RosterEvidence::Membership => 8,
+            _ => 4,
+        };
+        let mut same_kind = self
+            .context
+            .iter()
+            .enumerate()
+            .filter(|(_, entry)| entry.kind == kind);
+        if let Some((oldest, _)) = same_kind.next()
+            && same_kind.count() + 1 == limit
+        {
+            self.context.remove(oldest);
+            self.dropped += 1;
+        }
+        if fight_start != 0 && self.fight_start == fight_start && self.lines < Self::MAX_LINES {
+            self.lines += 1;
+            log::info!(
+                "rdps party fight={fight_start} t_ms={} {event}",
+                timestamp - fight_start
+            );
+        }
+        self.context.push_back(RosterObservation {
+            first_ms: timestamp,
+            last_ms: timestamp,
+            kind,
+            event,
+        });
+    }
+
+    pub fn troop_info(&mut self, timestamp: i64, fight_start: i64, body: &[u8]) {
+        let event = match super::parse_complete_packet::<meter_defs::defs::PKTTroopInfo>(body) {
+            Ok(pkt) => describe_troop_roster(&pkt),
+            Err(_) => format!("event=TroopInfo decode_failed bytes={}", body.len()),
+        };
+        self.record_context(timestamp, fight_start, RosterEvidence::Troop, event);
+    }
+
+    pub fn before_reset(&mut self, timestamp: i64, fight_start: i64, tracker: &PartyTracker) {
+        self.record_context(
+            timestamp,
+            fight_start,
+            RosterEvidence::Reset,
+            format!("event=InitEnv cleared {}", tracker.describe_roster()),
+        );
+        self.previous.clear();
+    }
+}
+
+fn describe_troop_roster(pkt: &meter_defs::defs::PKTTroopInfo) -> String {
+    let groups = &pkt
+        .sub_p_k_t_troop_info_1_5_130
+        .sub_p_k_t_troop_info_2_4_116
+        .party_member_datas;
+    let mut remaining = 32;
+    let mut group_members = Vec::new();
+    for group in groups.iter().take(32) {
+        let members = group
+            .iter()
+            .take(remaining)
+            .map(|member| format!("{}({})", member.name, member.character_id))
+            .collect::<Vec<_>>();
+        remaining -= members.len();
+        group_members.push(format!("[{}]", members.join(" ")));
+        if remaining == 0 {
+            break;
+        }
+    }
+    format!(
+        "event=TroopInfo groups={} members={} {}",
+        groups.len(),
+        groups.iter().map(Vec::len).sum::<usize>(),
+        group_members.join(" ")
+    )
+}
+
 impl PartyTracker {
+    fn describe_roster(&self) -> String {
+        let mut roster = self.memberships().collect::<Vec<_>>();
+        roster.sort_unstable_by_key(|(character, party)| (*party, *character));
+        let members = roster
+            .iter()
+            .take(32)
+            .map(|(character, party)| {
+                let name = self
+                    .character_id_to_name
+                    .get(character)
+                    .map_or("?", String::as_str);
+                format!(
+                    "{name}({character})={}/{}",
+                    party.raid_instance_id, party.party_instance_id
+                )
+            })
+            .collect::<Vec<_>>()
+            .join(" ");
+        format!("members={} [ {members} ]", roster.len())
+    }
+
     pub fn new(id_tracker: Rc<RefCell<IdTracker>>) -> Self {
         Self {
             id_tracker,
@@ -184,5 +364,75 @@ impl PartyTracker {
         sorted_party_ids
             .iter()
             .position(|tracked_party_id| *tracked_party_id == party_id)
+    }
+}
+
+#[cfg(test)]
+mod trace_tests {
+    use super::*;
+    use meter_defs::{
+        BiSerializable,
+        defs::{PKTTroopInfo, PartyMemberData},
+    };
+
+    #[test]
+    fn grouped_packet_and_discarded_mapping_survive_pre_pull_member_updates() {
+        let mut packet = PKTTroopInfo::default();
+        let roster = &mut packet
+            .sub_p_k_t_troop_info_1_5_130
+            .sub_p_k_t_troop_info_2_4_116;
+        roster.num = 2;
+        roster.b_0 = vec![0, 1];
+        roster.str_0 = vec![String::new(); 2];
+        let member = |character_id, name: &str| PartyMemberData {
+            character_id,
+            name: name.into(),
+            ..Default::default()
+        };
+        roster.party_member_datas = vec![
+            vec![member(10, "Artist"), member(20, "DPS")],
+            vec![member(30, "Bard")],
+        ];
+        let bytes = packet.to_bytes().unwrap();
+
+        let mut trace = RdpsPartyTrace::default();
+        let mut tracker = PartyTracker::new(Rc::new(RefCell::new(IdTracker::new())));
+        trace.troop_info(100, 0, &bytes);
+        trace.troop_info(110, 0, &bytes);
+        tracker.add(7, 42, 10, 0, Some("Artist".into()));
+        trace.observe(120, 0, &tracker, "PartyInfo");
+        trace.before_reset(130, 0, &tracker);
+        tracker.reset_party_mappings();
+        for id in 20..32 {
+            tracker.add(7, 42, id, 0, None);
+            trace.observe(
+                140 + id as i64,
+                0,
+                &tracker,
+                "PartyStatusEffectResultNotify",
+            );
+        }
+        trace.observe(200, 200, &tracker, "fight_start");
+        let grouped = &trace.context[0];
+        assert_eq!((grouped.first_ms, grouped.last_ms), (100, 110));
+        assert_eq!(
+            grouped.event,
+            "event=TroopInfo groups=2 members=3 [Artist(10) DPS(20)] [Bard(30)]"
+        );
+        assert!(
+            trace.context[1]
+                .event
+                .contains("event=InitEnv cleared members=1 [ Artist(10)=7/42 ]")
+        );
+        assert_eq!(trace.context.len(), 10);
+        assert_eq!(trace.dropped, 5);
+        assert!(!trace.previous.contains_key(&10));
+
+        trace.troop_info(201, 200, &[]);
+        assert_eq!(
+            trace.context.back().unwrap().event,
+            "event=TroopInfo decode_failed bytes=0"
+        );
+        assert_eq!(trace.lines, 2);
     }
 }
