@@ -568,3 +568,197 @@ fn grab_abnormal_movement_survives_missing_damage_key_but_requires_known_target(
     ));
     assert!(open(&encounter));
 }
+
+#[test]
+fn skill_cancel_decoder_round_trips_and_requires_complete_packet() {
+    use meter_defs::defs::PKTSkillCancelNotify;
+
+    let body = PKTSkillCancelNotify {
+        object_id: 0x1122334455667788,
+        skill_id: 16050,
+        cancel_reason: 1,
+        direction_yaw: 0x1234,
+        bytearray_0: vec![0],
+        bytearray_1: vec![0],
+        ..Default::default()
+    }
+    .to_bytes()
+    .unwrap();
+    let packet = parse_complete_packet::<PKTSkillCancelNotify>(&body).unwrap();
+    assert_eq!(packet.object_id, 0x1122334455667788);
+    assert_eq!(packet.skill_id, 16050);
+    assert_eq!(packet.cancel_reason, 1);
+    assert_eq!(packet.direction_yaw, 0x1234);
+    assert_eq!(packet.to_bytes().unwrap(), body);
+    assert!(parse_complete_packet::<PKTSkillCancelNotify>(&body[..body.len() - 1]).is_err());
+    let mut trailing = body.clone();
+    trailing.push(0);
+    assert!(parse_complete_packet::<PKTSkillCancelNotify>(&trailing).is_err());
+}
+
+#[test]
+fn paralysis_sway_and_freeze_track_duration_and_clip_cleanly() {
+    let mut encounter = Encounter {
+        entities: HashMap::from_iter([(
+            "player".into(),
+            EncounterEntity {
+                id: 10,
+                name: "player".into(),
+                entity_type: EntityType::Player,
+                ..Default::default()
+            },
+        )]),
+        last_combat_packet: 10_000,
+        ..Default::default()
+    };
+
+    // Sway via PKTSkillDamageAbnormalMoveNotify: duration = move_time + freeze_time = 650ms.
+    let mut sway = SkillDamageAbnormalMoveEvent {
+        move_type: 4,
+        movement_sequence: 1,
+        ..Default::default()
+    };
+    sway.skill_damage_event.target_id = 10;
+    sway.skill_move_option_data.move_time = Some(0.25);
+    sway.skill_move_option_data.freeze_time = Some(0.40);
+    on_abnormal_move(&mut encounter, &HashMap::new(), &sway, 1_000);
+
+    let events = &encounter.entities["player"].damage_stats.incapacitations;
+    assert_eq!(events.len(), 1);
+    assert_eq!(events[0].event_type, IncapacitationEventType::PARALYSIS);
+    assert_eq!((events[0].timestamp, events[0].duration), (1_000, 650));
+
+    // Early skill start clips active paralysis to elapsed duration (300ms).
+    on_skill_start(&mut encounter, 10, 1_300);
+    assert_eq!(
+        encounter.entities["player"].damage_stats.incapacitations[0].duration,
+        300
+    );
+
+    // Delayed standalone PKTSkillMoveNotify sway (move_type=4) applies after delay_milliseconds.
+    let delayed_sway = PKTSkillMoveNotify {
+        move_time: 0.2,
+        freeze_time: 0.8,
+        delay_mode: Some(2),
+        delay_milliseconds: Some(200),
+        ..movement(4, 2)
+    };
+    on_skill_move(&mut encounter, &HashMap::new(), &delayed_sway, 2_000);
+    encounter.advance_grab_movements(2_199);
+    assert_eq!(
+        encounter.entities["player"]
+            .damage_stats
+            .incapacitations
+            .len(),
+        1
+    );
+    encounter.advance_grab_movements(2_200);
+    assert_eq!(
+        encounter.entities["player"].damage_stats.incapacitations[1].event_type,
+        IncapacitationEventType::PARALYSIS
+    );
+    assert_eq!(
+        (
+            encounter.entities["player"].damage_stats.incapacitations[1].timestamp,
+            encounter.entities["player"].damage_stats.incapacitations[1].duration
+        ),
+        (2_200, 1_000)
+    );
+
+    // Subsequent knockdown clips active paralysis at 2_500 (300ms elapsed) and records FALL_DOWN.
+    let knockdown = PKTSkillMoveNotify {
+        move_time: 0.2,
+        down_time: 1.5,
+        stand_up_time: 0.3,
+        ..movement(5, 3)
+    };
+    on_skill_move(&mut encounter, &HashMap::new(), &knockdown, 2_500);
+    let events = &encounter.entities["player"].damage_stats.incapacitations;
+    assert_eq!(events[1].duration, 300);
+    assert_eq!(events[2].event_type, IncapacitationEventType::FALL_DOWN);
+    assert_eq!((events[2].timestamp, events[2].duration), (2_500, 2_000));
+
+    // MoveType::STOP (0) terminates active abnormal movement.
+    on_skill_move(&mut encounter, &HashMap::new(), &movement(0, 4), 3_000);
+    assert_eq!(
+        encounter.entities["player"].damage_stats.incapacitations[2].duration,
+        500
+    );
+
+    // FREEZE_STRONG (9) and FREEZE_COUNTER (11) record paralysis when NOT grabbed.
+    let freeze_strong = PKTSkillMoveNotify {
+        move_time: 0.1,
+        stand_up_time: 0.9,
+        ..movement(9, 5)
+    };
+    on_skill_move(&mut encounter, &HashMap::new(), &freeze_strong, 4_000);
+    let events = &encounter.entities["player"].damage_stats.incapacitations;
+    assert_eq!(events[3].event_type, IncapacitationEventType::PARALYSIS);
+    assert_eq!((events[3].timestamp, events[3].duration), (4_000, 900));
+
+    // FREEZE_STRONG during an active grab does NOT double-record paralysis.
+    encounter
+        .entities
+        .get_mut("player")
+        .unwrap()
+        .damage_stats
+        .start_grab(20, 5_000);
+    on_skill_move(&mut encounter, &HashMap::new(), &freeze_strong, 5_100);
+    assert_eq!(
+        encounter.entities["player"]
+            .damage_stats
+            .incapacitations
+            .iter()
+            .filter(|e| e.event_type == IncapacitationEventType::PARALYSIS)
+            .count(),
+        3
+    );
+
+    // Replacement movements with zero down_time (STAND_UP=3, push BRING_DOWN=8)
+    // must clip active paralysis rather than leaving it running.
+    let sway_move = PKTSkillMoveNotify {
+        move_time: 0.2,
+        freeze_time: 0.8,
+        ..movement(4, 6)
+    };
+    on_skill_move(&mut encounter, &HashMap::new(), &sway_move, 6_000);
+    let stand_up = PKTSkillMoveNotify {
+        move_time: 0.3,
+        ..movement(3, 7)
+    };
+    on_skill_move(&mut encounter, &HashMap::new(), &stand_up, 6_250);
+    let last_paralysis = encounter.entities["player"]
+        .damage_stats
+        .incapacitations
+        .iter()
+        .rev()
+        .find(|e| e.event_type == IncapacitationEventType::PARALYSIS)
+        .unwrap();
+    assert_eq!(
+        (last_paralysis.timestamp, last_paralysis.duration),
+        (6_000, 250)
+    );
+
+    let sway_move2 = PKTSkillMoveNotify {
+        move_time: 0.2,
+        freeze_time: 0.8,
+        ..movement(4, 8)
+    };
+    on_skill_move(&mut encounter, &HashMap::new(), &sway_move2, 7_000);
+    let zero_down_push = PKTSkillMoveNotify {
+        move_time: 0.4,
+        ..movement(8, 9)
+    };
+    on_skill_move(&mut encounter, &HashMap::new(), &zero_down_push, 7_350);
+    let last_paralysis2 = encounter.entities["player"]
+        .damage_stats
+        .incapacitations
+        .iter()
+        .rev()
+        .find(|e| e.event_type == IncapacitationEventType::PARALYSIS)
+        .unwrap();
+    assert_eq!(
+        (last_paralysis2.timestamp, last_paralysis2.duration),
+        (7_000, 350)
+    );
+}

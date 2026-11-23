@@ -1345,6 +1345,7 @@ impl EncounterState {
         target.back_attacks += source.back_attacks;
         target.front_attacks += source.front_attacks;
         target.counters += source.counters;
+        target.interrupts.merge(source.interrupts);
         if target.identity_stats.is_none() {
             target.identity_stats = source.identity_stats;
         }
@@ -1380,6 +1381,7 @@ impl EncounterState {
         target.buffed_by_hat += source.buffed_by_hat;
         target.debuffed_by_support += source.debuffed_by_support;
         target.casts += source.casts;
+        target.interrupts.merge(source.interrupts);
         target.hits += source.hits;
         target.crits += source.crits;
         if target.adjusted_crit.is_none() {
@@ -1896,6 +1898,93 @@ impl EncounterState {
         }
 
         (skill_id, summons)
+    }
+
+    pub fn on_skill_cancel(&mut self, source_entity: &Entity, skill_id: u32, cancel_reason: u8) {
+        Self::record_skill_cancel(
+            &mut self.encounter,
+            &self.skill_tracker,
+            source_entity,
+            skill_id,
+            cancel_reason,
+        );
+    }
+
+    pub(crate) fn is_excluded_interrupt_skill(skill_id: u32) -> bool {
+        let Some(skill_data) = SKILL_DATA.try_get().and_then(|map| map.get(&skill_id)) else {
+            return false;
+        };
+        if matches!(
+            skill_data.action_type.as_str(),
+            "default" | "moving" | "getup"
+        ) || skill_data.skill_type == "getup"
+        {
+            return true;
+        }
+        matches!(skill_data.name.as_deref(), Some("Basic Attack"))
+    }
+
+    pub(crate) fn record_skill_cancel(
+        encounter: &mut Encounter,
+        skill_tracker: &SkillTracker,
+        source_entity: &Entity,
+        skill_id: u32,
+        cancel_reason: u8,
+    ) {
+        if encounter.fight_start == 0
+            || skill_id == 0
+            || source_entity.entity_type != EntityType::Player
+        {
+            return;
+        }
+
+        let Some(category) = SkillInterruptCategory::from_cancel_reason(cancel_reason) else {
+            return;
+        };
+
+        if Self::is_excluded_interrupt_skill(skill_id) {
+            return;
+        }
+
+        let (skill_name, skill_icon, _, _, is_hyper_awakening) = if SKILL_DATA.try_get().is_some() {
+            get_skill_name_and_icon(skill_id, 0, skill_tracker, source_entity.id)
+        } else {
+            (skill_id.to_string(), String::new(), None, false, false)
+        };
+
+        let entity = encounter
+            .entities
+            .entry(source_entity.name.clone())
+            .or_insert_with(|| encounter_entity_from_entity(source_entity));
+
+        if entity.class_id == 0 && source_entity.class_id > 0 {
+            entity.class_id = source_entity.class_id;
+            entity.class = get_class_from_id(&source_entity.class_id);
+        }
+
+        entity.skill_stats.interrupts.record(category);
+
+        if let Some(skill) = entity.skills.get_mut(&skill_id) {
+            skill.interrupts.record(category);
+        } else if !skill_name.is_empty()
+            && let Some(skill) = entity.skills.values_mut().find(|s| s.name == skill_name)
+        {
+            skill.interrupts.record(category);
+        } else {
+            let mut interrupts = SkillInterrupts::default();
+            interrupts.record(category);
+            entity.skills.insert(
+                skill_id,
+                Skill {
+                    id: skill_id,
+                    name: skill_name,
+                    icon: skill_icon,
+                    interrupts,
+                    is_hyper_awakening,
+                    ..Default::default()
+                },
+            );
+        }
     }
 
     fn start_fight(
@@ -3770,6 +3859,44 @@ impl EncounterState {
                 && (target_type != EntityType::Player || source_type == EntityType::Boss))
     }
 
+    pub(crate) fn ensure_damage_skill_entry(
+        source_entity: &mut EncounterEntity,
+        skill_key: u32,
+        skill_name: String,
+        skill_icon: String,
+    ) -> u32 {
+        if let Some(skill) = source_entity.skills.get_mut(&skill_key) {
+            if skill.casts == 0 {
+                skill.casts = 1;
+                source_entity.skill_stats.casts += 1;
+            }
+            return skill_key;
+        }
+        if let Some(skill) = source_entity
+            .skills
+            .values_mut()
+            .find(|s| s.name == skill_name)
+        {
+            if skill.casts == 0 {
+                skill.casts = 1;
+                source_entity.skill_stats.casts += 1;
+            }
+            return skill.id;
+        }
+        source_entity.skills.insert(
+            skill_key,
+            Skill {
+                id: skill_key,
+                name: skill_name,
+                icon: skill_icon,
+                casts: 1,
+                ..Default::default()
+            },
+        );
+        source_entity.skill_stats.casts += 1;
+        skill_key
+    }
+
     #[allow(clippy::too_many_arguments)]
     fn apply_damage(
         &mut self,
@@ -3810,7 +3937,7 @@ impl EncounterState {
 
         // get skill info here early for stagger tracking
         // since we can stagger mobs that are not bosses that would otherwise be ignored
-        let mut skill_key = if is_battle_item {
+        let skill_key = if is_battle_item {
             // pad battle item skill effect id to avoid overlap with skill ids
             skill_effect_id + 1_000_000
         } else if damage_data.skill_id == 0 {
@@ -3833,27 +3960,8 @@ impl EncounterState {
 
         let battle_item_name = skill_name.clone();
 
-        if !source_entity.skills.contains_key(&skill_key) {
-            if let Some(skill) = source_entity
-                .skills
-                .values()
-                .find(|&s| s.name == skill_name)
-            {
-                skill_key = skill.id;
-            } else {
-                source_entity.skills.insert(
-                    skill_key,
-                    Skill {
-                        id: skill_key,
-                        name: skill_name,
-                        icon: skill_icon,
-                        casts: 1,
-                        ..Default::default()
-                    },
-                );
-                source_entity.skill_stats.casts += 1;
-            }
-        }
+        let skill_key =
+            Self::ensure_damage_skill_entry(source_entity, skill_key, skill_name, skill_icon);
 
         // add stagger damage here
         source_entity
@@ -5530,6 +5638,7 @@ impl EncounterState {
             buffed_by_hat: skill.buffed_by_hat,
             debuffed_by_support: skill.debuffed_by_support,
             casts: skill.casts,
+            interrupts: skill.interrupts,
             hits: skill.hits,
             crits: skill.crits,
             adjusted_crit: skill.adjusted_crit,

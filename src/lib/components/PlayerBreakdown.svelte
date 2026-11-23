@@ -16,7 +16,7 @@
   import { openUrl } from "@tauri-apps/plugin-opener";
   import { flip } from "svelte/animate";
 
-  import { unbuffedDamageTooltip, unbuffedDpsTooltip } from "./DamageMeterColumns.svelte";
+  import { skillInterruptsTooltip, unbuffedDamageTooltip, unbuffedDpsTooltip } from "./DamageMeterColumns.svelte";
   import PlayerBreakdownHeader from "./PlayerBreakdownHeader.svelte";
   import PlayerBreakdownRow from "./PlayerBreakdownRow.svelte";
   import { badTooltip, fadTooltip } from "./Snippets.svelte";
@@ -305,6 +305,17 @@
       {#if enc.curSettings.breakdown.casts}
         <td class="px-1 text-center">
           {entity.skillStats.casts}
+        </td>
+      {/if}
+      {#if enc.curSettings.breakdown.interrupts && entityState.anySkillInterrupts}
+        <td class="px-1 text-center">
+          <QuickTooltip tooltip={skillInterruptsTooltip} tooltipProps={entityState}>
+            {#if entityState.skillInterrupts.total > 0}
+              {entityState.skillInterrupts.total}
+            {:else}
+              -
+            {/if}
+          </QuickTooltip>
         </td>
       {/if}
       {#if enc.curSettings.breakdown.cpm}

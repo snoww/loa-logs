@@ -2726,6 +2726,7 @@ fn merge_player_identity_state(target: &mut Entity, previous: Entity) {
 pub struct Entity {
     pub next_skill: super::next_skill::NextSkillState,
     pub npc_action: Option<crate::live::npc_windows::ObservedAction>,
+    pub active_skill_cast: Option<crate::live::skill_windows::ActiveSkillCast>,
     pub id: u64,
     pub entity_type: EntityType,
     pub name: String,

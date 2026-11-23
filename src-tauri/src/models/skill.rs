@@ -1,3 +1,4 @@
+use super::SkillInterrupts;
 use hashbrown::HashMap;
 use serde::{Deserialize, Serialize};
 
@@ -17,6 +18,8 @@ pub struct Skill {
     pub buffed_by_hat: i64,
     pub debuffed_by_support: i64,
     pub casts: i64,
+    #[serde(default, skip_serializing_if = "SkillInterrupts::is_empty")]
+    pub interrupts: SkillInterrupts,
     pub hits: i64,
     pub crits: i64,
     #[serde(skip_serializing_if = "Option::is_none")]

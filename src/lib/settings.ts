@@ -26,6 +26,7 @@ export interface BreakdownBase extends DisplayFlags {
   avgDamage: boolean;
   maxDamage: boolean;
   casts: boolean;
+  interrupts: boolean;
   cpm: boolean;
   hits: boolean;
   hpm: boolean;
@@ -97,6 +98,7 @@ export interface CommonSettings extends DisplayFlags {
   incapacitatedTime: boolean;
   deathTime: boolean;
   counters: boolean;
+  skillInterrupts: boolean;
   positionalDmgPercent: boolean;
   stagger: boolean;
 }

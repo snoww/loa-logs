@@ -159,7 +159,7 @@ impl DamageStats {
     pub fn start_grab(&mut self, source_id: u64, timestamp: i64) {
         self.advance_grab_movements(timestamp);
         self.grab_state.pending_detach = false;
-        self.clip_knockdowns(timestamp);
+        self.clip_abnormal_moves(timestamp);
         if let Some(event) = self
             .incapacitations
             .iter_mut()
@@ -220,6 +220,74 @@ impl Encounter {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SkillInterruptCategory {
+    Paralysis,
+    Push,
+    CrowdControl,
+    Grab,
+    Other,
+}
+
+impl SkillInterruptCategory {
+    /// Classify a native `SkillCancelReason` byte into a player-facing involuntary
+    /// interruption cause. Voluntary, system, and NPC-only cancel reasons return `None`.
+    pub fn from_cancel_reason(reason: u8) -> Option<Self> {
+        match reason {
+            // ABNORMAL_SWAY (1)
+            1 => Some(Self::Paralysis),
+            // ABNORMAL_BRING_DOWN (2), ABNORMAL_ROOT_MOTION (3)
+            2 | 3 => Some(Self::Push),
+            // DEBUFF_NO_ACTION (8), ADD_STATUS_EFFECT (29)
+            8 | 29 => Some(Self::CrowdControl),
+            // GRAP_RELEASE (6), GRAP_FREEZE_STRONG (7)
+            6 | 7 => Some(Self::Grab),
+            // BE_KILLED (5), FORCE_TELEPORT_SKILL_BY_FALLEN_VOLUME (32), ABNORMAL_EVENT (40)
+            5 | 32 | 40 => Some(Self::Other),
+            // Voluntary, normal, system, and NPC-only reasons are excluded.
+            _ => None,
+        }
+    }
+}
+
+#[derive(Debug, Default, Serialize, Deserialize, Clone, Copy, PartialEq, Eq)]
+#[serde(rename_all = "camelCase", default)]
+pub struct SkillInterrupts {
+    pub paralysis: i64,
+    pub push: i64,
+    pub crowd_control: i64,
+    pub grab: i64,
+    pub other: i64,
+}
+
+impl SkillInterrupts {
+    pub fn total(&self) -> i64 {
+        self.paralysis + self.push + self.crowd_control + self.grab + self.other
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total() == 0
+    }
+
+    pub fn record(&mut self, category: SkillInterruptCategory) {
+        match category {
+            SkillInterruptCategory::Paralysis => self.paralysis += 1,
+            SkillInterruptCategory::Push => self.push += 1,
+            SkillInterruptCategory::CrowdControl => self.crowd_control += 1,
+            SkillInterruptCategory::Grab => self.grab += 1,
+            SkillInterruptCategory::Other => self.other += 1,
+        }
+    }
+
+    pub fn merge(&mut self, other: Self) {
+        self.paralysis += other.paralysis;
+        self.push += other.push;
+        self.crowd_control += other.crowd_control;
+        self.grab += other.grab;
+        self.other += other.other;
+    }
+}
+
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct SkillStats {
@@ -229,6 +297,8 @@ pub struct SkillStats {
     pub back_attacks: i64,
     pub front_attacks: i64,
     pub counters: i64,
+    #[serde(default, skip_serializing_if = "SkillInterrupts::is_empty")]
+    pub interrupts: SkillInterrupts,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub identity_stats: Option<String>,
 }
@@ -272,6 +342,7 @@ pub enum IncapacitationEventType {
     FALL_DOWN,
     CROWD_CONTROL,
     GRAB,
+    PARALYSIS,
 }
 
 pub type IdentityLog = Vec<(i64, (u32, u32, u32))>;

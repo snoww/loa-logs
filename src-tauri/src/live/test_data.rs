@@ -21,6 +21,7 @@ pub fn initialize() {
             serde_json::from_slice(&std::fs::read(path).unwrap()).unwrap()
         }
         NPC_WINDOW_DATA.set(read("NpcWindows.json")).unwrap();
+        SKILL_WINDOW_DATA.set(read("SkillWindows.json")).unwrap();
         let mut buffs: HashMap<u32, crate::models::SkillBuffData> = read("SkillBuff.json");
         buffs.insert(
             BASE_AP_BUFF_ID,

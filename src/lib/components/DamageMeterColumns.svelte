@@ -7,7 +7,7 @@
 
   import { badTooltip, damageValue, fadTooltip, percentValue } from "./Snippets.svelte";
 
-  export { unbuffedDamageTooltip, unbuffedDpsTooltip };
+  export { skillInterruptsTooltip, unbuffedDamageTooltip, unbuffedDpsTooltip };
 
   export const logColumns: LogColumn<EncounterState, EntityState>[] = [
     // Dead for
@@ -55,7 +55,7 @@
         return enc.anyPlayerIncapacitated;
       },
       headerText: "INCAP",
-      headerTooltip: "Time spent in the air, on the floor, grabbed, or affected by crowd control effects.",
+      headerTooltip: "Time spent in the air, on the floor, paralyzed, grabbed, or affected by crowd control effects.",
       value: incap,
       valueTooltip: incapTooltip
     },
@@ -341,6 +341,18 @@
       value: counters,
       valueTooltip: null,
       width: "w-10"
+    },
+
+    // Skill Interrupts
+    {
+      show(enc) {
+        return enc.curSettings.skillInterrupts && enc.anySkillInterrupts;
+      },
+      headerText: "INT",
+      headerTooltip: "Skills interrupted by paralysis, push, crowd control, grab, or other effects",
+      value: skillInterrupts,
+      valueTooltip: skillInterruptsTooltip,
+      width: "w-10"
     }
   ];
 </script>
@@ -379,9 +391,10 @@
   {#if state.entity.entityType === EntityType.ESTHER}
     N/A
   {:else}
-    {@const { knockDown, cc, grab } = state.incapacitatedTimeMs}
+    {@const { knockDown, paralysis, cc, grab } = state.incapacitatedTimeMs}
     <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
       <span>Knockdowns: {(knockDown / 1000).toFixed(1)}s</span>
+      <span>Paralysis: {(paralysis / 1000).toFixed(1)}s</span>
       <span>Crowd control: {(cc / 1000).toFixed(1)}s</span>
       <span>Grabbed: {(grab / 1000).toFixed(1)}s</span>
     </div>
@@ -500,6 +513,29 @@
     -
   {:else}
     {state.entity.skillStats.counters}
+  {/if}
+{/snippet}
+
+{#snippet skillInterrupts(state: EntityState)}
+  {#if state.entity.entityType === EntityType.ESTHER || state.skillInterrupts.total === 0}
+    -
+  {:else}
+    {state.skillInterrupts.total}
+  {/if}
+{/snippet}
+
+{#snippet skillInterruptsTooltip(state: EntityState)}
+  {#if state.entity.entityType === EntityType.ESTHER || state.skillInterrupts.total === 0}
+    N/A
+  {:else}
+    {@const { paralysis, push, crowdControl, grab, other } = state.skillInterrupts}
+    <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
+      <span>Paralysis: {paralysis}</span>
+      <span>Push: {push}</span>
+      <span>Crowd control: {crowdControl}</span>
+      <span>Grab: {grab}</span>
+      <span>Other: {other}</span>
+    </div>
   {/if}
 {/snippet}
 

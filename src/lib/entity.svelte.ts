@@ -179,12 +179,37 @@ export class EntityState {
     return {
       total: this.computeIncapacitatedTime(events),
       knockDown: this.computeIncapacitatedTime(events.filter((event) => event.type === "FALL_DOWN")),
+      paralysis: this.computeIncapacitatedTime(events.filter((event) => event.type === "PARALYSIS")),
       cc: this.computeIncapacitatedTime(events.filter((event) => event.type === "CROWD_CONTROL")),
       grab: this.computeIncapacitatedTime(events.filter((event) => event.type === "GRAB"))
     };
   });
 
   grabCount = $derived(this.entity.damageStats.incapacitations.filter((event) => event.type === "GRAB").length);
+
+  skillInterrupts = $derived.by(() => {
+    const intr = this.entity.skillStats.interrupts;
+    const paralysis = intr?.paralysis ?? 0;
+    const push = intr?.push ?? 0;
+    const crowdControl = intr?.crowdControl ?? 0;
+    const grab = intr?.grab ?? 0;
+    const other = intr?.other ?? 0;
+    return {
+      total: paralysis + push + crowdControl + grab + other,
+      paralysis,
+      push,
+      crowdControl,
+      grab,
+      other
+    };
+  });
+
+  anySkillInterrupts = $derived(
+    Object.values(this.entity.skills).some((skill) => {
+      const intr = skill.interrupts;
+      return intr ? intr.paralysis + intr.push + intr.crowdControl + intr.grab + intr.other > 0 : false;
+    })
+  );
 
   skillSort: SkillSort = $state("buffed");
 

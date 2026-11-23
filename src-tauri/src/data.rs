@@ -27,6 +27,9 @@ pub static NPC_DATA: OnceLockWrapper<HashMap<u32, Npc>> = OnceLockWrapper::new()
 #[cfg(feature = "meter-core")]
 pub static NPC_WINDOW_DATA: OnceLockWrapper<crate::live::npc_windows::NpcWindowData> =
     OnceLockWrapper::new();
+#[cfg(feature = "meter-core")]
+pub static SKILL_WINDOW_DATA: OnceLockWrapper<crate::live::skill_windows::SkillWindowData> =
+    OnceLockWrapper::new();
 pub static GEM_SKILL_MAP: OnceLockWrapper<HashMap<u32, Vec<u32>>> = OnceLockWrapper::new();
 pub static RAID_MAP: OnceLockWrapper<HashMap<String, String>> = OnceLockWrapper::new();
 pub static IP_RANGES: OnceLockWrapper<Vec<IpRangeEntry>> = OnceLockWrapper::new();
@@ -315,6 +318,11 @@ impl AssetPreloader {
                 load_meter_data(resource_dir, "NpcWindows.json")?;
             npc_windows.validate()?;
             NPC_WINDOW_DATA.set(npc_windows)?;
+
+            let skill_windows: crate::live::skill_windows::SkillWindowData =
+                load_extra_meter_data(resource_dir, "SkillWindows.json", "SkillWindows.json")?;
+            skill_windows.validate()?;
+            SKILL_WINDOW_DATA.set(skill_windows)?;
         }
         GEM_SKILL_MAP.set({
             let raw: HashMap<String, (String, String, Vec<u32>)> =

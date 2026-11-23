@@ -335,6 +335,18 @@
       valueTooltip: null
     },
 
+    // Skill Interrupts
+    {
+      show(enc) {
+        return enc.encounter.curSettings.breakdown.interrupts && enc.anySkillInterrupts;
+      },
+      headerText: "INT",
+      headerTooltip: "Times this skill was interrupted by paralysis, push, crowd control, grab, or other effects",
+      value: skillInterrupts,
+      valueTooltip: skillInterruptsTooltip,
+      width: "w-10"
+    },
+
     // CPM
     {
       show(enc) {
@@ -574,6 +586,29 @@
 
 {#snippet casts(state: SkillState)}
   {state.skill.casts}
+{/snippet}
+
+{#snippet skillInterrupts(state: SkillState)}
+  {#if state.skillInterrupts.total > 0}
+    {state.skillInterrupts.total}
+  {:else}
+    -
+  {/if}
+{/snippet}
+
+{#snippet skillInterruptsTooltip(state: SkillState)}
+  {#if state.skillInterrupts.total === 0}
+    N/A
+  {:else}
+    {@const { paralysis, push, crowdControl, grab, other } = state.skillInterrupts}
+    <div class="-mx-px flex flex-col space-y-1 py-px text-xs font-normal">
+      <span>Paralysis: {paralysis}</span>
+      <span>Push: {push}</span>
+      <span>Crowd control: {crowdControl}</span>
+      <span>Grab: {grab}</span>
+      <span>Other: {other}</span>
+    </div>
+  {/if}
 {/snippet}
 
 {#snippet castsPerMinute(state: SkillState)}

@@ -12,6 +12,8 @@ pub struct SkillData {
     #[serde(rename = "type", default)]
     #[serde(deserialize_with = "int_or_string_as_string")]
     pub skill_type: String,
+    #[serde(default, deserialize_with = "int_or_string_as_string")]
+    pub action_type: String,
     pub desc: Option<String>,
     pub class_id: u32,
     pub icon: Option<String>,

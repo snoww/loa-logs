@@ -38,12 +38,13 @@ impl DamageStats {
         if self.grab_state.pending_detach {
             self.end_grab(timestamp);
         }
+        self.clip_paralysis(timestamp);
     }
 
     pub(crate) fn reset_grab(&mut self, timestamp: i64) {
         self.advance_grab_movements(timestamp);
         self.end_grab(timestamp);
-        self.clip_knockdowns(timestamp);
+        self.clip_abnormal_moves(timestamp);
         self.grab_state = GrabState::default();
     }
 
@@ -72,6 +73,12 @@ impl DamageStats {
         }
     }
 
+    fn has_active_grab(&self) -> bool {
+        self.incapacitations
+            .iter()
+            .any(|event| event.grab_source_id.is_some())
+    }
+
     fn apply_grab_movement(&mut self, movement: GrabMovement) {
         // Native unsigned ordering admits equality. Zero bypasses the comparison
         // and replaces the remembered sequence, including on delayed application.
@@ -79,11 +86,21 @@ impl DamageStats {
             return;
         }
         self.grab_state.sequence = movement.sequence;
+        if movement.move_type == 0 {
+            // MoveType::STOP cancels active abnormal movement (native vfunc+2960).
+            self.clip_abnormal_moves(movement.timestamp);
+            return;
+        }
+        if matches!(movement.move_type, 2..=12) {
+            // Native EFACT_BEHIT replacement movements (STAND_UP, pushes with zero down_time,
+            // SWAY, FREEZE_*) replace any active paralysis even when no new timed interval starts.
+            self.clip_paralysis(movement.timestamp);
+        }
         if matches!(movement.move_type, 2..=8 | 10 | 12) {
             self.end_grab(movement.timestamp);
         }
         if movement.down_time > 0.0 {
-            self.clip_knockdowns(movement.timestamp);
+            self.clip_abnormal_moves(movement.timestamp);
             self.incapacitations.push(IncapacitatedEvent {
                 timestamp: movement.timestamp,
                 duration: ((movement.move_time
@@ -94,6 +111,42 @@ impl DamageStats {
                 event_type: IncapacitationEventType::FALL_DOWN,
                 grab_source_id: None,
             });
+        } else if movement.move_type == 4 {
+            // MoveType::SWAY (paralysis): native total duration is move_time + freeze_time
+            // (verified in sub_1424939E0 / sub_14247D000 / sub_14230DC60).
+            let seconds = movement.move_time.max(0.0) + movement.freeze_time.max(0.0);
+            if seconds.is_finite() && seconds > 0.0 {
+                let duration = (seconds * 1000.0) as i64;
+                if duration > 0 {
+                    self.clip_abnormal_moves(movement.timestamp);
+                    self.incapacitations.push(IncapacitatedEvent {
+                        timestamp: movement.timestamp,
+                        duration,
+                        event_type: IncapacitationEventType::PARALYSIS,
+                        grab_source_id: None,
+                    });
+                }
+            }
+        } else if matches!(movement.move_type, 9 | 11) && !self.has_active_grab() {
+            // MoveType::FREEZE_STRONG (9) and FREEZE_COUNTER (11): non-knockdown hit-freezes.
+            // Native sub_143C44770 passes moveTime and standUpTime (total freeze duration);
+            // skip while a grab is active so GRAP_FREEZE_STRONG is not double-labelled as paralysis.
+            let seconds = movement
+                .move_time
+                .max(0.0)
+                .max(movement.stand_up_time.max(0.0));
+            if seconds.is_finite() && seconds > 0.0 {
+                let duration = (seconds * 1000.0) as i64;
+                if duration > 0 {
+                    self.clip_abnormal_moves(movement.timestamp);
+                    self.incapacitations.push(IncapacitatedEvent {
+                        timestamp: movement.timestamp,
+                        duration,
+                        event_type: IncapacitationEventType::PARALYSIS,
+                        grab_source_id: None,
+                    });
+                }
+            }
         }
     }
 
@@ -101,6 +154,28 @@ impl DamageStats {
         for event in &mut self.incapacitations {
             if event.event_type == IncapacitationEventType::FALL_DOWN
                 && event.timestamp + event.duration > timestamp
+            {
+                event.duration = (timestamp - event.timestamp).max(0);
+            }
+        }
+    }
+
+    pub(crate) fn clip_paralysis(&mut self, timestamp: i64) {
+        for event in &mut self.incapacitations {
+            if event.event_type == IncapacitationEventType::PARALYSIS
+                && event.timestamp + event.duration > timestamp
+            {
+                event.duration = (timestamp - event.timestamp).max(0);
+            }
+        }
+    }
+
+    pub(crate) fn clip_abnormal_moves(&mut self, timestamp: i64) {
+        for event in &mut self.incapacitations {
+            if matches!(
+                event.event_type,
+                IncapacitationEventType::FALL_DOWN | IncapacitationEventType::PARALYSIS
+            ) && event.timestamp + event.duration > timestamp
             {
                 event.duration = (timestamp - event.timestamp).max(0);
             }

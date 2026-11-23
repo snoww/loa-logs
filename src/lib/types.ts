@@ -439,6 +439,7 @@ export interface Skill {
   buffedByHat: number;
   debuffedBySupport: number;
   casts: number;
+  interrupts?: SkillInterrupts;
   hits: number;
   crits: number;
   adjustedCrit?: number;
@@ -539,8 +540,17 @@ export interface DeathInfo {
   deadFor?: number;
 }
 
+export interface SkillInterrupts {
+  paralysis: number;
+  push: number;
+  crowdControl: number;
+  grab: number;
+  other: number;
+}
+
 export interface SkillStats {
   casts: number;
+  interrupts?: SkillInterrupts;
   hits: number;
   crits: number;
   backAttacks: number;
@@ -638,7 +648,8 @@ export interface IncapacitatedEvent {
 export enum IncapacitationEventType {
   FALL_DOWN = "FALL_DOWN",
   CROWD_CONTROL = "CROWD_CONTROL",
-  GRAB = "GRAB"
+  GRAB = "GRAB",
+  PARALYSIS = "PARALYSIS"
 }
 
 export enum EntityType {

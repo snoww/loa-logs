@@ -452,7 +452,7 @@
           "logs",
           "incapacitatedTime",
           "Incapacitated Time",
-          "Show how long a party member has been incapacitated for (e.g. on the floor, stunned, trapped)"
+          "Show how long a party member has been incapacitated for (e.g. on the floor, paralyzed, stunned, grabbed)"
         )}
         {@render settingOption(
           "logs",
@@ -536,6 +536,12 @@
         )}
         {@render settingOption("logs", "stagger", "Stagger", "Show the total stagger damage dealt")}
         {@render settingOption("logs", "counters", "Counters", "Show the number of counters hit")}
+        {@render settingOption(
+          "logs",
+          "skillInterrupts",
+          "Skill Interrupts",
+          "Show how many times player skills were interrupted (broken down by paralysis, push, crowd control, grab, and other)"
+        )}
         <div class="mt-4 h-px w-full bg-neutral-600"></div>
         <div class="py-2 text-sm">Skill Breakdown</div>
         {@render settingOption("logs", "damage", "Skill Damage", "Show the total damage dealt by the skill", true)}
@@ -652,6 +658,13 @@
           "Show the total number of casts of the skill (note: cancelled skills still count as cast)",
           true
         )}
+        {@render settingOption(
+          "logs",
+          "interrupts",
+          "Skill Interrupts",
+          "Show how many times each skill was interrupted by paralysis, push, crowd control, grab, or other effects",
+          true
+        )}
         {@render settingOption("logs", "cpm", "Skill Casts/min", "Show the casts per minute of the skill", true)}
         {@render settingOption(
           "logs",
@@ -710,7 +723,7 @@
           "meter",
           "incapacitatedTime",
           "Incapacitated Time",
-          "Show how long a party member has been incapacitated for (e.g. on the floor, stunned, trapped)"
+          "Show how long a party member has been incapacitated for (e.g. on the floor, paralyzed, stunned, grabbed)"
         )}
         {@render settingOption("meter", "damage", "Damage", "Show the damage dealt by player in the current encounter")}
         {@render settingOption("meter", "ndmg", "nDMG", "Neutral Damage (self damage with incoming buffs removed)")}
@@ -794,6 +807,12 @@
         )}
         {@render settingOption("meter", "stagger", "Stagger", "Show the total stagger damage dealt")}
         {@render settingOption("meter", "counters", "Counters", "Show the number of counters hit")}
+        {@render settingOption(
+          "meter",
+          "skillInterrupts",
+          "Skill Interrupts",
+          "Show how many times player skills were interrupted (broken down by paralysis, push, crowd control, grab, and other)"
+        )}
         <div class="mt-4 h-px w-full bg-neutral-600"></div>
         <div class="py-2 text-sm">Skill Breakdown</div>
         {@render settingOption("meter", "damage", "Skill Damage", "Show the total damage dealt by the skill", true)}
@@ -901,6 +920,13 @@
           "casts",
           "Skill Casts",
           "Show the total number of casts of the skill (note: cancelled skills still count as cast)",
+          true
+        )}
+        {@render settingOption(
+          "meter",
+          "interrupts",
+          "Skill Interrupts",
+          "Show how many times each skill was interrupted by paralysis, push, crowd control, grab, or other effects",
           true
         )}
         {@render settingOption("meter", "cpm", "Skill Casts/min", "Show the casts per minute of the skill", true)}

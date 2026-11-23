@@ -82,7 +82,23 @@ export class SkillState {
     }
     return "0";
   });
-  averagePerCast = $derived(this.skill.totalDamage / this.skill.casts);
+  averagePerCast = $derived(this.skill.casts > 0 ? this.skill.totalDamage / this.skill.casts : 0);
+  skillInterrupts = $derived.by(() => {
+    const intr = this.skill.interrupts;
+    const paralysis = intr?.paralysis ?? 0;
+    const push = intr?.push ?? 0;
+    const crowdControl = intr?.crowdControl ?? 0;
+    const grab = intr?.grab ?? 0;
+    const other = intr?.other ?? 0;
+    return {
+      total: paralysis + push + crowdControl + grab + other,
+      paralysis,
+      push,
+      crowdControl,
+      grab,
+      other
+    };
+  });
   adjustedCrit = $derived.by(() => {
     if (settings.app.logs.breakdown.adjustedCritRate) {
       if (this.skill.adjustedCrit) {

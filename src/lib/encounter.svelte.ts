@@ -120,6 +120,7 @@ export class EncounterState {
     let anyFrontAtk = false;
     let anyBackAtk = false;
     let anyCounters = false;
+    let anySkillInterrupts = false;
     let anySupportBuff = false;
     let anySupportIdentity = false;
     let anySupportBrand = false;
@@ -139,6 +140,10 @@ export class EncounterState {
       if (ss.frontAttacks > 0) anyFrontAtk = true;
       if (ss.backAttacks > 0) anyBackAtk = true;
       if (ss.counters > 0) anyCounters = true;
+      const intr = ss.interrupts;
+      if (intr && intr.paralysis + intr.push + intr.crowdControl + intr.grab + intr.other > 0) {
+        anySkillInterrupts = true;
+      }
       if (ds.buffedBySupport > 0) anySupportBuff = true;
       if (ds.buffedByIdentity > 0) anySupportIdentity = true;
       if (ds.debuffedBySupport > 0) anySupportBrand = true;
@@ -163,6 +168,7 @@ export class EncounterState {
       anyFrontAtk,
       anyBackAtk,
       anyCounters,
+      anySkillInterrupts,
       anySupportBuff,
       anySupportIdentity,
       anySupportBrand,
@@ -183,6 +189,7 @@ export class EncounterState {
   anyFrontAtk = $derived(this.aggregates.anyFrontAtk);
   anyBackAtk = $derived(this.aggregates.anyBackAtk);
   anyCounters = $derived(this.aggregates.anyCounters);
+  anySkillInterrupts = $derived(this.aggregates.anySkillInterrupts);
   anySupportBuff = $derived(this.aggregates.anySupportBuff);
   anySupportIdentity = $derived(this.aggregates.anySupportIdentity);
   anySupportBrand = $derived(this.aggregates.anySupportBrand);

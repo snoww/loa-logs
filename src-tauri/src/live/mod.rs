@@ -11,6 +11,7 @@ mod party_tracker;
 mod player_stats;
 mod rdps;
 mod skill_tracker;
+pub(crate) mod skill_windows;
 mod stat_type;
 mod status_tracker;
 #[cfg(test)]
@@ -369,6 +370,17 @@ pub fn start(args: StartArgs) -> Result<()> {
                     );
                 }
             }
+            PKTSkillCancelNotify::OPCODE => {
+                if let Ok(pkt) = parse_complete_packet::<PKTSkillCancelNotify>(&packet.body)
+                    && let Some(entity) = entity_tracker
+                        .entities
+                        .get_mut(&pkt.object_id)
+                        .filter(|entity| entity.entity_type == EntityType::Player)
+                    && !entity.consume_skill_cancel(pkt.skill_id, packet_timestamp)
+                {
+                    state.on_skill_cancel(entity, pkt.skill_id, pkt.cancel_reason);
+                }
+            }
             PKTTeleportFinishNotify::OPCODE => {
                 if let Ok(pkt) = parse_complete_packet::<PKTTeleportFinishNotify>(&packet.body) {
                     incapacitation::on_teleport(&mut state.encounter, &pkt, packet_timestamp);
@@ -410,6 +422,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                         entity.id
                     );
                     entity.npc_action = None;
+                    entity.active_skill_cast = None;
                     state.on_death(entity);
                 }
             }
@@ -657,6 +670,12 @@ pub fn start(args: StartArgs) -> Result<()> {
             PKTNewProjectile::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTNewProjectile>().unwrap() {
                     entity_tracker.new_projectile(&pkt);
+                    if let Some(entity) = entity_tracker
+                        .entities
+                        .get_mut(&pkt.projectile_info.owner_id)
+                    {
+                        entity.observe_player_skill_projectile(pkt.projectile_info.skill_id);
+                    }
                     state.on_source_owner_resolved(
                         pkt.projectile_info.projectile_id,
                         pkt.projectile_info.owner_id,
@@ -678,6 +697,10 @@ pub fn start(args: StartArgs) -> Result<()> {
             PKTNewTrap::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTNewTrap>().unwrap() {
                     entity_tracker.new_trap(&pkt);
+                    if let Some(entity) = entity_tracker.entities.get_mut(&pkt.trap_struct.owner_id)
+                    {
+                        entity.observe_player_skill_trap(pkt.trap_struct.skill_id);
+                    }
                     state.on_source_owner_resolved(
                         pkt.trap_struct.object_id,
                         pkt.trap_struct.owner_id,
@@ -861,14 +884,25 @@ pub fn start(args: StartArgs) -> Result<()> {
                         packet_timestamp,
                     );
                     if let Some(entity) = entity_tracker.entities.get_mut(&pkt.source_id) {
+                        let layer = u32::from(pkt.skill_option_data.layer_index.unwrap_or(0));
+                        let stage = pkt.skill_option_data.start_stage_index.unwrap_or(0);
+                        let stage_start_time =
+                            f32::from_bits(pkt.skill_option_data.stage_start_time.unwrap_or(0))
+                                as f64;
                         entity.observe_npc_action(
                             pkt.skill_id,
-                            Some(u32::from(pkt.skill_option_data.layer_index.unwrap_or(0))),
-                            pkt.skill_option_data.start_stage_index.unwrap_or(0),
-                            f32::from_bits(pkt.skill_option_data.stage_start_time.unwrap_or(0))
-                                as f64,
+                            Some(layer),
+                            stage,
+                            stage_start_time,
                             Utc::now().timestamp_millis(),
                             false,
+                        );
+                        entity.observe_player_skill_start(
+                            pkt.skill_id,
+                            layer,
+                            stage,
+                            stage_start_time,
+                            packet_timestamp,
                         );
                     }
                     let mut entity = entity_tracker.get_source_entity(pkt.source_id);
@@ -942,6 +976,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                         Utc::now().timestamp_millis(),
                         true,
                     );
+                    entity.observe_player_skill_stage(pkt.skill_id, pkt.stage, packet_timestamp);
                 }
             }
             PKTStatChangeOriginNotify::OPCODE => {
@@ -970,6 +1005,11 @@ pub fn start(args: StartArgs) -> Result<()> {
                 if let Ok(pkt) =
                     parse_complete_packet::<PKTSkillDamageAbnormalMoveNotify>(&packet.body)
                 {
+                    if !pkt.skill_damage_abnormal_move_events.is_empty()
+                        && let Some(entity) = entity_tracker.entities.get_mut(&pkt.source_id)
+                    {
+                        entity.observe_player_skill_direct_damage(pkt.skill_id);
+                    }
                     let now = Utc::now().timestamp_millis();
                     let owner = if ignore_damage {
                         None
@@ -1052,6 +1092,11 @@ pub fn start(args: StartArgs) -> Result<()> {
                     continue;
                 }
                 if let Some(pkt) = packet.try_parse::<PKTSkillDamageNotify>().unwrap() {
+                    if !pkt.skill_damage_events.is_empty()
+                        && let Some(entity) = entity_tracker.entities.get_mut(&pkt.source_id)
+                    {
+                        entity.observe_player_skill_direct_damage(pkt.skill_id);
+                    }
                     let now = Utc::now().timestamp_millis();
                     let mut owner = entity_tracker.get_source_entity(pkt.source_id);
                     entity_tracker.infer_entity_class_from_skill(&mut owner, pkt.skill_id);
