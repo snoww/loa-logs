@@ -37,7 +37,7 @@
       await writeLog("loading app settings");
       let data = await getSettings();
       if (data) {
-        settings.app = data;
+        settings.app = mergeWithDefaultSettings(data);
       }
       await writeLog("finished app settings setup");
 
