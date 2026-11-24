@@ -785,6 +785,15 @@ pub fn start(args: StartArgs) -> Result<()> {
                 info!("phase: 1 - RaidBossKillNotify");
             }
             PKTRaidResult::OPCODE => {
+                const RAID_RESULT_CLEAR: u8 = 1;
+                let raid_result = match packet.try_parse::<PKTRaidResult>() {
+                    Ok(packet) => packet.map(|result| result.raid_result),
+                    Err(err) => {
+                        warn!("failed to parse PKTRaidResult: {err}");
+                        None
+                    }
+                };
+                state.raid_clear |= raid_result == Some(RAID_RESULT_CLEAR);
                 if !party_freeze {
                     state.party_info = update_party(&party_tracker, &entity_tracker);
                 }
@@ -801,7 +810,10 @@ pub fn start(args: StartArgs) -> Result<()> {
                     state.on_phase_transition(0);
                 }
                 raid_end_cd = Instant::now();
-                info!("phase: 0 - RaidResult");
+                info!(
+                    "phase: 0 - RaidResult (result={:?}, cleared={})",
+                    raid_result, state.raid_clear
+                );
             }
             PKTRemoveObject::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTRemoveObject>().unwrap() {

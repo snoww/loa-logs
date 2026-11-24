@@ -290,6 +290,17 @@ impl SkillInterrupts {
         self.grab += other.grab;
         self.other += other.other;
     }
+
+    pub fn remove(&mut self, other: Self) {
+        self.paralysis = self.paralysis.saturating_sub(other.paralysis).max(0);
+        self.push = self.push.saturating_sub(other.push).max(0);
+        self.crowd_control = self
+            .crowd_control
+            .saturating_sub(other.crowd_control)
+            .max(0);
+        self.grab = self.grab.saturating_sub(other.grab).max(0);
+        self.other = self.other.saturating_sub(other.other).max(0);
+    }
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]

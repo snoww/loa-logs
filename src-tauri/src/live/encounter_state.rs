@@ -1928,7 +1928,10 @@ impl EncounterState {
         {
             return true;
         }
-        matches!(skill_data.name.as_deref(), Some("Basic Attack"))
+        matches!(
+            skill_data.name.as_deref(),
+            Some("Basic Attack" | PERFECT_BLOCK_SKILL_NAME)
+        )
     }
 
     pub(crate) fn record_skill_cancel(

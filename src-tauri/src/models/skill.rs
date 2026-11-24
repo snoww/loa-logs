@@ -2,6 +2,8 @@ use super::SkillInterrupts;
 use hashbrown::HashMap;
 use serde::{Deserialize, Serialize};
 
+pub(crate) const PERFECT_BLOCK_SKILL_NAME: &str = "Perfect Block";
+
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase", default)]
 pub struct Skill {
