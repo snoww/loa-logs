@@ -39,14 +39,14 @@
 {#if comparison}
   {@const deltaColor = comparison.isAhead ? "text-lime-400" : "text-red-300"}
   {#snippet pbTooltip()}
-    <span class="flex flex-col leading-[1.55] tracking-tighter whitespace-nowrap tabular-nums">
+    <span class="flex min-w-55 flex-col leading-[1.55] tracking-tighter tabular-nums">
       {#if comparison.kind === "dps"}
         {@const boss = enc.encounter?.currentBoss}
         {@const totalBars = boss ? getBossHpBars(boss) : 1}
         {@const bars = (comparison.bossHpPercent / 100) * totalBars}
         {@const remainingBars = (boss?.currentShield ?? 0) > 0 ? Math.round(bars) : Math.ceil(bars)}
         <span>
-          {comparison.metric}
+          <span class="text-neutral-400">{comparison.metric}</span>
           {abbreviateNumber(comparison.liveDps)}
           <span class="text-neutral-400">now</span>
           &middot;
@@ -64,7 +64,8 @@
         </span>
       {:else}
         <span>
-          Buff performance {comparison.liveScore.toFixed(1)}%
+          <span class="text-neutral-400">Buff performance</span>
+          {comparison.liveScore.toFixed(1)}%
           <span class="text-neutral-400">now</span>
           &middot;
           {comparison.pbScore.toFixed(1)}%
@@ -79,14 +80,14 @@
         </span>
       {/if}
       <span class="text-neutral-400">
-        {formatPbLogMeta(comparison.logId, comparison.difficulty, comparison.fightStart)}
+        {formatPbLogMeta(comparison.logId, comparison.fightStart)}
       </span>
     </span>
   {/snippet}
 
-  <QuickTooltip tooltip={pbTooltip} class="shrink-0">
+  <QuickTooltip tooltip={pbTooltip} class="w-14 shrink-0 text-right">
     <span
-      class="pr-1 text-xs tracking-[-0.01em] whitespace-nowrap tabular-nums"
+      class="text-xs tracking-[-0.01em] whitespace-nowrap tabular-nums"
       style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85)"
     >
       <span class={deltaColor}>

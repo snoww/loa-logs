@@ -46,7 +46,6 @@ export interface DpsPersonalBestComparison {
   bossHpPercent: number;
   isAhead: boolean;
   logId: number;
-  difficulty?: string;
   fightStart: number;
 }
 
@@ -60,7 +59,6 @@ export interface SupportPersonalBestComparison {
   liveIdentity: number;
   isAhead: boolean;
   logId: number;
-  difficulty?: string;
   fightStart: number;
 }
 
@@ -332,7 +330,6 @@ export function evaluatePersonalBest(input: {
       liveIdentity: localSupportBuffs.identity * 100,
       isAhead: deltaScore >= 0,
       logId: pb.id,
-      difficulty: pb.difficulty,
       fightStart: pb.fightStart
     };
   }
@@ -382,7 +379,6 @@ export function evaluatePersonalBest(input: {
     bossHpPercent: liveHpRatio * 100,
     isAhead: deltaPercent >= 0,
     logId: pb.id,
-    difficulty: pb.difficulty,
     fightStart: pb.fightStart
   };
 }
@@ -397,22 +393,12 @@ export function formatSignedAbbreviated(value: number, abbreviate: (n: number) =
   return `${sign}${abbreviate(Math.abs(value))}`;
 }
 
-export function formatShortPbDate(timestampMs: number, locale?: string): string {
-  return new Intl.DateTimeFormat(locale, { month: "short", day: "numeric" }).format(new Date(timestampMs));
-}
-
-export function formatPbLogMeta(
-  logId: number,
-  difficulty: string | undefined,
-  fightStart: number,
-  formatDate: (timestampMs: number) => string = formatShortPbDate
-): string {
+export function formatPbLogMeta(logId: number, fightStart: number): string {
   const parts = [`PB #${logId}`];
-  if (difficulty) {
-    parts.push(difficulty);
-  }
   if (fightStart > 0) {
-    parts.push(formatDate(fightStart));
+    const dayMs = 24 * 60 * 60 * 1000;
+    const days = Math.max(0, Math.floor((Date.now() - fightStart) / dayMs));
+    parts.push(days === 0 ? "<1 day ago" : `${days} ${days === 1 ? "day" : "days"} ago`);
   }
   return parts.join(" \u00b7 ");
 }
