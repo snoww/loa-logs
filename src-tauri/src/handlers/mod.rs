@@ -64,6 +64,7 @@ pub fn generate_handlers() -> Box<dyn Fn(Invoke) -> bool + Send + Sync> {
         get_character_statistics,
         get_raid_progression_range,
         get_raid_progression_statistics,
+        get_personal_best,
     ])
 }
 
@@ -139,6 +140,18 @@ pub async fn get_raid_progression_range(
 }
 
 #[command]
+pub async fn get_personal_best(
+    repository: State<'_, Repository>,
+    criteria: PersonalBestCriteria,
+) -> Result<Option<PersonalBest>> {
+    let repository = repository.inner().clone();
+    let pb = tauri::async_runtime::spawn_blocking(move || repository.get_personal_best(criteria))
+        .await
+        .context("personal best query task failed")??;
+    Ok(pb)
+}
+
+#[command]
 pub async fn load_encounter(repository: State<'_, Repository>, id: String) -> Result<Encounter> {
     let encounter = repository
         .get_encounter(&id)
@@ -206,19 +219,29 @@ pub fn toggle_encounter_favorite(repository: State<Repository>, id: i32) -> Resu
 }
 
 #[command]
-pub fn delete_encounter(repository: State<Repository>, id: String) -> Result<()> {
+pub fn delete_encounter(
+    app_handle: AppHandle,
+    repository: State<Repository>,
+    id: String,
+) -> Result<()> {
     repository
         .delete_encounter(id)
         .context("could not delete encounters")?;
+    let _ = app_handle.emit("encounters-deleted", ());
 
     Ok(())
 }
 
 #[command]
-pub fn delete_encounters(repository: State<Repository>, ids: Vec<i32>) -> Result<()> {
+pub fn delete_encounters(
+    app_handle: AppHandle,
+    repository: State<Repository>,
+    ids: Vec<i32>,
+) -> Result<()> {
     repository
         .delete_encounters(ids)
         .context("could not delete encounters")?;
+    let _ = app_handle.emit("encounters-deleted", ());
 
     Ok(())
 }
@@ -318,6 +341,7 @@ pub fn open_db_path(shell_manager: State<ShellManager>) {
 
 #[command]
 pub fn delete_encounters_below_min_duration(
+    app_handle: AppHandle,
     repository: State<Repository>,
     min_duration: i64,
     keep_favorites: bool,
@@ -325,12 +349,14 @@ pub fn delete_encounters_below_min_duration(
     repository
         .delete_encounters_below_min_duration(min_duration, keep_favorites)
         .context("could not delete encounters")?;
+    let _ = app_handle.emit("encounters-deleted", ());
 
     Ok(())
 }
 
 #[command]
 pub fn delete_encounters_before(
+    app_handle: AppHandle,
     repository: State<Repository>,
     before: i64,
     keep_favorites: bool,
@@ -338,6 +364,7 @@ pub fn delete_encounters_before(
     repository
         .delete_encounters_before(before, keep_favorites)
         .context("could not delete encounters")?;
+    let _ = app_handle.emit("encounters-deleted", ());
 
     Ok(())
 }
@@ -375,10 +402,15 @@ pub fn delete_all_uncleared_encounters(
 }
 
 #[command]
-pub fn delete_all_encounters(repository: State<Repository>, keep_favorites: bool) -> Result<()> {
+pub fn delete_all_encounters(
+    app_handle: AppHandle,
+    repository: State<Repository>,
+    keep_favorites: bool,
+) -> Result<()> {
     repository
         .delete_all_encounters(keep_favorites)
         .context("could not delete encounters")?;
+    let _ = app_handle.emit("encounters-deleted", ());
 
     Ok(())
 }

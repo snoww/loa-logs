@@ -5,6 +5,7 @@
   import NinevehWelcome from "#lib/components/NinevehWelcome.svelte";
   import Toaster from "#lib/components/Toaster.svelte";
   import UpdateAvailable from "#lib/components/UpdateAvailable.svelte";
+  import { mergeWithDefaultSettings } from "#lib/settings.ts";
   import { settings } from "#lib/stores.svelte.ts";
   import { checkForUpdate } from "#lib/utils.ts";
   import { registerShortcuts } from "#lib/utils/shortcuts.ts";

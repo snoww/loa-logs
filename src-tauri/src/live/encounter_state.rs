@@ -5,6 +5,7 @@ use crate::constants::{
 use crate::data::*;
 use crate::database::Repository;
 use crate::database::models::InsertEncounterArgs;
+use crate::database::repository::compute_support_buffs;
 use crate::live::entity_tracker::AppliedInspectResult;
 use crate::live::entity_tracker::{Entity, EntityTracker, SkillOptionSnapshot};
 use crate::live::player_stats::PlayerStats;
@@ -24,8 +25,8 @@ use crate::live::utils::*;
 use crate::live::{DEBUG_DUMP_DAMAGE_STATE_JSON, write_debug_json_dump};
 use crate::models::*;
 use crate::utils::{
-    get_class_from_id, get_player_spec, is_confirmed_player_entity, is_support_class,
-    normalize_encounter_damage_totals,
+    get_class_from_id, get_player_spec, is_confirmed_player_entity, is_support, is_support_class,
+    normalize_boss_name, normalize_encounter_damage_totals,
 };
 use chrono::{DateTime, Utc};
 use hashbrown::{HashMap, HashSet};
@@ -439,6 +440,7 @@ pub struct EncounterState {
     pub raid_clear: bool,
 
     damage_log: HashMap<String, Vec<(i64, i64)>>,
+    ndps_damage_log: HashMap<String, Vec<(i64, i64)>>,
     cast_log: HashMap<String, HashMap<u32, Vec<i32>>>,
 
     boss_hp_log: HashMap<String, Vec<BossHpLog>>,
@@ -491,6 +493,7 @@ impl EncounterState {
             disabled: false,
 
             damage_log: HashMap::new(),
+            ndps_damage_log: HashMap::new(),
             boss_hp_log: HashMap::new(),
             cast_log: HashMap::new(),
             intermission_start: None,
@@ -547,6 +550,7 @@ impl EncounterState {
         self.raid_clear = false;
 
         self.damage_log = HashMap::new();
+        self.ndps_damage_log = HashMap::new();
         self.cast_log = HashMap::new();
         self.boss_hp_log = HashMap::new();
         self.intermission_start = None;
@@ -877,32 +881,33 @@ impl EncounterState {
     // update local player as we get more info
     pub fn update_local_player(&mut self, entity: &Entity, entity_tracker: &EntityTracker) {
         // we replace the existing local player if it exists, since its name might have changed (from hex or "You" to character name)
-        if let Some(mut local) = self.encounter.entities.remove(&self.encounter.local_player) {
-            // update local player name, insert back into encounter
-            self.encounter.local_player.clone_from(&entity.name);
-            update_player_entity(&mut local, entity);
-            self.encounter
-                .entities
-                .insert(self.encounter.local_player.clone(), local);
+        let old_name = if self
+            .encounter
+            .entities
+            .contains_key(&self.encounter.local_player)
+        {
+            Some(self.encounter.local_player.clone())
         } else {
             // cannot find old local player by name, so we look by local player's entity id
             // this can happen when the user started meter late
-            let old_local = self
-                .encounter
+            self.encounter
                 .entities
                 .iter()
                 .find(|(_, e)| e.id == entity.id)
-                .map(|(key, _)| key.clone());
+                .map(|(key, _)| key.clone())
+        };
 
-            // if we find the old local player, we update its name and insert back into encounter
-            if let Some(old_local) = old_local {
-                let mut new_local = self.encounter.entities[&old_local].clone();
-                update_player_entity(&mut new_local, entity);
-                self.encounter.entities.remove(&old_local);
-                self.encounter.local_player.clone_from(&entity.name);
-                self.encounter
-                    .entities
-                    .insert(self.encounter.local_player.clone(), new_local);
+        if let Some(old_name) = old_name {
+            if old_name != entity.name {
+                self.merge_player_entity_name(&old_name, &entity.name);
+            }
+            self.encounter.local_player.clone_from(&entity.name);
+            if let Some(local) = self
+                .encounter
+                .entities
+                .get_mut(&self.encounter.local_player)
+            {
+                update_player_entity(local, entity);
             }
         }
         self.resolve_source_aliases_for_player(entity, entity_tracker);
@@ -949,7 +954,7 @@ impl EncounterState {
             if self.raid_difficulty != "The First" {
                 let now = Utc::now().timestamp_millis();
                 self.intermission_start = Some(now);
-                self.rearm_startup_barrier_on_next_combat = true;
+                self.rearm_startup_barrier_on_next_combat = self.rdps_valid;
                 info!("starting intermission");
                 for entity in self
                     .encounter
@@ -1117,11 +1122,7 @@ impl EncounterState {
             }
         }
 
-        Self::merge_name_keyed_vec_map(&mut self.damage_log, old_name, new_name);
-        if let Some(log) = self.damage_log.get_mut(new_name) {
-            log.sort_unstable_by_key(|(timestamp, _)| *timestamp);
-        }
-
+        self.merge_damage_logs(old_name, new_name);
         Self::merge_name_keyed_cast_log(&mut self.cast_log, old_name, new_name);
 
         if let Some(old_accumulator) = self.player_contributions.remove(old_name) {
@@ -1164,11 +1165,7 @@ impl EncounterState {
             Self::merge_owned_source_entity(player_entity, old_entity);
         }
 
-        Self::merge_name_keyed_vec_map(&mut self.damage_log, old_name, &player.name);
-        if let Some(log) = self.damage_log.get_mut(&player.name) {
-            log.sort_unstable_by_key(|(timestamp, _)| *timestamp);
-        }
-
+        self.merge_damage_logs(old_name, &player.name);
         Self::merge_name_keyed_cast_log(&mut self.cast_log, old_name, &player.name);
 
         if let Some(old_accumulator) = self.player_contributions.remove(old_name) {
@@ -1186,6 +1183,15 @@ impl EncounterState {
         Self::merge_skills(&mut target.skills, source.skills);
         Self::merge_owned_source_damage_stats(&mut target.damage_stats, source.damage_stats);
         Self::merge_skill_stats(&mut target.skill_stats, source.skill_stats);
+    }
+
+    fn merge_damage_logs(&mut self, old_name: &str, new_name: &str) {
+        for damage_log in [&mut self.damage_log, &mut self.ndps_damage_log] {
+            Self::merge_name_keyed_vec_map(damage_log, old_name, new_name);
+            if let Some(log) = damage_log.get_mut(new_name) {
+                log.sort_unstable_by_key(|(timestamp, _)| *timestamp);
+            }
+        }
     }
 
     fn merge_owned_source_damage_stats(target: &mut DamageStats, source: DamageStats) {
@@ -1312,6 +1318,7 @@ impl EncounterState {
         }
         target.dps += source.dps;
         target.dps_average.extend(source.dps_average);
+        target.ndps_average.extend(source.ndps_average);
         target
             .dps_rolling_10s_avg
             .extend(source.dps_rolling_10s_avg);
@@ -2322,6 +2329,7 @@ impl EncounterState {
 
     fn scrub_rdps_derived_state(&mut self) {
         self.dimensional_break_windows.clear();
+        self.ndps_damage_log.clear();
         for entity in self.encounter.entities.values_mut() {
             entity.damage_stats.rdps_damage_received = 0;
             entity.damage_stats.rdps_damage_received_npc = 0;
@@ -2330,6 +2338,7 @@ impl EncounterState {
             entity.damage_stats.rdps_damage_given = 0;
             entity.damage_stats.rdps = 0;
             entity.damage_stats.ndps = 0;
+            entity.damage_stats.ndps_average.clear();
 
             for skill in entity.skills.values_mut() {
                 skill.rdps_damage_received = 0;
@@ -3381,8 +3390,12 @@ impl EncounterState {
             self.rdps_valid = true;
             self.rdps_message = None;
         } else {
+            let was_valid = self.rdps_valid;
             self.rdps_valid = false;
             self.rdps_message = Some("inspect_timeout".into());
+            if was_valid {
+                self.scrub_rdps_derived_state();
+            }
         }
 
         let mut ordered_events = Vec::with_capacity(pending_skill.len() + pending_damage.len());
@@ -3445,12 +3458,17 @@ impl EncounterState {
         if stats_ready {
             self.rdps_valid = true;
             self.rdps_message = None;
-        } else if has_inspect_failures {
-            self.rdps_valid = false;
-            self.rdps_message = Some("inspect_timeout".into());
         } else {
+            let was_valid = self.rdps_valid;
             self.rdps_valid = false;
-            self.rdps_message = Some(invalid_reason.into());
+            self.rdps_message = Some(if has_inspect_failures {
+                "inspect_timeout".into()
+            } else {
+                invalid_reason.into()
+            });
+            if was_valid {
+                self.scrub_rdps_derived_state();
+            }
         }
 
         let mut ordered_events = Vec::with_capacity(pending_skill.len() + pending_damage.len());
@@ -3770,8 +3788,12 @@ impl EncounterState {
                     return;
                 }
                 if !missing_inspects.is_empty() {
+                    let was_valid = self.rdps_valid;
                     self.rdps_valid = false;
                     self.rdps_message = Some("inspect_unavailable".into());
+                    if was_valid {
+                        self.scrub_rdps_derived_state();
+                    }
                 } else {
                     self.rdps_valid = true;
                     self.rdps_message = None;
@@ -4337,18 +4359,23 @@ impl EncounterState {
             );
         }
 
-        let unresolved_damage_log_source = (source_entity.entity_type == EntityType::Unknown
+        let unresolved_damage_log_source = source_entity.entity_type == EntityType::Unknown
             && (source_entity.class_id > 0
                 || self.source_owner_aliases.contains_key(&source_entity.id)
                 || self
                     .resolved_source_owner_aliases
-                    .contains_key(&source_entity.id)))
-        .then(|| source_entity.name.clone());
-        if let Some(source_name) = unresolved_damage_log_source {
+                    .contains_key(&source_entity.id));
+        if source_entity.entity_type == EntityType::Player || unresolved_damage_log_source {
             self.damage_log
-                .entry(source_name)
+                .entry(source_entity.name.clone())
                 .or_default()
                 .push((timestamp, damage));
+            if self.rdps_valid {
+                self.ndps_damage_log
+                    .entry(source_entity.name.clone())
+                    .or_default()
+                    .push((timestamp, damage - skill_hit.rdps_damage_received));
+            }
         }
 
         if source_entity.entity_type == EntityType::Player {
@@ -4357,11 +4384,6 @@ impl EncounterState {
                 self.encounter.encounter_damage_stats.top_damage_dealt,
                 source_entity.damage_stats.damage_dealt,
             );
-
-            self.damage_log
-                .entry(source_entity.name.clone())
-                .or_default()
-                .push((timestamp, damage));
 
             let mut is_buffed_by_support = false;
             let mut is_buffed_by_identity = false;
@@ -5367,6 +5389,7 @@ impl EncounterState {
         encounter.snapshot_incapacitations();
 
         let damage_log = self.damage_log.clone();
+        let ndps_damage_log = self.ndps_damage_log.clone();
         let cast_log = self.cast_log.clone();
         let boss_hp_log = self.boss_hp_log.clone();
         let raid_clear = self.raid_clear;
@@ -5401,7 +5424,7 @@ impl EncounterState {
             raid_clear, self.raid_difficulty, encounter.current_boss_name
         );
 
-        encounter.current_boss_name = update_current_boss_name(&encounter.current_boss_name);
+        encounter.current_boss_name = normalize_boss_name(&encounter.current_boss_name);
 
         if *DEBUG_DUMP_DAMAGE_STATE_JSON {
             let dump = self.build_damage_state_dump();
@@ -5434,6 +5457,7 @@ impl EncounterState {
                 let args = InsertEncounterArgs {
                     encounter,
                     damage_log,
+                    ndps_damage_log,
                     cast_log,
                     boss_hp_log,
                     raid_clear,
@@ -5468,7 +5492,7 @@ impl EncounterState {
         });
     }
 
-    pub fn live_snapshot(&self, boss_dead: bool) -> Encounter {
+    pub fn live_snapshot(&self, boss_dead: bool, party_info: &[Vec<String>]) -> Encounter {
         let mut current_boss_name = self.encounter.current_boss_name.clone();
         let mut current_boss = None;
 
@@ -5478,12 +5502,35 @@ impl EncounterState {
                 if boss_dead {
                     boss.is_dead = true;
                     boss.current_hp = 0;
+                    boss.current_shield = 0;
                 }
                 current_boss = Some(boss);
             } else {
                 current_boss_name.clear();
             }
         }
+
+        let local_support_buffs =
+            Self::live_snapshot_local_support_buffs(&self.encounter, party_info);
+        let misc = EncounterMisc {
+            rdps_valid: Some(self.rdps_valid),
+            intermission_start: self.intermission_start,
+            intermission_end: self.intermission_end,
+            ..self
+                .encounter
+                .encounter_damage_stats
+                .misc
+                .clone()
+                .unwrap_or_default()
+        };
+        let difficulty = if self.raid_difficulty.is_empty() {
+            self.encounter
+                .difficulty
+                .clone()
+                .filter(|difficulty| !difficulty.is_empty())
+        } else {
+            Some(self.raid_difficulty.clone())
+        };
 
         let entities = self
             .encounter
@@ -5529,19 +5576,33 @@ impl EncounterState {
                     .applied_shield_buffs
                     .clone(),
                 unknown_buffs: Default::default(),
-                misc: self.encounter.encounter_damage_stats.misc.clone(),
+                misc: Some(misc),
                 boss_hp_log: HashMap::new(),
             },
             duration: self.encounter.duration,
-            difficulty: self.encounter.difficulty.clone(),
+            difficulty,
             favorite: self.encounter.favorite,
             cleared: self.encounter.cleared,
             boss_only_damage: self.encounter.boss_only_damage,
             sync: self.encounter.sync.clone(),
             region: self.encounter.region.clone(),
+            local_support_buffs,
         };
         encounter.snapshot_incapacitations();
         encounter
+    }
+
+    fn live_snapshot_local_support_buffs(
+        encounter: &Encounter,
+        party_info: &[Vec<String>],
+    ) -> Option<SupportBuffs> {
+        encounter
+            .entities
+            .get(&encounter.local_player)
+            .filter(|entity| is_support(entity))
+            .and_then(|_| {
+                compute_support_buffs(encounter, party_info).remove(&encounter.local_player)
+            })
     }
 
     fn live_snapshot_entity(entity: &EncounterEntity) -> EncounterEntity {
@@ -5604,6 +5665,7 @@ impl EncounterState {
             boss_hp_at_death: stats.boss_hp_at_death,
             dps: stats.dps,
             dps_average: Vec::new(),
+            ndps_average: Vec::new(),
             dps_rolling_10s_avg: Vec::new(),
             rdps_damage_received: stats.rdps_damage_received,
             rdps_damage_received_support: stats.rdps_damage_received_support,

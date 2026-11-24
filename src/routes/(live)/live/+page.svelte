@@ -1,5 +1,12 @@
 <script lang="ts">
+  import type { UnlistenFn } from "@tauri-apps/api/event";
+  import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
+  import { onMount } from "svelte";
+
   import {
+    getPersonalBest,
+    onClearEncounter,
+    onEncountersDeleted,
     onEncounterUpdate,
     onPartyUpdate,
     onInvalidDamage,
@@ -12,11 +19,21 @@
     onAdmin,
     onBannedEvent,
     onNinevehUpdate,
-    ninevehStateRequest
+    ninevehStateRequest,
+    writeLog,
+    type PersonalBestCriteria
   } from "#lib/api.ts";
   import { addToast, removeToast } from "#lib/components/Toaster.svelte";
+  import { resolveLocalPlayerRole } from "#lib/constants/support.ts";
   import { EncounterState } from "#lib/encounter.svelte.ts";
   import { misc, nineveh, settings } from "#lib/stores.svelte.ts";
+  import { EntityType } from "#lib/types.ts";
+  import { isNameValid } from "#lib/utils.ts";
+  import {
+    buildPersonalBestCacheKey,
+    PersonalBestLookupController,
+    resolveGateMatch
+  } from "#lib/utils/personalBest.ts";
   import {
     adminAlert,
     bannedEvent,
@@ -29,9 +46,6 @@
     resuming,
     zoneChange
   } from "#lib/utils/toasts.ts";
-  import type { UnlistenFn } from "@tauri-apps/api/event";
-  import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
-  import { onMount } from "svelte";
 
   import LiveDamageMeter from "./LiveDamageMeter.svelte";
 
@@ -42,6 +56,61 @@
   let unsubscribe: (() => void) | null = null;
   let pendingTimeouts: ReturnType<typeof setTimeout>[] = [];
   let bannedToastId: string | undefined;
+  let personalBestRevision = $state(0);
+  const personalBestController = new PersonalBestLookupController<PersonalBestCriteria>(
+    getPersonalBest,
+    (pb) => {
+      enc.personalBest = pb;
+    },
+    (error) => {
+      void writeLog(`failed to load personal best: ${error}`).catch(console.error);
+    }
+  );
+
+  let personalBestRequest = $derived.by(() => {
+    if (!settings.app.meter.personalBest) return null;
+    const encounter = enc.encounter;
+    if (!encounter) return null;
+
+    const localPlayer = encounter.localPlayer;
+    if (!localPlayer || localPlayer === "You" || !isNameValid(localPlayer)) return null;
+
+    const localEntity = encounter.entities[localPlayer];
+    if (!localEntity || localEntity.entityType !== EntityType.PLAYER) return null;
+
+    const role = resolveLocalPlayerRole(localEntity);
+    if (!role) return null;
+
+    const bossName = encounter.currentBoss?.name || encounter.currentBossName;
+    if (!bossName) return null;
+
+    const gate = resolveGateMatch(bossName, encounter.currentBoss?.maxHp);
+    if (!gate) return null;
+
+    const difficulty = encounter.difficulty ?? "";
+    const isSupport = role === "support";
+    const bossOnlyDamage = encounter.bossOnlyDamage;
+    const key = buildPersonalBestCacheKey({
+      localPlayer,
+      gateKey: gate.gateKey,
+      difficulty,
+      isSupport,
+      bossOnlyDamage
+    });
+
+    return {
+      key,
+      criteria: {
+        localPlayer,
+        bosses: gate.bosses,
+        difficulty,
+        isSupport,
+        bossOnlyDamage,
+        bossMaxHpMin: gate.bossMaxHpMin,
+        bossMaxHpMax: gate.bossMaxHpMax
+      }
+    };
+  });
 
   function trackTimeout(fn: () => void, ms: number) {
     const id = setTimeout(() => {
@@ -53,6 +122,7 @@
   }
 
   onMount(() => {
+    let disposed = false;
     const interval = setInterval(() => {
       if (misc.raidInProgress && !misc.paused) {
         time = +Date.now();
@@ -60,11 +130,14 @@
     }, 1000);
 
     listenEvents().then((unsub) => {
-      unsubscribe = unsub;
+      if (disposed) unsub();
+      else unsubscribe = unsub;
     });
 
     return () => {
+      disposed = true;
       unsubscribe?.();
+      personalBestController.invalidate();
       clearInterval(interval);
       for (const id of pendingTimeouts) clearTimeout(id);
       pendingTimeouts = [];
@@ -178,6 +251,17 @@
     });
     handles.push(handle);
 
+    handle = await onClearEncounter(() => {
+      personalBestController.invalidate();
+    });
+    handles.push(handle);
+
+    handle = await onEncountersDeleted(() => {
+      personalBestController.invalidate();
+      personalBestRevision++;
+    });
+    handles.push(handle);
+
     return () => {
       for (const unlisten of handles) {
         unlisten();
@@ -198,6 +282,11 @@
     } else {
       enc.duration = 0;
     }
+  });
+
+  $effect(() => {
+    void personalBestRevision;
+    personalBestController.sync(personalBestRequest);
   });
 
   $effect(() => {

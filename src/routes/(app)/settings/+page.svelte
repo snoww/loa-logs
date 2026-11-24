@@ -702,6 +702,12 @@
         )}
         {@render settingOption(
           "meter",
+          "personalBest",
+          "Personal Best",
+          "Show how your nDPS/Buff Performance compares with your best cleared log of this fight "
+        )}
+        {@render settingOption(
+          "meter",
           "showClassColors",
           "Show Class Colors",
           "Shows class colors in the meter. Width of the bar shows relative % damage dealt."
@@ -811,7 +817,7 @@
           "meter",
           "skillInterrupts",
           "Skill Interrupts",
-          "Show how many times player skills were interrupted (broken down by paralysis, push, crowd control, grab, and other)"
+          "Show how many times your skills were cancelled (interrupted by paralysis, push, crowd control, grab, etc.)"
         )}
         <div class="mt-4 h-px w-full bg-neutral-600"></div>
         <div class="py-2 text-sm">Skill Breakdown</div>

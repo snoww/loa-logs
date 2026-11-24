@@ -331,18 +331,6 @@
       valueTooltip: staggerTooltip
     },
 
-    // Counters
-    {
-      show(enc) {
-        return enc.curSettings.counters && enc.anyCounters;
-      },
-      headerText: "CTR",
-      headerTooltip: "Counters",
-      value: counters,
-      valueTooltip: null,
-      width: "w-10"
-    },
-
     // Skill Interrupts
     {
       show(enc) {
@@ -352,6 +340,18 @@
       headerTooltip: "Skills interrupted by paralysis, push, crowd control, grab, or other effects",
       value: skillInterrupts,
       valueTooltip: skillInterruptsTooltip,
+      width: "w-10"
+    },
+
+    // Counters
+    {
+      show(enc) {
+        return enc.curSettings.counters && enc.anyCounters;
+      },
+      headerText: "CTR",
+      headerTooltip: "Counters",
+      value: counters,
+      valueTooltip: null,
       width: "w-10"
     }
   ];

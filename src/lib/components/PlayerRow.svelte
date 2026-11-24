@@ -13,6 +13,7 @@
   import { Tween } from "svelte/motion";
 
   import { logColumns } from "./DamageMeterColumns.svelte";
+  import PersonalBestIndicator from "./PersonalBestIndicator.svelte";
   import ArkPassiveTooltip from "./tooltips/ArkPassiveTooltip.svelte";
   import ClassTooltip from "./tooltips/ClassTooltip.svelte";
 
@@ -67,37 +68,42 @@
 </td>
 
 <td colspan="2" onmouseenter={() => (hovering = true)} onmouseleave={() => (hovering = false)}>
-  <div class="flex gap-1">
-    <div class="truncate">
-      {#if [EntityType.DARK_GRENADE, EntityType.NPC_BONUS, EntityType.ATROPINE].includes(entity.entityType)}
-        {entityState.name}
-      {:else}
-        <ArkPassiveTooltip state={entityState} />
+  <div class="flex items-center justify-between gap-1.5">
+    <div class="flex min-w-0 items-center gap-1">
+      <div class="truncate">
+        {#if [EntityType.DARK_GRENADE, EntityType.NPC_BONUS, EntityType.ATROPINE].includes(entity.entityType)}
+          {entityState.name}
+        {:else}
+          <ArkPassiveTooltip state={entityState} />
+        {/if}
+      </div>
+      {#if !screenshot.state && entity.entityType === EntityType.PLAYER && ((enc.live && settings.app.meter.profileShortcut) || (!enc.live && isNameValid(entityState.entity.name) && hovering && entityState.entity.entityType === EntityType.PLAYER))}
+        <button
+          class="shrink-0"
+          title="View Character Profile"
+          onclick={(e) => {
+            e.stopPropagation();
+            openUrl(LOA_BIBLE_URL + "/character/" + enc.region + "/" + entityState.entity.name);
+          }}
+        >
+          <IconExternalLink class="size-3" />
+        </button>
+      {/if}
+      {#if !screenshot.state && entityState.entity.loadoutHash && hovering}
+        <button
+          class="shrink-0 tracking-tighter hover:underline"
+          title="View Loadout Snapshot"
+          onclick={(e) => {
+            e.stopPropagation();
+            openUrl(LOA_BIBLE_URL + `/character/snapshot/${entityState.entity.loadoutHash}`);
+          }}
+        >
+          <IconFileClock class="size-3" />
+        </button>
       {/if}
     </div>
-    {#if !screenshot.state && entity.entityType === EntityType.PLAYER && ((enc.live && settings.app.meter.profileShortcut) || (!enc.live && isNameValid(entityState.entity.name) && hovering && entityState.entity.entityType === EntityType.PLAYER))}
-      <button
-        class="shrink-0"
-        title="View Character Profile"
-        onclick={(e) => {
-          e.stopPropagation();
-          openUrl(LOA_BIBLE_URL + "/character/" + enc.region + "/" + entityState.entity.name);
-        }}
-      >
-        <IconExternalLink class="size-3" />
-      </button>
-    {/if}
-    {#if !screenshot.state && entityState.entity.loadoutHash && hovering}
-      <button
-        class="shrink-0 tracking-tighter hover:underline"
-        title="View Loadout Snapshot"
-        onclick={(e) => {
-          e.stopPropagation();
-          openUrl(LOA_BIBLE_URL + `/character/snapshot/${entityState.entity.loadoutHash}`);
-        }}
-      >
-        <IconFileClock class="size-3" />
-      </button>
+    {#if enc.live && settings.app.meter.personalBest && entity.entityType === EntityType.PLAYER && entity.name === enc.localPlayer && enc.personalBest}
+      <PersonalBestIndicator {enc} {entityState} />
     {/if}
   </div>
 </td>

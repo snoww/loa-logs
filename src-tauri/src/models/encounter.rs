@@ -27,6 +27,8 @@ pub struct Encounter {
     pub sync: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub region: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub local_support_buffs: Option<crate::models::SupportBuffs>,
 }
 
 #[derive(Debug, Serialize, Clone, Default)]
@@ -124,6 +126,8 @@ pub struct DamageStats {
     pub dps: i64,
     #[serde(default)]
     pub dps_average: Vec<i64>,
+    #[serde(default)]
+    pub ndps_average: Vec<i64>,
     #[serde(default)]
     pub dps_rolling_10s_avg: Vec<i64>,
     #[serde(default)]

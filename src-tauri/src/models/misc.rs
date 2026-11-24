@@ -404,9 +404,44 @@ pub struct Engraving {
     pub level: u8,
 }
 
+#[derive(Debug, Default, Serialize, Clone, Copy)]
+#[serde(rename_all = "camelCase")]
 pub struct SupportBuffs {
     pub brand: f64,
+    #[serde(rename = "ap")]
     pub buff: f64,
     pub identity: f64,
     pub hyper: f64,
+}
+
+#[derive(Debug, Default, Deserialize, Clone)]
+#[serde(rename_all = "camelCase", default)]
+pub struct PersonalBestCriteria {
+    pub local_player: String,
+    pub bosses: Vec<String>,
+    pub difficulty: String,
+    pub is_support: bool,
+    pub boss_only_damage: bool,
+    pub boss_max_hp_min: Option<i64>,
+    pub boss_max_hp_max: Option<i64>,
+}
+
+#[derive(Debug, Default, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct PersonalBest {
+    pub id: i32,
+    pub fight_start: i64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub difficulty: Option<String>,
+    pub is_support: bool,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub ndps_average: Vec<i64>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub dps_average: Vec<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub curve_end_seconds: Option<f64>,
+    #[serde(skip_serializing_if = "HashMap::is_empty")]
+    pub boss_hp_log: HashMap<String, Vec<crate::models::BossHpLog>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub buff_performance: Option<f64>,
 }

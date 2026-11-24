@@ -1,4 +1,4 @@
-import { type ContributionSplit, type Encounter, type Entity, EntityType } from "#lib/types.ts";
+import { type ContributionSplit, type Encounter, type Entity, EntityType, type PersonalBest } from "#lib/types.ts";
 
 import { classNameToClassId } from "./constants/classes";
 import { sumUdpsContributed } from "./skill.svelte";
@@ -19,6 +19,7 @@ export class EncounterState {
   live = false;
 
   encounter: Encounter | undefined = $state();
+  personalBest: PersonalBest | null = $state(null);
   curSettings = $derived(this.live ? settings.app.meter : settings.app.logs);
   playerSort: PlayerSort = $state("dps");
   end = $derived(this.encounter?.lastCombatPacket ?? 0);
@@ -480,6 +481,7 @@ export class EncounterState {
 
   reset() {
     this.encounter = undefined;
+    this.personalBest = null;
     this.duration = 0;
     this.partyInfo = undefined;
     this.playerSort = "dps";

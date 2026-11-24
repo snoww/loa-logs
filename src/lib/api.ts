@@ -12,6 +12,7 @@ import type {
   EncountersOverview,
   IdentityEvent,
   NinevehEvent,
+  PersonalBest,
   RaidProgressionRange,
   RaidProgressionStatistics,
   PartyEvent,
@@ -159,6 +160,19 @@ export const getRaidProgressionRange = (criteria: RaidProgressionRangeCriteria):
 export const getRaidProgressionStatistics = (criteria: RaidProgressionCriteria): Promise<RaidProgressionStatistics> =>
   invoke("get_raid_progression_statistics", { criteria });
 
+export interface PersonalBestCriteria {
+  localPlayer: string;
+  bosses: string[];
+  difficulty: string;
+  isSupport: boolean;
+  bossOnlyDamage: boolean;
+  bossMaxHpMin?: number;
+  bossMaxHpMax?: number;
+}
+
+export const getPersonalBest = (criteria: PersonalBestCriteria): Promise<PersonalBest | null> =>
+  invoke("get_personal_best", { criteria });
+
 export interface SyncArgs {
   encounter: number;
   upstream: string;
@@ -295,6 +309,8 @@ export const onPhaseTransition = (handler: (event: { payload: number }) => void)
 export const onAdmin = (handler: () => void) => listen("admin", handler);
 
 export const onClearEncounter = (handler: (event: { payload: number }) => void) => listen("clear-encounter", handler);
+
+export const onEncountersDeleted = (handler: () => void) => listen("encounters-deleted", handler);
 
 export const onNinevehUpdate = (handler: (event: NinevehEvent) => void) => listen("nineveh-update", handler);
 

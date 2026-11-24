@@ -1,11 +1,47 @@
 #![allow(dead_code)]
 
+use std::sync::LazyLock;
+
 use hashbrown::HashMap;
+use serde::Deserialize;
 
 use crate::{
     data::RAID_MAP,
     models::{ArkPassiveNode, Encounter, EncounterEntity, EntityType, StatusEffect},
 };
+
+#[derive(Debug, Deserialize, Clone, Copy)]
+pub struct SupportBuffWeights {
+    pub ap: f64,
+    pub brand: f64,
+    pub identity: f64,
+}
+
+pub static SUPPORT_BUFF_WEIGHTS: LazyLock<SupportBuffWeights> = LazyLock::new(|| {
+    serde_json::from_str(include_str!(
+        "../../src/lib/constants/supportBuffWeights.json"
+    ))
+    .expect("valid supportBuffWeights.json")
+});
+
+pub const SUPPORT_SPECS: [&str; 4] = [
+    "Desperate Salvation",
+    "Full Bloom",
+    "Blessed Aura",
+    "Liberator",
+];
+
+pub fn normalize_boss_name(boss_name: &str) -> String {
+    match boss_name {
+        "Chaos Lightning Dragon Jade" => "Argeos",
+        "Vicious Argeos" | "Ruthless Lakadroff" | "Untrue Crimson Yoho" | "Despicable Skolakia" => {
+            "Behemoth, the Storm Commander"
+        }
+        "Krathoios's Tail" => "Krathoios",
+        _ => boss_name,
+    }
+    .to_string()
+}
 
 pub fn is_support(entity: &EncounterEntity) -> bool {
     if let Some(spec) = &entity.spec {
@@ -53,10 +89,7 @@ pub fn is_support_class(class_id: &u32) -> bool {
 }
 
 pub fn is_support_spec(spec: &str) -> bool {
-    matches!(
-        spec,
-        "Desperate Salvation" | "Full Bloom" | "Blessed Aura" | "Liberator"
-    )
+    SUPPORT_SPECS.contains(&spec)
 }
 
 pub fn get_spec_from_ark_passive(node: &ArkPassiveNode) -> String {

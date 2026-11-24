@@ -395,8 +395,9 @@ pub fn update_entity_stats(
     fight_start: i64,
     fight_end: i64,
     intermission_duration: i64,
-    intermission: Option<(i64, i64)>,
+    intermission_ms: Option<(i64, i64)>,
     damage_log: &HashMap<String, Vec<(i64, i64)>>,
+    ndps_damage_log: &HashMap<String, Vec<(i64, i64)>>,
     rdps_valid: bool,
 ) {
     let duration = fight_end - fight_start - intermission_duration;
@@ -404,6 +405,10 @@ pub fn update_entity_stats(
     let intervals = generate_intervals(fight_start, fight_end);
 
     if entity.entity_type == EntityType::Player {
+        let fight_start_sec = fight_start / 1000;
+        let fight_end_sec = fight_end / 1000;
+        let intermission_sec = intermission_ms.map(|(start, end)| (start / 1000, end / 1000));
+
         if let Some(player_log) = damage_log.get(&entity.name) {
             for interval in intervals {
                 let start = fight_start + interval - WINDOW_MS;
@@ -415,10 +420,13 @@ pub fn update_entity_stats(
                     .push(damage / (WINDOW_S * 2));
             }
 
-            let fight_start_sec = fight_start / 1000;
-            let fight_end_sec = fight_end / 1000;
             entity.damage_stats.dps_average =
-                calculate_average_dps(player_log, fight_start_sec, fight_end_sec, intermission);
+                calculate_average_dps(player_log, fight_start_sec, fight_end_sec, intermission_sec);
+        }
+
+        if rdps_valid && let Some(player_ndps_log) = ndps_damage_log.get(&entity.name) {
+            entity.damage_stats.ndps_average =
+                calculate_ndps_curve(player_ndps_log, fight_start, fight_end, intermission_ms);
         }
 
         // let mut buffed_damage = 0;
@@ -472,6 +480,7 @@ pub fn sanitize_invalid_rdps(
         entity.damage_stats.rdps_damage_given = 0;
         entity.damage_stats.rdps = 0;
         entity.damage_stats.ndps = 0;
+        entity.damage_stats.ndps_average.clear();
 
         for skill in entity.skills.values_mut() {
             skill.rdps_damage_received = 0;
@@ -654,6 +663,69 @@ pub fn calculate_average_dps(
 
         let elapsed = max((t - start_time + 1) - paused_time, 1);
         results[((t - start_time) / step) as usize] = current_sum / elapsed;
+    }
+
+    results
+}
+
+pub fn calculate_ndps_curve(
+    data: &[(i64, i64)],
+    fight_start: i64,
+    fight_end: i64,
+    intermission_ms: Option<(i64, i64)>,
+) -> Vec<i64> {
+    if fight_end < fight_start {
+        return Vec::new();
+    }
+
+    let step_ms = 5_000;
+    let intermission = intermission_ms
+        .filter(|(start, end)| end > start)
+        .map(|(start, end)| (max(start, fight_start), end.min(fight_end)))
+        .filter(|(start, end)| end > start);
+
+    let regular_steps = (fight_end - fight_start) / step_ms;
+    let has_tail_sample = (fight_end - fight_start) % step_ms != 0;
+    let mut results = Vec::with_capacity((regular_steps + 1 + i64::from(has_tail_sample)) as usize);
+
+    let mut current_sum = 0;
+    let mut data_iter = data.iter();
+    let mut current_data = data_iter.next();
+
+    let mut sample_at = |t_ms: i64, drain_all: bool| {
+        while let Some((timestamp, value)) = current_data {
+            if drain_all || *timestamp <= t_ms {
+                current_sum += value;
+                current_data = data_iter.next();
+            } else {
+                break;
+            }
+        }
+
+        let paused_ms = if let Some((inter_start, inter_end)) = intermission {
+            if t_ms <= inter_start {
+                0
+            } else if t_ms >= inter_end {
+                inter_end - inter_start
+            } else {
+                t_ms - inter_start
+            }
+        } else {
+            0
+        };
+
+        let elapsed_seconds = max((t_ms - fight_start - paused_ms) / 1000, 1);
+        results.push(current_sum / elapsed_seconds);
+    };
+
+    for step_idx in 0..=regular_steps {
+        let t_ms = fight_start + step_idx * step_ms;
+        let is_final = !has_tail_sample && step_idx == regular_steps;
+        sample_at(t_ms, is_final);
+    }
+
+    if has_tail_sample {
+        sample_at(fight_end, true);
     }
 
     results

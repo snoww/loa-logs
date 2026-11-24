@@ -1637,7 +1637,17 @@ pub fn start(args: StartArgs) -> Result<()> {
                     None
                 };
 
-            let live_update = state.live_snapshot(boss_dead);
+            let snapshot_party_info;
+            let current_party_info: &[Vec<String>] = if party_freeze {
+                &state.party_info
+            } else if let Some(ref updated) = party_info {
+                updated
+            } else {
+                snapshot_party_info = update_party(&party_tracker, &entity_tracker);
+                &snapshot_party_info
+            };
+
+            let live_update = state.live_snapshot(boss_dead, current_party_info);
 
             tokio::task::spawn(async move {
                 if !live_update.entities.is_empty() {

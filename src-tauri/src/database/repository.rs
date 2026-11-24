@@ -268,6 +268,275 @@ impl Repository {
         Ok(range)
     }
 
+    pub fn get_personal_best(
+        &self,
+        criteria: PersonalBestCriteria,
+    ) -> Result<Option<PersonalBest>> {
+        if criteria.local_player.is_empty() {
+            return Ok(None);
+        }
+
+        let mut bosses = BTreeSet::new();
+        for boss in &criteria.bosses {
+            if boss.is_empty() {
+                continue;
+            }
+            bosses.insert(boss.clone());
+            bosses.insert(normalize_boss_name(boss));
+        }
+        if bosses.is_empty() {
+            return Ok(None);
+        }
+        let connection = self.0.get()?;
+        let mut params: Vec<rusqlite::types::Value> = vec![
+            rusqlite::types::Value::Text(criteria.local_player),
+            rusqlite::types::Value::Integer(if criteria.boss_only_damage { 1 } else { 0 }),
+        ];
+
+        let boss_placeholders = std::iter::repeat_n("?", bosses.len())
+            .collect::<Vec<_>>()
+            .join(",");
+        for boss in bosses {
+            params.push(rusqlite::types::Value::Text(boss));
+        }
+
+        let difficulty_filter = if criteria.difficulty.is_empty() {
+            "(e.difficulty IS NULL OR e.difficulty = '')"
+        } else {
+            params.push(rusqlite::types::Value::Text(criteria.difficulty));
+            "e.difficulty = ?"
+        };
+
+        let spec_placeholders = std::iter::repeat_n("?", SUPPORT_SPECS.len())
+            .collect::<Vec<_>>()
+            .join(",");
+        for spec in SUPPORT_SPECS {
+            params.push(rusqlite::types::Value::Text(spec.to_string()));
+        }
+        let role_filter = if criteria.is_support {
+            format!("le.spec IN ({spec_placeholders})")
+        } else {
+            format!("(le.spec IS NULL OR le.spec NOT IN ({spec_placeholders}))")
+        };
+        let matching_encounters = format!(
+            "FROM encounter_preview e
+             JOIN encounter enc ON enc.id = e.id
+             JOIN entity le ON le.encounter_id = e.id AND le.name = e.local_player
+             LEFT JOIN entity boss
+               ON boss.encounter_id = e.id
+              AND boss.name = e.current_boss
+              AND boss.entity_type = 'BOSS'
+             WHERE e.cleared = 1
+               AND e.local_player = ?
+               AND e.boss_only_damage = ?
+               AND e.current_boss IN ({boss_placeholders})
+               AND {difficulty_filter}
+               AND {role_filter}"
+        );
+
+        if criteria.is_support {
+            let weights = *SUPPORT_BUFF_WEIGHTS;
+            let params = [weights.ap, weights.brand, weights.identity]
+                .into_iter()
+                .map(rusqlite::types::Value::Real)
+                .chain(params);
+
+            let query = format!(
+                "SELECT
+                    e.id,
+                    e.fight_start,
+                    e.current_boss,
+                    e.difficulty,
+                    e.local_player,
+                    enc.misc,
+                    enc.boss_hp_log,
+                    boss.max_hp AS boss_max_hp,
+                    le.support_ap,
+                    le.support_brand,
+                    le.support_identity,
+                    (? * le.support_ap + ? * le.support_brand + ? * le.support_identity) AS buff_performance
+                {matching_encounters}
+                  AND le.support_ap IS NOT NULL
+                  AND le.support_brand IS NOT NULL
+                  AND le.support_identity IS NOT NULL
+                  AND (le.support_ap > 0 OR le.support_brand > 0 OR le.support_identity > 0)
+                ORDER BY buff_performance DESC, e.fight_start DESC, e.id DESC"
+            );
+
+            let mut statement = connection.prepare(&query)?;
+            let mut rows = statement.query(params_from_iter(params))?;
+
+            while let Some(row) = rows.next()? {
+                let ap: f64 = row.get("support_ap")?;
+                let brand: f64 = row.get("support_brand")?;
+                let identity: f64 = row.get("support_identity")?;
+                let Some(score) = row
+                    .get::<_, Option<f64>>("buff_performance")?
+                    .filter(|score| score.is_finite() && *score > 0.0)
+                else {
+                    continue;
+                };
+
+                let boss_name: String = row.get("current_boss")?;
+                let misc_str: String = row.get("misc").unwrap_or_default();
+                let mut misc = serde_json::from_str::<EncounterMisc>(misc_str.as_str()).ok();
+
+                let boss_max_hp: Option<i64> = row.get("boss_max_hp")?;
+                let needs_hp_check = (criteria.boss_max_hp_min.is_some()
+                    || criteria.boss_max_hp_max.is_some())
+                    && boss_name == AMBIGUOUS_BRELSHAZA_BOSS;
+                if needs_hp_check {
+                    let boss_hp_log = if boss_max_hp.is_some_and(|hp| hp > 0) {
+                        HashMap::new()
+                    } else {
+                        read_personal_best_boss_hp_log(row, misc.as_mut())?
+                    };
+                    if !matches_boss_max_hp_bounds(
+                        &boss_name,
+                        boss_max_hp,
+                        &boss_hp_log,
+                        criteria.boss_max_hp_min,
+                        criteria.boss_max_hp_max,
+                    ) {
+                        continue;
+                    }
+                }
+
+                let row_local_player: String = row.get("local_player")?;
+                let Some(party) = misc.as_ref().and_then(|m| {
+                    m.party_info.as_ref().and_then(|parties| {
+                        parties
+                            .values()
+                            .find(|party| party.iter().any(|name| name == &row_local_player))
+                    })
+                }) else {
+                    continue;
+                };
+
+                let encounter_id: i32 = row.get("id")?;
+                if !is_valid_party_support_score(
+                    &connection,
+                    encounter_id,
+                    &row_local_player,
+                    party,
+                    ap,
+                    brand,
+                    identity,
+                )? {
+                    continue;
+                }
+
+                let difficulty = row
+                    .get::<_, Option<String>>("difficulty")?
+                    .filter(|d| !d.is_empty());
+
+                return Ok(Some(PersonalBest {
+                    id: encounter_id,
+                    fight_start: row.get("fight_start")?,
+                    difficulty,
+                    is_support: true,
+                    buff_performance: Some(score),
+                    ..PersonalBest::default()
+                }));
+            }
+
+            return Ok(None);
+        }
+
+        let query = format!(
+            "SELECT
+                e.id,
+                e.fight_start,
+                enc.last_combat_packet,
+                e.current_boss,
+                e.difficulty,
+                COALESCE(e.my_ndps, 0) AS my_ndps,
+                COALESCE(e.my_dps, 0) AS my_dps,
+                enc.misc,
+                enc.boss_hp_log,
+                boss.max_hp AS boss_max_hp,
+                le.damage_stats
+            {matching_encounters}
+              AND (e.my_ndps > 0 OR e.my_dps > 0)
+            ORDER BY e.my_ndps DESC, e.fight_start DESC, e.id DESC"
+        );
+
+        let mut statement = connection.prepare(&query)?;
+        let mut rows = statement.query(params_from_iter(params))?;
+        let mut dps_fallback = None;
+
+        while let Some(row) = rows.next()? {
+            let id: i32 = row.get("id")?;
+            let fight_start: i64 = row.get("fight_start")?;
+            let my_ndps: i64 = row.get("my_ndps")?;
+            let my_dps: i64 = row.get("my_dps")?;
+            let dps_rank = (my_dps, fight_start, id);
+            let can_use_dps = my_dps > 0
+                && dps_fallback
+                    .as_ref()
+                    .is_none_or(|(best_rank, _)| dps_rank > *best_rank);
+            if my_ndps <= 0 && !can_use_dps {
+                continue;
+            }
+
+            let damage_stats: DamageStats = decode_json_column(row, "damage_stats")?;
+            let use_ndps = my_ndps > 0 && !damage_stats.ndps_average.is_empty();
+            if !use_ndps && (!can_use_dps || damage_stats.dps_average.is_empty()) {
+                continue;
+            }
+
+            let boss_name: String = row.get("current_boss")?;
+            let misc_str: String = row.get("misc").unwrap_or_default();
+            let mut misc = serde_json::from_str::<EncounterMisc>(misc_str.as_str()).ok();
+            let boss_hp_log = read_personal_best_boss_hp_log(row, misc.as_mut())?;
+            if !boss_hp_log.values().any(|samples| !samples.is_empty()) {
+                continue;
+            }
+
+            let boss_max_hp: Option<i64> = row.get("boss_max_hp")?;
+            if !matches_boss_max_hp_bounds(
+                &boss_name,
+                boss_max_hp,
+                &boss_hp_log,
+                criteria.boss_max_hp_min,
+                criteria.boss_max_hp_max,
+            ) {
+                continue;
+            }
+
+            let last_combat_packet: i64 = row.get("last_combat_packet")?;
+            // The legacy DPS curve ends on a five-second sample and has no fight-end sample.
+            let curve_end_seconds = (use_ndps && last_combat_packet > fight_start)
+                .then(|| (last_combat_packet - fight_start) as f64 / 1000.0);
+            let (ndps_average, dps_average) = if use_ndps {
+                (damage_stats.ndps_average, Vec::new())
+            } else {
+                (Vec::new(), damage_stats.dps_average)
+            };
+
+            let difficulty = row
+                .get::<_, Option<String>>("difficulty")?
+                .filter(|d| !d.is_empty());
+
+            let personal_best = PersonalBest {
+                id,
+                fight_start,
+                difficulty,
+                ndps_average,
+                dps_average,
+                curve_end_seconds,
+                boss_hp_log,
+                ..PersonalBest::default()
+            };
+            if use_ndps {
+                return Ok(Some(personal_best));
+            }
+            dps_fallback = Some((dps_rank, personal_best));
+        }
+
+        Ok(dps_fallback.map(|(_, personal_best)| personal_best))
+    }
+
     pub fn delete_all_uncleared_encounters(&self, keep_favorites: bool) -> Result<()> {
         let connection = self.0.get()?;
 
@@ -630,6 +899,42 @@ impl Repository {
             .execute(params)?;
 
         Ok(())
+    }
+}
+
+fn read_personal_best_boss_hp_log(
+    row: &rusqlite::Row,
+    misc: Option<&mut EncounterMisc>,
+) -> Result<HashMap<String, Vec<BossHpLog>>> {
+    let log: HashMap<String, Vec<BossHpLog>> = decode_json_column(row, "boss_hp_log")?;
+    if log.is_empty() {
+        Ok(misc
+            .and_then(|misc| misc.boss_hp_log.take())
+            .unwrap_or_default())
+    } else {
+        Ok(log)
+    }
+}
+
+fn decode_json_column<T>(row: &rusqlite::Row, col: &str) -> rusqlite::Result<T>
+where
+    T: serde::de::DeserializeOwned + Default,
+{
+    match row.get_ref(col)? {
+        rusqlite::types::ValueRef::Blob(_) => {
+            let CompressedJson(parsed) = row.get::<_, CompressedJson<T>>(col)?;
+            std::result::Result::Ok(parsed)
+        }
+        rusqlite::types::ValueRef::Text(_) => {
+            let JsonColumn(parsed) = row.get::<_, JsonColumn<T>>(col)?;
+            std::result::Result::Ok(parsed)
+        }
+        rusqlite::types::ValueRef::Null => std::result::Result::Ok(T::default()),
+        other => std::result::Result::Err(rusqlite::Error::InvalidColumnType(
+            0,
+            col.to_string(),
+            other.data_type(),
+        )),
     }
 }
 
@@ -2382,6 +2687,7 @@ pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
         encounter,
         cast_log,
         damage_log,
+        ndps_damage_log,
         rdps_valid,
         skill_cast_log,
         player_info,
@@ -2395,11 +2701,9 @@ pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
     let fight_end = encounter.last_combat_packet;
     let local_player_str = encounter.local_player.as_str();
 
-    let (intermission_duration, intermission_range_seconds) =
+    let (intermission_duration, intermission_range_ms) =
         match (&intermission_start, &intermission_end) {
-            (Some(start), Some(end)) if end > start => {
-                (*end - *start, Some((*start / 1000, *end / 1000)))
-            }
+            (Some(start), Some(end)) if end > start => (*end - *start, Some((*start, *end))),
             _ => (0, None),
         };
 
@@ -2413,8 +2717,9 @@ pub fn calculate_entities(args: &mut InsertEncounterArgs) -> Result<()> {
             fight_start,
             fight_end,
             intermission_duration,
-            intermission_range_seconds,
+            intermission_range_ms,
             damage_log,
+            ndps_damage_log,
             *rdps_valid,
         );
 
@@ -2521,6 +2826,137 @@ pub fn compute_support_buffs(
     }
 
     buffs
+}
+
+const AMBIGUOUS_BRELSHAZA_BOSS: &str = "Phantom Legion Commander Brelshaza";
+
+fn infer_boss_max_hp(
+    boss_name: &str,
+    entity_max_hp: Option<i64>,
+    boss_hp_log: &HashMap<String, Vec<BossHpLog>>,
+) -> Option<i64> {
+    if let Some(max_hp) = entity_max_hp.filter(|&hp| hp > 0) {
+        return Some(max_hp);
+    }
+
+    let entries = boss_hp_log.get(boss_name)?;
+    if let Some(entry) = entries.iter().find(|entry| entry.hp > 0 && entry.p > 0.0) {
+        let inferred = (entry.hp as f64 / entry.p as f64).round() as i64;
+        if inferred > 0 {
+            return Some(inferred);
+        }
+    }
+
+    entries
+        .iter()
+        .map(|entry| entry.hp)
+        .filter(|&hp| hp > 0)
+        .max()
+}
+
+fn matches_boss_max_hp_bounds(
+    boss_name: &str,
+    entity_max_hp: Option<i64>,
+    boss_hp_log: &HashMap<String, Vec<BossHpLog>>,
+    min_hp: Option<i64>,
+    max_hp: Option<i64>,
+) -> bool {
+    if min_hp.is_none() && max_hp.is_none() {
+        return true;
+    }
+    if boss_name != AMBIGUOUS_BRELSHAZA_BOSS {
+        return true;
+    }
+    let Some(resolved_max_hp) = infer_boss_max_hp(boss_name, entity_max_hp, boss_hp_log) else {
+        return false;
+    };
+    if let Some(min_hp) = min_hp
+        && resolved_max_hp < min_hp
+    {
+        return false;
+    }
+    if let Some(max_hp) = max_hp
+        && resolved_max_hp > max_hp
+    {
+        return false;
+    }
+    true
+}
+
+fn is_valid_party_support_score(
+    connection: &rusqlite::Connection,
+    encounter_id: i32,
+    local_player: &str,
+    party: &[String],
+    stored_ap: f64,
+    stored_brand: f64,
+    stored_identity: f64,
+) -> Result<bool> {
+    let unique_members: Vec<&String> = party.iter().collect::<BTreeSet<_>>().into_iter().collect();
+    if unique_members.len() <= 1 {
+        return Ok(false);
+    }
+
+    let placeholders = std::iter::repeat_n("?", unique_members.len())
+        .collect::<Vec<_>>()
+        .join(",");
+    let query = format!(
+        "SELECT name, class_id, spec, damage_stats, skills
+         FROM entity
+         WHERE encounter_id = ?
+           AND entity_type = 'PLAYER'
+           AND name IN ({placeholders})"
+    );
+    let mut query_params: Vec<rusqlite::types::Value> =
+        Vec::with_capacity(1 + unique_members.len());
+    query_params.push(rusqlite::types::Value::Integer(encounter_id as i64));
+    for member in &unique_members {
+        query_params.push(rusqlite::types::Value::Text((*member).clone()));
+    }
+
+    let mut stmt = connection.prepare(&query)?;
+    let mut rows = stmt.query(params_from_iter(query_params))?;
+    let mut encounter = Encounter::default();
+
+    while let Some(row) = rows.next()? {
+        let name: String = row.get("name")?;
+        let class_id: u32 = row.get::<_, Option<u32>>("class_id")?.unwrap_or(0);
+        let spec: Option<String> = row.get("spec")?;
+        let damage_stats: DamageStats = decode_json_column(row, "damage_stats")?;
+        let skills: HashMap<u32, Skill> = decode_json_column(row, "skills")?;
+        encounter.entities.insert(
+            name.clone(),
+            EncounterEntity {
+                name,
+                class_id,
+                spec,
+                entity_type: EntityType::Player,
+                damage_stats,
+                skills,
+                ..Default::default()
+            },
+        );
+    }
+
+    let loaded_count = encounter.entities.len();
+    let party_slice = [party.to_vec()];
+    let recomputed = compute_support_buffs(&encounter, &party_slice);
+    let Some(expected) = recomputed.get(local_player) else {
+        return Ok(false);
+    };
+
+    // If a party member was absent from the entity table (for example a zero-damage second
+    // support), save-time compute_support_buffs saw that member and skipped the party, causing
+    // insert_entities to store the support's own self-buff ratios instead.
+    if loaded_count < unique_members.len() {
+        const EPSILON: f64 = 1e-5;
+        let matches = (stored_ap - expected.buff).abs() <= EPSILON
+            && (stored_brand - expected.brand).abs() <= EPSILON
+            && (stored_identity - expected.identity).abs() <= EPSILON;
+        return Ok(matches);
+    }
+
+    Ok(true)
 }
 
 #[cfg(test)]
@@ -3540,6 +3976,7 @@ mod tests {
                         ..Default::default()
                     },
                     damage_log: HashMap::new(),
+                    ndps_damage_log: HashMap::new(),
                     cast_log: HashMap::new(),
                     boss_hp_log: HashMap::new(),
                     raid_clear: true,
@@ -3667,6 +4104,7 @@ mod tests {
                         ..Default::default()
                     },
                     damage_log: HashMap::new(),
+                    ndps_damage_log: HashMap::new(),
                     cast_log: HashMap::new(),
                     boss_hp_log: HashMap::new(),
                     raid_clear: true,
@@ -4716,11 +5154,13 @@ mod tests {
                 boss_only_damage: false,
                 sync: None,
                 region: Some(self.region.clone()),
+                local_support_buffs: None,
             };
 
             let insert_args = InsertEncounterArgs {
                 encounter,
                 damage_log,
+                ndps_damage_log: HashMap::new(),
                 cast_log,
                 boss_hp_log: boss_hp_logs,
                 raid_clear: true,

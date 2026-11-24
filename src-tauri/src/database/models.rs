@@ -20,6 +20,7 @@ pub struct GetEncounterPreviewArgs {
 pub struct InsertEncounterArgs {
     pub encounter: Encounter,
     pub damage_log: HashMap<String, Vec<(i64, i64)>>,
+    pub ndps_damage_log: HashMap<String, Vec<(i64, i64)>>,
     pub cast_log: HashMap<String, HashMap<u32, Vec<i32>>>,
     pub boss_hp_log: HashMap<String, Vec<BossHpLog>>,
     pub raid_clear: bool,

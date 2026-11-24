@@ -108,6 +108,7 @@ export interface MeterSettings extends CommonSettings {
   bossHpBar: boolean;
   splitBossHpBar: boolean;
   showTimeUntilKill: boolean;
+  personalBest: boolean;
   showClassColors: boolean;
   pinSelfParty: boolean;
   breakdown: MeterBreakdown;
@@ -197,6 +198,7 @@ export const defaultSettings: AppSettings = {
     bossHpBar: true,
     splitBossHpBar: false,
     showTimeUntilKill: false,
+    personalBest: true,
     splitPartyBuffs: true,
     showClassColors: true,
     profileShortcut: false,

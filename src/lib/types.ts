@@ -40,6 +40,14 @@ export interface Encounter {
   bossOnlyDamage: boolean;
   sync?: string;
   region?: string;
+  localSupportBuffs?: SupportBuffSummary;
+}
+
+export interface SupportBuffSummary {
+  ap: number;
+  brand: number;
+  identity: number;
+  hyper: number;
 }
 
 export interface EncountersOverview {
@@ -67,6 +75,18 @@ export interface EncounterPreview {
   udps?: number;
   myRdps?: number;
   myNdps?: number;
+}
+
+export interface PersonalBest {
+  id: number;
+  fightStart: number;
+  difficulty?: string;
+  isSupport: boolean;
+  ndpsAverage?: number[];
+  dpsAverage?: number[];
+  curveEndSeconds?: number;
+  bossHpLog?: Record<string, Array<BossHpLog>>;
+  buffPerformance?: number;
 }
 
 export interface CharacterStatistics {
@@ -523,6 +543,7 @@ export interface DamageStats {
   deathInfo?: DeathInfo[];
   dps: number;
   dpsAverage: [number, number];
+  ndpsAverage?: number[];
   dpsRolling10sAvg: [number, number];
   rdpsDamageReceived: number;
   rdpsDamageReceivedSupport: number;

@@ -585,18 +585,6 @@ pub fn get_skill_id(new_skill: u32, original_buff_id: u32) -> u32 {
     new_skill - 1_000_000_000 - original_buff_id
 }
 
-pub fn update_current_boss_name(boss_name: &str) -> String {
-    match boss_name {
-        "Chaos Lightning Dragon Jade" => "Argeos",
-        "Vicious Argeos" | "Ruthless Lakadroff" | "Untrue Crimson Yoho" | "Despicable Skolakia" => {
-            "Behemoth, the Storm Commander"
-        }
-        "Krathoios's Tail" => "Krathoios",
-        _ => boss_name,
-    }
-    .to_string()
-}
-
 fn get_damage_without_hyper_or_special(e: &EncounterEntity) -> i64 {
     let hyper = e.damage_stats.hyper_awakening_damage;
     let special = e
