@@ -5,7 +5,7 @@
   "platforms": {
     "windows-x86_64": {
       "url": "https://github.com/snoww/loa-logs/releases/download/v1.54.1/LOA.Logs_1.54.1_x64-setup.exe",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlNoaWxDWmpKOUdmNit5OWJQK0xDUmFlNENYMXRYMlc3OERYaWtWWDl5VHN6QkRuakNEMnhzVFhvVDRUSTRyeDdQREFBZFBEalgyNytONGtlNENvWFFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzk1NTc5MDcwCWZpbGU6TE9BIExvZ3NfMS41NC4xX3g2NC1zZXR1cC5leGUJdmVyc2lvbjoxLjU0LjEKZC9Fc0JCYlp6aGN0VStjSjk3bUcwbDJad2Z0aXlVYjZlT1l5WUwxbG1rY1lsK0FTYlFrM3M3MWJSbllYdWV2K1AvbW1vQzVTTDF0ZmJQQmdRNkxEQVE9PQo=="
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlNoaWxDWmpKOUdmNit5OWJQK0xDUmFlNENYMXRYMlc3OERYaWtWWDl5VHN6QkRuakNEMnhzVFhvVDRUSTRyeDdQREFBZFBEalgyNytONGtlNENvWFFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzk1NTc5MDcwCWZpbGU6TE9BIExvZ3NfMS41NC4xX3g2NC1zZXR1cC5leGUJdmVyc2lvbjoxLjU0LjEKZC9Fc0JCYlp6aGN0VStjSjk3bUcwbDJad2Z0aXlVYjZlT1l5WUwxbG1rY1lsK0FTYlFrM3M3MWJSbllYdWV2K1AvbW1vQzVTTDF0ZmJQQmdRNkxEQVE9PQo="
     },
     "linux-x86_64": {
       "url": "https://github.com/snoww/loa-logs/releases/download/v1.54.1/LOA.Logs_1.54.1_amd64.AppImage",
