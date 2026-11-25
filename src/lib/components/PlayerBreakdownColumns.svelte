@@ -129,7 +129,6 @@
     // Buffed damage % (support's view)
     {
       show(enc) {
-        if (!enc.encounter.curSettings.breakdown.unbuffedDamage) return false;
         return enc.hasUdpsContributions;
       },
       headerText: "bD%",
