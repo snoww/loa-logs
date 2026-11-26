@@ -1,6 +1,8 @@
 import { classesMap } from "#lib/constants/classes.ts";
 import { type Encounter, type Entity, EntityType } from "#lib/types.ts";
 
+export const previewNdpsDelta = 4.2;
+
 export function createPreviewEncounter(playerCount: 4 | 8): Encounter {
   const duration = 120000;
   const classIds = [102, 205, 402, 204, 112, 512, 313, 602];
@@ -70,7 +72,7 @@ export function createPreviewEncounter(playerCount: 4 | 8): Encounter {
   return {
     lastCombatPacket: duration,
     fightStart: 0,
-    localPlayer: "",
+    localPlayer: players[0].name,
     entities: Object.fromEntries(players.map((player) => [player.name, player])),
     currentBossName: "",
     currentBoss: null,

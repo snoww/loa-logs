@@ -44,7 +44,6 @@ export interface DpsPersonalBestComparison {
   deltaDps: number;
   deltaPercent: number;
   bossHpPercent: number;
-  isAhead: boolean;
   logId: number;
   fightStart: number;
 }
@@ -57,7 +56,6 @@ export interface SupportPersonalBestComparison {
   liveAp: number;
   liveBrand: number;
   liveIdentity: number;
-  isAhead: boolean;
   logId: number;
   fightStart: number;
 }
@@ -328,7 +326,6 @@ export function evaluatePersonalBest(input: {
       liveAp: localSupportBuffs.ap * 100,
       liveBrand: localSupportBuffs.brand * 100,
       liveIdentity: localSupportBuffs.identity * 100,
-      isAhead: deltaScore >= 0,
       logId: pb.id,
       fightStart: pb.fightStart
     };
@@ -377,7 +374,6 @@ export function evaluatePersonalBest(input: {
     deltaDps,
     deltaPercent,
     bossHpPercent: liveHpRatio * 100,
-    isAhead: deltaPercent >= 0,
     logId: pb.id,
     fightStart: pb.fightStart
   };

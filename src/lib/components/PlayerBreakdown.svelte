@@ -31,6 +31,9 @@
 
   let { entity, enc, handleRightClick }: Props = $props();
   let entityState = new EntityState(entity, enc);
+  let showNDamage = $derived(
+    !isSupportSpec(entity.spec) && enc.curSettings.breakdown.ndps && enc.anyRdpsContributions
+  );
   $effect(() => {
     entityState.entity = entity;
     entityState.encounter = enc;
@@ -99,7 +102,7 @@
             </QuickTooltip>
           </td>
         {/if}
-        {#if enc.curSettings.breakdown.unbuffedDamage && entityState.hasUdpsContributions}
+        {#if entityState.hasUdpsContributions}
           {@const supportDamagePercent = ((entityState.totalDamageBuffed / enc.totalDamageDealt) * 100).toFixed(1)}
           <td class="px-1 text-center">
             <QuickTooltip tooltip="Contributed {supportDamagePercent}% of total raid damage">
@@ -144,7 +147,7 @@
             </QuickTooltip>
           </td>
         {/if}
-        {#if !isSupportSpec(entity.spec) && enc.curSettings.breakdown.ndps && enc.anyRdpsContributions}
+        {#if showNDamage}
           {#if entity.damageStats.rdpsDamageReceived > 0}
             {@const ndmg = abbreviateNumberSplit(entityState.baseDamage)}
             <td class="px-1 text-center">
@@ -156,7 +159,7 @@
             <td class="px-1 text-center">-</td>
           {/if}
         {/if}
-        {#if !isSupportSpec(entity.spec) && enc.curSettings.breakdown.ndps && enc.anyRdpsContributions}
+        {#if showNDamage}
           {#if entity.damageStats.rdpsDamageReceived > 0}
             <td class="px-1 text-center">
               <QuickTooltip tooltip={entityState.ndps.toLocaleString()}>
@@ -185,7 +188,7 @@
             </QuickTooltip>
           </td>
         {/if}
-        {#if enc.curSettings.breakdown.ndps && enc.anyRdpsContributions}
+        {#if showNDamage}
           {#if entity.damageStats.rdpsDamageReceived > 0}
             {@const ndmg = abbreviateNumberSplit(entityState.baseDamage)}
             <td class="px-1 text-center">
@@ -212,7 +215,7 @@
             </QuickTooltip>
           </td>
         {/if}
-        {#if enc.curSettings.breakdown.ndps && enc.anyRdpsContributions}
+        {#if showNDamage}
           {#if entity.damageStats.rdpsDamageReceived > 0}
             <td class="px-1 text-center">
               <QuickTooltip tooltip={entityState.ndps.toLocaleString()}>

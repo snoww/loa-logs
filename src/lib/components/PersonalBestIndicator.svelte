@@ -13,9 +13,11 @@
   interface Props {
     enc: EncounterState;
     entityState: EntityState;
+    compact?: boolean;
+    previewDelta?: number;
   }
 
-  let { enc, entityState }: Props = $props();
+  let { enc, entityState, compact = false, previewDelta }: Props = $props();
 
   let comparison = $derived.by(() => {
     if (!enc.live || !enc.personalBest || !enc.encounter) return null;
@@ -34,10 +36,26 @@
       localSupportBuffs: enc.encounter.localSupportBuffs
     });
   });
+  let delta = $derived(previewDelta ?? (comparison?.kind === "dps" ? comparison.deltaPercent : comparison?.deltaScore));
+  let deltaColor = $derived((delta ?? 0) >= 0 ? "text-lime-400" : "text-red-300");
 </script>
 
-{#if comparison}
-  {@const deltaColor = comparison.isAhead ? "text-lime-400" : "text-red-300"}
+{#snippet pbDelta(value: number)}
+  <span
+    class={[
+      "tracking-[-0.01em] whitespace-nowrap tabular-nums",
+      compact ? "w-11 shrink-0 text-right text-[10px]" : "text-xs",
+      deltaColor
+    ]}
+    style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85)"
+  >
+    {formatSignedFixed(value, 1, "%")}
+  </span>
+{/snippet}
+
+{#if compact && delta !== undefined}
+  {@render pbDelta(delta)}
+{:else if comparison && delta !== undefined}
   {#snippet pbTooltip()}
     <span class="flex min-w-55 flex-col leading-[1.55] tracking-tighter tabular-nums">
       {#if comparison.kind === "dps"}
@@ -86,13 +104,6 @@
   {/snippet}
 
   <QuickTooltip tooltip={pbTooltip} class="w-14 shrink-0 text-right">
-    <span
-      class="text-xs tracking-[-0.01em] whitespace-nowrap tabular-nums"
-      style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85)"
-    >
-      <span class={deltaColor}>
-        {formatSignedFixed(comparison.kind === "dps" ? comparison.deltaPercent : comparison.deltaScore, 1, "%")}
-      </span>
-    </span>
+    {@render pbDelta(delta)}
   </QuickTooltip>
 {/if}

@@ -1,4 +1,8 @@
 <script lang="ts">
+  import type { UnlistenFn } from "@tauri-apps/api/event";
+  import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
+  import { onMount } from "svelte";
+
   import {
     ninevehStateRequest,
     onEncounterUpdate,
@@ -10,16 +14,14 @@
   import { EncounterState } from "#lib/encounter.svelte.ts";
   import { misc, nineveh, settings } from "#lib/stores.svelte.ts";
   import type { EncounterEvent } from "#lib/types.ts";
+  import { trackPersonalBest } from "#lib/utils/personalBest.svelte.ts";
   import { zoneChange } from "#lib/utils/toasts.ts";
-  import type { UnlistenFn } from "@tauri-apps/api/event";
-  import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
-  import { onMount } from "svelte";
 
   import MiniEncounterInfo from "./MiniEncounterInfo.svelte";
   import MiniPlayers from "./MiniPlayers.svelte";
   import { createPreviewEncounter } from "./preview";
 
-  let enc = $derived(new EncounterState(undefined, true));
+  const enc = new EncounterState(undefined, true);
   let displayEnc = $derived(
     settings.app.general.miniEdit
       ? new EncounterState(createPreviewEncounter(settings.app.mini.previewPlayers), true)
@@ -28,6 +30,8 @@
   let time = $state(+Date.now());
   let unsubscribe: (() => void) | null = null;
   let zoneTimeout: ReturnType<typeof setTimeout> | undefined;
+
+  trackPersonalBest(enc, () => settings.app.general.mini && !settings.app.general.miniEdit);
 
   onMount(() => {
     const interval = setInterval(() => {
