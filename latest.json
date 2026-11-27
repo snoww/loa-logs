@@ -1,15 +1,15 @@
 {
-  "version": "v1.54.2",
-  "notes": "### v1.54.2 - November 26th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Vairgrys\n- **Administrator** on Elpon\n- **Poont** on Arcturus\n\n### Note: ExitLag users must check the ExitLag Compatibility setting\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- added pb to mini mode\n",
+  "version": "v1.54.3",
+  "notes": "### v1.54.3 - November 26th, 2026\n\n#### P.S. If you see any of us in town or raid, feel free to drop an honor!\n\n- **Snowving** on Vairgrys\n- **Administrator** on Elpon\n- **Poont** on Arcturus\n\n### Note: ExitLag users must check the ExitLag Compatibility setting\n\n#### BUG FIXES AND IMPROVEMENTS\n\n- added pb to mini mode\n",
   "pub_date": "2026-11-26T10:20:08.001Z",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.54.2/LOA.Logs_1.54.2_x64-setup.exe",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmMxVUlkOGFDL2REdFUwUjJGT0U4Z2xURkE1OUhRd2NMTG1vMXZocmJyc0trWlloQ0pjUnEzSEJYRVRZd2RQWE9RTVFzWDFVYk11cjMrUXFiTHJqcFEwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzk1NjcyNDMzCWZpbGU6TE9BIExvZ3NfMS41NC4yX3g2NC1zZXR1cC5leGUJdmVyc2lvbjoxLjU0LjIKVy8rRlZUVm0xS1dXTUVWZjB6UG1MTTNkOVB4Q1AzSjEvT1E3L3NsSWFWcDRRaFlqODNicXdYeWFmWWRiRkxQWWFsWmY1MHAzYjUvNCt2UjB6Y3VaQ1E9PQo="
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.54.3/LOA.Logs_1.54.3_x64-setup.exe",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmNRaVgvY2pEL2M0MDJZQmk1T1FDZUI2aEl1dCtMTXREMURRa0JIZkpCanN3NWlyV1NrSlo5cVoxclJ4elpOQzhqZGZoMnF4NFU1bERHc1FLbitmN2c4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzk1NzUzMjE0CWZpbGU6TE9BIExvZ3NfMS41NC4zX3g2NC1zZXR1cC5leGUJdmVyc2lvbjoxLjU0LjMKaHEyZFNoTVFaZHkzbmd2RmNORkNTN1NLRFRJU2E1T3ZYNnc4ajJhUDl0ZUZ2b2VYYXBEUE1rV3Z5VTYwa0djZGxyVi81a09DNzVPSHQyQ1hVQVA2Q3c9PQo="
     },
     "linux-x86_64": {
-      "url": "https://github.com/snoww/loa-logs/releases/download/v1.54.2/LOA.Logs_1.54.2_amd64.AppImage",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYmZpQWdOdDdSTGdDdjZ0MmE1SDJXTC9YVSszVXdYUzZkc1lzR1dzaVhmUWhqZDZWWFJRK1VPMGN1YWF2QndPRkZodVAzZ2JHY2RhYTFiOCtYb2o1NFEwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzk1NjcyNDAyCWZpbGU6TE9BIExvZ3NfMS41NC4yX2FtZDY0LkFwcEltYWdlCXZlcnNpb246MS41NC4yClhEdEU4Y3NqL25nQW9qeUpxOHlvYXdCRE9LNndVVTYrQ05QWjl2YzVEaWd3Z0h0Y0ZXV1E5ZFpDaDBKUWxZTUhmc1hyUDdsa09yVWFpekx6R2NlRUF3PT0K"
+      "url": "https://github.com/snoww/loa-logs/releases/download/v1.54.3/LOA.Logs_1.54.3_amd64.AppImage",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUYWhFaUdQWk9GYlZYWmtLT0dyRGd6U3BYUTkxTkE4ZzZhSC9CZklUVzhaQlMrWTg2TUQ0UTVkNWlZekcrOEs1VkdzZmRTSEZRSUY4UG5DM3RGallFeHdEUVRZTjVlaVFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzk1NzUzMTYxCWZpbGU6TE9BIExvZ3NfMS41NC4zX2FtZDY0LkFwcEltYWdlCXZlcnNpb246MS41NC4zClhzWXEvazIwczZJUUNHNVJoTk9WNXA5MFRYSkd5VzVUVUdLb2EvNzlqYzB1d3RmWEN2YUNHTXErbEoxOTlkY1YxcGd2Q3loMnYyMm9Ub0NxZ1A5R0NRPT0K"
     }
   }
 }

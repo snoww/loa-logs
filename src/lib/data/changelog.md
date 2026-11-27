@@ -1,6 +1,6 @@
 <div class="rounded-md flex space-x-2 items-center">
   <div class="text-lg font-semibold text-white">
-    v1.54.2 - November 26h, 2026
+    v1.54.3 - November 26h, 2026
   </div>
   <div class="bg-accent-500 px-2 font-medium rounded-md text-white">
     New
@@ -17,4 +17,4 @@
 
 #### BUG FIXES AND IMPROVEMENTS
 
-- added pb to mini mode
+- more speculative fixes for debuffs not applying to party members
