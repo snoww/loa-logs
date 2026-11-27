@@ -1,5 +1,6 @@
 use crate::live::id_tracker::IdTracker;
 use hashbrown::{HashMap, HashSet};
+use meter_defs::defs::PKTTroopInfo;
 use std::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
@@ -14,6 +15,8 @@ pub struct PartyTracker {
     id_tracker: Rc<RefCell<IdTracker>>,
 
     memberships: HashMap<u64, PartyMembership>,
+    explicit_memberships: HashMap<u64, PartyMembership>,
+    troop_groups: Vec<Vec<u64>>,
     character_id_to_name: HashMap<u64, String>,
     name: Option<String>,
 }
@@ -130,12 +133,19 @@ impl RdpsPartyTrace {
         });
     }
 
-    pub fn troop_info(&mut self, timestamp: i64, fight_start: i64, body: &[u8]) {
-        let event = match super::parse_complete_packet::<meter_defs::defs::PKTTroopInfo>(body) {
-            Ok(pkt) => describe_troop_roster(&pkt),
-            Err(_) => format!("event=TroopInfo decode_failed bytes={}", body.len()),
+    pub fn troop_info(
+        &mut self,
+        timestamp: i64,
+        fight_start: i64,
+        body: &[u8],
+    ) -> Option<PKTTroopInfo> {
+        let packet = super::parse_complete_packet::<PKTTroopInfo>(body).ok();
+        let event = match &packet {
+            Some(pkt) => describe_troop_roster(pkt),
+            None => format!("event=TroopInfo decode_failed bytes={}", body.len()),
         };
         self.record_context(timestamp, fight_start, RosterEvidence::Troop, event);
+        packet
     }
 
     pub fn before_reset(&mut self, timestamp: i64, fight_start: i64, tracker: &PartyTracker) {
@@ -149,7 +159,7 @@ impl RdpsPartyTrace {
     }
 }
 
-fn describe_troop_roster(pkt: &meter_defs::defs::PKTTroopInfo) -> String {
+fn describe_troop_roster(pkt: &PKTTroopInfo) -> String {
     let groups = &pkt
         .sub_p_k_t_troop_info_1_5_130
         .sub_p_k_t_troop_info_2_4_116
@@ -202,6 +212,8 @@ impl PartyTracker {
         Self {
             id_tracker,
             memberships: HashMap::new(),
+            explicit_memberships: HashMap::new(),
+            troop_groups: Vec::new(),
             character_id_to_name: HashMap::new(),
             name: None,
         }
@@ -209,6 +221,42 @@ impl PartyTracker {
 
     pub fn set_name(&mut self, name: String) {
         self.name = Some(name);
+    }
+
+    pub fn set_troop_groups(&mut self, pkt: PKTTroopInfo) {
+        self.troop_groups.clear();
+        for group in pkt
+            .sub_p_k_t_troop_info_1_5_130
+            .sub_p_k_t_troop_info_2_4_116
+            .party_member_datas
+        {
+            let mut ids = Vec::with_capacity(group.len());
+            for member in group.into_iter().filter(|m| m.character_id != 0) {
+                ids.push(member.character_id);
+                if !member.name.is_empty() {
+                    self.character_id_to_name
+                        .insert(member.character_id, member.name);
+                }
+            }
+            self.troop_groups.push(ids);
+        }
+        self.refresh_memberships();
+    }
+
+    fn refresh_memberships(&mut self) {
+        self.memberships.clone_from(&self.explicit_memberships);
+        for group in &self.troop_groups {
+            // TroopInfo identifies teammates. A later party packet can supply their instance ID.
+            let mut known = group
+                .iter()
+                .filter_map(|id| self.explicit_memberships.get(id));
+            let Some(&party) = known.next() else { continue };
+            if party.party_instance_id != 0 && known.all(|other| *other == party) {
+                for &id in group {
+                    self.memberships.entry(id).or_insert(party);
+                }
+            }
+        }
     }
 
     /// Only observed party packets establish membership.
@@ -231,13 +279,20 @@ impl PartyTracker {
         if character_id == 0 {
             return;
         }
-        self.memberships.insert(
-            character_id,
-            PartyMembership {
-                raid_instance_id,
-                party_instance_id: party_id,
-            },
-        );
+        let membership = PartyMembership {
+            raid_instance_id,
+            party_instance_id: party_id,
+        };
+        let previous = self.explicit_memberships.insert(character_id, membership);
+        if previous != Some(membership) {
+            if previous.is_some_and(|party| party.party_instance_id != 0) {
+                // A confirmed move supersedes the older grouping for this player.
+                for group in &mut self.troop_groups {
+                    group.retain(|id| *id != character_id);
+                }
+            }
+            self.refresh_memberships();
+        }
         if let Some(name) = name.filter(|name| !name.is_empty()) {
             self.character_id_to_name.insert(character_id, name);
         }
@@ -253,10 +308,25 @@ impl PartyTracker {
             raid_instance_id,
             party_instance_id: party_id,
         };
-        self.memberships.retain(|_, party| *party != membership);
+        // A complete party roster supersedes its older troop group, including omitted members.
+        let members: Vec<_> = members.into_iter().collect();
+        self.troop_groups.retain(|group| {
+            !group.iter().any(|id| {
+                self.memberships.get(id) == Some(&membership)
+                    || members.iter().any(|(member, _)| member == id)
+            })
+        });
+        self.explicit_memberships
+            .retain(|_, party| *party != membership);
         for (character, name) in members {
-            self.add(raid_instance_id, party_id, character, 0, Some(name));
+            if character != 0 {
+                self.explicit_memberships.insert(character, membership);
+                if !name.is_empty() {
+                    self.character_id_to_name.insert(character, name);
+                }
+            }
         }
+        self.refresh_memberships();
     }
 
     pub fn observe_member_name(&mut self, character_id: u64, name: &str) {
@@ -267,14 +337,24 @@ impl PartyTracker {
     }
 
     pub fn remove(&mut self, party_instance_id: u32, name: String) {
-        self.memberships.retain(|character, party| {
-            party.party_instance_id != party_instance_id
-                || self.character_id_to_name.get(character) != Some(&name)
-        });
+        let keep = |character: &u64| {
+            self.character_id_to_name.get(character) != Some(&name)
+                || self
+                    .memberships
+                    .get(character)
+                    .is_some_and(|party| party.party_instance_id != party_instance_id)
+        };
+        for group in &mut self.troop_groups {
+            group.retain(keep);
+        }
+        self.explicit_memberships.retain(|id, _| keep(id));
+        self.refresh_memberships();
     }
 
     pub fn reset_party_mappings(&mut self) {
         self.memberships.clear();
+        self.explicit_memberships.clear();
+        self.troop_groups.clear();
         self.character_id_to_name.clear();
     }
 

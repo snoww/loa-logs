@@ -648,6 +648,19 @@ impl Repository {
             sanitize_invalid_rdps(&mut args.encounter, &mut args.contribution_splits);
         }
 
+        for party in &mut args.party_info {
+            if party.len() == 4 {
+                continue;
+            }
+            party.retain(|name| {
+                args.encounter.entities.get(name).is_some_and(|entity| {
+                    entity.entity_type == EntityType::Player
+                        && should_insert_entity(entity, &args.encounter.local_player)
+                })
+            });
+        }
+        args.party_info.retain(|party| !party.is_empty());
+
         let mut connection = self.0.get()?;
         let transaction = connection.transaction()?;
 

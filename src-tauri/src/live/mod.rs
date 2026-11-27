@@ -1172,11 +1172,14 @@ pub fn start(args: StartArgs) -> Result<()> {
                 }
             }
             PKTTroopInfo::OPCODE => {
-                rdps_party_trace.troop_info(
+                if let Some(pkt) = rdps_party_trace.troop_info(
                     packet_timestamp,
                     state.encounter.fight_start,
                     &packet.body,
-                );
+                ) {
+                    party_tracker.borrow_mut().set_troop_groups(pkt);
+                    state.try_flush_startup_barrier(&mut entity_tracker);
+                }
             }
             PKTPartyInfo::OPCODE => {
                 if let Some(pkt) = packet.try_parse::<PKTPartyInfo>().unwrap() {
@@ -1587,6 +1590,7 @@ pub fn start(args: StartArgs) -> Result<()> {
                 Some("fight_start")
             }
             PKTPartyInfo::OPCODE => Some("PartyInfo"),
+            PKTTroopInfo::OPCODE => Some("TroopInfo"),
             PKTPartyLeaveResult::OPCODE => Some("PartyLeaveResult"),
             PKTPartyStatusEffectResultNotify::OPCODE => Some("PartyStatusEffectResultNotify"),
             _ => None,
